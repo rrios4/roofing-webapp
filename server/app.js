@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 const mysql = require('mysql');
+const fs = require('fs');
 
 
 //init the express app
@@ -13,8 +14,18 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 'roofing_db'
+    database: 'roofing_db',
+    // ssl: {
+    //     ca   : fs.readFileSync('./ssl/server-ca.pem'), // should be enough for AWS
+    //     key  : fs.readFileSync('./ssl/client-key.pem'), // required for google mysql cloud db
+    //     cert : fs.readFileSync('./ssl/client-cert.pem'), // required for google mysql cloud db
+    // }
 });
+
+db.connect(function(err) {
+    if(err) throw err;
+    console.log('Connected to mysql!');
+})
 
 //Middleware
 app.use(cors())
