@@ -1,0 +1,29 @@
+{
+  "name": "roofing-webapp",
+  "version": "1.0.0",
+  "description": "Web application that uses React for the front-end and Nodejs/MySQL for the backend. This application will allow Rios Roofing to manage information about invoices, estimates, customers, employees, and materials.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "author": "CoogTech Consulting",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "assert": "^2.0.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "logger": "0.0.1",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "validator": "^13.5.2"
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.0",
+    "nodemon": "^2.0.7"
+  }
+}
