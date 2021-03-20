@@ -14,11 +14,7 @@ let corsOptions = {
 
 //init sequilize models
 const db = require('./models');
-db.sequelize.sync(/*{ force: true }).then(() => {
-
-    console.log("Drop and re-sync db.");
-    
-    }*/);
+db.sequelize.sync(/*{ force: true }).then(() => { console.log("Drop and re-sync db.");}*/);
 
 //Connection to mysql db
 // const db = mysql.createConnection({
@@ -49,6 +45,7 @@ app.get("/", (req, res) => {
  res.json({ message: "Welcome to Rios Roofing Web App Backend!"})
 });
 require("./routes/api/customers")(app);
+require("./routes/api/employees")(app);
 
 //Error handling middleware
 // app.use(function(err, request, response, next) {
@@ -57,6 +54,7 @@ require("./routes/api/customers")(app);
 // });
 
 //Handle for production
+
 //Litsen for port
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 app.listen(port,() => console.log(`Server started on port ${port}`));
