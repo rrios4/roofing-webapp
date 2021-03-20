@@ -46,6 +46,7 @@ app.get("/", (req, res) => {
 });
 require("./routes/api/customers")(app);
 require("./routes/api/employees")(app);
+require("./routes/api/materials")(app);
 
 //Error handling middleware
 // app.use(function(err, request, response, next) {
@@ -56,5 +57,5 @@ require("./routes/api/employees")(app);
 //Handle for production
 
 //Litsen for port
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3001;
 app.listen(port,() => console.log(`Server started on port ${port}`));
