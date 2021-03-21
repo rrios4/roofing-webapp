@@ -47,6 +47,8 @@ app.get("/", (req, res) => {
 require("./routes/api/customers")(app);
 require("./routes/api/employees")(app);
 require("./routes/api/materials")(app);
+require("./routes/api/warranties")(app);
+require("./routes/api/job_type")(app);
 
 //Error handling middleware
 // app.use(function(err, request, response, next) {
