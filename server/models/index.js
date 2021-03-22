@@ -24,5 +24,6 @@ db.employees = require("./employee")(sequelize, Sequelize);
 db.materials = require("./material")(sequelize,Sequelize);
 db.warranties = require("./warranty")(sequelize, Sequelize);
 db.job_types = require("./job_type")(sequelize, Sequelize);
+db.invoice_status = require("./invoice_status")(sequelize,Sequelize);
 
 module.exports = db;
