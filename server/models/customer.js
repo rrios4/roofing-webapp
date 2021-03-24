@@ -1,3 +1,4 @@
+const Invoice = require("./invoice");
 module.exports = (sequelize, Sequelize) => {
     const Customer = sequelize.define("customer", {
         name: {
@@ -23,6 +24,5 @@ module.exports = (sequelize, Sequelize) => {
         }
 
     });
-
     return Customer;
 };

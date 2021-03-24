@@ -50,6 +50,8 @@ require("./routes/api/materials")(app);
 require("./routes/api/warranties")(app);
 require("./routes/api/job_type")(app);
 require("./routes/api/invoices_status")(app);
+require("./routes/api/inv_notes")(app);
+require("./routes/api/invoices")(app);
 
 //Error handling middleware
 // app.use(function(err, request, response, next) {
