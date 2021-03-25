@@ -1,10 +1,6 @@
 const dbConfig = require('../config/db.config.js');
 
 const Sequelize = require('sequelize');
-const invoice = require('./invoice');
-const job_type = require('./job_type');
-const customer = require('./customer');
-const invoice_status = require('./invoice_status');
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
@@ -31,8 +27,9 @@ db.job_types = require("./job_type")(sequelize, Sequelize);
 db.invoice_status = require("./invoice_status")(sequelize,Sequelize);
 db.inv_notes = require("./inv_note")(sequelize, Sequelize);
 db.invoices = require("./invoice")(sequelize, Sequelize);
-//db.estimates = require("./estimate")(sequelize, Sequelize);
-
+db.estimates = require("./estimate")(sequelize, Sequelize);
+db.et_status = require("./et_status")(sequelize, Sequelize);
+db.material_lines = require("./material_line")(sequelize, Sequelize);
 
 //Relationshops
 // job_type.hasMany(invoice); // set one to many relationship

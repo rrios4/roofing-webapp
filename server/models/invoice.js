@@ -1,24 +1,34 @@
 module.exports = (sequelize, Sequelize) => {
     const Invoice = sequelize.define("invoice", {
-        // customerId: {
-        //     type: Sequelize.INTEGER,
-        //     references: 'customers', //looks for table name not object
-        //     referencesKey: 'id' //column name with in the customer table
-        // },
-        // jobTypeId: {
-        //     type: Sequelize.INTEGER,
-        //     references: 'job_types',
-        //     referencesKey: 'id'
-        // },
-        // invStatusId: {
-        //     type: Sequelize.INTEGER,
-        //     references: 'invoice_statuses',
-        //     referencesKey: 'id'
-        // },
+        customerId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'customers',
+                key: 'id'
+            }
+        },
+        jobTypeId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {           //Job Types hasMany invoices
+                model: 'job_types',
+                key: 'id'
+            }
+        },
+        invStatusId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'invoice_statuses',
+                key: 'id'
+            }
+        },
         service_name: {
             type: Sequelize.STRING
         },
         inv_date: {
+            allowNull: false,
             type: Sequelize.DATE
         },
         due_date: {

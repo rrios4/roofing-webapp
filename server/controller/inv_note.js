@@ -12,6 +12,7 @@ exports.create = (req, res) => {
 
     //Create a Invoice Note
     const inv_note = {
+        invoiceId: req.body.invoiceId,
         note_title: req.body.note_title,
         subject: req.body.subject,
         description: req.body.description,

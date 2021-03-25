@@ -12,6 +12,9 @@ exports.create = (req, res) => {
 
     //Create a invoice
     const invoice = {
+        customerId: req.body.customerId,
+        jobTypeId: req.body.jobTypeId,
+        invStatusId: req.body.invStatusId,
         service_name: req.body.service_name,
         inv_date: req.body.inv_date,
         due_date: req.body.due_date,

@@ -1,9 +1,9 @@
 const db = require("../models");
-const Warranty = db.warranties;
+const Material_Line = db.material_lines;
 
 exports.create = (req, res) => {
     //Validate request
-    if(!req.body.warr_exp_date) {
+    if(!req.body.estimateId) {
         res.status(400).send({
             message: "Content cannot be empty!"
         });
@@ -11,22 +11,21 @@ exports.create = (req, res) => {
     };
 
     //Create a Warranty
-    const warranty = {
-        invoiceId: req.body.invoiceId,
-        warr_exp_date: req.body.warr_exp_date,
-        warr_start_date: req.body.warr_start_date,
-        description: req.body.description
+    const material_line = {
+        estimateId: req.body.estimateId,
+        materialId: req.body.materialId,
+        qty: req.body.qty
     };
 
     //Save warranty 
-    Warranty.create(warranty)
+    Material_Line.create(material_line)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "An error occured creating Warranty info!"
+                    err.message || "An error occured creating Material Line info!"
             });
         });
 };
@@ -35,14 +34,14 @@ exports.findAll = (req, res) => {
     const name = req.query.name;
     var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
     
-    Warranty.findAll({ where: condition})
+    Material_Line.findAll({ where: condition})
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving warranties!."
+                    err.message || "Some error occurred while retrieving Material Lines!."
             });
         });
 };

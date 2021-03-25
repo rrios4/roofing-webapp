@@ -52,6 +52,9 @@ require("./routes/api/job_type")(app);
 require("./routes/api/invoices_status")(app);
 require("./routes/api/inv_notes")(app);
 require("./routes/api/invoices")(app);
+require("./routes/api/estimates")(app);
+require("./routes/api/et_statuses")(app);
+require("./routes/api/material_lines")(app);
 
 //Error handling middleware
 // app.use(function(err, request, response, next) {

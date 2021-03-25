@@ -48,12 +48,13 @@ Author: CoogTech Consulting
 
 ## API Endpoints
 
-- GET: <http://localhost:3001/api/customer> - Get all customers
-- GET: <http://localhost:3001/api/employee> - Get all employees
-- GET: <http://localhost:3001/api/invoices> - Get all invoices
-- GET: <http://localhost:3001/api/estimaates> - Get all estimates
-- GET: <http://localhost:3001/api/services> - Get all services
-- GET: <http://localhost:3001/api/vendors> - Get all vendors
+- GET: <http://localhost:3001/api/customers/> - Get all customers
+- GET: <http://localhost:3001/api/employees/> - Get all employees
+- GET: <http://localhost:3001/api/invoices/> - Get all invoices
+- GET: <http://localhost:3001/api/estimates/> - Get all estimates
+- GET: <http://localhost:3001/api/materials/> - Get all materials
+- GET: <http://localhost:3001/api/job-schedule/> - Get all job schedules
+- GET: <http://localhost:3001/api/material-line> - Get all material lists for estimates
 - POST: <http://localhost:3001/sign-in> - Sign in
 - POST: <http://localhost:3001/sign-up> - Sign up
 - POST: <http://localhost:3001/logout> - Logout
