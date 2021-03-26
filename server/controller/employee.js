@@ -12,6 +12,7 @@ exports.create = (req, res) => {
 
     //Create a Employee
     const employee = {
+        emp_statusId: req.body.emp_statusId,
         emp_name: req.body.emp_name,
         address: req.body.address,
         city: req.body.city,

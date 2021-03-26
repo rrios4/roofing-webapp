@@ -1,5 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
     const Employee = sequelize.define("employee", {
+        emp_statusId: {
+            allowNull: false,
+            type: Sequelize.INTEGER,
+            reference: {
+                model: 'employees',
+                key: 'id'
+            }
+        },
         emp_name: {
             type: Sequelize.STRING
         },

@@ -32,6 +32,9 @@ db.et_status = require("./et_status")(sequelize, Sequelize);
 db.material_lines = require("./material_line")(sequelize, Sequelize);
 db.job_schedules = require("./job_schedule")(sequelize, Sequelize);
 db.job_status = require("./job_status")(sequelize, Sequelize);
+db.emp_status = require("./emp_status")(sequelize, Sequelize);
+db.et_notes = require('./et_note')(sequelize, Sequelize);
+db.available_emps = require('./available_emp')(sequelize, Sequelize);
 
 //Relationshops
 // job_type.hasMany(invoice); // set one to many relationship

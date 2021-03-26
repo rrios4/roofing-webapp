@@ -57,6 +57,9 @@ require("./routes/api/et_statuses")(app);
 require("./routes/api/material_lines")(app);
 require("./routes/api/job_schedule")(app);
 require("./routes/api/job_statuses")(app);
+require("./routes/api/et_notes")(app);
+require("./routes/api/emp_statuses")(app);
+require("./routes/api/available_emps")(app);
 
 //Error handling middleware
 // app.use(function(err, request, response, next) {
