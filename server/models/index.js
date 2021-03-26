@@ -30,6 +30,8 @@ db.invoices = require("./invoice")(sequelize, Sequelize);
 db.estimates = require("./estimate")(sequelize, Sequelize);
 db.et_status = require("./et_status")(sequelize, Sequelize);
 db.material_lines = require("./material_line")(sequelize, Sequelize);
+db.job_schedules = require("./job_schedule")(sequelize, Sequelize);
+db.job_status = require("./job_status")(sequelize, Sequelize);
 
 //Relationshops
 // job_type.hasMany(invoice); // set one to many relationship
