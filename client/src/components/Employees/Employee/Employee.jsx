@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Products() {
+const Employee = () => {
     return (
         <div>
             
@@ -8,4 +8,4 @@ function Products() {
     )
 }
 
-export default Products
+export default Employee

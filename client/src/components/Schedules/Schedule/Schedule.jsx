@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Services() {
+const Schedule = () => {
     return (
         <div>
             
@@ -8,4 +8,4 @@ function Services() {
     )
 }
 
-export default Services
+export default Schedule
