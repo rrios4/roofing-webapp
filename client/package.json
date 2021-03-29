@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^1.4.1",
-    "@chec/commerce.js": "^2.3.2",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
     "@material-ui/core": "^4.11.3",

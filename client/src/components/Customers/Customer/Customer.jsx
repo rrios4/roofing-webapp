@@ -1,7 +1,9 @@
 import React from 'react'
 import { Card, CardMedia, CardContent, CardActions, Typography, IconBotton} from '@material-ui/core';
+import useStyles from './styles'
 
-function Customer({customer}) {
+const Customer = ({customer}) => {
+    const classes = useStyles();
     return (
         <Card className={classes.root}>
             <CardMedia className={classes.media} image='' title={customer.name}/>
@@ -22,7 +24,7 @@ function Customer({customer}) {
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }
 
-export default Customer
+export default Customer;
