@@ -1,10 +1,9 @@
 import React from 'react';
-import Axios from 'axios';
 //import {Employees, Navbar, Customers, Estimates, Invoices, Materials, Schedules} from './components';
 import Customers from './components/Customers/Customers';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-
-import {ChakraProvider, extendTheme} from "@chakra-ui/react"
+import {ChakraProvider, extendTheme, Box, Flex} from "@chakra-ui/react"
+import Navbar from './components/Navbar/Navbar';
 
 const colors = {
     brand: {
@@ -13,14 +12,17 @@ const colors = {
         700: "#2a69ac",
     },
 }
-
 const theme = extendTheme({ colors })
 
 const App = () => {
     return (
         <ChakraProvider theme={theme}>
-            Roofing App
-            <Customers />
+                <Navbar/>
+                <Flex ml='9rem' justifyContent='center' bg='gray.900'>
+                    <Customers />
+                    
+                </Flex>
+  
         </ChakraProvider>
 
         
