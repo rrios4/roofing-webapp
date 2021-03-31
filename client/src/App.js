@@ -1,29 +1,37 @@
 import React from 'react';
 //import {Employees, Navbar, Customers, Estimates, Invoices, Materials, Schedules} from './components';
-import Customers from './components/Customers/Customers';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import {ChakraProvider, extendTheme, Box, Flex} from "@chakra-ui/react"
-import Navbar from './components/Navbar/Navbar';
-
-const colors = {
-    brand: {
-        900: "#la365d",
-        800: "#153e75",
-        700: "#2a69ac",
-    },
-}
-const theme = extendTheme({ colors })
+import {BrowserRouter as HashRouter, Switch, Route} from 'react-router-dom';
+import {ChakraProvider, extendTheme, Box, Flex, ThemeProvider, theme, ColorModeProvider, CSSReset} from "@chakra-ui/react"
+import { Customers, Navbar } from "./components/";
+import DashBoard from './components/Dashboard/Dashboard'
 
 const App = () => {
     return (
-        <ChakraProvider theme={theme}>
-                <Navbar/>
-                <Flex ml='9rem' justifyContent='center' bg='gray.900'>
-                    <Customers />
-                    
-                </Flex>
-  
-        </ChakraProvider>
+        <HashRouter>
+            <ThemeProvider theme={theme}>
+                <ColorModeProvider options={{
+                    useSystemColorMode: true
+                }}>
+                    <CSSReset />
+                    <ChakraProvider>
+                        <Navbar/>
+                        <Switch>
+                        <Flex ml='9rem' justifyContent='center' >
+                            <Route exact path='/' component={DashBoard}>
+                                
+                            </Route>
+                            <Route exact path='/customers' component={Customers}>
+                            </Route>
+                        
+                        </Flex>
+                        </Switch>
+
+                    </ChakraProvider>
+                </ColorModeProvider>
+            </ThemeProvider>
+        </HashRouter>
+
+
 
         
     )

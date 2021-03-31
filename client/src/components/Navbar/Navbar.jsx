@@ -1,17 +1,22 @@
 import React from 'react';
-import {Box, Text, Flex, UnorderedList, ListItem, Link, Image, Avatar, AvatarBadge, AvatarGroup, Divider, Tooltip} from '@chakra-ui/react';
-import HomeIcon from '@material-ui/icons/Home'
+import {Box, Text, Flex, UnorderedList, ListItem, Image, Avatar, AvatarBadge, AvatarGroup, Divider, Tooltip} from '@chakra-ui/react';
+import HomeIcon from '@material-ui/icons/Home';
+import Toggle from "./Toggle";
+import {Link} from 'react-router-dom'
 
 
 const Navbar = () => {
     return (
         <main>
         <Flex position='fixed' w='9rem' h='100vh' bg='gray.700' roundedTopRight='25' roundedBottomRight='25' flexDir='column' p='0' m='0'>
-            <Box display='flex' flexDir='column' h='9rem' bg='blue.500' roundedRight='25' justifyContent='center' pl='20px'>
+            <Box display='flex' flexDir='column' h='9rem' bg='blue.400' shadow='xl' roundedRight='25' justifyContent='center' pl='20px'>
                 <Image boxSize='100px' src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>
             </Box>
+            <Box>
+                <Toggle />
+            </Box>
             <Box display='flex' justifyContent='center' marginTop='auto' paddingBottom='2rem' color='white' _hover={'color: red'}>
-                <Link>
+                <Link to='/'>
                     <Tooltip label='Home' bg="gray.500">
                         <HomeIcon fontSize='large'/>
                     </Tooltip>

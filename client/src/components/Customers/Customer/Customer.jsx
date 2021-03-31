@@ -21,12 +21,12 @@ const Customer = ({customer}) => {
                 {customer.phone_number}
             </Box>
             <Box pl='10' ml='auto'>
-                <Badge bg='green.300'>
+                <Badge bg='green.300' color='black'>
                     Active
                 </Badge>
             </Box>
             <Box pl="5">
-                <ChevronRightIcon color='blue.100'/>
+                <ChevronRightIcon fontSize='25px'/>
             </Box>
         </Flex>
 
