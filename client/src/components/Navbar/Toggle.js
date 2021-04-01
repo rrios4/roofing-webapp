@@ -8,7 +8,7 @@ export default function Toggle() {
         <div>
             <Flex align='center' justify='center' height='4rem' direction='column'>
                 <Tooltip label='Toggle Dark Mode'>
-                    <IconButton onClick={() => toggleColorMode()} fontSize='25px' colorScheme='yellow' variant='ghost' aria-label='Toggle Dark Mode' icon={<MoonIcon />}/>
+                    <IconButton onClick={() => toggleColorMode()} fontSize='35px' colorScheme='yellow' variant='ghost' aria-label='Toggle Dark Mode' icon={<MoonIcon />}/>
                 </Tooltip>
             </Flex>
             
