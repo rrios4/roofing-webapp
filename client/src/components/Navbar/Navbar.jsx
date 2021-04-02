@@ -9,9 +9,11 @@ const Navbar = () => {
     return (
         <main>
         <Flex position='fixed' w='9rem' h='100vh' bg='gray.700' roundedTopRight='25' roundedBottomRight='25' flexDir='column' p='0' m='0'>
-            <Box display='flex' flexDir='column' h='9rem' bg='blue.400' shadow='xl' roundedRight='25' justifyContent='center' pl='20px'>
-                <Image boxSize='100px' src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>
-            </Box>
+            <Link to='/'>
+                <Box display='flex' flexDir='column' h='9rem' bg='blue.400' shadow='xl' roundedRight='25' justifyContent='center' pl='20px'>
+                    <Image boxSize='100px' src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>
+                </Box>
+            </Link>
             <Box display='flex' justifyContent='center' marginTop='auto' p='1rem'>
                 <Link to='/'>
                     <Box _hover={{bg: "gray.600"}} rounded='md' p='8px' color='white'>
