@@ -28,7 +28,7 @@ function Dashboard() {
                         <Button colorScheme='blue'>Logout</Button>
                     </Box>
                 </Box> */}
-                <Box display='flex' flexDir='column' pb='1rem' pt='2rem'>
+                {/* <Box display='flex' flexDir='column' pb='1rem' pt='2rem'>
                     <Box>
                         <Text fontSize='30px' fontWeight='black'>Upcoming Jobs</Text>
                     </Box>
@@ -89,9 +89,9 @@ function Dashboard() {
                         </Box>
                     </Grid>
 
-                </Box>
+                </Box> */}
                 
-                <Grid templateColumns='repeat(3, 1fr)' gap='5' pb='1rem' pl='0rem'>
+                <Grid templateColumns='repeat(4, 1fr)' gap='5' pt='22rem' pb='1rem' pl='0rem'>
                     <Link to='/invoices'>
                         <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.700' rounded='2xl' shadow='md' _hover={{ bg: "gray.600" }}>
                             <Box display='flex' justifyContent='center'>
@@ -112,7 +112,7 @@ function Dashboard() {
                             </Box>
                         </Box>
                     </Link>
-                    <Link to='/schedules'>
+                    {/* <Link to='/schedules'>
                         <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.700' rounded='2xl' shadow='md' _hover={{ bg: "gray.600" }}>
                             <Box display='flex' justifyContent='center'>
                                 <AccessTimeIcon style={{fontSize: 100}} />
@@ -121,8 +121,8 @@ function Dashboard() {
                                 <Text fontSize='20px' fontWeight='black'>Job Schedule</Text>
                             </Box>
                         </Box>
-                    </Link>
-                    <Link to='/materials'>
+                    </Link> */}
+                    {/* <Link to='/materials'>
                         <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.700' rounded='2xl' shadow='md' _hover={{ bg: "gray.600" }}>
                             <Box display='flex' justifyContent='center'>
                                 <BallotIcon style={{fontSize: 100}} />
@@ -132,7 +132,7 @@ function Dashboard() {
                             </Box>
 
                         </Box> 
-                    </Link>
+                    </Link> */}
                     <Link to='/customers'>
                         <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.700' rounded='2xl' shadow='md' _hover={{ bg: "gray.600" }}>
                                 <Box display='flex' justifyContent='center'>

@@ -3,6 +3,7 @@ import React from 'react';
 import Customer from './Customer/Customer';
 import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, Form} from '@chakra-ui/react';
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
+import {Link} from 'react-router-dom';
 
 const customers = [
     {id: 1, name: 'Jonh Den', email: 'johnden123@gmail.com', phone_number: '883-229-1212'},
@@ -50,14 +51,15 @@ const Customers = () => {
                         </Button>
                     </Box>
                 </Box>
-                <Grid gap={4} p='4' >
-                    {customers.map((customer) => (
-                                <Box borderRadius="xl" p='2' item key={customer.id} bg="gray.600" color='white'>
-                                            <Customer customer={customer} /> 
-                                </Box>
-                            ))}
-                </Grid>
-
+                <Link to='/editcustomer'>
+                    <Grid gap={4} p='4' >
+                        {customers.map((customer) => (
+                                    <Box borderRadius="xl" p='2' item key={customer.id} bg="gray.600" color='white'>
+                                                <Customer customer={customer} /> 
+                                    </Box>
+                                ))}
+                    </Grid>
+                </Link>
             </Flex>
             {/* <Flex justify='center' flexDirection='column' p={2}>
                 {customers.map((customer) => (

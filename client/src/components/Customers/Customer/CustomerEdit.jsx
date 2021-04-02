@@ -1,12 +1,15 @@
 import React from 'react'
 import { Box, Flex , Text, Editable, Badge, Button, Grid } from "@chakra-ui/react";
+import {Link} from 'react-router-dom';
 
 const CustomerEdit = () => {
     return (
         <Flex direction='column'>
             <Box pt='2rem' pb='1rem' >
                 <Box>
-                    <Text>Go Back</Text>
+                    <Link to='/customers'>
+                        <Text>Go Back</Text>
+                    </Link>
                 </Box>
             </Box>
             <Box display='flex' pt='2rem'>
@@ -44,10 +47,10 @@ const CustomerEdit = () => {
                     <Box display='flex' >
                         <Box display='flex' flexDir='column'>
                             <Box>
-                            Customer name 
+                                Customer name 
                             </Box>
                             <Box>
-                            Customer phone
+                                Customer phone
                             </Box>
                         </Box>
                         <Box display='flex' flexDir='column'>
