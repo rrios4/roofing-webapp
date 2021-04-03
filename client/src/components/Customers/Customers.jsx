@@ -4,6 +4,7 @@ import Customer from './Customer/Customer';
 import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, Form} from '@chakra-ui/react';
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
 import {Link} from 'react-router-dom';
+import Axios from 'axios'
 
 const customers = [
     {id: 1, name: 'Jonh Den', email: 'johnden123@gmail.com', phone_number: '883-229-1212'},
@@ -17,7 +18,9 @@ const customers = [
     {id: 9, name: 'Jonh Den', email: 'johnden123@gmail.com', phone_number: '883-229-1212'},
     {id: 10, name: 'Jonh Den', email: 'johnden123@gmail.com', phone_number: '883-229-1212'}
 ]
-
+    // const customers = () = Axios.get('http://localhost:3002/api/customers').then((response) => {
+    //     console.log(response);
+    // });
 const Customers = () => {
     return (
         <main>
