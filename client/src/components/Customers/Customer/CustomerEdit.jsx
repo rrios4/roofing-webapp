@@ -1,11 +1,9 @@
 import React from 'react'
-import { Box, Flex , Text, Editable, EditablePreview, EditableInput, EditableControls, Badge, Button, Grid } from "@chakra-ui/react";
+import { Box, Flex , Text, Editable, EditablePreview, EditableInput, Badge, Button, Grid } from "@chakra-ui/react";
 import {Link} from 'react-router-dom';
 
 
 const CustomerEdit = () => {
-    
-
 
     return (
         <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]}>
@@ -18,15 +16,15 @@ const CustomerEdit = () => {
             </Box>
             <Box display='flex' pt='1rem' justifyContent='center'>
                 <Box display='flex' p='1rem' bg='gray.700' rounded='2xl' shadow='md' w={[300, 400, 800]}>
-                    <Box display='flex' mr='auto'>
+                    <Box display='flex' mr='auto' pl='1rem'>
                         <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
-                            <Text>Status</Text>
+                            <Text fontWeight='bold' fontSize='20px'>Status:</Text>
                         </Box>
                         <Box >
                             <Badge bg='green.600' p='8px'>Active</Badge>
                         </Box>
                     </Box>
-                    <Box display='flex'>
+                    <Box display='flex' pr='1rem'>
                         <Box pr='1rem'>
                             <Button>Edit</Button>
                         </Box>
@@ -52,6 +50,11 @@ const CustomerEdit = () => {
                     <Box display='flex' >
                         <Box display='flex' flexDir='column' p='1rem'>
                             <Box>
+                                <Editable defaultValue='Rogelio Rios'>
+                                    <EditablePreview/>
+                                    <EditableInput/>
+                                    
+                                </Editable>
                                 Customer name 
                             </Box>
                             <Box>
