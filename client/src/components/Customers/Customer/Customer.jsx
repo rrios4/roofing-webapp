@@ -114,12 +114,7 @@ function Customer(props) {
         </Flex>
         )
     }
-    
-    return (
-        <>
-            {Customer(props)}
-        </>
-    )
+
 }
 
 export default Customer;

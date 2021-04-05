@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex, Avatar, Text, Grid, Button, Badge} from "@chakra-ui/react";
-import {ChevronRightIcon} from '@chakra-ui/icons'
+import {ChevronRightIcon, ChevronLeftIcon} from '@chakra-ui/icons'
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -14,12 +14,12 @@ import {Link} from 'react-router-dom'
 function Dashboard() {
     return (
         <main>
-            <Flex flexDir='column' color='white'>
+            <Flex flexDir='column' >
                 <Box display='flex' justifyContent='center' p='3rem' pt='3rem'>
                     <Box display='flex' flexDir='column' justifyContent='center' >
 
                         <Text fontWeight='light' fontSize='45px' align='center'>Welcome!</Text>
-                        <Box>Rios Roofing Web Application by CoogTech</Box>
+                        <Box><Text fontSize='18px'>Rios Roofing Web Application by CoogTech</Text></Box>
                     </Box>
                 </Box>
                 {/* <Box display='flex' pt='1rem'>
@@ -98,7 +98,7 @@ function Dashboard() {
 
                 </Box> */}
                 
-                <Grid templateColumns='repeat(2, 1fr)' gap='6' pt='2rem' pb='1rem' pl='0rem'>
+                <Grid templateColumns='repeat(2, 1fr)' gap='6' pt='2rem' pb='1rem' pl='0rem' color='white'>
                     <Link to='/invoices'>
                         <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                             <Box display='flex' justifyContent='center'>

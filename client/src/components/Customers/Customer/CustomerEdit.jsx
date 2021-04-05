@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Box, Flex , Text, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input } from "@chakra-ui/react";
-import {Link} from 'react-router-dom';
+import {ChevronRightIcon, ChevronLeftIcon} from '@chakra-ui/icons'
+import {Link, Redirect} from 'react-router-dom';
 import FocusLock from 'react-focus-lock';
 import axios from 'axios';
 
@@ -8,42 +9,53 @@ import axios from 'axios';
 
 const CustomerEdit = (props) => {
     const {id} = props.match.params;
-    
             //GET data from API
-            const [customers, getCustomers] = useState('');
+            const [customer, getCustomer] = useState(''); 
 
             const url = 'http://localhost:8081/api';
 
             useEffect(() => {
-                getAllCustomers();
+                getAllCustomer();
             }, []);
+
+            // componentDidMount() {
+            //     getAllCustomer();
+            // }
     
-            const getAllCustomers = () => {
-                axios.get(`${url}/customers/${id}`)
+            const getAllCustomer = async () => {
+                await axios.get(`${url}/customers/${id}`)
                 .then((response) => {
-                    const allCustomers = response.data
-    
+                    const allCustomer = response.data
                     //add our data to state
-                    getCustomers(allCustomers);
+                    getCustomer(allCustomer);
                 })
                 .catch(error => console.error(`Error: ${error}`));
             }
 
-            const deleteCustomer = () => {
-                //axios.delete(`${url}/customers/${id}`)
-                console.log('Button will perform a delete to the database.')
+            const deleteCustomer = async () => {
+
+                // console.log('Button will perform a delete to the database.');
+                await axios.delete(`${url}/customers/${id}`)
+                .then((response) => {
+                    console.log("Customer has been deleted!")
+                    return <Redirect to='/customers' />
+                })
+                .catch(error => console.error(`Error: ${error}`));
+                
+
+            
             }
-    
+
 
     return (
         <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]} >
-            <Box pt='2rem' pb='1rem'>
-                <Box>
-                    <Link to='/customers'>
-                        <Text fontWeight='bold' fontSize='20px'>Go Back</Text>
-                    </Link>
+            <Link to='/customers'>
+                <Box display='flex'  pt='2rem' pb='1rem' pl='1rem'>
+                    <Box display='flex' rounded='xl' p='1rem'>
+                        <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
+                    </Box>
                 </Box>
-            </Box>
+            </Link>
             <Box display='flex' pt='1rem' justifyContent='center'>
                 <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' mr='auto' pl='1rem'>
@@ -59,17 +71,17 @@ const CustomerEdit = (props) => {
                             <Button>Edit</Button>
                         </Box>
                         <Box  color='white'>
-                            <Button bg='red.600' onClick={deleteCustomer()}>Delete</Button>
+                                <Button bg='red.600' onClick={deleteCustomer}>Delete</Button>
                         </Box>
                     </Box>
                 </Box>
             </Box>
             <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
                 <Box display='flex' flexDir='column' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
-                    <Box display='flex' p='2rem'>
+                    <Box display='flex' p='1rem'>
                         <Box>
-
-                            <Text fontSize='40px' fontWeight='bold'># {customers.id}</Text>
+                            <Text fontWeight='bold'>Customer ID:</Text>
+                            <Text fontSize='30px' fontWeight='regular'> #{customer.id}</Text>
                         </Box>
                         <Box display='flex' flexDir='column' ml='auto'>
                             <Text>150 Tallant St</Text>
@@ -86,12 +98,12 @@ const CustomerEdit = (props) => {
                                     
                                 </Editable> */}
                                 <Text fontWeight='bold'>Name:</Text>
-                                <Text>{customers.name}</Text> 
+                                <Text>{customer.name}</Text> 
                                 
                             </Box>
                             <Box>
                                 <Text fontWeight='bold'>Phone Number:</Text>
-                                <Text>{customers.phone_number}</Text>
+                                <Text>{customer.phone_number}</Text>
                             </Box>
                         </Box>
                         <Box display='flex' flexDir='column' p='1rem'>
@@ -99,13 +111,13 @@ const CustomerEdit = (props) => {
                                 <Text fontWeight='bold'>Address:</Text>
                             </Box>
                             <Box>
-                                {customers.address}
+                                {customer.address}
                             </Box>
                             <Box>
-                                {customers.city}
+                                {customer.city}
                             </Box>
                             <Box>
-                                {customers.state}
+                                {customer.state}
                             </Box>
                             <Box>
                                 United States
@@ -116,7 +128,7 @@ const CustomerEdit = (props) => {
                             <Box>
                                 <Text fontWeight='bold'>Email: </Text>
                             </Box>
-                            {customers.email}
+                            {customer.email}
                         </Box>
                     </Box>
                     <Grid>
