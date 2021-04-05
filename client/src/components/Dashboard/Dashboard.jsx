@@ -15,6 +15,13 @@ function Dashboard() {
     return (
         <main>
             <Flex flexDir='column' color='white'>
+                <Box display='flex' justifyContent='center' p='3rem' pt='3rem'>
+                    <Box display='flex' flexDir='column' justifyContent='center' >
+
+                        <Text fontWeight='light' fontSize='45px' align='center'>Welcome!</Text>
+                        <Box>Rios Roofing Web Application by CoogTech</Box>
+                    </Box>
+                </Box>
                 {/* <Box display='flex' pt='1rem'>
                     <Box p='1rem'> 
                         <Avatar size='lg' name='username' src='https://64.media.tumblr.com/073578da50f557bd56caef112e255950/b754da231bb4bd69-34/s640x960/4f8c9cf93d4f03c42d448eba0dac2a9cbb2a69e2.jpg'/>
@@ -91,9 +98,9 @@ function Dashboard() {
 
                 </Box> */}
                 
-                <Grid templateColumns='repeat(4, 1fr)' gap='5' pt='22rem' pb='1rem' pl='0rem'>
+                <Grid templateColumns='repeat(2, 1fr)' gap='6' pt='2rem' pb='1rem' pl='0rem'>
                     <Link to='/invoices'>
-                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.700' rounded='2xl' shadow='md' _hover={{ bg: "gray.600" }}>
+                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                             <Box display='flex' justifyContent='center'>
                                 <DescriptionIcon style={{fontSize: 100}} />
                             </Box>
@@ -103,7 +110,7 @@ function Dashboard() {
                         </Box>
                     </Link>
                     <Link to='/estimates'>
-                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.700' rounded='2xl' shadow='md' _hover={{ bg: "gray.600" }}>
+                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                             <Box display='flex' justifyContent='center'>
                                 <AssignmentIcon style={{fontSize: 100}} />
                             </Box>
@@ -134,7 +141,7 @@ function Dashboard() {
                         </Box> 
                     </Link> */}
                     <Link to='/customers'>
-                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.700' rounded='2xl' shadow='md' _hover={{ bg: "gray.600" }}>
+                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                                 <Box display='flex' justifyContent='center'>
                                     <PersonPinIcon style={{fontSize: 100}} />
                                 </Box>
@@ -144,7 +151,7 @@ function Dashboard() {
                         </Box>
                     </Link>   
                     <Link to='/employees'>
-                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.700' rounded='2xl' shadow='md' _hover={{ bg: "gray.600" }}>
+                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                             
                             <Box display='flex' justifyContent='center'>
                                 <PermContactCalendarIcon style={{fontSize: 100}} />

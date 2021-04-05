@@ -28,6 +28,11 @@ const CustomerEdit = (props) => {
                 })
                 .catch(error => console.error(`Error: ${error}`));
             }
+
+            const deleteCustomer = () => {
+                //axios.delete(`${url}/customers/${id}`)
+                console.log('Button will perform a delete to the database.')
+            }
     
 
     return (
@@ -40,7 +45,7 @@ const CustomerEdit = (props) => {
                 </Box>
             </Box>
             <Box display='flex' pt='1rem' justifyContent='center'>
-                <Box display='flex' p='1rem' bg='gray.700' rounded='2xl' shadow='md' w={[300, 400, 800]}>
+                <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' mr='auto' pl='1rem'>
                         <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
                             <Text fontWeight='bold' fontSize='20px' color='white'>Status:</Text>
@@ -54,13 +59,13 @@ const CustomerEdit = (props) => {
                             <Button>Edit</Button>
                         </Box>
                         <Box  color='white'>
-                            <Button bg='red.600' onClick=''>Delete</Button>
+                            <Button bg='red.600' onClick={deleteCustomer()}>Delete</Button>
                         </Box>
                     </Box>
                 </Box>
             </Box>
             <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
-                <Box display='flex' flexDir='column' p='1rem' bg='gray.700' rounded='2xl' shadow='md' w={[300, 400, 800]}>
+                <Box display='flex' flexDir='column' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' p='2rem'>
                         <Box>
 
