@@ -98,7 +98,7 @@ function Dashboard() {
 
                 </Box> */}
                 
-                <Grid templateColumns='repeat(2, 1fr)' gap='6' pt='2rem' pb='1rem' pl='0rem' color='white'>
+                <Grid templateColumns='repeat(2, 1fr)' gap='6' pt='1rem' pb='1rem' pl='0rem' color='white'>
                     <Link to='/invoices'>
                         <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                             <Box display='flex' justifyContent='center'>

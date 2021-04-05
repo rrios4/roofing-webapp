@@ -73,7 +73,7 @@ function Customer(props) {
                 {customers.map((customer, index) => {
                 return (
                     <Link to={`/editcustomer/${customer.id}`}>
-                        <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' >
+                        <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} >
                             <Box key={customer.id}>
                                 {customer.id}
                             </Box>
