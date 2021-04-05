@@ -9,7 +9,7 @@ const morgan = require('morgan');
 //init the express app
 const app = express()
 let corsOptions = {
-    origin: "http://localhost:3001"
+    origin: "http://localhost:3000"
 };
 
 //init sequilize models
@@ -70,5 +70,5 @@ require("./routes/api/available_emps")(app);
 //Handle for production
 
 //Litsen for port
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8081;
 app.listen(port,() => console.log(`Server started on port ${port}`));

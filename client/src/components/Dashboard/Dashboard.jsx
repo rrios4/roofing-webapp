@@ -14,7 +14,7 @@ import {Link} from 'react-router-dom'
 function Dashboard() {
     return (
         <main>
-            <Flex flexDir='column'>
+            <Flex flexDir='column' color='white'>
                 {/* <Box display='flex' pt='1rem'>
                     <Box p='1rem'> 
                         <Avatar size='lg' name='username' src='https://64.media.tumblr.com/073578da50f557bd56caef112e255950/b754da231bb4bd69-34/s640x960/4f8c9cf93d4f03c42d448eba0dac2a9cbb2a69e2.jpg'/>

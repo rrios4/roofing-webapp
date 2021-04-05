@@ -26,7 +26,7 @@ const App = () => {
                             <Route exact path='/schedules' component={Schedules}></Route>
                             <Route exact path='/employees' component={Employees}></Route>
                             <Route exact path='/materials' component={Materials}></Route>
-                            <Route excat path='/editcustomer' component={CustomerEdit}></Route>
+                            <Route exact path='/editcustomer/:id' component={CustomerEdit}></Route>
 
                         </Flex>
                         </Switch>

@@ -1,16 +1,41 @@
-import React from 'react'
-import { Box, Flex , Text, Editable, EditablePreview, EditableInput, Badge, Button, Grid } from "@chakra-ui/react";
+import React, {useEffect, useState} from 'react'
+import { Box, Flex , Text, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import {Link} from 'react-router-dom';
+import FocusLock from 'react-focus-lock';
+import axios from 'axios';
 
 
-const CustomerEdit = () => {
+
+const CustomerEdit = (props) => {
+    const {id} = props.match.params;
+    
+            //GET data from API
+            const [customers, getCustomers] = useState('');
+
+            const url = 'http://localhost:8081/api';
+
+            useEffect(() => {
+                getAllCustomers();
+            }, []);
+    
+            const getAllCustomers = () => {
+                axios.get(`${url}/customers/${id}`)
+                .then((response) => {
+                    const allCustomers = response.data
+    
+                    //add our data to state
+                    getCustomers(allCustomers);
+                })
+                .catch(error => console.error(`Error: ${error}`));
+            }
+    
 
     return (
-        <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]}>
+        <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]} >
             <Box pt='2rem' pb='1rem'>
                 <Box>
                     <Link to='/customers'>
-                        <Text>Go Back</Text>
+                        <Text fontWeight='bold' fontSize='20px'>Go Back</Text>
                     </Link>
                 </Box>
             </Box>
@@ -18,7 +43,7 @@ const CustomerEdit = () => {
                 <Box display='flex' p='1rem' bg='gray.700' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' mr='auto' pl='1rem'>
                         <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
-                            <Text fontWeight='bold' fontSize='20px'>Status:</Text>
+                            <Text fontWeight='bold' fontSize='20px' color='white'>Status:</Text>
                         </Box>
                         <Box >
                             <Badge bg='green.600' p='8px'>Active</Badge>
@@ -28,18 +53,18 @@ const CustomerEdit = () => {
                         <Box pr='1rem'>
                             <Button>Edit</Button>
                         </Box>
-                        <Box >
-                            <Button bg='red.600'>Delete</Button>
+                        <Box  color='white'>
+                            <Button bg='red.600' onClick=''>Delete</Button>
                         </Box>
                     </Box>
                 </Box>
             </Box>
-            <Box display='flex' pt='2rem'  justifyContent='center'>
+            <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
                 <Box display='flex' flexDir='column' p='1rem' bg='gray.700' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' p='2rem'>
                         <Box>
 
-                            <Text fontSize='40px' fontWeight='bold'>#1</Text>
+                            <Text fontSize='40px' fontWeight='bold'># {customers.id}</Text>
                         </Box>
                         <Box display='flex' flexDir='column' ml='auto'>
                             <Text>150 Tallant St</Text>
@@ -50,32 +75,43 @@ const CustomerEdit = () => {
                     <Box display='flex' >
                         <Box display='flex' flexDir='column' p='1rem'>
                             <Box>
-                                <Editable defaultValue='Rogelio Rios'>
+                                {/* <Editable defaultValue={customers.name}>
                                     <EditablePreview/>
                                     <EditableInput/>
                                     
-                                </Editable>
-                                Customer name 
+                                </Editable> */}
+                                <Text fontWeight='bold'>Name:</Text>
+                                <Text>{customers.name}</Text> 
+                                
                             </Box>
                             <Box>
-                                Customer phone
+                                <Text fontWeight='bold'>Phone Number:</Text>
+                                <Text>{customers.phone_number}</Text>
                             </Box>
                         </Box>
                         <Box display='flex' flexDir='column' p='1rem'>
                             <Box>
-                                Address 
+                                <Text fontWeight='bold'>Address:</Text>
                             </Box>
                             <Box>
-                                City
+                                {customers.address}
                             </Box>
                             <Box>
-                                Country
+                                {customers.city}
+                            </Box>
+                            <Box>
+                                {customers.state}
+                            </Box>
+                            <Box>
+                                United States
                             </Box>
                             
                         </Box>
                         <Box display='flex' flexDir='column' p='1rem'>
-
-                            Customer email
+                            <Box>
+                                <Text fontWeight='bold'>Email: </Text>
+                            </Box>
+                            {customers.email}
                         </Box>
                     </Box>
                     <Grid>
