@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import { Box, Flex , Text, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, Flex , Text, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input, Alert, AlertIcon } from "@chakra-ui/react";
 import {ChevronRightIcon, ChevronLeftIcon} from '@chakra-ui/icons'
-import {Link, Redirect} from 'react-router-dom';
+import {Link, Redirect, useHistory} from 'react-router-dom';
 import FocusLock from 'react-focus-lock';
 import axios from 'axios';
 
@@ -9,6 +9,7 @@ import axios from 'axios';
 
 const CustomerEdit = (props) => {
     const {id} = props.match.params;
+    let history = useHistory();
             //GET data from API
             const [customer, getCustomer] = useState(''); 
 
@@ -30,10 +31,10 @@ const CustomerEdit = (props) => {
                     getCustomer(allCustomer);
                 })
                 .catch(error => console.error(`Error: ${error}`));
+
             }
 
             const deleteCustomer = async () => {
-
                 // console.log('Button will perform a delete to the database.');
                 await axios.delete(`${url}/customers/${id}`)
                 .then((response) => {
@@ -41,9 +42,8 @@ const CustomerEdit = (props) => {
                     return <Redirect to='/customers' />
                 })
                 .catch(error => console.error(`Error: ${error}`));
+                history.push("/customers")
                 
-
-            
             }
 
 
@@ -78,7 +78,7 @@ const CustomerEdit = (props) => {
             </Box>
             <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
                 <Box display='flex' flexDir='column' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
-                    <Box display='flex' p='1rem'>
+                    <Box display='flex' p='2rem'>
                         <Box>
                             <Text fontWeight='bold'>Customer ID:</Text>
                             <Text fontSize='30px' fontWeight='regular'> #{customer.id}</Text>
@@ -89,9 +89,9 @@ const CustomerEdit = (props) => {
                             <Text> United States</Text>
                         </Box>
                     </Box>
-                    <Box display='flex' >
-                        <Box display='flex' flexDir='column' p='1rem'>
-                            <Box>
+                    <Box display='flex' justifyContent='space-between' p='1rem'>
+                        <Box display='flex' flexDir='column' p='1rem' justifyContent='space-between'>
+                            <Box pb='1rem'>
                                 {/* <Editable defaultValue={customers.name}>
                                     <EditablePreview/>
                                     <EditableInput/>
@@ -114,10 +114,7 @@ const CustomerEdit = (props) => {
                                 {customer.address}
                             </Box>
                             <Box>
-                                {customer.city}
-                            </Box>
-                            <Box>
-                                {customer.state}
+                                {customer.city}, {customer.state}
                             </Box>
                             <Box>
                                 United States
