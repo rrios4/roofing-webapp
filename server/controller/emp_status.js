@@ -1,5 +1,5 @@
 const db = require("../models");
-const Emp_Status = db.job_status;
+const Emp_Status = db.emp_status;
 
 exports.create = (req, res) => {
     //Validate request

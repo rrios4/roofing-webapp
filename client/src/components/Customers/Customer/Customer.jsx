@@ -69,11 +69,11 @@ function Customer(props) {
 
     if(customers.length > 0) {
         return(
-                <Grid gap={4} shadow='md'>
+                <Grid gap={4}>
                 {customers.map((customer, index) => {
                 return (
                     <Link to={`/editcustomer/${customer.id}`}>
-                        <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} >
+                        <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='md' pt='1.5rem' pb='1.5rem'>
                             <Box key={customer.id}>
                                 {customer.id}
                             </Box>

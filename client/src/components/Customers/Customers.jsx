@@ -131,7 +131,7 @@ export default function Customers() {
                 </Grid>
             ))}
         </Grid> */}
-            <Flex flexDir='column' justifyContent='center'>
+            <Flex flexDir='column' justifyContent='center' pb='2rem'>
                 <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
                     <Box display='flex'>
                         <Box pr='1rem'>
