@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 //import {Grid} from '@material-ui/core';
 import Customer from './Customer/Customer';
-import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, Form} from '@chakra-ui/react';
+import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
 import {Link} from 'react-router-dom';
 import axios from 'axios';
@@ -104,7 +104,6 @@ export default function Customers() {
 
         //GET data from API
         const [customers, getCustomers] = useState('');
-
         const url = 'http://localhost:8081/api';
 
         useEffect(() => {
@@ -122,6 +121,10 @@ export default function Customers() {
             .catch(error => console.error(`Error: ${error}`));
         }
 
+        const { isOpen, onOpen, onClose } = useDisclosure();
+        const initialRef = React.useRef();
+        const finalRef = React.useRef();
+
     return (
         <main>
         {/* <Grid container justify="center" spacing={4}>
@@ -132,6 +135,31 @@ export default function Customers() {
             ))}
         </Grid> */}
             <Flex flexDir='column' justifyContent='center' pb='2rem'>
+                <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent p='1rem' ml='6rem'>
+                        <ModalHeader textAlign='center'>Create New Customer</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <FormControl>
+                                <FormLabel>Customer Name</FormLabel>
+                                <Input ref={initialRef} placeholder='Customer name' />
+                                <FormLabel>Address</FormLabel>
+                                <Input placeholder='Street address'/>
+                                <FormLabel>City</FormLabel>
+                                <Input placeholder='City'/>
+                                <FormLabel>State</FormLabel>
+                                <Input placeholder='State'/>
+                                <FormLabel>Zipcode</FormLabel>
+                                <Input placeholder='Zipcode'/>
+                            </FormControl>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button colorScheme='blue' mr={3}>Save</Button>
+                            <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
                 <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
                     <Box display='flex'>
                         <Box pr='1rem'>
@@ -140,7 +168,7 @@ export default function Customers() {
                         <IconButton icon={<SearchIcon/>} colorScheme='blue'></IconButton>
                     </Box>
                 </Box>
-                <Box display='flex' pt='1rem' pb='3rem' pl='1rem' pr='1rem'>
+                <Box display='flex' pt='1rem' pb='2rem' pl='1rem' pr='1rem' >
                     <Box>
                         <Text fontSize='4xl'> Customers</Text>
                         <Text>There is a total of {customers.length} customers</Text>    
@@ -149,12 +177,12 @@ export default function Customers() {
                         Filter By
                     </Box>
                     <Box display='flex' flexDir='column' justifyContent='center'>
-                        <Button leftIcon={<AddIcon/>} colorScheme='blue' variant='solid'>
+                        <Button leftIcon={<AddIcon/>} colorScheme='blue' variant='solid' onClick={onOpen}>
                             New Customer 
                         </Button>
                     </Box>
                 </Box>
-                <Box p='1rem' color='white'>
+                <Box p='1rem' color='white' >
                         <Customer customers={customers} />                
                 </Box>
             </Flex>
