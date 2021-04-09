@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 //import {Grid} from '@material-ui/core';
 import Customer from './Customer/Customer';
-import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
+import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, InputGroup, InputLeftAddon, NumberInput, NumberInputField, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
 import {Link} from 'react-router-dom';
 import axios from 'axios';
@@ -100,6 +100,34 @@ import axios from 'axios';
 
 // export default Customers;
 
+function formatPhoneNumber(value) {
+    //if value is falsy eg if the user deletes the input, then just return 
+    if(!value) return value;
+
+    //clean the input for any non-digit values.
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    // phoneNumberLength is used to know when to apply our formatting for the phone number
+    const phoneNumberLength = phoneNumber.length;
+
+    // we need to return the value with no formatting if its less then four digits
+    // this is to avoid weird behavior that occurs if you  format the area code to early
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    // if phoneNumberLength is greater than 4 and less the 7 we start to return
+    // the formatted number
+    if (phoneNumberLength < 7) {
+        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    // finally, if the phoneNumberLength is greater then seven, we add the last
+    // bit of formatting and return it.
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+        3,
+        6
+    )}-${phoneNumber.slice(6, 10)}`;
+}
+
 export default function Customers() {
 
         //GET data from API
@@ -125,6 +153,15 @@ export default function Customers() {
         const initialRef = React.useRef();
         const finalRef = React.useRef();
 
+        const [inputValue, SetInputValue] = useState("");
+
+        const handlePhoneInput = (e) => {
+            //This is where we'll call our future formatPhoneNumber function
+            const formattedPhoneNumber = formatPhoneNumber(e.target.value);
+            //We'll set the input value using our setInputValue
+            SetInputValue(formattedPhoneNumber);
+        }
+
     return (
         <main>
         {/* <Grid container justify="center" spacing={4}>
@@ -141,21 +178,28 @@ export default function Customers() {
                         <ModalHeader textAlign='center'>Create New Customer</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
-                            <FormControl>
-                                <FormLabel>Customer Name</FormLabel>
-                                <Input ref={initialRef} placeholder='Customer name' />
-                                <FormLabel>Address</FormLabel>
-                                <Input placeholder='Street address'/>
-                                <FormLabel>City</FormLabel>
-                                <Input placeholder='City'/>
-                                <FormLabel>State</FormLabel>
-                                <Input placeholder='State'/>
-                                <FormLabel>Zipcode</FormLabel>
-                                <Input placeholder='Zipcode'/>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>Customer Name</FormLabel>
+                                <Input id='address' ref={initialRef} placeholder='Customer name' />
+                                <FormLabel pt='1rem'>Address</FormLabel>
+                                <Input id='address' placeholder='Street address'/>
+                                <FormLabel pt='1rem'>City</FormLabel>
+                                <Input id='city' placeholder='City'/>
+                                <FormLabel pt='1rem'>State</FormLabel>
+                                <Input id='state' placeholder='State'/>
+                                <FormLabel pt='1rem'>Zipcode</FormLabel>
+                                <Input id='zipcode' placeholder='Zipcode'/>
+                                <FormLabel pt='1rem'>Phone Number</FormLabel>
+                                <InputGroup>
+                                <InputLeftAddon children="+1" />
+                                <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+                                </InputGroup>
+                                <FormLabel pt='1rem'>Email</FormLabel>
+                                <Input placeholder='Email Address' type='email'/>
                             </FormControl>
                         </ModalBody>
                         <ModalFooter>
-                            <Button colorScheme='blue' mr={3}>Save</Button>
+                            <Button colorScheme='blue' mr={3} type='submit'>Save</Button>
                             <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
                         </ModalFooter>
                     </ModalContent>
