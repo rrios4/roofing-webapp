@@ -1,6 +1,6 @@
 import React from 'react';
 // import { Card, CardMedia, CardContent, CardActions, Typography, IconBotton} from '@material-ui/core';
-import {Box, Badge, Container, Flex, Grid} from "@chakra-ui/react";
+import {Box, Badge, Container, Flex, Grid, Text} from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import useStyles from './styles';
 import {Link} from 'react-router-dom'
@@ -74,20 +74,20 @@ function Customer(props) {
                 return (
                     <Link to={`/editcustomer/${customer.id}`}>
                         <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='md' pt='1.5rem' pb='1.5rem'>
-                            <Box key={customer.id}>
-                                {customer.id}
+                            <Box key={customer.id} pl='1rem'>
+                                <Text fontFamily='sans-serif' fontWeight='light'>{customer.id}</Text>
                             </Box>
                             <Box pl='12'>
-                                {customer.name}
+                                <Text fontFamily='sans-serif' fontWeight='ligh'>{customer.name}</Text>
                             </Box>
                             <Box pl='12'>
-                                {customer.email}
+                                <Text fontFamily='sans-serif' fontWeight='light'>{customer.email}</Text>
                             </Box>
                             <Box pl='12'>
-                                {customer.phone_number}
+                                <Text fontFamily='sans-serif' fontWeight='light'>{customer.phone_number}</Text>
                             </Box>
                             <Box pl='10' ml='auto'>
-                            <Badge bg='green.300' color='black'>
+                            <Badge ml="1" fontSize="0.8em" colorScheme="green">
                                 Active
                             </Badge>
                             </Box>

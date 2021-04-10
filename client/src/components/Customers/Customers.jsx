@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import Customer from './Customer/Customer';
 import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, InputGroup, InputLeftAddon, NumberInput, NumberInputField, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
-import {Link} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import axios from 'axios';
 
 // const customers = [
@@ -129,6 +129,7 @@ function formatPhoneNumber(value) {
 }
 
 export default function Customers() {
+        let history = useHistory();
 
         //GET data from API
         const [customers, getCustomers] = useState('');
@@ -162,6 +163,44 @@ export default function Customers() {
             SetInputValue(formattedPhoneNumber);
         }
 
+        // States that pick up the values from the input fields of the form
+        const [name, setCustomerName] = useState('');
+        const [address, setAddress] = useState('');
+        const [city, setCity] = useState('');
+        const [state, setState] = useState('');
+        const [zipcode, setZipcode] = useState('');
+        const [email, setEmail] = useState('');
+        
+        // Function that will make the POST request from axios
+        const handleSubmit = async(event) => {
+            event.preventDefault();
+            const url2 = 'http://localhost:8081/api/customers/add'
+            const json = {
+                name: name,
+                address: address,
+                city: city,
+                state: state,
+                phone_number: inputValue,
+                email: email
+            }
+            await axios.post(url2, json)
+            .then((response) => {
+                console.log('I was submitted', response);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            console.log('Submit Function works!')
+            //history.go(0);
+            getAllCustomers();
+            setCustomerName('');
+            setAddress('');
+            setCity('');
+            setZipcode('');
+            SetInputValue('');
+            setEmail('');
+        }
+
     return (
         <main>
         {/* <Grid container justify="center" spacing={4}>
@@ -177,32 +216,47 @@ export default function Customers() {
                     <ModalContent p='1rem' ml='6rem'>
                         <ModalHeader textAlign='center'>Create New Customer</ModalHeader>
                         <ModalCloseButton />
+                        <form method='POST' onSubmit={handleSubmit}>
                         <ModalBody>
-                            <FormControl isRequired>
-                                <FormLabel pt='1rem'>Customer Name</FormLabel>
-                                <Input id='address' ref={initialRef} placeholder='Customer name' />
-                                <FormLabel pt='1rem'>Address</FormLabel>
-                                <Input id='address' placeholder='Street address'/>
-                                <FormLabel pt='1rem'>City</FormLabel>
-                                <Input id='city' placeholder='City'/>
-                                <FormLabel pt='1rem'>State</FormLabel>
-                                <Input id='state' placeholder='State'/>
-                                <FormLabel pt='1rem'>Zipcode</FormLabel>
-                                <Input id='zipcode' placeholder='Zipcode'/>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Customer Name</FormLabel>
+                                    <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Address</FormLabel>
+                                    <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>City</FormLabel>
+                                    <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>State</FormLabel>
+                                    <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Zipcode</FormLabel>
+                                    <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
+                                </FormControl>
+                                <FormControl isRequired>
                                 <FormLabel pt='1rem'>Phone Number</FormLabel>
-                                <InputGroup>
-                                <InputLeftAddon children="+1" />
-                                <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
-                                </InputGroup>
-                                <FormLabel pt='1rem'>Email</FormLabel>
-                                <Input placeholder='Email Address' type='email'/>
-                            </FormControl>
+                                    <InputGroup>
+                                    <InputLeftAddon children="+1" />
+                                    <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+                                    </InputGroup>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Email</FormLabel>
+                                    <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
+                                </FormControl>
                         </ModalBody>
                         <ModalFooter>
-                            <Button colorScheme='blue' mr={3} type='submit'>Save</Button>
+                            <Button colorScheme='blue' mr={3} type='submit' onClick={onClose} >Save</Button>
                             <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
                         </ModalFooter>
-                    </ModalContent>
+                        </form>
+
+                    </ModalContent> 
                 </Modal>
                 <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
                     <Box display='flex'>
