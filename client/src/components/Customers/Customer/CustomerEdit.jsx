@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import { Box, Flex , Text, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input, Alert, AlertIcon } from "@chakra-ui/react";
-import {ChevronRightIcon, ChevronLeftIcon} from '@chakra-ui/icons'
+import { Box, Flex , Text, ButtonGroup, IconButton, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input, Alert, AlertIcon } from "@chakra-ui/react";
+import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon} from '@chakra-ui/icons'
 import {Link, Redirect, useHistory} from 'react-router-dom';
-import FocusLock from 'react-focus-lock';
 import axios from 'axios';
-
-
 
 const CustomerEdit = (props) => {
     const {id} = props.match.params;
@@ -92,10 +89,10 @@ const CustomerEdit = (props) => {
                     <Box display='flex' justifyContent='space-between' p='1rem'>
                         <Box display='flex' flexDir='column' p='1rem' justifyContent='space-between'>
                             <Box pb='1rem'>
-                                {/* <Editable defaultValue={customers.name}>
+                                {/* <Editable defaultValue={customer.name}>
                                     <EditablePreview/>
                                     <EditableInput/>
-                                    
+                                    <EditableControls/>
                                 </Editable> */}
                                 <Text fontWeight='bold'>Name:</Text>
                                 <Text>{customer.name}</Text> 

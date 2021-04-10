@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 //import {Grid} from '@material-ui/core';
 import Customer from './Customer/Customer';
-import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, InputGroup, InputLeftAddon, NumberInput, NumberInputField, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
+import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, InputGroup, InputLeftAddon, FormHelperText, NumberInput, NumberInputField, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
 import {useHistory} from 'react-router-dom';
 import axios from 'axios';
@@ -133,19 +133,32 @@ export default function Customers() {
 
         //GET data from API
         const [customers, getCustomers] = useState('');
+        const [searchCustomer, setSearchCustomer] = useState('');
         const url = 'http://localhost:8081/api';
+        const query = `/?name=${searchCustomer}`
 
         useEffect(() => {
             getAllCustomers();
         }, []);
 
-        const getAllCustomers = () => {
-            axios.get(`${url}/customers`)
+        const getAllCustomers = async() => {
+            await axios.get(`${url}/customers`)
             .then((response) => {
                 const allCustomers = response.data
-
                 //add our data to state
                 getCustomers(allCustomers);
+            })
+            .catch(error => console.error(`Error: ${error}`));
+        }
+
+        const getAllCustomersByName = async(event) => {
+            event.preventDefault();
+            axios.get(`${url}/customers/?name=${searchCustomer}`)
+            .then((response) => {
+                const results = response.data;
+                //add data to old state to update it
+                getCustomers(results);
+                this.customers(results);
             })
             .catch(error => console.error(`Error: ${error}`));
         }
@@ -199,7 +212,7 @@ export default function Customers() {
             setZipcode('');
             SetInputValue('');
             setEmail('');
-        }
+        };
 
     return (
         <main>
@@ -260,10 +273,14 @@ export default function Customers() {
                 </Modal>
                 <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
                     <Box display='flex'>
-                        <Box pr='1rem'>
-                            <Input placeholder='Search for Customer' colorScheme='blue' border='2px'/>
+                        <Box display='flex' flexDir='column' pr='1rem'>
+                            <form method='GET' onSubmit={getAllCustomersByName}>
+                                <FormControl>
+                                    <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search for Customer' colorScheme='blue' border='2px'/>
+                                    <FormHelperText textAlign='right'>Press Enter key to search</FormHelperText>
+                                </FormControl>
+                            </form>
                         </Box>
-                        <IconButton icon={<SearchIcon/>} colorScheme='blue'></IconButton>
                     </Box>
                 </Box>
                 <Box display='flex' pt='1rem' pb='2rem' pl='1rem' pr='1rem' >
@@ -272,7 +289,7 @@ export default function Customers() {
                         <Text>There is a total of {customers.length} customers</Text>    
                     </Box>
                     <Box display='flex' flexDir='column' justifyContent='center' ml='auto' pr='6rem'>
-                        Filter By
+                        
                     </Box>
                     <Box display='flex' flexDir='column' justifyContent='center'>
                         <Button leftIcon={<AddIcon/>} colorScheme='blue' variant='solid' onClick={onOpen}>

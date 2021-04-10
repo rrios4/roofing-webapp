@@ -1,4 +1,6 @@
+const { Sequelize } = require("sequelize");
 const db = require("../models");
+const customer = require("../models/customer");
 const Customer = db.customers;
 
 exports.create = (req, res) => {
@@ -36,6 +38,8 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
     const name = req.query.name;
+    const Op = Sequelize.Op;
+    console.log(name);
     var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
     
     Customer.findAll({ where: condition})
@@ -87,3 +91,19 @@ exports.delete = (req, res) => {
         });
       });
 };
+
+// exports.findAllByName = (req, res) => {
+//   const name = req.query.name;
+//   let condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+
+//   Customer.findAll({ where: name })
+//   .then(data => {
+//     res.send(data);
+//   })
+//   .catch(err => {
+//     res.status(500).send({
+//       message: 
+//         err.message || "Some error occured while retrieving Customers."
+//     });
+//   });
+// };
