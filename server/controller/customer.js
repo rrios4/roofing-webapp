@@ -70,7 +70,7 @@ exports.findOne = (req, res) => {
 
 exports.delete = (req, res) => {
     const id = req.params.id;
-  
+    
     Customer.destroy({
       where: { id: id }
     })
