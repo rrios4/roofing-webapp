@@ -38,7 +38,7 @@ exports.findAll = (req, res) => {
     const name = req.query.name;
     var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
     
-    Invoice.findAll({ where: condition})
+    Invoice.findAll({ include: ['cu', 'jtype', 'invs'],})
         .then(data => {
             res.send(data);
         })
@@ -49,3 +49,17 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
+exports.findInvoiceById = (req, res) => {
+    const id = req.params.id;
+
+    Invoice.findByPk(id, {include: ['cu', 'jtype', 'invs']})
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Error retrieving Invoice with id=" + id
+        })
+    })
+}

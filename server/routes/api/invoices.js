@@ -8,6 +8,9 @@ module.exports = app => {
 
     //Retrieve all invoices
     router.get('/', invoices.findAll);
+
+    // Retrieve invoice by id; 
+    router.get('/:id', invoices.findInvoiceById);
     
     //api url route
     app.use('/api/invoices', router);

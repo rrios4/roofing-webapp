@@ -7,42 +7,40 @@ import axios from 'axios';
 const CustomerEdit = (props) => {
     const {id} = props.match.params;
     let history = useHistory();
-            //GET data from API
-            const [customer, getCustomer] = useState(''); 
+    //GET data from API
+    const [customer, getCustomer] = useState(''); 
 
-            const url = 'http://localhost:8081/api';
+    const url = 'http://localhost:8081/api';
 
-            useEffect(() => {
-                getAllCustomer();
-            }, []);
+    useEffect(() => {
+        getAllCustomer();
+    }, []);
 
-            // componentDidMount() {
-            //     getAllCustomer();
-            // }
+    // componentDidMount() {
+    //     getAllCustomer();
+    // }
     
-            const getAllCustomer = async () => {
-                await axios.get(`${url}/customers/${id}`)
-                .then((response) => {
-                    const allCustomer = response.data
-                    //add our data to state
-                    getCustomer(allCustomer);
-                })
-                .catch(error => console.error(`Error: ${error}`));
+    const getAllCustomer = async () => {
+        await axios.get(`${url}/customers/${id}`)
+        .then((response) => {
+            const allCustomer = response.data
+            //add our data to state
+            getCustomer(allCustomer);
+        })
+        .catch(error => console.error(`Error: ${error}`));
+    }
 
-            }
-
-            const deleteCustomer = async () => {
-                // console.log('Button will perform a delete to the database.');
-                await axios.delete(`${url}/customers/${id}`)
-                .then((response) => {
-                    console.log("Customer has been deleted!")
-                    return <Redirect to='/customers' />
-                })
-                .catch(error => console.error(`Error: ${error}`));
-                history.push("/customers")
+    const deleteCustomer = async () => {
+        // console.log('Button will perform a delete to the database.');
+        await axios.delete(`${url}/customers/${id}`)
+        .then((response) => {
+            console.log("Customer has been deleted!")
+            return <Redirect to='/customers' />
+        })
+        .catch(error => console.error(`Error: ${error}`));
+        history.push("/customers")
                 
-            }
-
+    }
 
     return (
         <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]} >

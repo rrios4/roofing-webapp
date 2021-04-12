@@ -6,6 +6,7 @@ import { Customers, Navbar, Invoices, Estimates, Schedules, Employees, Materials
 import CustomerEdit from './components/Customers/Customer/CustomerEdit'
 import DashBoard from './components/Dashboard/Dashboard'
 import Customer from './components/Customers/Customer/Customer';
+import InvoiceEdit from './components/Invoices/Invoice/InvoiceEdit'
 
 const App = () => {
     return (
@@ -27,6 +28,7 @@ const App = () => {
                             <Route exact path='/employees' component={Employees}></Route>
                             <Route exact path='/materials' component={Materials}></Route>
                             <Route exact path='/editcustomer/:id' component={CustomerEdit}></Route>
+                            <Route exact path='/editinvoice/:id' component={InvoiceEdit}></Route>
 
                         </Flex>
                         </Switch>

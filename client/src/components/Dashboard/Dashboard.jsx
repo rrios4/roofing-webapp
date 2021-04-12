@@ -100,7 +100,7 @@ function Dashboard() {
                 
                 <Grid templateColumns='repeat(2, 1fr)' gap='6' pt='1rem' pb='1rem' pl='0rem' color='white'>
                     <Link to='/invoices'>
-                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
+                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='250px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                             <Box display='flex' justifyContent='center'>
                                 <DescriptionIcon style={{fontSize: 100}} />
                             </Box>
@@ -110,7 +110,7 @@ function Dashboard() {
                         </Box>
                     </Link>
                     <Link to='/estimates'>
-                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
+                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='250px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                             <Box display='flex' justifyContent='center'>
                                 <AssignmentIcon style={{fontSize: 100}} />
                             </Box>
@@ -141,7 +141,7 @@ function Dashboard() {
                         </Box> 
                     </Link> */}
                     <Link to='/customers'>
-                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
+                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='250px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                                 <Box display='flex' justifyContent='center'>
                                     <PersonPinIcon style={{fontSize: 100}} />
                                 </Box>
@@ -151,7 +151,7 @@ function Dashboard() {
                         </Box>
                     </Link>   
                     <Link to='/employees'>
-                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='280px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
+                        <Box display='flex' flexDir='column' justifyContent='center' p='1rem' boxSize='250px' bg='gray.600' rounded='2xl' shadow='md' _hover={{ bg: "gray.500" }}>
                             
                             <Box display='flex' justifyContent='center'>
                                 <PermContactCalendarIcon style={{fontSize: 100}} />

@@ -37,6 +37,21 @@ db.et_notes = require('./et_note')(sequelize, Sequelize);
 db.available_emps = require('./available_emp')(sequelize, Sequelize);
 
 //Relationshops
+db.customers.hasMany(db.invoices, { as: 'inv'});
+db.invoices.belongsTo(db.customers, {
+    foreignKey: "customerId",
+    as: "cu",
+});
+db.job_types.hasMany(db.invoices, { as: 'inv' });
+db.invoices.belongsTo(db.job_types, {
+    foreignKey: "jobTypeId",
+    as: "jtype"
+});
+db.invoice_status.hasMany(db.invoices, { as: 'inv' });
+db.invoices.belongsTo(db.invoice_status, {
+    foreignKey: 'invStatusId',
+    as: 'invs'
+})
 // job_type.hasMany(invoice); // set one to many relationship
 // customer.hasMany(invoice);
 // invoice_status.hasMany(invoice);

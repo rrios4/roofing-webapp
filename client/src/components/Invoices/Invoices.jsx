@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 import axios from 'axios'
+import Invoice from "./Invoice/Invoice";
 
 function formatPhoneNumber(value) {
     //if value is falsy eg if the user deletes the input, then just return 
@@ -46,36 +47,38 @@ function Invoices() {
     const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState('');
     const [email, setEmail] = useState('');
-    const [customers, getCustomers] = useState('');
+    const [invoices, getInvoices] = useState('');
     const [searchCustomer, setSearchCustomer] = useState('');
     const [inputValue, SetInputValue] = useState("");
 
     // Functions to program functions
     useEffect(() => {
-        getAllCustomers();
+        getAllInvoices();
     }, []);
 
-    const getAllCustomers = async() => {
-        await axios.get(`${url}/customers`)
+    const getAllInvoices = async() => {
+        await axios.get(`${url}/invoices/`)
         .then((response) => {
-            const allCustomers = response.data
+            const allInvoices = response.data
             //add our data to state
-            getCustomers(allCustomers);
+            getInvoices(allInvoices);
+            console.log(allInvoices);
         })
         .catch(error => console.error(`Error: ${error}`));
+
     }
 
-    const getAllCustomersByName = async(event) => {
-        event.preventDefault();
-        axios.get(`${url}/customers/?name=${searchCustomer}`)
-        .then((response) => {
-            const results = response.data;
-            //add data to old state to update it
-            getCustomers(results);
-            this.customers(results);
-        })
-        .catch(error => console.error(`Error: ${error}`));
-    }
+    // const getAllCustomersByName = async(event) => {
+    //     event.preventDefault();
+    //     axios.get(`${url}/customers/?name=${searchCustomer}`)
+    //     .then((response) => {
+    //         const results = response.data;
+    //         //add data to old state to update it
+    //         getCustomers(results);
+    //         this.customers(results);
+    //     })
+    //     .catch(error => console.error(`Error: ${error}`));
+    // }
 
 
     const handleSubmit = async(event) => {
@@ -98,13 +101,13 @@ function Invoices() {
         })
         console.log('Submit Function works!')
         //history.go(0);
-        getAllCustomers();
-        setCustomerName('');
-        setAddress('');
-        setCity('');
-        setZipcode('');
-        SetInputValue('');
-        setEmail('');
+        // getAllCustomers();
+        // setCustomerName('');
+        // setAddress('');
+        // setCity('');
+        // setZipcode('');
+        // SetInputValue('');
+        // setEmail('');
     };
 
     const handlePhoneInput = (e) => {
@@ -176,7 +179,7 @@ function Invoices() {
                 <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
                     <Box display='flex'>
                         <Box display='flex' flexDir='column' pr='1rem'>
-                            <form method='GET' onSubmit={getAllCustomersByName}>
+                            <form method='GET' >
                                 <FormControl>
                                     <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search Invoices Name' colorScheme='blue' border='2px'/>
                                     <FormHelperText textAlign='right'>Press Enter key to search</FormHelperText>
@@ -188,7 +191,7 @@ function Invoices() {
                 <Box display='flex' pt='1rem' pb='2rem' pl='1rem' pr='1rem' >
                     <Box>
                         <Text fontSize='4xl'>Invoices</Text>
-                        <Text>There is a total of {customers.length} invoices</Text>    
+                        <Text>There is a total of {invoices.length} invoices</Text>    
                     </Box>
                     <Box display='flex' flexDir='column' justifyContent='center' ml='auto' pr='6rem'>
                         
@@ -200,7 +203,7 @@ function Invoices() {
                     </Box>
                 </Box>
                 <Box p='1rem' color='white' >
-                        {/* <Customer customers={customers} />                 */}
+                        <Invoice invoices={invoices} />                
                 </Box>
             </Flex>
         </main>

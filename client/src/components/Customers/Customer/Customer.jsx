@@ -69,52 +69,46 @@ function Customer(props) {
 
     if(customers.length > 0) {
         return(
-                <Grid gap={4}>
+            <Grid gap={4}>
                 {customers.map((customer, index) => {
-                return (
-                    <Link to={`/editcustomer/${customer.id}`}>
-                        <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='md' pt='1.5rem' pb='1.5rem'>
-                            <Box key={customer.id} pl='1rem'>
-                                <Text fontFamily='sans-serif' fontWeight='light'>{customer.id}</Text>
-                            </Box>
-                            <Box pl='12'>
-                                <Text fontFamily='sans-serif' fontWeight='ligh'>{customer.name}</Text>
-                            </Box>
-                            <Box pl='12'>
-                                <Text fontFamily='sans-serif' fontWeight='light'>{customer.email}</Text>
-                            </Box>
-                            <Box pl='12'>
-                                <Text fontFamily='sans-serif' fontWeight='light'>{customer.phone_number}</Text>
-                            </Box>
-                            <Box pl='10' ml='auto'>
-                            <Badge ml="1" fontSize="0.8em" colorScheme="green">
-                                Active
-                            </Badge>
-                            </Box>
-                            <Box pl="5">
-                                <ChevronRightIcon fontSize='25px'/>
-                            </Box>
-                        </Flex>
-                    </Link>
-                    
-
-                )
-            })}
-                </Grid>
-            
-
+                    return (
+                        <Link to={`/editcustomer/${customer.id}`}>
+                            <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='md' pt='1.5rem' pb='1.5rem'>
+                                <Box key={customer.id} pl='1rem'>
+                                    <Text fontFamily='sans-serif' fontWeight='light'>{customer.id}</Text>
+                                </Box>
+                                <Box pl='12'>
+                                    <Text fontFamily='sans-serif' fontWeight='ligh'>{customer.name}</Text>
+                                </Box>
+                                <Box pl='12'>
+                                    <Text fontFamily='sans-serif' fontWeight='light'>{customer.email}</Text>
+                                </Box>
+                                <Box pl='12'>
+                                    <Text fontFamily='sans-serif' fontWeight='light'>{customer.phone_number}</Text>
+                                </Box>
+                                <Box pl='10' ml='auto'>
+                                <Badge ml="1" fontSize="0.8em" colorScheme="green">
+                                    Active
+                                </Badge>
+                                </Box>
+                                <Box pl="5">
+                                    <ChevronRightIcon fontSize='25px'/>
+                                </Box>
+                            </Flex>
+                        </Link>
+                    )
+                })}
+            </Grid>   
         )
     } else {
         return (
-            <Flex p='4' justifyContent='space-between' >
-                <Box >
-                    No Customers yet!
+            <Flex p='4' justifyContent='space-between' justifyContent='center'>
+                <Box display='flex'>
+                    <Text shadow='sm' color='red'>No Customers yet!</Text>
                 </Box>
-
-        </Flex>
+            </Flex>
         )
     }
-
 }
 
 export default Customer;

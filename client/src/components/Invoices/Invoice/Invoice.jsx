@@ -1,6 +1,60 @@
 import React from 'react'
+import { Grid, Box, Flex, Text, Badge } from '@chakra-ui/react';
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
 
-function Invoice() {
+function Invoice(props) {
+    const {menu, invoices} = props;
+    if(invoices.length > 0){
+        return(
+            <Grid gap={4}>
+            {invoices.map((invoice, index) => {
+                return (
+                    <Link to={`/editinvoice/${invoice.id}`}>
+                        <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='sm' pt='1.5rem' pb='1.5rem' key={invoice.id}>
+                            <Box pl='1rem'>
+                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='light'>#{invoice.id}</Text>
+                            </Box>
+                            <Box ml='2rem' display='flex'>
+                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Date:</Text>
+                                <Text fontSize='17px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.inv_date).toLocaleDateString()}</Text>
+                            </Box>
+                            <Box ml='2rem' display='flex'>
+                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Due:</Text>
+                                <Text fontSize='17px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.due_date).toLocaleDateString()}</Text>
+                            </Box>
+                            <Box ml='2rem'>
+                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.name}</Text>
+                            </Box>
+                            <Box ml='2rem'>
+                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.phone_number}</Text>
+                            </Box>
+                            <Box ml='2rem' display='flex'>
+                                <Text fontSize='18px' mr='8px' fontWeight='bold'>Total:</Text>
+                                <Text fontSize='18px' fontWeight='light'>{invoice.amount_due}</Text>
+                            </Box>
+                            <Box pl='2rem' ml='auto'>
+                            <Badge ml="1" fontSize="0.8em" colorScheme='yellow'>
+                                
+                                <Text>{invoice.invs.status_name}</Text>
+                            </Badge>
+                            </Box>
+                            <Box pl="5">
+                                <ChevronRightIcon fontSize='25px'/>
+                            </Box>
+                        </Flex>
+                    </Link>
+                )
+            })}
+        </Grid> 
+        )
+    } else {
+        return (
+            <main>
+
+            </main>
+        )
+    }
     return (
         <div>
             
