@@ -9,37 +9,50 @@ function Invoice(props) {
         return(
             <Grid gap={4}>
             {invoices.map((invoice, index) => {
+                    const statusBadge = () => {
+                        if(invoice.invs.status_name === 'Pending'){
+                            return(
+                                <Badge colorScheme='yellow' variant='solid' p='8px' rounded='xl'>{invoice.invs.status_name}</Badge>
+                            )
+                        } else if(invoice.invs.status_name === 'Active'){
+                            return(
+                                <Badge colorScheme='green' variant='solid' p='8px' rounded='xl'>{invoice.invs.status_name}</Badge>
+                            )
+                        }
+                    }
                 return (
                     <Link to={`/editinvoice/${invoice.id}`}>
                         <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='sm' pt='1.5rem' pb='1.5rem' key={invoice.id}>
-                            <Box pl='1rem'>
-                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='light'>#{invoice.id}</Text>
+                            <Box display='flex' flexDir='column' justifyContent='center' pl='1rem'>
+                                <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='light'>#{invoice.id}</Text>
                             </Box>
-                            <Box ml='2rem' display='flex'>
-                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Date:</Text>
-                                <Text fontSize='17px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.inv_date).toLocaleDateString()}</Text>
+                            <Box display='flex' flexDir='column' justifyContent='center' ml='2rem' >
+                                <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Invoice Date:</Text>
+                                <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.inv_date).toLocaleDateString()}</Text>
                             </Box>
-                            <Box ml='2rem' display='flex'>
-                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Due:</Text>
-                                <Text fontSize='17px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.due_date).toLocaleDateString()}</Text>
+                            <Box display='flex' flexDir='column' justifyContent='center' ml='2rem' >
+                                <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Invoice Due:</Text>
+                                <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.due_date).toLocaleDateString()}</Text>
                             </Box>
-                            <Box ml='2rem'>
-                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.name}</Text>
+                            <Box display='flex' flexDir='column' justifyContent='center' ml='2rem'>
+                                <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Customer:</Text>
+                                <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.name}</Text>
                             </Box>
-                            <Box ml='2rem'>
-                                <Text fontSize='18px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.phone_number}</Text>
+                            <Box display='flex' flexDir='column' justifyContent='center' ml='2rem'>
+                                <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Phone Number:</Text>
+                                <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.phone_number}</Text>
                             </Box>
-                            <Box ml='2rem' display='flex'>
-                                <Text fontSize='18px' mr='8px' fontWeight='bold'>Total:</Text>
-                                <Text fontSize='18px' fontWeight='light'>{invoice.amount_due}</Text>
+                            <Box ml='2rem' display='flex' flexDir='column' justifyContent='center'>
+                                <Text letterSpacing='1px' fontSize='18px' mr='8px' fontWeight='bold'>Total:</Text>
+                                <Text letterSpacing='1px' fontSize='16px' fontWeight='light'>{invoice.amount_due}</Text>
                             </Box>
-                            <Box pl='2rem' ml='auto'>
-                            <Badge ml="1" fontSize="0.8em" colorScheme='yellow'>
-                                
-                                <Text>{invoice.invs.status_name}</Text>
-                            </Badge>
+                            <Box display='flex' flexDir='column' justifyContent='center' pl='2rem' ml='auto'>
+                                {statusBadge()}
+                                {/* <Badge ml="1" fontSize="0.8em" colorScheme='yellow' variant='solid' p='4px'>  
+                                    <Text>{invoice.invs.status_name}</Text>
+                                </Badge> */}
                             </Box>
-                            <Box pl="5">
+                            <Box display='flex' flexDir='column' justifyContent='center' pl="5">
                                 <ChevronRightIcon fontSize='25px'/>
                             </Box>
                         </Flex>

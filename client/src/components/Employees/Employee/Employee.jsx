@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-import {Box, Badge, Container, Flex, Grid} from "@chakra-ui/react";
+import {Box, Badge, Container, Flex, Grid, Text} from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 
 function Employee(props) {
@@ -49,12 +49,11 @@ function Employee(props) {
         )
     } else {
         return (
-            <Flex p='4' justifyContent='space-between' >
-                <Box >
-                    No Employees yet!
-                </Box>
-
-        </Flex>
+            <Flex p='4' justifyContent='space-between' justifyContent='center'>
+            <Box display='flex'>
+                <Text shadow='sm' color='red' fontSize='20px'>No Employees yet!</Text>
+            </Box>
+            </Flex>
         )
     }
 }

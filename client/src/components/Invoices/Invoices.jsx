@@ -5,34 +5,6 @@ import { AddIcon } from "@chakra-ui/icons";
 import axios from 'axios'
 import Invoice from "./Invoice/Invoice";
 
-function formatPhoneNumber(value) {
-    //if value is falsy eg if the user deletes the input, then just return 
-    if(!value) return value;
-
-    //clean the input for any non-digit values.
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    // phoneNumberLength is used to know when to apply our formatting for the phone number
-    const phoneNumberLength = phoneNumber.length;
-
-    // we need to return the value with no formatting if its less then four digits
-    // this is to avoid weird behavior that occurs if you  format the area code to early
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    // if phoneNumberLength is greater than 4 and less the 7 we start to return
-    // the formatted number
-    if (phoneNumberLength < 7) {
-        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    // finally, if the phoneNumberLength is greater then seven, we add the last
-    // bit of formatting and return it.
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-        3,
-        6
-    )}-${phoneNumber.slice(6, 10)}`;
-}
-
 function Invoices() {
     //Defining variables
     const {isOpen, onOpen, onClose} = useDisclosure();
@@ -68,19 +40,6 @@ function Invoices() {
 
     }
 
-    // const getAllCustomersByName = async(event) => {
-    //     event.preventDefault();
-    //     axios.get(`${url}/customers/?name=${searchCustomer}`)
-    //     .then((response) => {
-    //         const results = response.data;
-    //         //add data to old state to update it
-    //         getCustomers(results);
-    //         this.customers(results);
-    //     })
-    //     .catch(error => console.error(`Error: ${error}`));
-    // }
-
-
     const handleSubmit = async(event) => {
         event.preventDefault();
         const url2 = 'http://localhost:8081/api/customers/add'
@@ -109,13 +68,7 @@ function Invoices() {
         // SetInputValue('');
         // setEmail('');
     };
-
-    const handlePhoneInput = (e) => {
-        //This is where we'll call our future formatPhoneNumber function
-        const formattedPhoneNumber = formatPhoneNumber(e.target.value);
-        //We'll set the input value using our setInputValue
-        SetInputValue(formattedPhoneNumber);
-    }
+    
 
     return (
         <main>

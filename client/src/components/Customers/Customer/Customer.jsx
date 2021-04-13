@@ -104,7 +104,7 @@ function Customer(props) {
         return (
             <Flex p='4' justifyContent='space-between' justifyContent='center'>
                 <Box display='flex'>
-                    <Text shadow='sm' color='red'>No Customers yet!</Text>
+                    <Text shadow='sm' color='red' fontSize='20px'>No Customers yet!</Text>
                 </Box>
             </Flex>
         )
