@@ -4,6 +4,8 @@ import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, Modal
 import { AddIcon } from "@chakra-ui/icons";
 import axios from 'axios'
 import Invoice from "./Invoice/Invoice";
+import SelectCustomers from './SelectCustomers';
+import AsyncSelect from 'react-select/async';
 
 function Invoices() {
     //Defining variables
@@ -15,20 +17,23 @@ function Invoices() {
     //React States to manage data
     const [invoices, getInvoices] = useState('');
     const [customers, setCustomers] = useState('');
+    const [customerInput, setCustomerInput] = useState('');
     const [searchCustomer, setSearchCustomer] = useState('');
     const [name, setCustomerName] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState('');
-    const [email, setEmail] = useState('');
-    const [inputValue, SetInputValue] = useState("");
+    const [invoiceDate, setInvoiceDate] = useState('');
+    const [dueDate, setDueDate] = useState('');
+    const [amountDue, setAmountDue] = useState('');
+    const [selectInvoiceStatus, setSelectInvoiceStatus] = useState('');
+    const [serviceName, setServiceName] = useState('');
+    const [inputValue, SetInputValue] = useState('');
+    const [selectJobTypeOption, setJobTypeOption] = useState('');
 
-    // Functions to program functions
+    // Functions to program events or actions
     useEffect(() => {
         getAllInvoices();
         getCustomers();
-        console.log(getCustomers())
     }, []);
 
     const getAllInvoices = async() => {
@@ -39,7 +44,6 @@ function Invoices() {
             getInvoices(allInvoices);
         })
         .catch(error => console.error(`Error: ${error}`));
-
     }
 
     const getCustomers = async() => {
@@ -48,20 +52,22 @@ function Invoices() {
             const allCustomers = response.data;
             //add data to state
             setCustomers(allCustomers);
+            console.log(allCustomers)
         })
         .catch(error => console.error(`Error: ${error}`))
     }
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = 'http://localhost:8081/api/customers/add'
+        const url2 = 'http://localhost:8081/api/invoices/add'
         const json = {
-            name: name,
-            address: address,
-            city: city,
-            state: state,
-            phone_number: inputValue,
-            email: email
+            customerId: "1",
+            jobTypeId: selectJobTypeOption,
+            invStatusId: selectInvoiceStatus,
+            service_name: serviceName,
+            inv_date: invoiceDate,
+            due_date: dueDate,
+            amount_due: `$${amountDue}`
         }
         await axios.post(url2, json)
         .then((response) => {
@@ -72,20 +78,31 @@ function Invoices() {
         })
         console.log('Submit Function works!')
         //history.go(0);
-        // getAllCustomers();
-        // setCustomerName('');
-        // setAddress('');
-        // setCity('');
-        // setZipcode('');
-        // SetInputValue('');
-        // setEmail('');
+        setJobTypeOption('');
+        setSelectInvoiceStatus('');
+        setServiceName('');
+        setInvoiceDate('');
+        setDueDate('');
+        setAmountDue('');
+        getAllInvoices();
     };
 
-    const handleOnInputchange = (e) => {
-        const query = e.target.value;
-
-    }
+    const handleJobTypeInput = (e) => {
+        const selectedValue = e.target.value;
+        setJobTypeOption(selectedValue);
+    };
     
+    const handleInvoiceStatusInput = (e) => {
+        const selectedValue = e.target.value;
+        setSelectInvoiceStatus(selectedValue);
+    };
+
+    const handleCustomerInput = (e) => {
+        const value = e.target.value;
+        setCustomerInput(value);
+        
+    };
+
     return (
         <main>
             <Flex flexDir='column' justifyContent='center' pb='2rem'>
@@ -98,9 +115,12 @@ function Invoices() {
                         <ModalBody>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Customer Name</FormLabel>
-                                        <Select placeholder='Select Customer'>
-                                            <option>{customers.name}</option>
-                                        </Select>
+                                        {/* <Dropdown options={customers} selection onChange={customerInput} defaultValue={null} placeholder='Select Customer'/> */}
+                                        {/* <Select defaultValue={null} placeholder='Select Customer'>
+                                            <SelectCustomers customers={customers}/>
+                                        </Select> */}
+                                        {/* <pre>customerInput: "{customerInput}"</pre> */}
+                                        <AsyncSelect options={customers} placeholder='Select Customer'/>
                                         {/* {customers.map(customer => {
                                             return(
                                                 <main>
@@ -114,39 +134,39 @@ function Invoices() {
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Job Type</FormLabel>
-                                    <Select placeholder='Select Job Type'>
-                                        <option value='Option 1'>New Roof</option>
-                                        <option value='Option 2'>Roof Repair</option>
-                                        <option value='Option 3'>Construction</option>
+                                    <Select defaultValue={null} value={selectJobTypeOption} placeholder='Select Job Type' onChange={(e) => handleJobTypeInput(e)}>
+                                        <option value='1'>New Roof Installation</option>
+                                        <option value='2'>Roof Repair</option>
+                                        <option value='3'>Construction</option>
                                     </Select>
                                     {/* <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/> */}
                                 </FormControl>
-                                <FormControl isRequired>
+                                <FormControl isRequired={true}>
                                     <FormLabel pt='1rem'>Invoice Status</FormLabel>
-                                    <Select placeholder='Select Invoice Status'>
-                                        <option value='Option 1'>Paid</option>
-                                        <option value='Option 2'>Pending</option>
-                                        <option value='Option 3'>Outstanding</option>
+                                    <Select defaultValue={null} value={selectInvoiceStatus} placeholder='Select Invoice Status' onChange={(e) => handleInvoiceStatusInput(e)}>
+                                        <option value='1'>Paid</option>
+                                        <option value='2'>Pending</option>
+                                        <option value='3'>Outstanding</option>
                                     </Select>
                                     {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Invoice Date</FormLabel>
-                                    <Input type='date' value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='Invoice date'/>
+                                    <Input type='date' value={invoiceDate} onChange={({target}) => setInvoiceDate(target.value)} id='invDate' placeholder='Invoice date'/>
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Due Date</FormLabel>
-                                    <Input type='date' value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Due date'/>
+                                    <Input type='date' value={dueDate} onChange={({target}) => setDueDate(target.value)} id='dueDate' placeholder='Due date'/>
                                 </FormControl>
                                 <FormControl isRequired>
                                 <FormLabel pt='1rem'>Service Name</FormLabel>
                                     <InputGroup>
-                                    <Input id='phone' placeholder='Service Name' />
+                                        <Input value={serviceName} id='service' onChange={({target}) => setServiceName(target.value)} placeholder='Service Name' />
                                     </InputGroup>
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Amount Due</FormLabel>
-                                    <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Amount due' type='number'/>
+                                    <Input value={amountDue} onChange={({target}) => setAmountDue(target.value)} placeholder='Amount due' type='number'/>
                                 </FormControl>
                         </ModalBody>
                         <ModalFooter>

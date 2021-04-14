@@ -193,6 +193,7 @@ export default function Customers() {
                 address: address,
                 city: city,
                 state: state,
+                zipcode: zipcode,
                 phone_number: inputValue,
                 email: email
             }

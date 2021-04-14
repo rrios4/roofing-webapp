@@ -14,7 +14,7 @@ function Invoice(props) {
                             return(
                                 <Badge colorScheme='yellow' variant='solid' p='8px' rounded='xl'>{invoice.invs.status_name}</Badge>
                             )
-                        } else if(invoice.invs.status_name === 'Active'){
+                        } else if(invoice.invs.status_name === 'Paid'){
                             return(
                                 <Badge colorScheme='green' variant='solid' p='8px' rounded='xl'>{invoice.invs.status_name}</Badge>
                             )

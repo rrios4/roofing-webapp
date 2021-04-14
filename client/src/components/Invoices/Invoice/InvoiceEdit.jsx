@@ -45,7 +45,7 @@ const InvoiceEdit = (props) => {
             return(
                 <Badge colorScheme='yellow' variant='solid' p='8px' rounded='xl'>{cuStatus.status_name}</Badge>
             )
-        } else if(cuStatus.status_name === 'Active'){
+        } else if(cuStatus.status_name === 'Paid'){
             return(
                 <Badge colorScheme='green' variant='solid' p='8px' rounded='xl'>{cuStatus.status_name}</Badge>
             )
