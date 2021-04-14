@@ -39,7 +39,7 @@ exports.findAll = (req, res) => {
     const name = req.query.name;
     var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
     
-    Estimate.findAll({ where: condition})
+    Estimate.findAll({ include: ['cu', 'ets']})
         .then(data => {
             res.send(data);
         })
@@ -50,3 +50,17 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
+exports.findEstimateById = (req, res) => {
+    const id = req.params.id;
+
+    Estimate.findByPk(id, {include: ['cu', 'ets']})
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Error retrieving Estimate with id=" + id
+        })
+    })
+}

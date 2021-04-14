@@ -3,11 +3,14 @@ module.exports = app => {
 
     let router = require("express").Router();
 
-    //Create a new invoice status
+    //Create a new estimate
     router.post("/add", estimates.create);
 
-    //Retrieve all invoices
+    //Retrieve all estimates
     router.get('/', estimates.findAll);
+
+    // Retrieve estimate by id
+    router.get('/:id', estimates.findEstimateById);
     
     //api url route
     app.use('/api/estimates', router);

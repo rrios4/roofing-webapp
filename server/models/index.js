@@ -52,6 +52,19 @@ db.invoices.belongsTo(db.invoice_status, {
     foreignKey: 'invStatusId',
     as: 'invs'
 })
+
+db.customers.hasMany(db.estimates, { as: 'et'});
+db.estimates.belongsTo(db.customers, {
+    foreignKey: "customerId",
+    as: "cu",
+});
+db.et_status.hasMany(db.estimates, { as: 'et' });
+db.estimates.belongsTo(db.et_status, {
+    foreignKey: 'etStatusId',
+    as: 'ets'
+})
+
+
 // job_type.hasMany(invoice); // set one to many relationship
 // customer.hasMany(invoice);
 // invoice_status.hasMany(invoice);

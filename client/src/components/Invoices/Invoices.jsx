@@ -12,7 +12,7 @@ function Invoices() {
     let history = useHistory();
     const url = 'http://localhost:8081/api';
 
-    // States to manage data
+    //React States to manage data
     const [invoices, getInvoices] = useState('');
     const [customers, setCustomers] = useState('');
     const [searchCustomer, setSearchCustomer] = useState('');

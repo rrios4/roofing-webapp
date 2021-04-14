@@ -9,6 +9,7 @@ import Customer from './components/Customers/Customer/Customer';
 import InvoiceEdit from './components/Invoices/Invoice/InvoiceEdit'
 import { InvoiceContext } from './components/Invoices/Invoice/InvoiceContext';
 import EmployeeEdit from './components/Employees/Employee/EmployeeEdit';
+import EstimateEdit from './components/Estimates/Estimate/EstimateEdit'
 
 const App = () => {
     
@@ -31,6 +32,7 @@ const App = () => {
                             <Route exact path='/materials' component={Materials}></Route>
                             <Route exact path='/editcustomer/:id' component={CustomerEdit}></Route>
                             <Route exact path='/editinvoice/:id' component={InvoiceEdit}></Route>
+                            <Route exact path='/editestimate/:id' component={EstimateEdit}></Route>
                             <Route exact path='/invoices' component={Invoices}></Route>
                             <Route exact path='/editemployee/:id' component={EmployeeEdit}></Route>
                         </Flex>

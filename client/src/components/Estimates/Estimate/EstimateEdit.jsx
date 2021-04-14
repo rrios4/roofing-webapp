@@ -4,7 +4,7 @@ import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon} from 
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
 
-const InvoiceEdit = (props) => { 
+const EstimateEdit = (props) => {
     //React functions
     useEffect(() => {
         getInvoiceById();
@@ -23,18 +23,17 @@ const InvoiceEdit = (props) => {
 
     // functions created by me to get what I need of data
     const getInvoiceById = async () => {
-        await axios.get(`${url}/invoices/${id}`)
+        await axios.get(`${url}/estimates/${id}`)
         .then((response) => {
             const invoiceById = response.data;
             const cu = response.data.cu;
-            const invs = response.data.invs;
+            const ets = response.data.ets;
             const jtype = response.data.jtype;
             console.log(cu)
             //add our data to state
             setInvoice(invoiceById);
             setCustomer(cu);
-            setCuStatus(invs);
-            setJobType(jtype);
+            setCuStatus(ets);
             console.log(invoiceById);
         })
         .catch(error => console.error(`Error: ${error}`));
@@ -51,11 +50,10 @@ const InvoiceEdit = (props) => {
             )
         }
     }
-    
-    
-    return (
+
+    return(
         <Flex direction='column' justifyContent='center' pb='1rem' pt='1rem' w={[300, 400, 800]} >
-                    <Link to='/invoices'>
+                    <Link to='/estimates'>
                         <Box display='flex'  pt='1rem' pb='1rem' pl='1rem'>
                             <Box display='flex' rounded='xl' p='1rem'>
                                 <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
@@ -87,7 +85,7 @@ const InvoiceEdit = (props) => {
                         <Box display='flex' flexDir='column' p='1rem' rounded='2xl' bg='gray.600' shadow='md' w={[300, 400, 800]}>
                             <Box display='flex' p='2rem' bg='gray.600' rounded='xl'>
                                 <Box>
-                                    <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Invoice #{invoice.id}</Text>
+                                    <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Estimate #{invoice.id}</Text>
                                     <Text  fontSize='20px' fontWeight='light' letterSpacing='1px'>{jobType.type_name}</Text>
                                 </Box>
                                 <Box display='flex' flexDir='column' ml='auto' >
@@ -106,17 +104,17 @@ const InvoiceEdit = (props) => {
                                             <EditableInput/>
                                             <EditableControls/>
                                         </Editable> */}
-                                        <Text fontSize='22px' fontWeight='bold'>Invoice Date:</Text>
-                                        <Text>{new Date(invoice.inv_date).toLocaleDateString()}</Text>  
+                                        <Text fontSize='22px' fontWeight='bold'>Estimate Date:</Text>
+                                        <Text>{new Date(invoice.estimate_date).toLocaleDateString()}</Text>  
                                     </Box>
                                     <Box>
-                                        <Text fontSize='22px' fontWeight='bold'>Payment Due:</Text>
-                                        <Text>{new Date(invoice.due_date).toLocaleDateString()}</Text>
+                                        <Text fontSize='22px' fontWeight='bold'>Expiration Date:</Text>
+                                        <Text>{new Date(invoice.exp_date).toLocaleDateString()}</Text>
                                     </Box>
                                 </Box>
                                 <Box display='flex' flexDir='column' p='1rem' ml='auto' mr='auto'>
                                     <Box>
-                                        <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Bill To:</Text>
+                                        <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>EST For:</Text>
                                     </Box>
                                     <Box pb='4px'>
                                         <Text letterSpacing='1px'>{customer.name}</Text>
@@ -149,7 +147,7 @@ const InvoiceEdit = (props) => {
                                                 <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>Service Name</Text>    
                                             </Box> 
                                             <Box>
-                                                <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>QTY.</Text>
+                                                {/* <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>QTY.</Text> */}
                                             </Box>
                                             <Box>
                                                 <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>Price</Text>
@@ -163,22 +161,22 @@ const InvoiceEdit = (props) => {
                                                 <Text letterSpacing='1px' fontSize='16px' fontWeight='light'>{invoice.service_name}</Text>    
                                             </Box> 
                                             <Box>
-                                                <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>1</Text>
+                                                {/* <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>1</Text> */}
                                             </Box>
                                             <Box>
-                                                <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>{invoice.amount_due}</Text>
+                                                <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>{invoice.quote_price}</Text>
                                             </Box>
                                             <Box mr='1rem'>
-                                                <Text letterSpacing='1px'  fontSize='16px' fontWeight='bold'>{invoice.amount_due}</Text>
+                                                <Text letterSpacing='1px'  fontSize='16px' fontWeight='bold'>{invoice.quote_price}</Text>
                                             </Box>
                                     </Box>
                                 </Box>
                                 <Box display='flex'  bg='blue.600' p='2rem' roundedBottom='xl'>
                                         <Box ml='auto'>
-                                            <Text fontWeight='bold' letterSpacing='1px' fontSize='22px'>Amount Due:</Text>
+                                            <Text fontWeight='bold' letterSpacing='1px' fontSize='22px'>Estimated Price:</Text>
                                         </Box>
                                         <Box ml='4rem' >
-                                            <Text fontWeight='bold' letterSpacing='1px' fontSize='22px'>{invoice.amount_due}</Text>
+                                            <Text fontWeight='bold' letterSpacing='1px' fontSize='22px'>{invoice.quote_price}</Text>
                                         </Box>
                                     </Box>
                                         
@@ -190,6 +188,7 @@ const InvoiceEdit = (props) => {
                     </Box>
             </Flex>
     )
+    
 }
 
-export default InvoiceEdit;
+export default EstimateEdit
