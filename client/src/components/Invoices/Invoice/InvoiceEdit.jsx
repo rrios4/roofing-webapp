@@ -207,7 +207,7 @@ const InvoiceEdit = (props) => {
                         </Box>
                     </Box>
                     <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
-                        <Box display='flex' flexDir='column' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
+                        <Box display='flex' flexDir='column' p='1rem' rounded='2xl' bg='gray.600' shadow='md' w={[300, 400, 800]}>
                             <Box display='flex' p='2rem' bg='gray.600' rounded='xl'>
                                 <Box>
                                     <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Invoice #{invoice.id}</Text>

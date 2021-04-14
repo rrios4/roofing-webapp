@@ -1,4 +1,5 @@
 const db = require('../models');
+const { Sequelize } = require("sequelize");
 const Employee = db.employees;
 
 exports.create = (req, res) => {
@@ -21,6 +22,7 @@ exports.create = (req, res) => {
         country: req.body.country,
         email: req.body.email,
         payrate: req.body.payrate,
+        phone_number: req.body.phone_number
     }
 
     //Save Employee in the database
@@ -38,7 +40,9 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
     const name = req.query.name;
-    var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+    const Op = Sequelize.Op;
+    var condition = name ? { emp_name: { [Op.like]: `%${name}%` } } : null;
+    console.log(name)
     
     Employee.findAll({ where: condition})
         .then(data => {
@@ -47,8 +51,46 @@ exports.findAll = (req, res) => {
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving customers."
+                    err.message || "Some error occurred while retrieving employees."
             });
         });
+};
+
+exports.findOne = (req, res) => {
+    const id = req.params.id;
+  
+    Employee.findByPk(id)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error retrieving Employee with id=" + id
+        });
+      });
+};
+
+exports.delete = (req, res) => {
+    const id = req.params.id;
+    
+    Employee.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Employee was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Employee with id=${id}. Maybe Customer was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Employee with id=" + id
+        });
+      });
 };
 

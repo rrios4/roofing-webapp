@@ -165,7 +165,7 @@ export default function Customers() {
 
         const { isOpen, onOpen, onClose } = useDisclosure();
         const initialRef = React.useRef();
-        const finalRef = React.useRef();
+        //const finalRef = React.useRef();
 
         const [inputValue, SetInputValue] = useState("");
 

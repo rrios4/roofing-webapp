@@ -8,6 +8,7 @@ import DashBoard from './components/Dashboard/Dashboard'
 import Customer from './components/Customers/Customer/Customer';
 import InvoiceEdit from './components/Invoices/Invoice/InvoiceEdit'
 import { InvoiceContext } from './components/Invoices/Invoice/InvoiceContext';
+import EmployeeEdit from './components/Employees/Employee/EmployeeEdit';
 
 const App = () => {
     
@@ -31,8 +32,7 @@ const App = () => {
                             <Route exact path='/editcustomer/:id' component={CustomerEdit}></Route>
                             <Route exact path='/editinvoice/:id' component={InvoiceEdit}></Route>
                             <Route exact path='/invoices' component={Invoices}></Route>
-
-
+                            <Route exact path='/editemployee/:id' component={EmployeeEdit}></Route>
                         </Flex>
                         </Switch>
 

@@ -14,8 +14,8 @@ function Employee(props) {
                 return (
                     <Link to={`/editemployee/${employees.id}`}>
                         <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='md' pt='1.5rem' pb='1.5rem'>
-                            <Box key={employees.id}>
-                                {employees.id}
+                            <Box pl='1rem' key={employees.id}>
+                                #{employees.id}
                             </Box>
                             <Box pl='12'>
                                 {employees.emp_name}
@@ -32,7 +32,7 @@ function Employee(props) {
                                 </Badge>
                             </Box>
                             <Box pl='12'>
-                                {employees.payrate}
+                                ${employees.payrate} per sq.
                             </Box>
                             <Box pl="5">
                                 <ChevronRightIcon fontSize='25px'/>

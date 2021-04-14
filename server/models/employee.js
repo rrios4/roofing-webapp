@@ -29,6 +29,9 @@ module.exports = (sequelize, Sequelize) => {
         email: {
             type: Sequelize.STRING
         },
+        phone_number: {
+            type: Sequelize.STRING
+        },
         payrate: {
             type: Sequelize.STRING
         }

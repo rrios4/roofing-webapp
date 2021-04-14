@@ -13,19 +13,22 @@ function Invoices() {
     const url = 'http://localhost:8081/api';
 
     // States to manage data
+    const [invoices, getInvoices] = useState('');
+    const [customers, setCustomers] = useState('');
+    const [searchCustomer, setSearchCustomer] = useState('');
     const [name, setCustomerName] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState('');
     const [email, setEmail] = useState('');
-    const [invoices, getInvoices] = useState('');
-    const [searchCustomer, setSearchCustomer] = useState('');
     const [inputValue, SetInputValue] = useState("");
 
     // Functions to program functions
     useEffect(() => {
         getAllInvoices();
+        getCustomers();
+        console.log(getCustomers())
     }, []);
 
     const getAllInvoices = async() => {
@@ -34,10 +37,19 @@ function Invoices() {
             const allInvoices = response.data
             //add our data to state
             getInvoices(allInvoices);
-            console.log(allInvoices);
         })
         .catch(error => console.error(`Error: ${error}`));
 
+    }
+
+    const getCustomers = async() => {
+        await axios.get('http://localhost:8081/api/customers')
+        .then((response) => {
+            const allCustomers = response.data;
+            //add data to state
+            setCustomers(allCustomers);
+        })
+        .catch(error => console.error(`Error: ${error}`))
     }
 
     const handleSubmit = async(event) => {
@@ -68,8 +80,12 @@ function Invoices() {
         // SetInputValue('');
         // setEmail('');
     };
-    
 
+    const handleOnInputchange = (e) => {
+        const query = e.target.value;
+
+    }
+    
     return (
         <main>
             <Flex flexDir='column' justifyContent='center' pb='2rem'>
@@ -82,7 +98,19 @@ function Invoices() {
                         <ModalBody>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Customer Name</FormLabel>
-                                    <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/>
+                                        <Select placeholder='Select Customer'>
+                                            <option>{customers.name}</option>
+                                        </Select>
+                                        {/* {customers.map(customer => {
+                                            return(
+                                                <main>
+                                                    <Select>
+                                                        <option>{customer.name}</option>
+                                                    </Select>
+                                                </main>
+                                            )
+                                        })} */}
+                                    {/* <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/> */}
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Job Type</FormLabel>
