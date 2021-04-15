@@ -162,7 +162,7 @@ function Estimates() {
                                     <FormLabel pt='1rem'>Estimate Status</FormLabel>
                                     <Select placeholder='Select Invoice Status' defaultValue={null} value={estStatus} onChange={(e) => handleEstimateStatusInput(e)}>
                                         <option value='1'>Ready</option>
-                                        <option value='2'>Pending</option>
+                                        <option value='2'>On Hold</option>
                                         <option value='3'>Expired</option>
                                     </Select>
                                     {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
