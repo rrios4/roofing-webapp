@@ -14,6 +14,9 @@ module.exports = app => {
 
     // Delete invoice by id;
     router.delete('/:id', invoices.delete);
+
+    // Update invoice by id;
+    router.put('/:id', invoices.update);
     
     //api url route
     app.use('/api/invoices', router);

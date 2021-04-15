@@ -106,6 +106,18 @@ function Invoices() {
             callback(response.data.map(customer =>({label: customer.name, value: customer.id, email: customer.email})))
         })
         .catch(error => console.error(`Error: ${error}`))
+    };
+
+    const getAllCustomersByName = async(event) => {
+        event.preventDefault();
+        axios.get(`${url}/customers/?name=${searchCustomer}`)
+        .then((response) => {
+            const results = response.data;
+            //add data to old state to update it
+            // getCustomers(results);
+            this.customers(results);
+        })
+        .catch(error => console.error(`Error: ${error}`));
     }
 
     return (

@@ -12,11 +12,15 @@ function Invoice(props) {
                     const statusBadge = () => {
                         if(invoice.invs.status_name === 'Pending'){
                             return(
-                                <Badge colorScheme='yellow' variant='solid' p='8px' rounded='xl'>{invoice.invs.status_name}</Badge>
+                                <Badge colorScheme='yellow' variant='solid' p='8px' w='110px' textAlign='center'  rounded='xl'>{invoice.invs.status_name}</Badge>
                             )
                         } else if(invoice.invs.status_name === 'Paid'){
                             return(
-                                <Badge colorScheme='green' variant='solid' p='8px' rounded='xl'>{invoice.invs.status_name}</Badge>
+                                <Badge colorScheme='green' variant='solid' p='8px' w='110px' textAlign='center'  rounded='xl'>{invoice.invs.status_name}</Badge>
+                            )
+                        } else if(invoice.invs.status_name === 'Outstanding'){
+                            return(
+                                <Badge colorScheme='red' variant='solid' p='8px' w='110px' textAlign='center' rounded='xl'>{invoice.invs.status_name}</Badge>
                             )
                         }
                     }

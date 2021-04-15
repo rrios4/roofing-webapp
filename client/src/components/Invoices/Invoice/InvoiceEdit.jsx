@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react'
-import { Box, Flex , Text, ButtonGroup, IconButton, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input, Alert, AlertIcon, color } from "@chakra-ui/react";
-import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon} from '@chakra-ui/icons';
+import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
+import { AddIcon } from "@chakra-ui/icons";
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
 
@@ -15,11 +15,21 @@ const InvoiceEdit = (props) => {
     const [customer, setCustomer] = useState('');
     const [cuStatus, setCuStatus] = useState('');
     const [jobType, setJobType] = useState('');
+    
+    const [invoiceDate, setInvoiceDate] = useState('');
+    const [dueDate, setDueDate] = useState('');
+    const [amountDue, setAmountDue] = useState('');
+    const [selectInvoiceStatus, setSelectInvoiceStatus] = useState('');
+    const [serviceName, setServiceName] = useState('');
+    const [selectJobTypeOption, setJobTypeOption] = useState('');
+
 
     // Define variables
     const {id} = props.match.params;
     const url = 'http://localhost:8081/api';
     let history = useHistory();
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const initialRef = React.useRef();
 
     // functions created by me to get what I need of data
     const getInvoiceById = async () => {
@@ -29,28 +39,64 @@ const InvoiceEdit = (props) => {
             const cu = response.data.cu;
             const invs = response.data.invs;
             const jtype = response.data.jtype;
-            console.log(cu)
             //add our data to state
             setInvoice(invoiceById);
             setCustomer(cu);
             setCuStatus(invs);
             setJobType(jtype);
-            console.log(invoiceById);
         })
         .catch(error => console.error(`Error: ${error}`));
-    }   
+    }
+
+    const handleSubmit = async(event) => {
+        event.preventDefault();
+        const url2 = `http://localhost:8081/api/invoices/${id}`
+        const json = {
+            jobTypeId: selectJobTypeOption,
+            service_name: serviceName,
+            inv_date: invoiceDate,
+            due_date: dueDate,
+            amount_due: `$${amountDue}`
+        }
+        await axios.put(url2, json)
+        .then((response) => {
+            console.log('I was submitted', response);
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+        setJobTypeOption('');
+        setSelectInvoiceStatus('');
+        setServiceName('');
+        setInvoiceDate('');
+        setDueDate('');
+        setAmountDue('');
+        getInvoiceById();
+        onClose();
+        console.log('Submit Function works!')
+        //history.go(0);
+    };
 
     const statusBadge = () => {
         if(cuStatus.status_name === 'Pending'){
             return(
-                <Badge colorScheme='yellow' variant='solid' p='8px' rounded='xl'>{cuStatus.status_name}</Badge>
+                <Badge colorScheme='yellow' variant='solid' p='8px' w='110px' textAlign='center'  rounded='xl'>{cuStatus.status_name}</Badge>
             )
         } else if(cuStatus.status_name === 'Paid'){
             return(
-                <Badge colorScheme='green' variant='solid' p='8px' rounded='xl'>{cuStatus.status_name}</Badge>
+                <Badge colorScheme='green' variant='solid' p='8px' w='110px' textAlign='center'  rounded='xl'>{cuStatus.status_name}</Badge>
+            )
+        } else if(cuStatus.status_name === 'Outstanding') {
+            return(
+                <Badge colorScheme='red' variant='solid' p='8px' w='110px' textAlign='center'  rounded='xl'>{cuStatus.status_name}</Badge>
             )
         }
     }
+
+    const handleJobTypeInput = (e) => {
+        const selectedValue = e.target.value;
+        setJobTypeOption(selectedValue);
+    };
 
     const deleteInvoice = async () => {
         // console.log('Button will perform a delete to the database.');
@@ -63,10 +109,85 @@ const InvoiceEdit = (props) => {
         history.push("/invoices")
                 
     }
+
+    const markInvoicePaid = async() => {
+        await axios.put(`http://localhost:8081/api/invoices/${id}`, {
+            invStatusId : '1'
+        })
+        .then((response) => {
+            getInvoiceById();
+            console.log(response);
+        })
+    };
+
+    const markInvoicePending = async() => {
+        await axios.put(`http://localhost:8081/api/invoices/${id}`, {
+            invStatusId: '2'
+        })
+        .then((response) => {
+            getInvoiceById();
+            console.log(response);
+        })
+        .catch(error => console.error(`Error: ${error}`));
+    };
+
+    const markInvoiceOutstanding = async() => {
+        await axios.put(`http://localhost:8081/api/invoices/${id}`, {
+            invStatusId: '3'
+        })
+        .then((response) => {
+            getInvoiceById();
+            console.log(response);
+        })
+        .catch(error => console.error(`Error: ${error}`));
+    };
     
     
     return (
-        <Flex direction='column' justifyContent='center' pb='1rem' pt='1rem' w={[300, 400, 800]} >
+        <Flex direction='column' justifyContent='center' pb='3rem' pt='1rem' w={[300, 400, 800]} >
+            <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent p='1rem' ml='6rem'>
+                        <ModalHeader textAlign='center'>Edit Invoice</ModalHeader>
+                        <ModalCloseButton />
+                        <form method='PUT' onSubmit={handleSubmit}>
+                        <ModalBody>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Job Type</FormLabel>
+                                    <Select defaultValue={null} value={selectJobTypeOption} placeholder='Select Job Type' onChange={(e) => handleJobTypeInput(e)}>
+                                        <option value='1'>New Roof Installation</option>
+                                        <option value='2'>Roof Repair</option>
+                                        <option value='3'>Construction</option>
+                                    </Select>
+                                    {/* <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/> */}
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Invoice Date</FormLabel>
+                                    <Input type='date' value={invoiceDate} onChange={({target}) => setInvoiceDate(target.value)} id='invDate' placeholder='Invoice date'/>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Due Date</FormLabel>
+                                    <Input type='date' value={dueDate} onChange={({target}) => setDueDate(target.value)} id='dueDate' placeholder='Due date'/>
+                                </FormControl>
+                                <FormControl isRequired>
+                                <FormLabel pt='1rem'>Service Name</FormLabel>
+                                    <InputGroup>
+                                        <Input value={serviceName} id='service' onChange={({target}) => setServiceName(target.value)} placeholder='Service Name' />
+                                    </InputGroup>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Amount Due</FormLabel>
+                                    <Input value={amountDue} onChange={({target}) => setAmountDue(target.value)} placeholder='Amount due' type='number'/>
+                                </FormControl>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button colorScheme='blue' mr={3} type='submit' onClick={handleSubmit} >Save</Button>
+                            <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
+                        </ModalFooter>
+                        </form>
+
+                    </ModalContent> 
+                </Modal>
                     <Link to='/invoices'>
                         <Box display='flex'  pt='1rem' pb='1rem' pl='1rem'>
                             <Box display='flex' rounded='xl' p='1rem'>
@@ -78,7 +199,7 @@ const InvoiceEdit = (props) => {
                         <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                             <Box display='flex' mr='auto' pl='1rem'>
                                 <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
-                                    <Text fontWeight='light' fontSize='18px' color='white'>Status:</Text>
+                                    <Text fontWeight='light' fontSize='18px' fontWeight='bold' color='white'>Status:</Text>
                                 </Box>
                                 <Box display='flex' flexDir='column' justifyContent='center' >
                                     {/* <Badge colorScheme='yellow' variant='solid' p='8px'>{cuStatus.status_name}</Badge> */}
@@ -87,22 +208,25 @@ const InvoiceEdit = (props) => {
                             </Box>
                             <Box display='flex' pr='1rem'>
                                 <Box pr='1rem' >
-                                    <Button colorScheme='orange'>Mark Outstanding</Button>
+                                    <Button colorScheme='red' onClick={markInvoiceOutstanding}>Mark Outstanding</Button>
                                 </Box>
                                 <Box pr='1rem' >
-                                    <Button colorScheme='yellow'>Mark Pending</Button>
+                                    <Button colorScheme='yellow' onClick={markInvoicePending}>Mark Pending</Button>
                                 </Box>
-                                <Box pr='1rem' >
-                                    <Button colorScheme='green'>Mark Paid</Button>
-                                </Box>
-                                <Box>
-                                    <Button colorScheme='red' onClick={deleteInvoice}>Delete</Button>
+                                <Box pr='0rem' >
+                                    <Button colorScheme='green' onClick={markInvoicePaid}>Mark Paid</Button>
                                 </Box>
                             </Box>
                         </Box>
                     </Box>
                     <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
                         <Box display='flex' flexDir='column' p='1rem' rounded='2xl' bg='gray.600' shadow='md' w={[300, 400, 800]}>
+                            <Box display='flex' justifyContent='flex-end' pr='2rem' pt='1rem'>
+                                <Button colorScheme='blue' onClick={onOpen}>Edit</Button>
+                                <Box pl='1rem'>
+                                    <Button colorScheme='red' onClick={deleteInvoice}>Delete</Button>
+                                </Box>
+                            </Box>
                             <Box display='flex' p='2rem' bg='gray.600' rounded='xl'>
                                 <Box>
                                     <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Invoice #{invoice.id}</Text>
@@ -167,7 +291,7 @@ const InvoiceEdit = (props) => {
                                                 <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>Service Name</Text>    
                                             </Box> 
                                             <Box>
-                                                <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>QTY.</Text>
+                                                {/* <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>QTY.</Text> */}
                                             </Box>
                                             <Box>
                                                 <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>Price</Text>
@@ -181,7 +305,7 @@ const InvoiceEdit = (props) => {
                                                 <Text letterSpacing='1px' fontSize='16px' fontWeight='light'>{invoice.service_name}</Text>    
                                             </Box> 
                                             <Box>
-                                                <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>1</Text>
+                                                {/* <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>1</Text> */}
                                             </Box>
                                             <Box>
                                                 <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>{invoice.amount_due}</Text>
