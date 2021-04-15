@@ -64,3 +64,27 @@ exports.findEstimateById = (req, res) => {
         })
     })
 }
+
+exports.delete = (req, res) => {
+    const id = req.params.id;
+    
+    Estimate.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Estimate was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Estimate with id=${id}. Maybe Customer was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Estimate with id=" + id
+        });
+      });
+};

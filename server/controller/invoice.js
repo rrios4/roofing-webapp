@@ -63,3 +63,27 @@ exports.findInvoiceById = (req, res) => {
         })
     })
 }
+
+exports.delete = (req, res) => {
+    const id = req.params.id;
+    
+    Invoice.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Invoice was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Invoice with id=${id}. Maybe Customer was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Invoice with id=" + id
+        });
+      });
+};

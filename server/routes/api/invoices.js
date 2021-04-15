@@ -11,6 +11,9 @@ module.exports = app => {
 
     // Retrieve invoice by id; 
     router.get('/:id', invoices.findInvoiceById);
+
+    // Delete invoice by id;
+    router.delete('/:id', invoices.delete);
     
     //api url route
     app.use('/api/invoices', router);

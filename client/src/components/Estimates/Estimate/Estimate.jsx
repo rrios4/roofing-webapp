@@ -33,6 +33,7 @@ if(estimates.length > 0){
                             <Box display='flex' flexDir='column' justifyContent='center' ml='2rem' >
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Invoice Due:</Text> */}
                                 {/* <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.due_date).toLocaleDateString()}</Text> */}
+                                <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{estimate.cu.email}</Text>
                             </Box>
                             <Box display='flex' flexDir='column' justifyContent='center' ml='2rem'>
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Customer:</Text> */}

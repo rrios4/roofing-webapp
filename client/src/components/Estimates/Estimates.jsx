@@ -4,6 +4,7 @@ import axios from 'axios';
 import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 import Estimate from './Estimate/Estimate';
+import AsyncSelect from 'react-select/async';
 
 function Estimates() {
     //Defining variables
@@ -17,12 +18,15 @@ function Estimates() {
     const [customers, setCustomers] = useState('');
     const [searchCustomer, setSearchCustomer] = useState('');
     const [name, setCustomerName] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [zipcode, setZipcode] = useState('');
-    const [email, setEmail] = useState('');
-    const [inputValue, SetInputValue] = useState("");
+    const [etDate, setEtDate] = useState('');
+    const [expDate, setExpDate] = useState('');
+    const [quotePrice, setQuotedPrice] = useState('');
+    const [estStatus, setEstStatus] = useState('');
+    const [serviceName, setServiceName] = useState('');
+    const [measurement, setMeasurement] = useState('');
+
+    const [selectedCustomer, setSelectedCustomer] = useState('');
+    const [cuIdCaptured, setCuIdCaptured] = useState('');
 
     //React Render Hook
     useEffect(() => {
@@ -55,14 +59,16 @@ function Estimates() {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = 'http://localhost:8081/api/customers/add'
+        const url2 = 'http://localhost:8081/api/estimates/add'
         const json = {
-            name: name,
-            address: address,
-            city: city,
-            state: state,
-            phone_number: inputValue,
-            email: email
+            etStatusId: estStatus,
+            customerId: cuIdCaptured,
+            estimate_date: etDate,
+            exp_date: expDate,
+            sqft_measurement: measurement,
+            service_name: serviceName,
+            price: `$${quotePrice}`,
+            quote_price: `$${quotePrice}`
         }
         await axios.post(url2, json)
         .then((response) => {
@@ -73,14 +79,44 @@ function Estimates() {
         })
         console.log('Submit Function works!')
         //history.go(0);
-        // getAllCustomers();
-        // setCustomerName('');
-        // setAddress('');
-        // setCity('');
-        // setZipcode('');
-        // SetInputValue('');
-        // setEmail('');
+        getAllEstimates();
+        setEtDate('');
+        setExpDate('');
+        setQuotedPrice('');
+        setEstStatus('');
+        setServiceName('');
+        setMeasurement('');
     };
+
+    const handleSelectedCustomer = (selectedCustomer) => {
+        // const value = e.target.value;
+        // setSelectedCustomer(value)
+        setSelectedCustomer({ 
+            selectedCustomer: selectedCustomer || []
+        })
+        // console.log(selectedCustomer.value)
+        const selectedCuId = selectedCustomer.value
+        // console.log(selectedCustomer.e.value)
+        setCuIdCaptured(selectedCuId);
+        console.log(selectedCuId);
+        // console.log(cuIdCaptured)
+    };
+
+    const handleEstimateStatusInput = (e) => {
+        const selectedValue = e.target.value;
+        setEstStatus(selectedValue);
+    }
+
+    const loadOptions = async (inputText, callback) => {
+        await axios.get(`http://localhost:8081/api/customers/?name=${inputText}`)
+        .then((response) => {
+            // const allCustomers = response.data;
+            //add data to state
+            // setCustomers(allCustomers);
+            callback(response.data.map(customer =>({label: customer.name, value: customer.id, email: customer.email})))
+        })
+        .catch(error => console.error(`Error: ${error}`))
+    }
 
 
     return (
@@ -95,59 +131,63 @@ function Estimates() {
                         <ModalBody>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Customer Name</FormLabel>
-                                        <Select placeholder='Select Customer'>
-                                            <option>{customers.name}</option>
-                                        </Select>
-                                        {/* {customers.map(customer => {
-                                            return(
-                                                <main>
-                                                    <Select>
-                                                        <option>{customer.name}</option>
-                                                    </Select>
-                                                </main>
-                                            )
-                                        })} */}
-                                    {/* <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/> */}
+                                    <AsyncSelect 
+                                            value={selectedCustomer} 
+                                            onChange={handleSelectedCustomer} 
+                                            loadOptions={loadOptions} 
+                                            placeholder='Type Customer Name'
+                                            getOptionLabel={option => `${option.label},  ${option.email}`}
+                                            theme={theme => ({
+                                                ...theme,
+                                                borderRadius: 0,
+                                                colors: {
+                                                    ...theme.colors,
+                                                    primary25: 'primary',
+                                                    primary: 'black',
+                                                    neutral0: 'white',
+                                                    neutral90: 'white',
+                                                },
+                                            })}/>
                                 </FormControl>
-                                <FormControl isRequired>
+                                {/* <FormControl isRequired>
                                     <FormLabel pt='1rem'>Job Type</FormLabel>
                                     <Select placeholder='Select Job Type'>
-                                        <option value='Option 1'>New Roof</option>
+                                        <option value='Option 1'>New Roof Installation</option>
                                         <option value='Option 2'>Roof Repair</option>
                                         <option value='Option 3'>Construction</option>
                                     </Select>
-                                    {/* <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/> */}
-                                </FormControl>
+                                    <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
+                                </FormControl> */}
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Estimate Status</FormLabel>
-                                    <Select placeholder='Select Invoice Status'>
-                                        <option value='Option 1'>Paid</option>
-                                        <option value='Option 2'>Pending</option>
-                                        <option value='Option 3'>Outstanding</option>
+                                    <Select placeholder='Select Invoice Status' defaultValue={null} value={estStatus} onChange={(e) => handleEstimateStatusInput(e)}>
+                                        <option value='1'>Ready</option>
+                                        <option value='2'>Pending</option>
+                                        <option value='3'>Expired</option>
                                     </Select>
                                     {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Estimate Date</FormLabel>
-                                    <Input type='date' value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='Invoice date'/>
+                                    <Input type='date' value={etDate} onChange={({target}) => setEtDate(target.value)} id='state' placeholder='Invoice date'/>
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Expiration Date</FormLabel>
-                                    <Input type='date' value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Due date'/>
+                                    <Input type='date' value={expDate} onChange={({target}) => setExpDate(target.value)} id='zipcode' placeholder='Due date'/>
                                 </FormControl>
                                 <FormControl isRequired>
                                 <FormLabel pt='1rem'>Service Name</FormLabel>
                                     <InputGroup>
-                                    <Input id='phone' placeholder='Service Name' />
+                                    <Input id='service' placeholder='Service Name' value={serviceName} onChange={({target}) => setServiceName(target.value)} />
                                     </InputGroup>
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Estimate Total</FormLabel>
-                                    <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Amount due' type='number'/>
+                                    <Input value={quotePrice} onChange={({target}) => setQuotedPrice(target.value)} placeholder='Quote price' type='number'/>
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel pt='1rem'>Sqft Roof Measurement</FormLabel>
-                                    <Input type='number' placeholder='Sqft of Roof'></Input>
+                                    <Input type='number' placeholder='Sqft of Roof' value={measurement} onChange={({target}) => setMeasurement(target.value)}></Input>
                                 </FormControl>
                         </ModalBody>
                         <ModalFooter>

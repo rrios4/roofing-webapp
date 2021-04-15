@@ -51,6 +51,18 @@ const InvoiceEdit = (props) => {
             )
         }
     }
+
+    const deleteInvoice = async () => {
+        // console.log('Button will perform a delete to the database.');
+        await axios.delete(`${url}/invoices/${id}`)
+        .then((response) => {
+            console.log("Invoice has been deleted!")
+            return <Redirect to='/invoices' />
+        })
+        .catch(error => console.error(`Error: ${error}`));
+        history.push("/invoices")
+                
+    }
     
     
     return (
@@ -75,10 +87,16 @@ const InvoiceEdit = (props) => {
                             </Box>
                             <Box display='flex' pr='1rem'>
                                 <Box pr='1rem' >
-                                    <Button colorScheme='green'>Mark as Paid</Button>
+                                    <Button colorScheme='orange'>Mark Outstanding</Button>
+                                </Box>
+                                <Box pr='1rem' >
+                                    <Button colorScheme='yellow'>Mark Pending</Button>
+                                </Box>
+                                <Box pr='1rem' >
+                                    <Button colorScheme='green'>Mark Paid</Button>
                                 </Box>
                                 <Box>
-                                    <Button colorScheme='red'>Delete</Button>
+                                    <Button colorScheme='red' onClick={deleteInvoice}>Delete</Button>
                                 </Box>
                             </Box>
                         </Box>

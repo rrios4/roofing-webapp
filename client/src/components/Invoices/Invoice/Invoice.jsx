@@ -22,7 +22,7 @@ function Invoice(props) {
                     }
                 return (
                     <Link to={`/editinvoice/${invoice.id}`}>
-                        <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='sm' pt='1.5rem' pb='1.5rem' key={invoice.id}>
+                        <Flex p='4' justifyContent='space-around' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='sm' pt='1.5rem' pb='1.5rem' key={invoice.id}>
                             <Box display='flex' flexDir='column' justifyContent='center' pl='1rem'>
                                 <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='light'>#{invoice.id}</Text>
                             </Box>
@@ -33,10 +33,11 @@ function Invoice(props) {
                             <Box display='flex' flexDir='column' justifyContent='center' ml='2rem' >
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Invoice Due:</Text> */}
                                 {/* <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.due_date).toLocaleDateString()}</Text> */}
+                                <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.name}</Text>
                             </Box>
                             <Box display='flex' flexDir='column' justifyContent='center' ml='2rem'>
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Customer:</Text> */}
-                                <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.name}</Text>
+                                <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{invoice.cu.email}</Text>
                             </Box>
                             <Box display='flex' flexDir='column' justifyContent='center' ml='2rem'>
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Phone Number:</Text> */}

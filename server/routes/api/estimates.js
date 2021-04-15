@@ -12,6 +12,9 @@ module.exports = app => {
     // Retrieve estimate by id
     router.get('/:id', estimates.findEstimateById);
     
+    //Delete estimate by id
+    router.delete('/:id', estimates.delete);
+    
     //api url route
     app.use('/api/estimates', router);
 

@@ -44,11 +44,23 @@ const EstimateEdit = (props) => {
             return(
                 <Badge colorScheme='yellow' variant='solid' p='8px' rounded='xl'>{cuStatus.status_name}</Badge>
             )
-        } else if(cuStatus.status_name === 'Active'){
+        } else if(cuStatus.status_name === 'Ready'){
             return(
                 <Badge colorScheme='green' variant='solid' p='8px' rounded='xl'>{cuStatus.status_name}</Badge>
             )
         }
+    }
+
+    const deleteEstimate = async () => {
+        // console.log('Button will perform a delete to the database.');
+        await axios.delete(`${url}/estimates/${id}`)
+        .then((response) => {
+            console.log("Estimate has been deleted!")
+            return <Redirect to='/estimates' />
+        })
+        .catch(error => console.error(`Error: ${error}`));
+        history.push("/estimates")
+                
     }
 
     return(
@@ -73,10 +85,13 @@ const EstimateEdit = (props) => {
                             </Box>
                             <Box display='flex' pr='1rem'>
                                 <Box pr='1rem' >
-                                    <Button colorScheme='green'>Mark as Paid</Button>
+                                    <Button colorScheme='yellow'>Mark as Pending</Button>
+                                </Box>
+                                <Box pr='1rem' >
+                                    <Button colorScheme='purple'>Mark as Expired</Button>
                                 </Box>
                                 <Box>
-                                    <Button colorScheme='red'>Delete</Button>
+                                    <Button colorScheme='red' onClick={deleteEstimate}>Delete</Button>
                                 </Box>
                             </Box>
                         </Box>

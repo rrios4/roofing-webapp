@@ -17,23 +17,20 @@ function Invoices() {
     //React States to manage data
     const [invoices, getInvoices] = useState('');
     const [customers, setCustomers] = useState('');
-    const [customerInput, setCustomerInput] = useState('');
+    const [selectedCustomer, setSelectedCustomer] = useState('');
+    const [cuIdCaptured, setCuIdCaptured] = useState('');
     const [searchCustomer, setSearchCustomer] = useState('');
-    const [name, setCustomerName] = useState('');
-    const [state, setState] = useState('');
-    const [zipcode, setZipcode] = useState('');
     const [invoiceDate, setInvoiceDate] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [amountDue, setAmountDue] = useState('');
     const [selectInvoiceStatus, setSelectInvoiceStatus] = useState('');
     const [serviceName, setServiceName] = useState('');
-    const [inputValue, SetInputValue] = useState('');
     const [selectJobTypeOption, setJobTypeOption] = useState('');
 
     // Functions to program events or actions
     useEffect(() => {
         getAllInvoices();
-        getCustomers();
+        // getCustomers();
     }, []);
 
     const getAllInvoices = async() => {
@@ -46,22 +43,11 @@ function Invoices() {
         .catch(error => console.error(`Error: ${error}`));
     }
 
-    const getCustomers = async() => {
-        await axios.get('http://localhost:8081/api/customers')
-        .then((response) => {
-            const allCustomers = response.data;
-            //add data to state
-            setCustomers(allCustomers);
-            console.log(allCustomers)
-        })
-        .catch(error => console.error(`Error: ${error}`))
-    }
-
     const handleSubmit = async(event) => {
         event.preventDefault();
         const url2 = 'http://localhost:8081/api/invoices/add'
         const json = {
-            customerId: "1",
+            customerId: cuIdCaptured,
             jobTypeId: selectJobTypeOption,
             invStatusId: selectInvoiceStatus,
             service_name: serviceName,
@@ -97,11 +83,30 @@ function Invoices() {
         setSelectInvoiceStatus(selectedValue);
     };
 
-    const handleCustomerInput = (e) => {
-        const value = e.target.value;
-        setCustomerInput(value);
-        
+    const handleSelectedCustomer = (selectedCustomer) => {
+        // const value = e.target.value;
+        // setSelectedCustomer(value)
+        setSelectedCustomer({ 
+            selectedCustomer: selectedCustomer || []
+        })
+        // console.log(selectedCustomer.value)
+        const selectedCuId = selectedCustomer.value
+        // console.log(selectedCustomer.e.value)
+        setCuIdCaptured(selectedCuId);
+        console.log(selectedCuId);
+        // console.log(cuIdCaptured)
     };
+
+    const loadOptions = async (inputText, callback) => {
+        await axios.get(`http://localhost:8081/api/customers/?name=${inputText}`)
+        .then((response) => {
+            // const allCustomers = response.data;
+            //add data to state
+            // setCustomers(allCustomers);
+            callback(response.data.map(customer =>({label: customer.name, value: customer.id, email: customer.email})))
+        })
+        .catch(error => console.error(`Error: ${error}`))
+    }
 
     return (
         <main>
@@ -115,22 +120,23 @@ function Invoices() {
                         <ModalBody>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Customer Name</FormLabel>
-                                        {/* <Dropdown options={customers} selection onChange={customerInput} defaultValue={null} placeholder='Select Customer'/> */}
-                                        {/* <Select defaultValue={null} placeholder='Select Customer'>
-                                            <SelectCustomers customers={customers}/>
-                                        </Select> */}
-                                        {/* <pre>customerInput: "{customerInput}"</pre> */}
-                                        <AsyncSelect options={customers} placeholder='Select Customer'/>
-                                        {/* {customers.map(customer => {
-                                            return(
-                                                <main>
-                                                    <Select>
-                                                        <option>{customer.name}</option>
-                                                    </Select>
-                                                </main>
-                                            )
-                                        })} */}
-                                    {/* <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/> */}
+                                        <AsyncSelect 
+                                            value={selectedCustomer} 
+                                            onChange={handleSelectedCustomer} 
+                                            loadOptions={loadOptions} 
+                                            placeholder='Type Customer Name'
+                                            getOptionLabel={option => `${option.label},  ${option.email}`}
+                                            theme={theme => ({
+                                                ...theme,
+                                                borderRadius: 0,
+                                                colors: {
+                                                    ...theme.colors,
+                                                    primary25: 'primary',
+                                                    primary: 'black',
+                                                    neutral0: 'white',
+                                                    neutral90: 'white',
+                                                },
+                                            })}/>
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Job Type</FormLabel>
