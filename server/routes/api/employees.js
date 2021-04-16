@@ -14,6 +14,9 @@ module.exports = app => {
 
     //Delete employee by id
     router.delete('/:id', employees.delete);
+    
+    // Update customer info
+    router.put('/:id', employees.update);
 
     app.use('/api/employees', router)
 

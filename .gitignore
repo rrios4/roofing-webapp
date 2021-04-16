@@ -4,6 +4,7 @@
 node_modules
 .pnp
 .pnp.js
+.vscode
 
 
 # testing
@@ -12,6 +13,7 @@ node_modules
 # production
 /build
 server/config
+server/data
 
 # misc
 .DS_Store

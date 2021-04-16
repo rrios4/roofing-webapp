@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
+import { Badge, Table, TableCaption, Thead, Tr, Th, Tbody, Tfoot, Td, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import Select from "react-select";
@@ -224,19 +224,31 @@ const CustomerEdit = (props) => {
             )   
         } else if(selectField === '4'){
             return(
-                <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
+                <Box pt='1rem' pb='1rem'>
+                    <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
+                    <FormHelperText>Current City: {customer.city}</FormHelperText>
+                </Box>
             )
         } else if(selectField === '5'){
             return(
-                <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
+                <Box pt='1rem' pb='1rem'>
+                    <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
+                    <FormHelperText>Current Zipcode: {customer.zipcode}</FormHelperText>
+                </Box>
             )
         } else if(selectField === '6'){
             return(
-                <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+                <Box pt='1rem' pb='1rem'>
+                    <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+                    <FormHelperText>Current Phone Number: {customer.phone_number}</FormHelperText>
+                </Box>
             )
         } else if(selectField === '7'){
             return(
-                <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
+                <Box pt='1rem' pb='1rem'>
+                    <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
+                    <FormHelperText>Current Email: {customer.email}</FormHelperText>
+                </Box>
             )
         } else if(selectField === '8'){
             return(
@@ -296,7 +308,6 @@ const CustomerEdit = (props) => {
                             <FormControl>
                                 <FormLabel>Select Field:</FormLabel>
                                     <Select
-                                    
                                     options={fieldOptions}
                                     onChange={handleInputField}
                                     theme={theme => ({
@@ -311,61 +322,7 @@ const CustomerEdit = (props) => {
                                         },
                                     })}/>
                                     {renderInputField()}
-                                {/* <Select defaultValue={null} placeholder='Select Fields'>
-                                    <option value='1'>Customer Name</option>
-                                    <option value='2'>Address</option>
-                                    <option value='3'>City</option>
-                                    <option value='4'>State</option>
-                                    <option value='5'>Zipcode</option>
-                                    <option value='6'>Phone Number</option>
-                                    <option value='7'>Email</option>
-                                </Select> */}
-                                {/* <option value='1'>Customer Name</option>
-                                    <option value='2'>Address</option>
-                                    <option value='3'>City</option>
-                                    <option value='4'>State</option>
-                                    <option value='5'>Zipcode</option>
-                                    <option value='6'>Phone Number</option>
-                                    <option value='7'>Email</option> */}
                             </FormControl>
-                                {/* <FormControl isRequired>
-                                    <FormLabel >Customer Name</FormLabel>
-                                    <Input isRequired defaultValue={customer.name} value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/>
-                                    <FormHelperText textAlign='right'>{customer.name}</FormHelperText>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel >Address</FormLabel>
-                                    <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
-                                    <FormHelperText textAlign='right'>{customer.address}</FormHelperText>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel >City</FormLabel>
-                                    <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/>
-                                    <FormHelperText textAlign='right'>{customer.city}</FormHelperText>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel >State</FormLabel>
-                                    <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
-                                    <FormHelperText textAlign='right'>{customer.state}</FormHelperText>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel >Zipcode</FormLabel>
-                                    <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
-                                    <FormHelperText textAlign='right'>{customer.zipcode}</FormHelperText>
-                                </FormControl>
-                                <FormControl isRequired>
-                                <FormLabel pt='1rem'>Phone Number</FormLabel>
-                                    <InputGroup>
-                                    <InputLeftAddon children="+1" />
-                                    <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
-                                    </InputGroup>
-                                    <FormHelperText textAlign='right'>{customer.phone_number}</FormHelperText>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel >Email</FormLabel>
-                                    <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
-                                    <FormHelperText textAlign='right'>{customer.email}</FormHelperText>
-                                </FormControl> */}
                         </ModalBody>
                         <ModalFooter>
                             <Button colorScheme='blue' mr={3} type='submit' onClick={handleSubmit} >Update</Button>
@@ -387,6 +344,7 @@ const CustomerEdit = (props) => {
                     <Box display='flex' mr='auto' pl='1rem'>
                         <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
                             {/* <Text fontWeight='bold' fontSize='20px' color='white'>Status:</Text> */}
+                            <Text color='white' fontSize='25px' letterSpacing='1px' fontWeight='bold'>Customer #{customer.id}</Text>
                         </Box>
                         <Box >
                             {/* <Badge bg='green.600' p='8px'>Active</Badge> */}
@@ -394,7 +352,7 @@ const CustomerEdit = (props) => {
                     </Box>
                     <Box display='flex' pr='1rem'>
                         <Box pr='1rem'>
-                            <Button onClick={onOpen}>Edit</Button>
+                            <Button onClick={onOpen} colorScheme='blue'>Edit</Button>
                         </Box>
                         <Box  color='white'>
                                 <Button bg='red.600' onClick={deleteCustomer}>Delete</Button>
@@ -406,34 +364,57 @@ const CustomerEdit = (props) => {
                 <Box display='flex' flexDir='column' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' p='2rem'>
                         <Box>
-                            <Text fontSize='25px' letterSpacing='1px' fontWeight='bold'>Customer #{customer.id}</Text>
+                            {/* <Text fontSize='25px' letterSpacing='1px' fontWeight='bold'>Customer #{customer.id}</Text> */}
                         </Box>
                         <Box display='flex' flexDir='column' ml='auto'>
-                            <Text>150 Tallant St</Text>
-                            <Text>Houston, TX </Text>
-                            <Text> United States</Text>
+                            <Text fontWeight='bold'>Rios Roofing</Text>
+                            <Text textAlign='right' fontWeight='light'>150 Tallant St</Text>
+                            <Text textAlign='right' fontWeight='light'>Houston, TX </Text>
+                            <Text textAlign='right' fontWeight='light'> United States</Text>
                         </Box>
                     </Box>
                     <Box display='flex' justifyContent='space-between' p='1rem'>
-                        <Box display='flex' flexDir='column' p='1rem' justifyContent='space-between'>
+                        <Box>
+                            <Table variant="simple" size='sm'>
+                                <TableCaption color='white'>Customer Information</TableCaption>
+                                <Thead>
+                                    <Tr>
+                                    <Th color='white'>Name</Th>
+                                    <Th color='white'>Email</Th>
+                                    <Th color='white'>Phone</Th>
+                                    <Th color='white'>Address</Th>
+                                    <Th isNumeric color='white'>City</Th>
+                                    <Th color='white'>State</Th>
+                                    <Th color='white'>Zipcode</Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    <Tr>
+                                    <Td>{customer.name}</Td>
+                                    <Td>{customer.email}</Td>
+                                    <Td>{customer.phone_number}</Td>
+                                    <Td >{customer.address}</Td>
+                                    <Td>{customer.city}</Td>
+                                    <Td>{customer.state}</Td>
+                                    <Td>{customer.zipcode}</Td>
+                                    </Tr>
+                                </Tbody>
+                            </Table>
+                        </Box>
+                        {/* <Box display='flex' flexDir='column' p='1rem' justifyContent='space-between'>
                             <Box pb='1rem'>
-                                {/* <Editable defaultValue={customer.name}>
-                                    <EditablePreview/>
-                                    <EditableInput/>
-                                    <EditableControls/>
-                                </Editable> */}
-                                <Text fontWeight='bold'>Name:</Text>
+                                <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Name:</Text>
                                 <Text>{customer.name}</Text> 
                                 
                             </Box>
                             <Box>
-                                <Text fontWeight='bold'>Phone Number:</Text>
+                                <Text fontSize='22px' fontWeight='bold' letterSpacing='1px' >Phone Number:</Text>
                                 <Text>{customer.phone_number}</Text>
                             </Box>
                         </Box>
                         <Box display='flex' flexDir='column' p='1rem'>
                             <Box>
-                                <Text fontWeight='bold'>Address:</Text>
+                                <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Address:</Text>
                             </Box>
                             <Box>
                                 {customer.address}
@@ -448,10 +429,10 @@ const CustomerEdit = (props) => {
                         </Box>
                         <Box display='flex' flexDir='column' p='1rem'>
                             <Box>
-                                <Text fontWeight='bold'>Email: </Text>
+                                <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Email: </Text>
                             </Box>
                             {customer.email}
-                        </Box>
+                        </Box> */}
                     </Box>
                     <Grid>
 

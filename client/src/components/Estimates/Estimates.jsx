@@ -132,7 +132,6 @@ function Estimates() {
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Customer Name</FormLabel>
                                     <AsyncSelect 
-                                            value={selectedCustomer} 
                                             onChange={handleSelectedCustomer} 
                                             loadOptions={loadOptions} 
                                             placeholder='Type Customer Name'

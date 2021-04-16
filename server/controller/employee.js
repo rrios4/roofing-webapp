@@ -94,3 +94,26 @@ exports.delete = (req, res) => {
       });
 };
 
+exports.update = (req, res) => {
+  const id = req.params.id;
+
+  Employee.update(req.body, {
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Employees was updated successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot update employees with id=${id}. Maybe customer was not found or req.body is empty!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating employees with id=" + id
+      });
+    });
+};
