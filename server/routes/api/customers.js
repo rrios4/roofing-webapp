@@ -15,8 +15,8 @@ module.exports = app => {
     // Delete Customer by Id
     router.delete('/:id', customers.delete);
 
-    // Retrieve all customers by name
-    // router.get("/?name=", customers.findAllByName);
+    // Update customer info
+    router.put('/:id', customers.update);
 
     app.use('/api/customers', router);
 }

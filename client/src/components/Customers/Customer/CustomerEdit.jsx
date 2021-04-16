@@ -1,14 +1,51 @@
 import React, {useEffect, useState} from 'react'
-import { Box, Flex , Text, ButtonGroup, IconButton, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input, Alert, AlertIcon } from "@chakra-ui/react";
-import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon} from '@chakra-ui/icons'
+import { Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
+
+function formatPhoneNumber(value) {
+    //if value is falsy eg if the user deletes the input, then just return 
+    if(!value) return value;
+
+    //clean the input for any non-digit values.
+    const phoneNumber = value.replace(/[^\d]/g, "");
+
+    // phoneNumberLength is used to know when to apply our formatting for the phone number
+    const phoneNumberLength = phoneNumber.length;
+
+    // we need to return the value with no formatting if its less then four digits
+    // this is to avoid weird behavior that occurs if you  format the area code to early
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    // if phoneNumberLength is greater than 4 and less the 7 we start to return
+    // the formatted number
+    if (phoneNumberLength < 7) {
+        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    // finally, if the phoneNumberLength is greater then seven, we add the last
+    // bit of formatting and return it.
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+        3,
+        6
+    )}-${phoneNumber.slice(6, 10)}`;
+}
 
 const CustomerEdit = (props) => {
     const {id} = props.match.params;
     let history = useHistory();
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const initialRef = React.useRef();
     //GET data from API
-    const [customer, getCustomer] = useState(''); 
+    const [customer, getCustomer] = useState('');
+
+    // States that pick up the values from the input fields of the form
+    const [name, setCustomerName] = useState('');
+    const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [zipcode, setZipcode] = useState('');
+    const [email, setEmail] = useState('');
 
     const url = 'http://localhost:8081/api';
 
@@ -42,8 +79,115 @@ const CustomerEdit = (props) => {
                 
     }
 
+    const handleSubmit = async(event) => {
+        event.preventDefault();
+        const url2 = `http://localhost:8081/api/customers/${id}`
+        const json = {
+            name: name,
+            address: address,
+            city: city,
+            state: state,
+            zipcode: zipcode,
+            phone_number: inputValue,
+            email: email
+        }
+        await axios.put(url2, json)
+        .then((response) => {
+            console.log('I was submitted 1', response);
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+            console.log('Submit Function works!')
+
+        getAllCustomer();
+        setCustomerName('');
+        setAddress('');
+        setCity('');
+        setZipcode('');
+        SetInputValue('');
+        setEmail('');
+        onClose()
+
+    };
+
+    const closeButton = () => {
+        getAllCustomer();
+        setCustomerName('');
+        setAddress('');
+        setCity('');
+        setZipcode('');
+        SetInputValue('');
+        setEmail('');
+        onClose()
+    }
+    const [inputValue, SetInputValue] = useState("");
+
+    const handlePhoneInput = (e) => {
+        //This is where we'll call our future formatPhoneNumber function
+        const formattedPhoneNumber = formatPhoneNumber(e.target.value);
+        //We'll set the input value using our setInputValue
+        SetInputValue(formattedPhoneNumber);
+    }
+
+
     return (
         <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]} >
+             <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent p='1rem' ml='6rem'>
+                        <ModalHeader textAlign='center' letterSpacing='1px'>Edit Customer</ModalHeader>
+                        <Text color='red' textAlign='center'>Re-type all data please!</Text>
+                        <ModalCloseButton />
+                        <form method='PUT' onSubmit={handleSubmit}>
+                        <ModalBody>
+                                <FormControl isRequired>
+                                    <FormLabel >Customer Name</FormLabel>
+                                    <Input isRequired defaultValue={customer.name} value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/>
+                                    <FormHelperText textAlign='right'>{customer.name}</FormHelperText>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel >Address</FormLabel>
+                                    <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
+                                    <FormHelperText textAlign='right'>{customer.address}</FormHelperText>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel >City</FormLabel>
+                                    <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/>
+                                    <FormHelperText textAlign='right'>{customer.city}</FormHelperText>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel >State</FormLabel>
+                                    <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
+                                    <FormHelperText textAlign='right'>{customer.state}</FormHelperText>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel >Zipcode</FormLabel>
+                                    <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
+                                    <FormHelperText textAlign='right'>{customer.zipcode}</FormHelperText>
+                                </FormControl>
+                                <FormControl isRequired>
+                                <FormLabel pt='1rem'>Phone Number</FormLabel>
+                                    <InputGroup>
+                                    <InputLeftAddon children="+1" />
+                                    <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+                                    </InputGroup>
+                                    <FormHelperText textAlign='right'>{customer.phone_number}</FormHelperText>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel >Email</FormLabel>
+                                    <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
+                                    <FormHelperText textAlign='right'>{customer.email}</FormHelperText>
+                                </FormControl>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button colorScheme='blue' mr={3} type='submit' onClick={handleSubmit} >Save</Button>
+                            <Button onClick={closeButton} colorScheme='blue'>Cancel</Button>
+                        </ModalFooter>
+                        </form>
+
+                    </ModalContent> 
+                </Modal>
             <Link to='/customers'>
                 <Box display='flex'  pt='2rem' pb='1rem' pl='1rem'>
                     <Box display='flex' rounded='xl' p='1rem'>
@@ -55,15 +199,15 @@ const CustomerEdit = (props) => {
                 <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' mr='auto' pl='1rem'>
                         <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
-                            <Text fontWeight='bold' fontSize='20px' color='white'>Status:</Text>
+                            {/* <Text fontWeight='bold' fontSize='20px' color='white'>Status:</Text> */}
                         </Box>
                         <Box >
-                            <Badge bg='green.600' p='8px'>Active</Badge>
+                            {/* <Badge bg='green.600' p='8px'>Active</Badge> */}
                         </Box>
                     </Box>
                     <Box display='flex' pr='1rem'>
                         <Box pr='1rem'>
-                            <Button>Edit</Button>
+                            <Button onClick={onOpen}>Edit</Button>
                         </Box>
                         <Box  color='white'>
                                 <Button bg='red.600' onClick={deleteCustomer}>Delete</Button>
@@ -75,8 +219,7 @@ const CustomerEdit = (props) => {
                 <Box display='flex' flexDir='column' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' p='2rem'>
                         <Box>
-                            <Text fontWeight='bold'>Customer ID:</Text>
-                            <Text fontSize='30px' fontWeight='regular'> #{customer.id}</Text>
+                            <Text fontSize='25px' letterSpacing='1px' fontWeight='bold'>Customer #{customer.id}</Text>
                         </Box>
                         <Box display='flex' flexDir='column' ml='auto'>
                             <Text>150 Tallant St</Text>
@@ -109,7 +252,7 @@ const CustomerEdit = (props) => {
                                 {customer.address}
                             </Box>
                             <Box>
-                                {customer.city}, {customer.state}
+                                {customer.city}, {customer.state}, {customer.zipcode}
                             </Box>
                             <Box>
                                 United States
