@@ -12,11 +12,15 @@ if(estimates.length > 0){
                     const statusBadge = () => {
                         if(estimate.ets.status_name === 'Pending'){
                             return(
-                                <Badge colorScheme='yellow' variant='solid' p='8px' rounded='xl'>{estimate.ets.status_name}</Badge>
+                                <Badge colorScheme='yellow' variant='solid' p='8px' w='110px' textAlign='center' rounded='xl'>{estimate.ets.status_name}</Badge>
                             )
-                        } else if(estimate.ets.status_name === 'Ready'){
+                        } else if(estimate.ets.status_name === 'Approved'){
                             return(
-                                <Badge colorScheme='green' variant='solid' p='8px' rounded='xl'>{estimate.ets.status_name}</Badge>
+                                <Badge colorScheme='green' variant='solid' p='8px' w='110px' textAlign='center' rounded='xl'>{estimate.ets.status_name}</Badge>
+                            )
+                        } else if(estimate.ets.status_name === 'Expired'){
+                            return(
+                                <Badge colorScheme='red' variant='solid' p='8px' w='110px' textAlign='center' rounded='xl'>{estimate.ets.status_name}</Badge>
                             )
                         }
                     }
@@ -26,28 +30,28 @@ if(estimates.length > 0){
                             <Box display='flex' flexDir='column' justifyContent='center' pl='1rem'>
                                 <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='light'>#{estimate.id}</Text>
                             </Box>
-                            <Box display='flex' flexDir='column' justifyContent='center' ml='2rem' >
+                            <Box display='flex' flexDir='column' justifyContent='center' pl='4rem'  >
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Invoice Date:</Text> */}
                                 <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{new Date(estimate.estimate_date).toLocaleDateString()}</Text>
                             </Box>
-                            <Box display='flex' flexDir='column' justifyContent='center' ml='2rem' >
+                            <Box display='flex' flexDir='column' justifyContent='center' pl='4rem'  >
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Invoice Due:</Text> */}
                                 {/* <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{new Date(invoice.due_date).toLocaleDateString()}</Text> */}
                                 <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{estimate.cu.email}</Text>
                             </Box>
-                            <Box display='flex' flexDir='column' justifyContent='center' ml='2rem'>
+                            <Box display='flex' flexDir='column' justifyContent='center'  pl='4rem'>
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Customer:</Text> */}
                                 <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{estimate.cu.name}</Text>
                             </Box>
-                            <Box display='flex' flexDir='column' justifyContent='center' ml='2rem'>
+                            <Box display='flex' flexDir='column' justifyContent='center' pl='4rem'>
                                 {/* <Text letterSpacing='1px' fontSize='18px' fontFamily='sans-serif' fontWeight='bold' mr='8px'>Phone Number:</Text> */}
                                 <Text letterSpacing='1px' fontSize='16px' fontFamily='sans-serif' fontWeight='light'>{estimate.cu.phone_number}</Text>
                             </Box>
-                            <Box ml='2rem' display='flex' flexDir='column' justifyContent='center'>
+                            <Box display='flex' flexDir='column' justifyContent='center' pl='4rem'>
                                 {/* <Text letterSpacing='1px' fontSize='18px' mr='8px' fontWeight='bold'>Total:</Text> */}
                                 <Text letterSpacing='1px' fontSize='18px' fontWeight='light'>{estimate.quote_price}</Text>
                             </Box>
-                            <Box display='flex' flexDir='column' justifyContent='center' pl='2rem' ml='auto'>
+                            <Box display='flex' flexDir='column' justifyContent='center' pl='2rem' >
                                 {statusBadge()}
                                 {/* <Badge ml="1" fontSize="0.8em" colorScheme='yellow' variant='solid' p='4px'>  
                                     <Text>{invoice.invs.status_name}</Text>

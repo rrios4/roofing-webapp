@@ -78,7 +78,7 @@ exports.delete = (req, res) => {
           });
         } else {
           res.send({
-            message: `Cannot delete Estimate with id=${id}. Maybe Customer was not found!`
+            message: `Cannot delete Estimate with id=${id}. Maybe Estimate was not found!`
           });
         }
       })
@@ -87,4 +87,28 @@ exports.delete = (req, res) => {
           message: "Could not delete Estimate with id=" + id
         });
       });
+};
+
+exports.update = (req, res) => {
+  const id = req.params.id;
+
+  Estimate.update(req.body, {
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Estimate was updated successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot update estimate with id=${id}. Maybe estimate was not found or req.body is empty!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating estimate with id=" + id
+      });
+    });
 };

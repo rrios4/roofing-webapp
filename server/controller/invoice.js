@@ -1,3 +1,4 @@
+const { Sequelize } = require("sequelize");
 const db = require("../models");
 const Invoice = db.invoices;
 
@@ -36,9 +37,10 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
     const name = req.query.name;
+    const Op = Sequelize.Op;
     var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
     
-    Invoice.findAll({ include: ['cu', 'jtype', 'invs'],})
+    Invoice.findAll({where: condition, include: ['cu', 'jtype', 'invs']})
         .then(data => {
             res.send(data);
         })

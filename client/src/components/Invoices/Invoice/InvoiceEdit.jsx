@@ -56,7 +56,7 @@ const InvoiceEdit = (props) => {
             service_name: serviceName,
             inv_date: invoiceDate,
             due_date: dueDate,
-            amount_due: `$${amountDue}`
+            amount_due: `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amountDue)}`
         }
         await axios.put(url2, json)
         .then((response) => {
@@ -152,7 +152,7 @@ const InvoiceEdit = (props) => {
                         <ModalCloseButton />
                         <form method='PUT' onSubmit={handleSubmit}>
                         <ModalBody>
-                                <FormControl isRequired>
+                                <FormControl isRequired={true}>
                                     <FormLabel pt='1rem'>Job Type</FormLabel>
                                     <Select defaultValue={null} value={selectJobTypeOption} placeholder='Select Job Type' onChange={(e) => handleJobTypeInput(e)}>
                                         <option value='1'>New Roof Installation</option>
@@ -175,7 +175,7 @@ const InvoiceEdit = (props) => {
                                         <Input value={serviceName} id='service' onChange={({target}) => setServiceName(target.value)} placeholder='Service Name' />
                                     </InputGroup>
                                 </FormControl>
-                                <FormControl isRequired>
+                                <FormControl isRequired={true}>
                                     <FormLabel pt='1rem'>Amount Due</FormLabel>
                                     <Input value={amountDue} onChange={({target}) => setAmountDue(target.value)} placeholder='Amount due' type='number'/>
                                 </FormControl>
@@ -208,7 +208,7 @@ const InvoiceEdit = (props) => {
                             </Box>
                             <Box display='flex' pr='1rem'>
                                 <Box pr='1rem' >
-                                    <Button colorScheme='red' onClick={markInvoiceOutstanding}>Mark Outstanding</Button>
+                                    <Button colorScheme='blue' onClick={markInvoiceOutstanding}>Mark Outstanding</Button>
                                 </Box>
                                 <Box pr='1rem' >
                                     <Button colorScheme='yellow' onClick={markInvoicePending}>Mark Pending</Button>

@@ -53,7 +53,7 @@ function Invoices() {
             service_name: serviceName,
             inv_date: invoiceDate,
             due_date: dueDate,
-            amount_due: `$${amountDue}`
+            amount_due: `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amountDue)}`
         }
         await axios.post(url2, json)
         .then((response) => {
