@@ -4,7 +4,6 @@ import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, Modal
 import { AddIcon } from "@chakra-ui/icons";
 import axios from 'axios'
 import Invoice from "./Invoice/Invoice";
-import SelectCustomers from './SelectCustomers';
 import AsyncSelect from 'react-select/async';
 
 function Invoices() {

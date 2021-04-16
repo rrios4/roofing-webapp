@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react'
 import { Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
+import Select from "react-select";
+import { render } from 'react-dom';
 
 function formatPhoneNumber(value) {
     //if value is falsy eg if the user deletes the input, then just return 
@@ -46,6 +48,7 @@ const CustomerEdit = (props) => {
     const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState('');
     const [email, setEmail] = useState('');
+    const [selectField, setSelectField] = useState('')
 
     const url = 'http://localhost:8081/api';
 
@@ -91,14 +94,63 @@ const CustomerEdit = (props) => {
             phone_number: inputValue,
             email: email
         }
-        await axios.put(url2, json)
-        .then((response) => {
-            console.log('I was submitted 1', response);
-        })
-        .catch((err) => {
-            console.error(err);
-        })
-            console.log('Submit Function works!')
+        console.log('Submit Function works!');
+        
+        if(selectField === '1'){
+            await axios.put(url2, {
+                name: name
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        } else if(selectField === '2'){
+            await axios.put(url2, {
+                address: address
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        } else if(selectField === '3'){
+            await axios.put(url2, {
+                city: city
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        } else if(selectField === '4'){
+            await axios.put(url2, {
+                state: state
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        } else if(selectField === '5'){
+            await axios.put(url2, {
+                zipcode: zipcode
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        } else if(selectField === '6'){
+            await axios.put(url2, {
+                phone_number: inputValue
+            })
+        } else if(selectField === '7'){
+            await axios.put(url2, {
+                email: email
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        } else if(selectField === '8'){
+            await axios.put(url2, json)
+            .then((response) => {
+                console.log('All fields have been updated!', response);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        }
 
         getAllCustomer();
         setCustomerName('');
@@ -128,6 +180,106 @@ const CustomerEdit = (props) => {
         const formattedPhoneNumber = formatPhoneNumber(e.target.value);
         //We'll set the input value using our setInputValue
         SetInputValue(formattedPhoneNumber);
+    }  
+
+    const fieldOptions = [
+        { value: '1', label: 'Customer Name'},
+        { value: '2', label: 'Address'},
+        { value: '3', label: 'City'},
+        { value: '4', label: 'State'},
+        { value: '5', label: 'Zipcode'},
+        { value: '6', label: 'Phone Number'},
+        { value: '7', label: 'Email'},
+        { value: '8', label: 'All Fields'}
+    ]
+
+    const handleInputField = (selectField) => {
+        setSelectField(selectField.value);
+        console.log(selectField);
+
+    }
+
+    const renderInputField = ()=> {
+        if(selectField === '1'){
+            return(
+                <Box pt='1rem' pb='1rem'>
+                    <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer Name'/>
+                    <FormHelperText>Current Name: {customer.name}</FormHelperText>
+                </Box>
+                
+            )
+        } else if(selectField === '2'){
+            return(
+                <Box pt='1rem' pb='1rem'>
+                    <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
+                    <FormHelperText>Current Address: {customer.address}</FormHelperText>
+                </Box>
+            )
+        } else if(selectField === '3'){
+            return(
+                <Box pt='1rem' pb='1rem'>
+                    <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/>
+                    <FormHelperText>Current City: {customer.state}</FormHelperText>
+                </Box>
+            )   
+        } else if(selectField === '4'){
+            return(
+                <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
+            )
+        } else if(selectField === '5'){
+            return(
+                <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
+            )
+        } else if(selectField === '6'){
+            return(
+                <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+            )
+        } else if(selectField === '7'){
+            return(
+                <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
+            )
+        } else if(selectField === '8'){
+            return(
+                <Box pt='1rem' pb='1rem'>
+                    <Box pb='1rem'>
+                        <FormLabel>Customer Name: </FormLabel>
+                        <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer Name'/>
+                        <FormHelperText>Current Name: {customer.name}</FormHelperText>
+                    </Box>
+                    <Box pb='1rem'>
+                        <FormLabel>Address: </FormLabel>
+                        <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
+                        <FormHelperText>Current Address: {customer.address}</FormHelperText>
+                    </Box >
+                    <Box  pb='1rem'>
+                        <FormLabel>City: </FormLabel>
+                        <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/>
+                        <FormHelperText>Current City: {customer.city}</FormHelperText>
+                    </Box>
+                    <Box  pb='1rem'>
+                        <FormLabel>State: </FormLabel>
+                        <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
+                        <FormHelperText>Current State: {customer.state}</FormHelperText>
+                    </Box>
+                    <Box  pb='1rem'>
+                        <FormLabel>Zipcode: </FormLabel>
+                        <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
+                        <FormHelperText>Current Zipcode: {customer.zipcode}</FormHelperText>
+                    </Box>
+                    <Box pb='1rem'>
+                        <FormLabel>Phone Number: </FormLabel>
+                        <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+                        <FormHelperText>Current Name: {customer.phone_number}</FormHelperText>
+                    </Box>
+                    <Box pt='1rem' >
+                        <FormLabel>Email: </FormLabel>
+                        <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
+                        <FormHelperText>Current Name: {customer.email}</FormHelperText>
+                    </Box>  
+                </Box>
+                
+            )
+        }
     }
 
 
@@ -137,11 +289,46 @@ const CustomerEdit = (props) => {
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
                         <ModalHeader textAlign='center' letterSpacing='1px'>Edit Customer</ModalHeader>
-                        <Text color='red' textAlign='center'>Re-type all data please!</Text>
+                        <Text color='red' textAlign='center'>Fill all fields please!</Text>
                         <ModalCloseButton />
                         <form method='PUT' onSubmit={handleSubmit}>
                         <ModalBody>
-                                <FormControl isRequired>
+                            <FormControl>
+                                <FormLabel>Select Field:</FormLabel>
+                                    <Select
+                                    
+                                    options={fieldOptions}
+                                    onChange={handleInputField}
+                                    theme={theme => ({
+                                        ...theme,
+                                        borderRadius: 0,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary25: 'primary',
+                                            primary: 'black',
+                                            neutral0: 'white',
+                                            neutral90: 'white',
+                                        },
+                                    })}/>
+                                    {renderInputField()}
+                                {/* <Select defaultValue={null} placeholder='Select Fields'>
+                                    <option value='1'>Customer Name</option>
+                                    <option value='2'>Address</option>
+                                    <option value='3'>City</option>
+                                    <option value='4'>State</option>
+                                    <option value='5'>Zipcode</option>
+                                    <option value='6'>Phone Number</option>
+                                    <option value='7'>Email</option>
+                                </Select> */}
+                                {/* <option value='1'>Customer Name</option>
+                                    <option value='2'>Address</option>
+                                    <option value='3'>City</option>
+                                    <option value='4'>State</option>
+                                    <option value='5'>Zipcode</option>
+                                    <option value='6'>Phone Number</option>
+                                    <option value='7'>Email</option> */}
+                            </FormControl>
+                                {/* <FormControl isRequired>
                                     <FormLabel >Customer Name</FormLabel>
                                     <Input isRequired defaultValue={customer.name} value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/>
                                     <FormHelperText textAlign='right'>{customer.name}</FormHelperText>
@@ -178,10 +365,10 @@ const CustomerEdit = (props) => {
                                     <FormLabel >Email</FormLabel>
                                     <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
                                     <FormHelperText textAlign='right'>{customer.email}</FormHelperText>
-                                </FormControl>
+                                </FormControl> */}
                         </ModalBody>
                         <ModalFooter>
-                            <Button colorScheme='blue' mr={3} type='submit' onClick={handleSubmit} >Save</Button>
+                            <Button colorScheme='blue' mr={3} type='submit' onClick={handleSubmit} >Update</Button>
                             <Button onClick={closeButton} colorScheme='blue'>Cancel</Button>
                         </ModalFooter>
                         </form>
