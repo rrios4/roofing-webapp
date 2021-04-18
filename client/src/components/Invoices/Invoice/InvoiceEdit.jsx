@@ -5,11 +5,7 @@ import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
 
 const InvoiceEdit = (props) => { 
-    //React functions
-    useEffect(() => {
-        getInvoiceById();
-    }, []);
-
+    
     // React States
     const [invoice, setInvoice] = useState('');
     const [customer, setCustomer] = useState('');
@@ -23,13 +19,21 @@ const InvoiceEdit = (props) => {
     const [serviceName, setServiceName] = useState('');
     const [selectJobTypeOption, setJobTypeOption] = useState('');
 
-
     // Define variables
     const {id} = props.match.params;
     const url = 'http://localhost:8081/api';
     let history = useHistory();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
+
+    //React functions
+    useEffect(() => {
+        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
+        if (!localStorage.getItem('currentUser')) {
+            history.push('/login');
+        }
+        getInvoiceById();
+    }, []);
 
     // functions created by me to get what I need of data
     const getInvoiceById = async () => {

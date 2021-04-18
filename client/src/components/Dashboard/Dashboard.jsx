@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Flex, Avatar, Text, Grid, Button, Badge} from "@chakra-ui/react";
 import {ChevronRightIcon, ChevronLeftIcon} from '@chakra-ui/icons'
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
@@ -8,10 +8,19 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import BallotIcon from '@material-ui/icons/Ballot';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
-import {Link} from 'react-router-dom'
-
+import {Link, useHistory} from 'react-router-dom'
 
 function Dashboard() {
+
+    let history = useHistory();
+
+    useEffect(() => {
+        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
+        if (!localStorage.getItem('currentUser')) {
+            history.push('/login');
+        }
+    }, []);
+
     return (
         <main>
             <Flex flexDir='column' >

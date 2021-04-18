@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
+import { useHistory } from "react-router-dom";
 import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, Form, Modal, ModalBody,ModalOverlay, ModalContent, ModalHeader, useDisclosure, ModalFooter, ModalCloseButton, FormControl, FormLabel, InputGroup, InputLeftAddon, Select, FormHelperText} from '@chakra-ui/react';
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
 import Employee from './Employee/Employee'
 import axios from 'axios';
 
 function formatPhoneNumber(value) {
+
     //if value is falsy eg if the user deletes the input, then just return 
     if(!value) return value;
 
@@ -33,6 +35,7 @@ function formatPhoneNumber(value) {
 }
 
 function Employees() {
+    const history = useHistory();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = React.useRef();
 
@@ -42,6 +45,10 @@ function Employees() {
     const url = 'http://localhost:8081/api';
 
     useEffect(() => {
+        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
+        if (!localStorage.getItem('currentUser')) {
+            history.push('/login');
+        }
         getAllEmployees();
     }, []);
 

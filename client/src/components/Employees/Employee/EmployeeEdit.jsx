@@ -28,6 +28,10 @@ const EmployeeEdit = (props) => {
     const [inputValue, SetInputValue] = useState("");
 
     useEffect(() => {
+        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
+        if (!localStorage.getItem('currentUser')) {
+            history.push('/login');
+        }
         getAllEmployees();
     }, []);
 

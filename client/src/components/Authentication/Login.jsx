@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import {
@@ -23,6 +23,13 @@ function Login() {
 
   let history = useHistory();
 
+  useEffect(() => {
+    // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
+    if (!localStorage.getItem('currentUser')) {
+      history.push('/login');
+    }
+  }, []);
+
   // Username and password fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -43,7 +50,6 @@ function Login() {
       // on the following line, 'success' is an actual boolean variable in the backend handler, it will return true if validation was successful or false if validation was unsuccessful
       if (response.data.success) {
         localStorage.setItem('currentUser', username);
-        localStorage.setItem('validated', true);
         //redirect page to home dashboard
         history.push('/');
         return;
