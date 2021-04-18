@@ -44,6 +44,10 @@ export default function Customers() {
         const query = `/?name=${searchCustomer}`
 
         useEffect(() => {
+            // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
+            if (!localStorage.getItem('currentUser')) {
+                history.push('/login');
+            }
             getAllCustomers();
         }, []);
 

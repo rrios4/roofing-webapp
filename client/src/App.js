@@ -13,6 +13,7 @@ import EstimateEdit from './components/Estimates/Estimate/EstimateEdit';
 import Login from './components/Authentication/Login'
 
 const App = () => {
+
     // let history = useHistory();
     // const session = () => {
     //     if(localStorage.getItem.token !== null){

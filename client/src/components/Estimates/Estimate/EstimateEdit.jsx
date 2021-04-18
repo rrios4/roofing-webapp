@@ -5,10 +5,6 @@ import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
 
 const EstimateEdit = (props) => {
-    //React functions
-    useEffect(() => {
-        getInvoiceById();
-    }, []);
 
     // React States
     const [invoice, setInvoice] = useState('');
@@ -27,6 +23,15 @@ const EstimateEdit = (props) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
     let history = useHistory();
+
+    //React functions
+    useEffect(() => {
+        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
+        if (!localStorage.getItem('currentUser')) {
+            history.push('/login');
+        }
+        getInvoiceById();
+    }, []);
 
     // functions created by me to get what I need of data
     const getInvoiceById = async () => {
