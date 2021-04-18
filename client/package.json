@@ -17,6 +17,7 @@
     "axios": "^0.21.1",
     "emotion-theming": "^11.0.0",
     "framer-motion": "^4.0.3",
+    "passport-local": "^1.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-dropdown": "^1.9.2",

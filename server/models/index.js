@@ -35,6 +35,7 @@ db.job_status = require("./job_status")(sequelize, Sequelize);
 db.emp_status = require("./emp_status")(sequelize, Sequelize);
 db.et_notes = require('./et_note')(sequelize, Sequelize);
 db.available_emps = require('./available_emp')(sequelize, Sequelize);
+db.admin = require('./admin')(sequelize, Sequelize);
 
 //Relationshops
 db.customers.hasMany(db.invoices, { as: 'inv'});

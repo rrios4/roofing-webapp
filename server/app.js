@@ -60,6 +60,7 @@ require("./routes/api/job_statuses")(app);
 require("./routes/api/et_notes")(app);
 require("./routes/api/emp_statuses")(app);
 require("./routes/api/available_emps")(app);
+require("./routes/authentication/auth")(app);
 
 //Error handling middleware
 // app.use(function(err, request, response, next) {

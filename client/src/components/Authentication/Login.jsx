@@ -20,20 +20,18 @@ import {
 
 
 function Login() {
-
   let history = useHistory();
-
   // Username and password fields
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
   // function to authenticate the user based on the login credentials provided
   const handleLogin = async (event) => {
     event.preventDefault();
     const url = ''
     const credentials = {
-      name: username,
-      password: password
+      username: loginUsername,
+      password: loginPassword
     }
     await axios.post(url, credentials) // <- api endpoint for authentication
     .then((response) => {
@@ -42,7 +40,7 @@ function Login() {
 
       // on the following line, 'success' is an actual boolean variable in the backend handler, it will return true if validation was successful or false if validation was unsuccessful
       if (response.data.success) {
-        localStorage.setItem('currentUser', username);
+        localStorage.setItem('currentUser', response.data.success);
         localStorage.setItem('validated', true);
         //redirect page to home dashboard
         history.push('/');
@@ -77,18 +75,17 @@ function Login() {
         <Stack spacing={4}>
           <FormControl id="email">
             <FormLabel>Email address</FormLabel>
-            <Input value={username} type="email" />
+            <Input value={loginUsername} onChange={e => setLoginUsername(e.target.value)} />
           </FormControl>
           <FormControl id="password">
             <FormLabel>Password</FormLabel>
-            <Input value={password} type="password" />
+            <Input value={loginPassword} type="password" onChange={e => setLoginPassword(e.target.value)} />
           </FormControl>
           <Stack spacing={10}>
             <Stack
               direction={{ base: 'column', sm: 'row' }}
               align={'end'}
               justify={'space-between'}>
-              <Link color={'blue.400'}>Forgot password?</Link>
             </Stack>
             <Button
               bg={'blue.400'}

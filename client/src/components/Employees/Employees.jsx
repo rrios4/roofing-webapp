@@ -131,7 +131,7 @@ function Employees() {
             <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
-                        <ModalHeader textAlign='center'>Create New Customer</ModalHeader>
+                        <ModalHeader textAlign='center'>Create New Employee</ModalHeader>
                         <ModalCloseButton />
                         <form method='POST' onSubmit={handleSubmit}>
                         <ModalBody>
