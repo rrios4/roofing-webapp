@@ -28,7 +28,7 @@ function Login() {
   // function to authenticate the user based on the login credentials provided
   const handleLogin = async (event) => {
     event.preventDefault();
-    const url = ''
+    const url = 'http://localhost:8081/api/auth/login'
     const credentials = {
       username: loginUsername,
       password: loginPassword
@@ -39,9 +39,8 @@ function Login() {
       // else, throw alert window and break out of function
 
       // on the following line, 'success' is an actual boolean variable in the backend handler, it will return true if validation was successful or false if validation was unsuccessful
-      if (response.data.success) {
-        localStorage.setItem('currentUser', response.data.success);
-        localStorage.setItem('validated', true);
+      if (response.status === 200) {
+        localStorage.setItem('username', response.data.username);
         //redirect page to home dashboard
         history.push('/');
         return;
@@ -73,14 +72,16 @@ function Login() {
         boxShadow={'lg'}
         p={8}>
         <Stack spacing={4}>
-          <FormControl id="email">
-            <FormLabel>Email address</FormLabel>
-            <Input value={loginUsername} onChange={e => setLoginUsername(e.target.value)} />
-          </FormControl>
-          <FormControl id="password">
-            <FormLabel>Password</FormLabel>
-            <Input value={loginPassword} type="password" onChange={e => setLoginPassword(e.target.value)} />
-          </FormControl>
+          <form method='POST' onSubmit={handleLogin}>
+            <FormControl id="email">
+              <FormLabel>Username</FormLabel>
+              <Input value={loginUsername} onChange={e => setLoginUsername(e.target.value)} />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input value={loginPassword} type="password" onChange={e => setLoginPassword(e.target.value)} />
+            </FormControl>
+          
           <Stack spacing={10}>
             <Stack
               direction={{ base: 'column', sm: 'row' }}
@@ -88,6 +89,7 @@ function Login() {
               justify={'space-between'}>
             </Stack>
             <Button
+              type='submit'
               bg={'blue.400'}
               color={'white'}
               _hover={{
@@ -97,6 +99,7 @@ function Login() {
               Sign in
             </Button>
           </Stack>
+          </form>
         </Stack>
       </Box>
     </Stack>

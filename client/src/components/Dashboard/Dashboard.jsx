@@ -16,15 +16,23 @@ function Dashboard() {
 
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('currentUser')) {
+        if (!localStorage.getItem('username')) {
             history.push('/login');
         }
     }, []);
 
+    const logout = () => {
+        localStorage.clear();
+        history.push('/login')
+    }
+
     return (
         <main>
             <Flex flexDir='column' >
-                <Box display='flex' justifyContent='center' p='3rem' pt='3rem'>
+                <Box display='flex' justifyContent='flex-end' pt='2rem'>
+                    <Button onClick={logout}>Logout</Button>
+                </Box>
+                <Box display='flex' justifyContent='center' p='3rem' pt='2rem'>
                     <Box display='flex' flexDir='column' justifyContent='center' >
 
                         <Text fontWeight='light' fontSize='45px' align='center'>Welcome!</Text>

@@ -54,9 +54,11 @@ exports.login = async(req, res) => {
     if(!validPassword){
         return res.status(400).send("Invalid Password!")
     }
+
     if(validPassword){
         return res.header('username', username).send({
-            success: true
+            username: username,
+            status: 'login succesful!'
         })
     }
 

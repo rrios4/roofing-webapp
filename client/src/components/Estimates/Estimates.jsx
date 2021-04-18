@@ -31,7 +31,7 @@ function Estimates() {
     //React Render Hook
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('currentUser')) {
+        if (!localStorage.getItem('username')) {
             history.push('/login');
         }
         getAllEstimates();
