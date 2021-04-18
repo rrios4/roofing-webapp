@@ -24,15 +24,15 @@ module.exports = (sequelize, Sequelize) => {
                 key: 'id'
             }
         },
-        service_name: {
-            type: Sequelize.STRING
-        },
         inv_date: {
             allowNull: false,
             type: Sequelize.DATE
         },
         due_date: {
             type: Sequelize.DATE
+        },
+        service_name: {
+            type: Sequelize.STRING
         },
         amount_due: {
             type: Sequelize.STRING

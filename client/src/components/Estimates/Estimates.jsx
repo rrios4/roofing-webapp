@@ -118,7 +118,6 @@ function Estimates() {
         .catch(error => console.error(`Error: ${error}`))
     }
 
-
     return (
         <main>
             <Flex flexDir='column' justifyContent='center' pb='2rem'>
