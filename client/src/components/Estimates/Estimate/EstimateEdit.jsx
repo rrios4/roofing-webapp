@@ -260,7 +260,7 @@ const EstimateEdit = (props) => {
                                         <Text fontWeight='light' letterSpacing='1px'>{customer.address},</Text>
                                     </Box>
                                     <Box>
-                                        <Text fontWeight='light' letterSpacing='1px'>{customer.city}, {customer.state}, 77076</Text>
+                                        <Text fontWeight='light' letterSpacing='1px'>{customer.city}, {customer.state},</Text>
                                     </Box>
                                     <Box>
                                         <Text fontWeight='light' letterSpacing='1px'>{customer.zipcode}</Text>

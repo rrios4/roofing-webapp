@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import { Badge, Table, TableCaption, Thead, Tr, Th, Tbody, Tfoot, Td, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
+import { Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import {Link, Redirect, useHistory} from 'react-router-dom';
+import { ChevronLeftIcon } from '@chakra-ui/icons'
 import axios from 'axios';
 import Select from "react-select";
-import { render } from 'react-dom';
 
 function formatPhoneNumber(value) {
     //if value is falsy eg if the user deletes the input, then just return 
@@ -59,10 +59,6 @@ const CustomerEdit = (props) => {
         }
         getAllCustomer();
     }, []);
-
-    // componentDidMount() {
-    //     getAllCustomer();
-    // }
     
     const getAllCustomer = async () => {
         await axios.get(`${url}/customers/${id}`)
@@ -155,7 +151,6 @@ const CustomerEdit = (props) => {
                 console.error(err);
             })
         }
-
         getAllCustomer();
         setCustomerName('');
         setAddress('');
@@ -163,8 +158,8 @@ const CustomerEdit = (props) => {
         setZipcode('');
         SetInputValue('');
         setEmail('');
+        setSelectField('');
         onClose()
-
     };
 
     const closeButton = () => {
@@ -175,6 +170,7 @@ const CustomerEdit = (props) => {
         setZipcode('');
         SetInputValue('');
         setEmail('');
+        setSelectField('');
         onClose()
     }
     const [inputValue, SetInputValue] = useState("");
@@ -200,7 +196,6 @@ const CustomerEdit = (props) => {
     const handleInputField = (selectField) => {
         setSelectField(selectField.value);
         console.log(selectField);
-
     }
 
     const renderInputField = ()=> {
@@ -209,8 +204,7 @@ const CustomerEdit = (props) => {
                 <Box pt='1rem' pb='1rem'>
                     <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer Name'/>
                     <FormHelperText>Current Name: {customer.name}</FormHelperText>
-                </Box>
-                
+                </Box>   
             )
         } else if(selectField === '2'){
             return(
@@ -223,14 +217,14 @@ const CustomerEdit = (props) => {
             return(
                 <Box pt='1rem' pb='1rem'>
                     <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/>
-                    <FormHelperText>Current City: {customer.state}</FormHelperText>
+                    <FormHelperText>Current City: {customer.city}</FormHelperText>
                 </Box>
             )   
         } else if(selectField === '4'){
             return(
                 <Box pt='1rem' pb='1rem'>
                     <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
-                    <FormHelperText>Current City: {customer.city}</FormHelperText>
+                    <FormHelperText>Current State: {customer.state}</FormHelperText>
                 </Box>
             )
         } else if(selectField === '5'){
@@ -337,8 +331,9 @@ const CustomerEdit = (props) => {
                     </ModalContent> 
                 </Modal>
             <Link to='/customers'>
-                <Box display='flex'  pt='2rem' pb='1rem' pl='1rem'>
-                    <Box display='flex' rounded='xl' p='1rem'>
+                <Box display='flex' pt='0rem' pb='0rem' pl='1rem'>
+                    <Box display='flex' _hover={{color: 'blue.400'}}>
+                        <ChevronLeftIcon fontSize='35px'/>
                         <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
                     </Box>
                 </Box>
@@ -378,7 +373,7 @@ const CustomerEdit = (props) => {
                         </Box>
                     </Box>
                     <Box display='flex' justifyContent='space-between' p='1rem'>
-                        <Box>
+                        {/* <Box>
                             <Table variant="simple" size='sm'>
                                 <TableCaption color='white'>Customer Information</TableCaption>
                                 <Thead>
@@ -404,8 +399,8 @@ const CustomerEdit = (props) => {
                                     </Tr>
                                 </Tbody>
                             </Table>
-                        </Box>
-                        {/* <Box display='flex' flexDir='column' p='1rem' justifyContent='space-between'>
+                        </Box> */}
+                        <Box display='flex' flexDir='column' p='1rem' justifyContent='space-between'>
                             <Box pb='1rem'>
                                 <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Name:</Text>
                                 <Text>{customer.name}</Text> 
@@ -436,7 +431,7 @@ const CustomerEdit = (props) => {
                                 <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Email: </Text>
                             </Box>
                             {customer.email}
-                        </Box> */}
+                        </Box>
                     </Box>
                     <Grid>
 

@@ -1,15 +1,10 @@
 import React from 'react';
-// import { Card, CardMedia, CardContent, CardActions, Typography, IconBotton} from '@material-ui/core';
-import {Box, Badge, Container, Flex, Grid, Text} from "@chakra-ui/react";
+import {Box, Badge, Flex, Grid, Text} from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import useStyles from './styles';
 import {Link} from 'react-router-dom'
-import CustomerEdit from './CustomerEdit';
 
 function Customer(props) {
-
     const {menu, customers} = props;
-
     if(customers.length > 0) {
         return(
             <Grid gap={4}>
@@ -30,7 +25,7 @@ function Customer(props) {
                                     <Text fontFamily='sans-serif' fontWeight='light'>{customer.phone_number}</Text>
                                 </Box>
                                 <Box pl='10' ml='auto'>
-                                <Badge ml="1" fontSize="0.8em" colorScheme="green">
+                                <Badge ml="1" fontSize="0.8em" colorScheme="green" variant='solid'>
                                     Active
                                 </Badge>
                                 </Box>

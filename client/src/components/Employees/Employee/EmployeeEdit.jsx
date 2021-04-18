@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { Box, Flex , Text, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, ModalOverlay, FormHelperText, useDisclosure, ModalCloseButton, ButtonGroup, IconButton, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input, Alert, AlertIcon } from "@chakra-ui/react";
-import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon} from '@chakra-ui/icons'
+import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon, ArrowLeftIcon} from '@chakra-ui/icons'
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import Employee from './Employee';
@@ -77,7 +77,7 @@ const EmployeeEdit = (props) => {
         { value: '6', label: 'Phone Number'},
         { value: '7', label: 'Email'},
         { value: '8', label: 'Payrate'},
-        { value: '8', label: 'All Fields'}
+        { value: '9', label: 'All Fields'}
     ];
 
     const handleInputField = (selectField) => {
@@ -90,8 +90,8 @@ const EmployeeEdit = (props) => {
         if(selectField === '1'){
             return(
                 <Box pt='1rem' pb='1rem'>
-                    <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer Name'/>
-                    <FormHelperText>Current Name: {Employees.name}</FormHelperText>
+                    <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Employee Name'/>
+                    <FormHelperText>Current Name: {Employees.emp_name}</FormHelperText>
                 </Box>
                 
             )
@@ -140,6 +140,13 @@ const EmployeeEdit = (props) => {
         } else if(selectField === '8'){
             return(
                 <Box pt='1rem' pb='1rem'>
+                    <Input value={payrate} onChange={({target}) => setPayRate(target.value)} placeholder='Payrate' type='number'/>
+                    <FormHelperText>Current Payrate: ${Employees.payrate}</FormHelperText>
+                </Box>
+            )    
+        } else if(selectField === '9'){
+            return(
+                <Box pt='1rem' pb='1rem'>
                     <Box pb='1rem'>
                         <FormLabel>Customer Name: </FormLabel>
                         <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer Name'/>
@@ -183,7 +190,7 @@ const EmployeeEdit = (props) => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = `http://localhost:8081/api/customers/${id}`
+        const url2 = `http://localhost:8081/api/employees/${id}`
         const json = {
             name: name,
             address: address,
@@ -197,7 +204,7 @@ const EmployeeEdit = (props) => {
         
         if(selectField === '1'){
             await axios.put(url2, {
-                name: name
+                emp_name: name
             })
             .catch((err) => {
                 console.error(err);
@@ -242,6 +249,16 @@ const EmployeeEdit = (props) => {
                 console.error(err);
             })
         } else if(selectField === '8'){
+            await axios.put(url2, {
+                payrate: `${payrate}`
+            })
+            .then((response) => {
+                console.log('All fields have been updated!', response);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+        } else if(selectField === '9'){
             await axios.put(url2, json)
             .then((response) => {
                 console.log('All fields have been updated!', response);
@@ -251,13 +268,15 @@ const EmployeeEdit = (props) => {
             })
         }
 
-        // getAllCustomer();
+        getAllEmployees();
         setCustomerName('');
         setAddress('');
         setCity('');
         setZipcode('');
-        // SetInputValue('');
+        SetInputValue('');
         setEmail('');
+        setPayRate('');
+        setSelectField('');
         onClose()
 
     };
@@ -270,6 +289,7 @@ const EmployeeEdit = (props) => {
         setZipcode('');
         SetInputValue('');
         setEmail('');
+        setSelectField('');
         onClose()
     }
 
@@ -311,8 +331,9 @@ const EmployeeEdit = (props) => {
                     </ModalContent> 
                 </Modal>
             <Link to='/employees'>
-                <Box display='flex'  pt='2rem' pb='1rem' pl='1rem'>
-                    <Box display='flex' rounded='xl' p='1rem'>
+                <Box display='flex' pt='0rem' pb='0rem' pl='1rem'>
+                    <Box display='flex' _hover={{color: 'blue.400'}}>
+                        <ChevronLeftIcon fontSize='35px'/>
                         <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
                     </Box>
                 </Box>
