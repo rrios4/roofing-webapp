@@ -13,7 +13,7 @@ node_modules
 # production
 /build
 server/config
-server/data
+server/data/.old
 
 # misc
 .DS_Store
