@@ -175,6 +175,7 @@ const InvoiceEdit = (props) => {
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
                         <ModalHeader textAlign='center'>Edit Invoice</ModalHeader>
+                        <Text color='red' textAlign='center'>Fill all fields please!</Text>
                         <ModalCloseButton />
                         <form method='PUT' onSubmit={handleSubmit}>
                         <ModalBody>
@@ -182,8 +183,14 @@ const InvoiceEdit = (props) => {
                                     <FormLabel pt='1rem'>Job Type</FormLabel>
                                     <Select defaultValue={null} value={selectJobTypeOption} placeholder='Select Job Type' onChange={(e) => handleJobTypeInput(e)}>
                                         <option value='1'>New Roof Installation</option>
-                                        <option value='2'>Roof Repair</option>
-                                        <option value='3'>Construction</option>
+                                        <option value='2'>Roof Repairs</option>
+                                        <option value='3'>Structure Construction</option>
+                                        <option value='4'>Siding Repair</option>
+                                        <option value='5'>Roof Maintenance</option>
+                                        <option value='6'>Painting Interior of Home</option>
+                                        <option value='6'>Painting Exterior of Home</option>
+                                        <option value='6'>Flooring Installation</option>
+                                        
                                     </Select>
                                     {/* <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/> */}
                                 </FormControl>

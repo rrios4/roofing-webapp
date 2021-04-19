@@ -20,13 +20,13 @@ function Employee(props) {
                             <Box pl='12'>
                                 {employees.emp_name}
                             </Box>
-                            <Box pl='12'>
+                            <Box pl='12' ml='auto'>
                                 {employees.email}
                             </Box>
                             <Box pl='12'>
                                 {employees.phone_number}
                             </Box>
-                            <Box pl='10' ml='auto'>
+                            <Box pl='10'>
                                 <Badge bg='green.300' color='black'>
                                     Active
                                 </Badge>

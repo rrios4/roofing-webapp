@@ -203,14 +203,14 @@ function Estimates() {
                 </Modal>
                 <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
                     <Box display='flex'>
-                        <Box display='flex' flexDir='column' pr='1rem'>
+                        {/* <Box display='flex' flexDir='column' pr='1rem'>
                             <form method='GET' >
                                 <FormControl>
                                     <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search Customer Name' colorScheme='blue' border='2px'/>
                                     <FormHelperText textAlign='right'>Press Enter key to search</FormHelperText>
                                 </FormControl>
                             </form>
-                        </Box>
+                        </Box> */}
                     </Box>
                 </Box>
                 <Box display='flex' pt='1rem' pb='2rem' pl='1rem' pr='1rem' >
