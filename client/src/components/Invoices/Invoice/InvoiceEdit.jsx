@@ -3,6 +3,7 @@ import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, Modal
 import { AddIcon } from "@chakra-ui/icons";
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
+import swal from 'sweetalert';
 
 const InvoiceEdit = (props) => { 
     
@@ -104,14 +105,34 @@ const InvoiceEdit = (props) => {
 
     const deleteInvoice = async () => {
         // console.log('Button will perform a delete to the database.');
-        await axios.delete(`${url}/invoices/${id}`)
-        .then((response) => {
-            console.log("Invoice has been deleted!")
-            return <Redirect to='/invoices' />
+        // await axios.delete(`${url}/invoices/${id}`)
+        // .then((response) => {
+        //     console.log("Invoice has been deleted!")
+        //     return <Redirect to='/invoices' />
+        // })
+        // .catch(error => console.error(`Error: ${error}`));
+        // history.push("/invoices")
+        await swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover invoice info!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true
         })
-        .catch(error => console.error(`Error: ${error}`));
-        history.push("/invoices")
-                
+        .then((willDelete) => {
+            if(willDelete) {
+                axios.delete(`${url}/invoices/${id}`)
+                .then(response => {
+                    history.push("/invoices")
+                })
+                swal("Poof! Your invoice has been deleted!", {
+                    icon: "success",
+                });
+            } else {
+                swal("Your invoice data was not deleted!");
+                history.push(`/editinvoice/${id}`)
+            }
+        })         
     }
 
     const markInvoicePaid = async() => {

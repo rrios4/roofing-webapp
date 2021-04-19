@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
+import swal from 'sweetalert';
 import {
   Flex,
   Box,
@@ -41,15 +42,21 @@ function Login() {
       // on the following line, 'success' is an actual boolean variable in the backend handler, it will return true if validation was successful or false if validation was unsuccessful
       if (response.status === 200) {
         localStorage.setItem('username', response.data.username);
+        swal("Logged In!", "You are now logged in!", "success");
         //redirect page to home dashboard
         history.push('/');
         return;
-      } else {
-        alert('Username and/or Password is incorrect.');
-        return;
+      } else if(response.status === 400) {
+        return swal("Try Again!", "Invalid Credentials!", "error");
       }
     })
-    .catch(error => console.error(`Error: ${error}`));
+    .catch(error => {
+      console.log(error.response);
+      swal("Try Again!", "Invalid Credentials!", "error");
+    });
+
+    setLoginPassword('');
+    setLoginUsername('');
   }
 
   return (

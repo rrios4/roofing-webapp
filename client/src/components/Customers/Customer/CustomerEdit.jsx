@@ -4,6 +4,7 @@ import {Link, Redirect, useHistory} from 'react-router-dom';
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import axios from 'axios';
 import Select from "react-select";
+import swal from 'sweetalert'
 
 function formatPhoneNumber(value) {
     //if value is falsy eg if the user deletes the input, then just return 
@@ -72,14 +73,27 @@ const CustomerEdit = (props) => {
 
     const deleteCustomer = async () => {
         // console.log('Button will perform a delete to the database.');
-        await axios.delete(`${url}/customers/${id}`)
-        .then((response) => {
-            console.log("Customer has been deleted!")
-            return <Redirect to='/customers' />
+        await swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover customer info!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true
         })
-        .catch(error => console.error(`Error: ${error}`));
-        history.push("/customers")
-                
+        .then((willDelete) => {
+            if(willDelete) {
+                axios.delete(`${url}/customers/${id}`)
+                .then(response => {
+                    history.push("/customers")
+                })
+                swal("Poof! Your customer has been deleted!", {
+                    icon: "success",
+                });
+            } else {
+                swal("Your customer data was not deleted!");
+                history.push(`/editcustomer/${id}`)
+            }
+        })          
     }
 
     const handleSubmit = async(event) => {

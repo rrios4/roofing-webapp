@@ -8,7 +8,8 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import BallotIcon from '@material-ui/icons/Ballot';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
-import {Link, useHistory} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom';
+import swal from 'sweetalert'
 
 function Dashboard() {
 
@@ -23,6 +24,7 @@ function Dashboard() {
 
     const logout = () => {
         localStorage.clear();
+        swal("Logged Out!", "You are now logged out from the system!", "success");
         history.push('/login')
     }
 

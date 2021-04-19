@@ -5,6 +5,7 @@ import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import Employee from './Employee';
 import Select from "react-select";
+import swal from 'sweetalert';
 
 const EmployeeEdit = (props) => {
     const {id} = props.match.params;
@@ -51,13 +52,34 @@ const EmployeeEdit = (props) => {
 
     const deleteCustomer = async () => {
         // console.log('Button will perform a delete to the database.');
-        await axios.delete(`${url}/employees/${id}`)
-        .then((response) => {
-            console.log("Employee has been deleted!")
-            return <Redirect to='/customers' />
+        // await axios.delete(`${url}/employees/${id}`)
+        // .then((response) => {
+        //     console.log("Employee has been deleted!")
+        //     return <Redirect to='/customers' />
+        // })
+        // .catch(error => console.error(`Error: ${error}`));
+        // history.push("/employees")
+        await swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover employee info!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true
         })
-        .catch(error => console.error(`Error: ${error}`));
-        history.push("/employees")
+        .then((willDelete) => {
+            if(willDelete) {
+                axios.delete(`${url}/employees/${id}`)
+                .then(response => {
+                    history.push("/employees")
+                })
+                swal("Poof! Your employee has been deleted!", {
+                    icon: "success",
+                });
+            } else {
+                swal("Your employee data was not deleted!");
+                history.push(`/editemployee/${id}`)
+            }
+        }) 
                 
     }
 

@@ -3,6 +3,7 @@ import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, Modal
 import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon} from '@chakra-ui/icons';
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
+import swal from 'sweetalert';
 
 const EstimateEdit = (props) => {
 
@@ -68,13 +69,27 @@ const EstimateEdit = (props) => {
 
     const deleteEstimate = async () => {
         // console.log('Button will perform a delete to the database.');
-        await axios.delete(`${url}/estimates/${id}`)
-        .then((response) => {
-            console.log("Estimate has been deleted!")
-            return <Redirect to='/estimates' />
+        await swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover estimate info!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true
         })
-        .catch(error => console.error(`Error: ${error}`));
-        history.push("/estimates")
+        .then((willDelete) => {
+            if(willDelete) {
+                axios.delete(`${url}/estimates/${id}`)
+                .then(response => {
+                    history.push("/estimates")
+                })
+                swal("Poof! Your estimate has been deleted!", {
+                    icon: "success",
+                });
+            } else {
+                swal("Your estimate data was not deleted!");
+                history.push(`/editestimate/${id}`)
+            }
+        }) 
                 
     }
 
