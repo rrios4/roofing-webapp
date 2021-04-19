@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
     "start": "node app.js",
+    "client1": "cd .. && cd client && npm start",
     "client": "cd .. && cd client && npm run build",
-    "app": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client\"",
+    "app": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client1\"",
     "build": "cd .. && cd client && npm install",
     "install-client": "cd .. && cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build"
