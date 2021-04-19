@@ -5,21 +5,21 @@ Author: CoogTech Consulting
 ## How to Run
 #### 1. Install Modules for Back-End Server
 ```
-  cd server
+  cd client
 ```
 ```
   npm ci
 ```
 #### 2. Install Modules for Front-End Client
 ```
-  cd client
+  cd server
 ```
 ```
   npm ci
 ```
-#### 3. Run Program from Root of Project
+#### 3. Run Program from Server folder by running this command in the terminal
 ```
-  npm run dev
+  npm run app
 ```
 
 ## Package list
@@ -28,10 +28,8 @@ Author: CoogTech Consulting
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | bcryptjs                   | Optimized bcrypt in JavaScript with zero dependencies. Compatible to the C++ bcrypt binding on node.js and also working in the browser.                                                                                 |
 | cors                       | CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.                                                                                              |
-| crypto-random-string       | Generate a cryptographically strong random string                                                                                                                                                                       |
 | dotenv                     | Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology.       |
-| ejs                        | Embedded JavaScript templates                                                                                                                                                                                           |
-| email-templates            | Create, preview, and send custom email templates for Node.js. Highly configurable and supports automatic inline CSS, stylesheets, embedded images and fonts, and much more! Made for sending beautiful emails with Lad. |
+| sweetAlerts                        | Alerts the indicates the user on UI actions through the application                                                                                                             |
 | express                    | Fast, unopinionated, minimalist web framework for node.                                                                                                                                                                 |
 | http-status-codes          | Constants enumerating the HTTP status codes.                                                                                                                                                                            |
 | i18next                    | i18next is a very popular internationalization framework for browser or any other javascript environment (eg. node.js).                                                                                                 |
@@ -40,31 +38,30 @@ Author: CoogTech Consulting
 | jsonwebtoken               | This was developed against draft-ietf-oauth-json-web-token-08. It makes use of node-jws                                                                                                                                 |
 | module-alias               | Create aliases of directories and register custom module paths in NodeJS like a boss!                                                                                                                                   |
 | moment                     | A lightweight JavaScript date library for parsing, validating, manipulating, and formatting dates.                                                                                                                      |
-| mysql                   | A way to provide a connection to mysql server that is local or cloud.                                                                            |
-| nodemailer                 | Send e-mails from Node.js – easy as cake!                                                                                                                                                                               |
+| mysql                      | A way to provide a connection to mysql server that is local or cloud.                                                                                                                                                   |
+| Sequelize               | ORDM that manages out database request to the database                                                                                                                                                                                |
 | validator                  | A library of string validators and sanitizers.                                                                                                                                                                          |
-| winston                    | A logger for just about everything.        |
-| axios                     | Tool for making HTTP request to communicate with API |
+| winston                    | A logger for just about everything.                                                                                                                                                                                     |
+| axios                      | Tool for making HTTP request to communicate with API                                                                                                                                                                    |
+| concurrently                      | Allows to run mutiple terminal commands in one by running one command                                                                                                                                                   |
+| chakra UI                      | Library that has UI components for react                                                                                                                                                                 |
+
+
 
 ## API Endpoints
 
-- GET: <http://localhost:3001/api/customers/> - Get all customers
-- GET: <http://localhost:3001/api/employees/> - Get all employees
-- GET: <http://localhost:3001/api/invoices/> - Get all invoices
-- GET: <http://localhost:3001/api/estimates/> - Get all estimates
-- GET: <http://localhost:3001/api/materials/> - Get all materials
-- GET: <http://localhost:3001/api/job-schedule/> - Get all job schedules
-- GET: <http://localhost:3001/api/material-line> - Get all material lists for estimates
-- POST: <http://localhost:3001/sign-in> - Sign in
-- POST: <http://localhost:3001/sign-up> - Sign up
-- POST: <http://localhost:3001/logout> - Logout
-- POST: <http://localhost:3001/verify-request> - Verification request
-- POST: <http://localhost:3001/verify> - Verify url
-- POST: <http://localhost:3001/reset-password> - Reset password
-- POST: <http://localhost:3001/new-password> - New password after password reset
-- POST: <http://localhost:3001/change-password> - Change password
-- POST: <http://localhost:3001/update-user> - Update user
-- POST: <http://localhost:3001/switch-locale> - Switch lang
+- GET: <http://localhost:8081/api/customers/> - Get all customers
+- GET: <http://localhost:8081/api/employees/> - Get all employees
+- GET: <http://localhost:8081/api/invoices/> - Get all invoices
+- GET: <http://localhost:8081/api/estimates/> - Get all estimates
+- POST: <http://localhost:8081/api/auth/login> - Sign in
+- POST: <http://localhost:8081/api/auth/register> - Sign up
+- POST: <http://localhost:8081/verify-request> - Verification request
+- POST: <http://localhost:8081/verify> - Verify url
+- POST: <http://localhost:8081/reset-password> - Reset password
+- POST: <http://localhost:8081/new-password> - New password after password reset
+- POST: <http://localhost:8081/change-password> - Change password
+- POST: <http://localhost:8081/update-user> - Update user
 
 **Note:** For any question [issues](https://github.com/rrios4/roofing-webapp/issues)
 
