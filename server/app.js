@@ -70,6 +70,9 @@ require("./routes/authentication/auth")(app);
 // });
 
 //Handle for production
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static('../client/build'));
+}
 
 //Litsen for port
 const port = process.env.PORT || 8081;

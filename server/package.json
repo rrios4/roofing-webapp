@@ -6,8 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
-    "client": "cd .. && cd client && npm start",
-    "app": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client\""
+    "start": "node app.js",
+    "client": "cd .. && cd client && npm run build",
+    "app": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client\"",
+    "build": "cd .. && cd client && npm install",
+    "install-client": "cd .. && cd client && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build"
   },
   "author": "CoogTech Consulting",
   "license": "ISC",
