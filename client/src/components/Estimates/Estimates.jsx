@@ -129,6 +129,7 @@ function Estimates() {
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
                         <ModalHeader textAlign='center'>Create New Estimate</ModalHeader>
+                        <Text color='red' textAlign='center'>Fill all fields please!</Text>
                         <ModalCloseButton />
                         <form method='POST' onSubmit={handleSubmit}>
                         <ModalBody>
@@ -163,8 +164,8 @@ function Estimates() {
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Estimate Status</FormLabel>
                                     <Select placeholder='Select Invoice Status' defaultValue={null} value={estStatus} onChange={(e) => handleEstimateStatusInput(e)}>
-                                        <option value='1'>Approved</option>
-                                        <option value='2'>Pending</option>
+                                        <option value='2'>Approved</option>
+                                        <option value='1'>Pending</option>
                                         <option value='3'>Expired</option>
                                     </Select>
                                     {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}

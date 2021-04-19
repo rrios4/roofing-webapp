@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { useHistory } from "react-router-dom";
-import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
+import { Formik, Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 import axios from 'axios'
 import Invoice from "./Invoice/Invoice";
 import AsyncSelect from 'react-select/async';
+import swal from 'sweetalert'
 
 function Invoices() {
     //Defining variables
@@ -64,6 +65,7 @@ function Invoices() {
         })
         .catch((err) => {
             console.error(err);
+            swal("Good job!", "You clicked the button!", "error");
         })
         console.log('Submit Function works!')
         //history.go(0);
@@ -111,6 +113,15 @@ function Invoices() {
         .catch(error => console.error(`Error: ${error}`))
     };
 
+    const formValidation = (value) => {
+        let error
+        if(!value){
+            error = 'Field is required'
+        } 
+
+        return error;
+    }
+
     return (
         <main>
             <Flex flexDir='column' justifyContent='center' pb='2rem'>
@@ -118,6 +129,7 @@ function Invoices() {
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
                         <ModalHeader textAlign='center'>Create New Invoice</ModalHeader>
+                        <Text color='red' textAlign='center'>Fill all fields please!</Text>
                         <ModalCloseButton />
                         <form method='POST' onSubmit={handleSubmit}>
                         <ModalBody>
@@ -145,16 +157,21 @@ function Invoices() {
                                     <FormLabel pt='1rem'>Job Type</FormLabel>
                                     <Select defaultValue={null} value={selectJobTypeOption} placeholder='Select Job Type' onChange={(e) => handleJobTypeInput(e)}>
                                         <option value='1'>New Roof Installation</option>
-                                        <option value='2'>Roof Repair</option>
-                                        <option value='3'>Construction</option>
+                                        <option value='2'>Roof Repairs</option>
+                                        <option value='3'>Structure Construction</option>
+                                        <option value='4'>Siding Repair</option>
+                                        <option value='5'>Roof Maintenance</option>
+                                        <option value='6'>Painting Interior of Home</option>
+                                        <option value='7'>Painting Exterior of Home</option>
+                                        <option value='8'>Flooring Installation</option>
                                     </Select>
                                     {/* <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/> */}
                                 </FormControl>
                                 <FormControl isRequired={true}>
                                     <FormLabel pt='1rem'>Invoice Status</FormLabel>
                                     <Select defaultValue={null} value={selectInvoiceStatus} placeholder='Select Invoice Status' onChange={(e) => handleInvoiceStatusInput(e)}>
-                                        <option value='1'>Paid</option>
-                                        <option value='2'>Pending</option>
+                                        <option value='2'>Paid</option>
+                                        <option value='1'>Pending</option>
                                         <option value='3'>Outstanding</option>
                                     </Select>
                                     {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
@@ -189,12 +206,12 @@ function Invoices() {
                 <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
                     <Box display='flex'>
                         <Box display='flex' flexDir='column' pr='1rem'>
-                            <form method='GET' >
+                            {/* <form method='GET' >
                                 <FormControl>
                                     <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search Invoices Name' colorScheme='blue' border='2px'/>
                                     <FormHelperText textAlign='right'>Press Enter key to search</FormHelperText>
                                 </FormControl>
-                            </form>
+                            </form> */}
                         </Box>
                     </Box>
                 </Box>

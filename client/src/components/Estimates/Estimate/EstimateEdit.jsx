@@ -95,7 +95,7 @@ const EstimateEdit = (props) => {
 
     const markEstimateApproved = async() => {
         await axios.put(`http://localhost:8081/api/estimates/${id}`, {
-            etStatusId : '1'
+            etStatusId : '2'
         })
         .then((response) => {
             getInvoiceById();
@@ -105,7 +105,7 @@ const EstimateEdit = (props) => {
 
     const markEstimatePending = async() => {
         await axios.put(`http://localhost:8081/api/estimates/${id}`, {
-            etStatusId: '2'
+            etStatusId: '1'
         })
         .then((response) => {
             getInvoiceById();
@@ -157,12 +157,45 @@ const EstimateEdit = (props) => {
         //history.go(0);
     };
 
+    const convertToInvoice = async() => {
+        await swal({
+            title: 'Are you sure?',
+            text: 'Once transferred, you will need to update invoice info with correct jobtype and due date!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true
+        })
+        .then((willDelete) => {
+            if(willDelete) {
+                axios.post('http://localhost:8081/api/invoices/add', {
+                    customerId: invoice.customerId,
+                    jobTypeId: '1',
+                    invStatusId: '2',
+                    service_name: invoice.service_name,
+                    inv_date: invoice.estimate_date,
+                    due_date: invoice.exp_date,
+                    amount_due: invoice.quote_price
+                })
+                .then(response => {
+                    history.push("/invoices")
+                })
+                swal("Poof! Your estimate has been transferred!", {
+                    icon: "success",
+                });
+            } else {
+                swal("Your estimate data was not converted!");
+                history.push(`/editestimate/${id}`)
+            }
+        }) 
+    }
+
     return(
         <Flex direction='column' justifyContent='center' pb='1rem' pt='1rem' w={[300, 400, 800]} >
                 <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
                         <ModalHeader textAlign='center'>Edit Estimate</ModalHeader>
+                        <Text color='red' textAlign='center'>Fill all fields please!</Text>
                         <ModalCloseButton />
                         <form method='PUT' onSubmit={handleSubmit}>
                         <ModalBody>
@@ -196,13 +229,14 @@ const EstimateEdit = (props) => {
                         </form>
                     </ModalContent> 
                 </Modal>
-                    <Link to='/estimates'>
-                        <Box display='flex'  pt='1rem' pb='1rem' pl='1rem'>
-                            <Box display='flex' rounded='xl' p='1rem'>
-                                <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
-                            </Box>
-                        </Box>
-                    </Link>
+                <Link to='/estimates'>
+                <Box display='flex' pt='1rem' pb='1rem' pl='1rem'>
+                    <Box display='flex' _hover={{color: 'blue.400'}}>
+                        <ChevronLeftIcon fontSize='35px'/>
+                        <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
+                    </Box>
+                </Box>
+            </Link>
                     <Box display='flex' pt='1rem' justifyContent='center'>
                         <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                             <Box display='flex' mr='auto' pl='1rem'>
@@ -230,7 +264,12 @@ const EstimateEdit = (props) => {
                     <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
                         <Box display='flex' flexDir='column' p='1rem' rounded='2xl' bg='gray.600' shadow='md' w={[300, 400, 800]}>
                             <Box display='flex' justifyContent='flex-end' pr='2rem' pt='1rem'>
-                                <Button colorScheme='blue' onClick={onOpen}>Edit</Button>
+                                <Box pr='1rem' >
+                                    <Button bg='white' color='green' onClick={convertToInvoice}>Convert To Invoice</Button>
+                                </Box>
+                                <Box>
+                                    <Button colorScheme='blue' onClick={onOpen}>Edit</Button>
+                                </Box>
                                 <Box pl='1rem'>
                                     <Button colorScheme='red' onClick={deleteEstimate}>Delete</Button>
                                 </Box>

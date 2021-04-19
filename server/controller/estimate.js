@@ -39,7 +39,7 @@ exports.findAll = (req, res) => {
     const name = req.query.name;
     var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
     
-    Estimate.findAll({ include: ['cu', 'ets']})
+    Estimate.findAll({ include: ['cu', 'ets'], order: [['etStatusId', 'ASC']]})
         .then(data => {
             res.send(data);
         })

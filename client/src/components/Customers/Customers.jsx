@@ -139,6 +139,7 @@ export default function Customers() {
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
                         <ModalHeader textAlign='center'>Create New Customer</ModalHeader>
+                        <Text color='red' textAlign='center'>Fill all fields please!</Text>
                         <ModalCloseButton />
                         <form method='POST' onSubmit={handleSubmit}>
                         <ModalBody>

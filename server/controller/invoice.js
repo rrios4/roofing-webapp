@@ -40,9 +40,8 @@ exports.findAll = (req, res) => {
     const porder = req.params.invs; 
     const Op = Sequelize.Op;
     var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
-    let order = 
     
-    Invoice.findAll({where: condition, include: ['cu', 'jtype', 'invs'], order: [['invStatusId', 'DESC']] })
+    Invoice.findAll({where: condition, include: ['cu', 'jtype', 'invs'], order: [['invStatusId', 'ASC']] })
         .then(data => {
             res.send(data);
         })

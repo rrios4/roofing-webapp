@@ -4,6 +4,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import {Link, Redirect, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import swal from 'sweetalert';
+import {ChevronLeftIcon} from '@chakra-ui/icons'
 
 const InvoiceEdit = (props) => { 
     
@@ -137,7 +138,7 @@ const InvoiceEdit = (props) => {
 
     const markInvoicePaid = async() => {
         await axios.put(`http://localhost:8081/api/invoices/${id}`, {
-            invStatusId : '1'
+            invStatusId : '2'
         })
         .then((response) => {
             getInvoiceById();
@@ -147,7 +148,7 @@ const InvoiceEdit = (props) => {
 
     const markInvoicePending = async() => {
         await axios.put(`http://localhost:8081/api/invoices/${id}`, {
-            invStatusId: '2'
+            invStatusId: '1'
         })
         .then((response) => {
             getInvoiceById();
@@ -213,13 +214,14 @@ const InvoiceEdit = (props) => {
 
                     </ModalContent> 
                 </Modal>
-                    <Link to='/invoices'>
-                        <Box display='flex'  pt='1rem' pb='1rem' pl='1rem'>
-                            <Box display='flex' rounded='xl' p='1rem'>
-                                <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
-                            </Box>
-                        </Box>
-                    </Link>
+                <Link to='/invoices'>
+                <Box display='flex' pt='1rem' pb='1rem' pl='1rem'>
+                    <Box display='flex' _hover={{color: 'blue.400'}}>
+                        <ChevronLeftIcon fontSize='35px'/>
+                        <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
+                    </Box>
+                </Box>
+            </Link>
                     <Box display='flex' pt='1rem' justifyContent='center'>
                         <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                             <Box display='flex' mr='auto' pl='1rem'>

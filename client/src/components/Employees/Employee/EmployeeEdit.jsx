@@ -353,7 +353,7 @@ const EmployeeEdit = (props) => {
                     </ModalContent> 
                 </Modal>
             <Link to='/employees'>
-                <Box display='flex' pt='0rem' pb='0rem' pl='1rem'>
+                <Box display='flex' pt='1rem' pb='1rem' pl='1rem'>
                     <Box display='flex' _hover={{color: 'blue.400'}}>
                         <ChevronLeftIcon fontSize='35px'/>
                         <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
