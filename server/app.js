@@ -4,6 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 //const mysql = require('mysql');
 //const fs = require('fs');
+require('dotenv').config()
 
 
 //init the express app
