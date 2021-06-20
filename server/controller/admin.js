@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 const db = require("../models");
 const Admin = db.admin;
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 exports.create = async(req, res) => {
     const {username} = req.body;
