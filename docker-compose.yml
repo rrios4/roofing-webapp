@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   db:
@@ -7,5 +7,6 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=Test123!
+      - MYSQL_DATABASE=roofing_db
     ports:
-      - 3306:3306
+      - "3306:3306"

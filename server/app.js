@@ -2,10 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path')
 //const mysql = require('mysql');
 //const fs = require('fs');
 require('dotenv').config()
-
 
 //init the express app
 const app = express()
@@ -41,9 +41,18 @@ app.use(morgan('tiny'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//Handle for production
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, '../client/build')));
+}
+
 //Routes
 app.get("/", (req, res) => {
- res.json({ message: "Welcome to Rios Roofing Web App Backend!"})
+    if(process.env.NODE_ENV === 'production'){
+        res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    } else {
+        res.json({ message: "Welcome to Rios Roofing Web App Backend!"})
+    }
 });
 require("./routes/api/customers")(app);
 require("./routes/api/employees")(app);
@@ -69,10 +78,6 @@ require("./routes/authentication/auth")(app);
 //     response.status(442).send({error: err.message});
 // });
 
-//Handle for production
-if(process.env.NODE_ENV === 'production'){
-    app.use(express.static('../client/build'));
-}
 
 //Litsen for port
 const port = process.env.PORT || 8081;
