@@ -13,10 +13,10 @@ node_modules
 # production
 /build
 client/build
-server/config
 server/data/.old
 
 # misc
+server/.env
 .DS_Store
 .env.local
 .env.development.local
