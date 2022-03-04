@@ -10,7 +10,7 @@ import swal from 'sweetalert';
 const EmployeeEdit = (props) => {
     const {id} = props.match.params;
     let history = useHistory();
-    const url = 'http://localhost:8081/api';
+    const url = `http:/${process.env.REACT_APP_BASE_URL}:8081/api`;
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
 
@@ -212,7 +212,7 @@ const EmployeeEdit = (props) => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = `http://localhost:8081/api/employees/${id}`
+        const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/employees/${id}`
         const json = {
             name: name,
             address: address,

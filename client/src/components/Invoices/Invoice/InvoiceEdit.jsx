@@ -23,7 +23,7 @@ const InvoiceEdit = (props) => {
 
     // Define variables
     const {id} = props.match.params;
-    const url = 'http://localhost:8081/api';
+    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
     let history = useHistory();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
@@ -56,7 +56,7 @@ const InvoiceEdit = (props) => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = `http://localhost:8081/api/invoices/${id}`
+        const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/invoices/${id}`
         const json = {
             jobTypeId: selectJobTypeOption,
             service_name: serviceName,
@@ -137,7 +137,7 @@ const InvoiceEdit = (props) => {
     }
 
     const markInvoicePaid = async() => {
-        await axios.put(`http://localhost:8081/api/invoices/${id}`, {
+        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/invoices/${id}`, {
             invStatusId : '2'
         })
         .then((response) => {
@@ -147,7 +147,7 @@ const InvoiceEdit = (props) => {
     };
 
     const markInvoicePending = async() => {
-        await axios.put(`http://localhost:8081/api/invoices/${id}`, {
+        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/invoices/${id}`, {
             invStatusId: '1'
         })
         .then((response) => {
@@ -158,7 +158,7 @@ const InvoiceEdit = (props) => {
     };
 
     const markInvoiceOutstanding = async() => {
-        await axios.put(`http://localhost:8081/api/invoices/${id}`, {
+        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/invoices/${id}`, {
             invStatusId: '3'
         })
         .then((response) => {

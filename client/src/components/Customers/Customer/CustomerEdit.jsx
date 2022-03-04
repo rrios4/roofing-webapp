@@ -51,7 +51,7 @@ const CustomerEdit = (props) => {
     const [email, setEmail] = useState('');
     const [selectField, setSelectField] = useState('')
 
-    const url = 'http://localhost:8081/api';
+    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
@@ -98,7 +98,7 @@ const CustomerEdit = (props) => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = `http://localhost:8081/api/customers/${id}`
+        const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/customers/${id}`
         const json = {
             name: name,
             address: address,

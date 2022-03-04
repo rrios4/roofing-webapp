@@ -40,7 +40,7 @@ export default function Customers() {
         //GET data from API
         const [customers, getCustomers] = useState('');
         const [searchCustomer, setSearchCustomer] = useState('');
-        const url = 'http://localhost:8081/api';
+        const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
         const query = `/?name=${searchCustomer}`
 
         useEffect(() => {
@@ -97,7 +97,7 @@ export default function Customers() {
         // Function that will make the POST request from axios
         const handleSubmit = async(event) => {
             event.preventDefault();
-            const url2 = 'http://localhost:8081/api/customers/add'
+            const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/customers/add`
             const json = {
                 name: name,
                 address: address,

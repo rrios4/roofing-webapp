@@ -12,7 +12,7 @@ function Invoices() {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
     let history = useHistory();
-    const url = 'http://localhost:8081/api';
+    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     //React States to manage data
     const [invoices, getInvoices] = useState('');
@@ -49,7 +49,7 @@ function Invoices() {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = 'http://localhost:8081/api/invoices/add'
+        const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/invoices/add`
         const json = {
             customerId: cuIdCaptured,
             jobTypeId: selectJobTypeOption,
@@ -103,7 +103,7 @@ function Invoices() {
     };
 
     const loadOptions = async (inputText, callback) => {
-        await axios.get(`http://localhost:8081/api/customers/?name=${inputText}`)
+        await axios.get(`http://${process.env.REACT_APP_BASE_URL}:8081/api/customers/?name=${inputText}`)
         .then((response) => {
             // const allCustomers = response.data;
             //add data to state

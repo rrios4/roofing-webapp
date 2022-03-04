@@ -11,7 +11,7 @@ function Estimates() {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
     let history = useHistory();
-    const url = 'http://localhost:8081/api';
+    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     // States to manage data
     const [estimates, getEstimates] = useState('');
@@ -52,7 +52,7 @@ function Estimates() {
     }
 
     const getCustomers = async() => {
-        await axios.get('http://localhost:8081/api/customers')
+        await axios.get(`http://${process.env.REACT_APP_BASE_URL}:8081/api/customers`)
         .then((response) => {
             const allCustomers = response.data;
             //add data to state
@@ -63,7 +63,7 @@ function Estimates() {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = 'http://localhost:8081/api/estimates/add'
+        const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/add`
         const json = {
             etStatusId: estStatus,
             customerId: cuIdCaptured,
@@ -112,7 +112,7 @@ function Estimates() {
     }
 
     const loadOptions = async (inputText, callback) => {
-        await axios.get(`http://localhost:8081/api/customers/?name=${inputText}`)
+        await axios.get(`http://${process.env.REACT_APP_BASE_URL}:8081/api/customers/?name=${inputText}`)
         .then((response) => {
             // const allCustomers = response.data;
             //add data to state

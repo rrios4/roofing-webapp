@@ -42,7 +42,7 @@ function Employees() {
     //GET data from API
     const [employees, getEmployees] = useState('');
     const [searchEmployee, setSearchEmployee] = useState('');
-    const url = 'http://localhost:8081/api';
+    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
@@ -84,7 +84,7 @@ function Employees() {
     // Function that will make the POST request from axios
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = 'http://localhost:8081/api/employees/add'
+        const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/employees/add`
         const json = {
             emp_statusId: '1',
             emp_name: name,

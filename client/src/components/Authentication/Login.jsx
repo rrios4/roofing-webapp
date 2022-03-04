@@ -29,7 +29,7 @@ function Login() {
   // function to authenticate the user based on the login credentials provided
   const handleLogin = async (event) => {
     event.preventDefault();
-    const url = 'http://localhost:8081/api/auth/login'
+    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api/auth/login`
     const credentials = {
       username: loginUsername,
       password: loginPassword
