@@ -20,7 +20,7 @@ const EstimateEdit = (props) => {
 
     // Define variables
     const {id} = props.match.params;
-    const url = 'http://localhost:8081/api';
+    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
     let history = useHistory();
@@ -94,7 +94,7 @@ const EstimateEdit = (props) => {
     }
 
     const markEstimateApproved = async() => {
-        await axios.put(`http://localhost:8081/api/estimates/${id}`, {
+        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
             etStatusId : '2'
         })
         .then((response) => {
@@ -104,7 +104,7 @@ const EstimateEdit = (props) => {
     };
 
     const markEstimatePending = async() => {
-        await axios.put(`http://localhost:8081/api/estimates/${id}`, {
+        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
             etStatusId: '1'
         })
         .then((response) => {
@@ -115,7 +115,7 @@ const EstimateEdit = (props) => {
     };
 
     const markEstimateExpired = async() => {
-        await axios.put(`http://localhost:8081/api/estimates/${id}`, {
+        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
             etStatusId: '3'
         })
         .then((response) => {
@@ -127,7 +127,7 @@ const EstimateEdit = (props) => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const url2 = `http://localhost:8081/api/estimates/${id}`
+        const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`
         const json = {
             estimate_date: estDate,
             exp_date: expDate,
@@ -167,7 +167,7 @@ const EstimateEdit = (props) => {
         })
         .then((willDelete) => {
             if(willDelete) {
-                axios.post('http://localhost:8081/api/invoices/add', {
+                axios.post(`http://${process.env.REACT_APP_BASE_URL}:8081/api/invoices/add`, {
                     customerId: invoice.customerId,
                     jobTypeId: '1',
                     invStatusId: '2',
