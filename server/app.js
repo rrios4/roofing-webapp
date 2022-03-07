@@ -10,7 +10,7 @@ require('dotenv').config()
 //init the express app
 const app = express()
 let corsOptions = {
-    origin: "http://localhost:3000"
+    origin: `http://${process.env.MACHINE_HOST_IP}:3000`
 };
 
 //init sequilize models
