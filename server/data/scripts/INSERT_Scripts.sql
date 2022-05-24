@@ -22,6 +22,18 @@ VALUES
     ( '6', 'Painting Interior of Home' , 'Painting indoors for the client.', '2021-04-15 05:00:25', '2021-04-15 05:00:25' ),
     ( '7', 'Painting Exterior of Home' , 'Painting the outdoors for the client.', '2021-04-15 05:00:25', '2021-04-15 05:00:25' ),
     ( '8', 'Flooring Installation', 'Installing tile floors to wood floor.','2021-04-15 05:00:25', '2021-04-15 05:00:25');
+-- @block Customer Schedule Type Data
+INSERT INTO roofing_db.customer_type
+VALUES 
+    (1,'Residential','Customer owns a residential house.', now(),now()),
+    (2,'Commercial','Customer owns a commercial building.',now(),now()),
+    (3,'Other','Customer owns structure that is not commercial or residential.', now(),now());
+-- @block Customer Schedule Status Data
+INSERT INTO roofing_db.customer_schedule_status 
+VALUES 
+    (1,'New','A new request date as been submitted by customer for estimate quote.', now(),now()),
+    (2,'Reschedule','A request that must be reschedule due to schedule conflict.',now(),now()),
+    (3,'Scheduled','A request that has been accepted and scheduled in out calendar.', now(),now());
 -- @block Employee Status Table Data
 INSERT INTO emp_statuses (id, status_name, description, createdAt, updatedAt)
 VALUES
