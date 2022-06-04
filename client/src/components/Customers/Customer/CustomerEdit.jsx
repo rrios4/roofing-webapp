@@ -4,35 +4,9 @@ import {Link, Redirect, useHistory} from 'react-router-dom';
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import axios from 'axios';
 import Select from "react-select";
-import swal from 'sweetalert'
-
-function formatPhoneNumber(value) {
-    //if value is falsy eg if the user deletes the input, then just return 
-    if(!value) return value;
-
-    //clean the input for any non-digit values.
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    // phoneNumberLength is used to know when to apply our formatting for the phone number
-    const phoneNumberLength = phoneNumber.length;
-
-    // we need to return the value with no formatting if its less then four digits
-    // this is to avoid weird behavior that occurs if you  format the area code to early
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    // if phoneNumberLength is greater than 4 and less the 7 we start to return
-    // the formatted number
-    if (phoneNumberLength < 7) {
-        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    // finally, if the phoneNumberLength is greater then seven, we add the last
-    // bit of formatting and return it.
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-        3,
-        6
-    )}-${phoneNumber.slice(6, 10)}`;
-}
+import swal from 'sweetalert';
+import supabase from '../../../utils/supabaseClient'
+import formatPhoneNumber from '../../../utils/formatPhoneNumber'
 
 const CustomerEdit = (props) => {
     const {id} = props.match.params;
@@ -44,6 +18,8 @@ const CustomerEdit = (props) => {
 
     // States that pick up the values from the input fields of the form
     const [name, setCustomerName] = useState('');
+    const [firstName, setfirstName] = useState('');
+    const [lastName, setlastName] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
@@ -62,15 +38,33 @@ const CustomerEdit = (props) => {
     }, []);
     
     const getAllCustomer = async () => {
-        await axios.get(`${url}/customers/${id}`)
-        .then((response) => {
-            const allCustomer = response.data
-            //add our data to state
-            getCustomer(allCustomer);
-        })
-        .catch(error => console.error(`Error: ${error}`));
+        let { data: customerById, error } = await supabase
+        .from('customer')
+        .select('*')
+        .eq('id', `${id}`)
+        
+        if(error){
+            console.log(error)
+        }
+        getCustomer(customerById[0])
+
     }
 
+    // Delete request that is sent to the DB to delete user by id
+    const deleteRequest = async() => {
+        let { data, error } = await supabase
+        .from('customer')
+        .delete()
+        .eq('id',`${id}`)
+
+        if(error){
+            console.log(error)
+        }
+        console.log(data)
+        history.push("/customers")
+    }
+
+    // Function that programs delete button with alert and triggers action from delete request function to deleter customer
     const deleteCustomer = async () => {
         // console.log('Button will perform a delete to the database.');
         await swal({
@@ -82,10 +76,7 @@ const CustomerEdit = (props) => {
         })
         .then((willDelete) => {
             if(willDelete) {
-                axios.delete(`${url}/customers/${id}`)
-                .then(response => {
-                    history.push("/customers")
-                })
+                deleteRequest()
                 swal("Poof! Your customer has been deleted!", {
                     icon: "success",
                 });
@@ -109,53 +100,70 @@ const CustomerEdit = (props) => {
             email: email
         }
         console.log('Submit Function works!');
-        
+        console.log(firstName)
         if(selectField === '1'){
-            await axios.put(url2, {
-                name: name
-            })
-            .catch((err) => {
-                console.error(err);
-            })
+            let { data, error } = await supabase
+            .from('customer')
+            .update({first_name: firstName})
+            .match({id: customer.id})
+            if(error){
+                console.log(error)
+            };
+            console.log(data);
         } else if(selectField === '2'){
-            await axios.put(url2, {
-                address: address
-            })
-            .catch((err) => {
-                console.error(err);
-            })
+            let { data, error } = await supabase
+            .from('customer')
+            .update({street_address: address})
+            .match({id: customer.id})
+            if(error){
+                console.log(error)
+            };
+            console.log(data);
         } else if(selectField === '3'){
-            await axios.put(url2, {
-                city: city
-            })
-            .catch((err) => {
-                console.error(err);
-            })
+            let { data, error } = await supabase
+            .from('customer')
+            .update({city: city})
+            .match({id: customer.id})
+            if(error){
+                console.log(error)
+            };
+            console.log(data);
         } else if(selectField === '4'){
-            await axios.put(url2, {
-                state: state
-            })
-            .catch((err) => {
-                console.error(err);
-            })
+            let { data, error } = await supabase
+            .from('customer')
+            .update({state: state})
+            .match({id: customer.id})
+            if(error){
+                console.log(error)
+            };
+            console.log(data);
         } else if(selectField === '5'){
-            await axios.put(url2, {
-                zipcode: zipcode
-            })
-            .catch((err) => {
-                console.error(err);
-            })
+            let { data, error } = await supabase
+            .from('customer')
+            .update({zipcode: zipcode})
+            .match({id: customer.id})
+            if(error){
+                console.log(error)
+            };
+            console.log(data);
         } else if(selectField === '6'){
-            await axios.put(url2, {
-                phone_number: inputValue
-            })
+            let { data, error } = await supabase
+            .from('customer')
+            .update({phone_number: inputValue})
+            .match({id: customer.id})
+            if(error){
+                console.log(error)
+            };
+            console.log(data);
         } else if(selectField === '7'){
-            await axios.put(url2, {
-                email: email
-            })
-            .catch((err) => {
-                console.error(err);
-            })
+            let { data, error } = await supabase
+            .from('customer')
+            .update({email: email})
+            .match({id: customer.id})
+            if(error){
+                console.log(error)
+            };
+            console.log(data);
         } else if(selectField === '8'){
             await axios.put(url2, json)
             .then((response) => {
@@ -164,27 +172,22 @@ const CustomerEdit = (props) => {
             .catch((err) => {
                 console.error(err);
             })
+        } else if(selectField === '9'){
+            let { data, error } = await supabase
+            .from('customer')
+            .update({last_name: lastName})
+            .match({id: customer.id})
+            if(error){
+                console.log(error)
+            };
+            console.log(data);
         }
-        getAllCustomer();
-        setCustomerName('');
-        setAddress('');
-        setCity('');
-        setZipcode('');
-        SetInputValue('');
-        setEmail('');
-        setSelectField('');
+        getAllCustomer(); setAddress(''); setCity(''); setZipcode(''); SetInputValue(''); setEmail(''); setSelectField(''); setState(''); setfirstName(''); setlastName(''); setlastName('');
         onClose()
     };
 
     const closeButton = () => {
-        getAllCustomer();
-        setCustomerName('');
-        setAddress('');
-        setCity('');
-        setZipcode('');
-        SetInputValue('');
-        setEmail('');
-        setSelectField('');
+        getAllCustomer(); setAddress(''); setCity(''); setZipcode(''); SetInputValue(''); setEmail(''); setSelectField(''); setfirstName(''); setlastName(''); setlastName('');
         onClose()
     }
     const [inputValue, SetInputValue] = useState("");
@@ -197,7 +200,8 @@ const CustomerEdit = (props) => {
     }  
 
     const fieldOptions = [
-        { value: '1', label: 'Customer Name'},
+        { value: '1', label: 'First Name'},
+        { value: '9', label: 'Last Name'},
         { value: '2', label: 'Address'},
         { value: '3', label: 'City'},
         { value: '4', label: 'State'},
@@ -216,15 +220,22 @@ const CustomerEdit = (props) => {
         if(selectField === '1'){
             return(
                 <Box pt='1rem' pb='1rem'>
-                    <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer Name'/>
-                    <FormHelperText>Current Name: {customer.name}</FormHelperText>
+                    <Input value={firstName} onChange={({target}) => setfirstName(target.value)} id='first_name' ref={initialRef} placeholder='Enter new first name'/>
+                    <FormHelperText>First Name: {customer.first_name}</FormHelperText>
                 </Box>   
+            )
+        } else if(selectField === '9'){
+            return(
+                <Box pt='1rem' pb='1rem'>
+                <Input value={lastName} onChange={({target}) => setlastName(target.value)} id='last_name' placeholder='Enter new last name'/>
+                <FormHelperText>Current Address: {customer.last_name}</FormHelperText>
+                </Box>
             )
         } else if(selectField === '2'){
             return(
                 <Box pt='1rem' pb='1rem'>
                     <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
-                    <FormHelperText>Current Address: {customer.address}</FormHelperText>
+                    <FormHelperText>Current Address: {customer.street_address}</FormHelperText>
                 </Box>
             )
         } else if(selectField === '3'){
@@ -417,7 +428,7 @@ const CustomerEdit = (props) => {
                         <Box display='flex' flexDir='column' p='1rem' justifyContent='space-between'>
                             <Box pb='1rem'>
                                 <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Name:</Text>
-                                <Text>{customer.name}</Text> 
+                                <Text>{customer.first_name} {customer.last_name}</Text> 
                                 
                             </Box>
                             <Box>
@@ -430,10 +441,10 @@ const CustomerEdit = (props) => {
                                 <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Address:</Text>
                             </Box>
                             <Box>
-                                {customer.address}
+                                {customer.street_address}
                             </Box>
                             <Box>
-                                {customer.city}, {customer.state}, {customer.zipcode}
+                                {customer.city}, {customer.state} {customer.zipcode}
                             </Box>
                             <Box>
                                 United States

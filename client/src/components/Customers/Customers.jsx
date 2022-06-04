@@ -1,38 +1,15 @@
 import React, {useState, useEffect} from 'react';
 //import {Grid} from '@material-ui/core';
 import Customer from './Customer/Customer';
-import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, InputGroup, InputLeftAddon, FormHelperText, NumberInput, NumberInputField, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
+import {VStack, Select, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, InputGroup, InputLeftAddon, FormHelperText, NumberInput, NumberInputField, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
 import {useHistory} from 'react-router-dom';
 import axios from 'axios';
-
-function formatPhoneNumber(value) {
-    //if value is falsy eg if the user deletes the input, then just return 
-    if(!value) return value;
-
-    //clean the input for any non-digit values.
-    const phoneNumber = value.replace(/[^\d]/g, "");
-
-    // phoneNumberLength is used to know when to apply our formatting for the phone number
-    const phoneNumberLength = phoneNumber.length;
-
-    // we need to return the value with no formatting if its less then four digits
-    // this is to avoid weird behavior that occurs if you  format the area code to early
-    if (phoneNumberLength < 4) return phoneNumber;
-
-    // if phoneNumberLength is greater than 4 and less the 7 we start to return
-    // the formatted number
-    if (phoneNumberLength < 7) {
-        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    }
-
-    // finally, if the phoneNumberLength is greater then seven, we add the last
-    // bit of formatting and return it.
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-        3,
-        6
-    )}-${phoneNumber.slice(6, 10)}`;
-}
+import supabase from '../../utils/supabaseClient'
+import stateJSONData from '../../data/state_titlecase.json'
+import CustomerTypeOptions from './Customer/CustomerTypeOptions';
+import StateOptions from '../StateOptions';
+import formatPhoneNumber from '../../utils/formatPhoneNumber';
 
 export default function Customers() {
         let history = useHistory();
@@ -40,8 +17,20 @@ export default function Customers() {
         //GET data from API
         const [customers, getCustomers] = useState('');
         const [searchCustomer, setSearchCustomer] = useState('');
-        const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
-        const query = `/?name=${searchCustomer}`
+
+        // useStates that pick up the values from the input fields of the form
+        const [firstName, setfirstName] = useState('');
+        const [lastName, setlastName] = useState('');
+        const [address, setAddress] = useState('');
+        const [city, setCity] = useState('');
+        const [state, setState] = useState('');
+        const [zipcode, setZipcode] = useState('');
+        const [email, setEmail] = useState('');
+        const [customerTypes, setcustomerTypes] = useState('')
+        const [selectedCustomerType, setselectedCustomerType] = useState('')
+        const [states, setstates] = useState('')
+
+        const [inputValue, SetInputValue] = useState("");
 
         useEffect(() => {
             // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
@@ -49,35 +38,63 @@ export default function Customers() {
                 history.push('/login');
             }
             getAllCustomers();
+            getAllCustomerTypes();
+            setstates(stateJSONData)
         }, []);
 
+        // Gets a list of all customers stored in supabase DB
         const getAllCustomers = async() => {
-            await axios.get(`${url}/customers`)
-            .then((response) => {
-                const allCustomers = response.data
-                //add our data to state
-                getCustomers(allCustomers);
-            })
-            .catch(error => console.error(`Error: ${error}`));
+            let { data: customer, error } = await supabase 
+            .from('customer')
+            .select('*')
+
+            if(error){
+                console.log(error)
+            }
+
+            getCustomers(customer)
         }
 
+        // Gets a list of all customer types stored in supabase DB
+        const getAllCustomerTypes = async() => {
+            let { data: customerTypes, error} = await supabase
+            .from('customer_type')
+            .select('*')
+
+            if(error){
+                console.log(error)
+            }
+            setcustomerTypes(customerTypes)
+        }
+
+        // Search for customer based on first name, last name, or email address
         const getAllCustomersByName = async(event) => {
             event.preventDefault();
-            axios.get(`${url}/customers/?name=${searchCustomer}`)
-            .then((response) => {
-                const results = response.data;
-                //add data to old state to update it
-                getCustomers(results);
-                this.customers(results);
-            })
-            .catch(error => console.error(`Error: ${error}`));
+            if(searchCustomer === ''){
+                let { data: customers, error } = await supabase
+                .from('customer')
+                .select('*')
+                if(error){
+                    console.log(error)
+                }
+                getCustomers(customers)
+            } else {
+                let {data: customersSearchResult, error } = await supabase
+                .from('customer')
+                .select('*')
+                .or(`first_name.ilike.%${searchCustomer}%,last_name.ilike.%${searchCustomer}%,email.ilike.%${searchCustomer}%,phone_number.ilike.%${searchCustomer}%`)
+    
+                if(error){
+                    console.log(error)
+                }
+                console.log(customersSearchResult)
+                getCustomers(customersSearchResult);
+            }
         }
 
         const { isOpen, onOpen, onClose } = useDisclosure();
         const initialRef = React.useRef();
         //const finalRef = React.useRef();
-
-        const [inputValue, SetInputValue] = useState("");
 
         const handlePhoneInput = (e) => {
             //This is where we'll call our future formatPhoneNumber function
@@ -85,44 +102,34 @@ export default function Customers() {
             //We'll set the input value using our setInputValue
             SetInputValue(formattedPhoneNumber);
         }
-
-        // States that pick up the values from the input fields of the form
-        const [name, setCustomerName] = useState('');
-        const [address, setAddress] = useState('');
-        const [city, setCity] = useState('');
-        const [state, setState] = useState('');
-        const [zipcode, setZipcode] = useState('');
-        const [email, setEmail] = useState('');
         
-        // Function that will make the POST request from axios
+        // Function that will make the POST request from axios to create new customer
         const handleSubmit = async(event) => {
             event.preventDefault();
-            const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/customers/add`
-            const json = {
-                name: name,
-                address: address,
-                city: city,
-                state: state,
-                zipcode: zipcode,
-                phone_number: inputValue,
-                email: email
+
+            let { data, error } = await supabase
+            .from('customer')
+            .insert([
+                {
+                    first_name: firstName,
+                    last_name: lastName,
+                    street_address: address,
+                    city: city,
+                    state: state,
+                    zipcode: zipcode,
+                    phone_number: inputValue,
+                    email: email,
+                    customer_type_id: selectedCustomerType,
+                }
+            ])
+
+            if(error){
+                console.log(error)
             }
-            await axios.post(url2, json)
-            .then((response) => {
-                console.log('I was submitted', response);
-            })
-            .catch((err) => {
-                console.error(err);
-            })
+            console.log(data)
             console.log('Submit Function works!')
             //history.go(0);
-            getAllCustomers();
-            setCustomerName('');
-            setAddress('');
-            setCity('');
-            setZipcode('');
-            SetInputValue('');
-            setEmail('');
+            getAllCustomers(); setfirstName(''); setlastName(''); setAddress(''); setCity(''); setZipcode(''); SetInputValue(''); setEmail(''); setselectedCustomerType(''); setState('');
         };
 
     return (
@@ -144,8 +151,18 @@ export default function Customers() {
                         <form method='POST' onSubmit={handleSubmit}>
                         <ModalBody>
                                 <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Customer Name</FormLabel>
-                                    <Input value={name} onChange={({target}) => setCustomerName(target.value)} id='name' ref={initialRef} placeholder='Customer name'/>
+                                    <FormLabel pt='1rem'>Customer Type</FormLabel>
+                                    <Select placeholder='Select Customer Type' onChange={(e) => {setselectedCustomerType(e.target.value)}}>
+                                        <CustomerTypeOptions customerTypes={customerTypes}/>
+                                    </Select>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>First Name</FormLabel>
+                                    <Input value={firstName} onChange={({target}) => setfirstName(target.value)} id='name' ref={initialRef} placeholder='First Name'/>
+                                </FormControl>
+                                <FormControl isRequired>
+                                    <FormLabel pt='1rem'>Last Name</FormLabel>
+                                    <Input value={lastName} onChange={({target}) => setlastName(target.value)} id='name' ref={initialRef} placeholder='Last Name'/>
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Address</FormLabel>
@@ -157,7 +174,10 @@ export default function Customers() {
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>State</FormLabel>
-                                    <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/>
+                                    {/* <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/> */}
+                                    <Select placeholder='Select State' onChange={(e) => {setState(e.target.value)}}>
+                                        <StateOptions states={states}/>
+                                    </Select>
                                 </FormControl>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Zipcode</FormLabel>

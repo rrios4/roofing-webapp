@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Badge, Flex, Grid, Text} from "@chakra-ui/react";
+import {Box, Badge, Flex, Grid, Text, Spinner} from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import {Link} from 'react-router-dom'
 
@@ -16,7 +16,10 @@ function Customer(props) {
                                     <Text fontFamily='sans-serif' fontWeight='light'>{customer.id}</Text>
                                 </Box>
                                 <Box pl='12'>
-                                    <Text fontFamily='sans-serif' fontWeight='ligh'>{customer.name}</Text>
+                                    <Text fontFamily='sans-serif' fontWeight='ligh'>{customer.first_name}</Text>
+                                </Box>
+                                <Box pl='2'>
+                                    <Text fontFamily='sans-serif' fontWeight='ligh'>{customer.last_name}</Text>
                                 </Box>
                                 <Box pl='12'>
                                     <Text fontFamily='sans-serif' fontWeight='light'>{customer.email}</Text>
@@ -40,9 +43,10 @@ function Customer(props) {
         )
     } else {
         return (
-            <Flex p='4' justifyContent='space-between' justifyContent='center'>
+            <Flex p='4' justifyContent='center'>
                 <Box display='flex'>
-                    <Text shadow='sm' color='red' fontSize='20px'>No Customers yet!</Text>
+                    {/* <Text shadow='sm' color='red' fontSize='20px'>No Customers yet! </Text> */}
+                    <Spinner margin='1rem'/>
                 </Box>
             </Flex>
         )
