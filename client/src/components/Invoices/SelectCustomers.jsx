@@ -20,13 +20,6 @@ function SelectCustomers(props) {
             <option>No Customers!</option>
         )
     }
-
-
-    return (
-        <div>
-            
-        </div>
-    )
 }
 
 export default SelectCustomers

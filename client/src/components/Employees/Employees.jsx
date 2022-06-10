@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { useHistory } from "react-router-dom";
-import {VStack, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, Form, Modal, ModalBody,ModalOverlay, ModalContent, ModalHeader, useDisclosure, ModalFooter, ModalCloseButton, FormControl, FormLabel, InputGroup, InputLeftAddon, Select, FormHelperText} from '@chakra-ui/react';
-import { SearchIcon, AddIcon } from "@chakra-ui/icons";
+// import { useHistory } from "react-router-dom";
+// import { useNavigate } from 'react-router-dom';
+import { Flex, Box, Text, Button, Input, Modal, ModalBody,ModalOverlay, ModalContent, ModalHeader, useDisclosure, ModalFooter, ModalCloseButton, FormControl, FormLabel, InputGroup, InputLeftAddon, FormHelperText} from '@chakra-ui/react';
+import { AddIcon } from "@chakra-ui/icons";
 import Employee from './Employee/Employee'
 import axios from 'axios';
 
@@ -35,7 +36,7 @@ function formatPhoneNumber(value) {
 }
 
 function Employees() {
-    const history = useHistory();
+    // const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = React.useRef();
 
@@ -45,10 +46,6 @@ function Employees() {
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     useEffect(() => {
-        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('username')) {
-            history.push('/login');
-        }
         getAllEmployees();
     }, []);
 

@@ -1,10 +1,7 @@
 import React, {useState, useEffect} from 'react';
-//import {Grid} from '@material-ui/core';
 import Customer from './Customer/Customer';
-import {VStack, Select, Grid, Stack, Flex, Box, Text, Button, IconButton, Input, InputGroup, InputLeftAddon, FormHelperText, NumberInput, NumberInputField, Form, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
-import { SearchIcon, AddIcon } from "@chakra-ui/icons";
-import {useHistory} from 'react-router-dom';
-import axios from 'axios';
+import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
+import { AddIcon } from "@chakra-ui/icons";
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import CustomerTypeOptions from './Customer/CustomerTypeOptions';
@@ -12,7 +9,6 @@ import StateOptions from '../StateOptions';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 
 export default function Customers() {
-        let history = useHistory();
 
         //GET data from API
         const [customers, getCustomers] = useState('');
@@ -34,9 +30,9 @@ export default function Customers() {
 
         useEffect(() => {
             // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-            if (!localStorage.getItem('username')) {
-                history.push('/login');
-            }
+            // if (!localStorage.getItem('supabase.auth.token')) {
+            //     history.push('/login');
+            // }
             getAllCustomers();
             getAllCustomerTypes();
             setstates(stateJSONData)

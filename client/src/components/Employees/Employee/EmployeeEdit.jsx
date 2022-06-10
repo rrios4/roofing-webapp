@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react'
-import { Box, Flex , Text, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, ModalOverlay, FormHelperText, useDisclosure, ModalCloseButton, ButtonGroup, IconButton, Editable, EditablePreview, EditableInput, Badge, Button, Grid, PopoverContent, FormControl, FormLabel, Input, Alert, AlertIcon } from "@chakra-ui/react";
-import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon, ArrowLeftIcon} from '@chakra-ui/icons'
-import {Link, Redirect, useHistory} from 'react-router-dom';
+import { Box, Flex , Text, ModalBody, Modal, ModalContent, ModalFooter, ModalHeader, ModalOverlay, FormHelperText, useDisclosure, ModalCloseButton, Badge, Button, Grid, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import {ChevronLeftIcon} from '@chakra-ui/icons'
+// import {Link, Redirect, useHistory} from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
-import Employee from './Employee';
+// import Employee from './Employee';
 import Select from "react-select";
 import swal from 'sweetalert';
 
 const EmployeeEdit = (props) => {
-    const {id} = props.match.params;
-    let history = useHistory();
+    const {id} = useParams();
+    let navigate = useNavigate();
     const url = `http:/${process.env.REACT_APP_BASE_URL}:8081/api`;
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
@@ -29,10 +30,6 @@ const EmployeeEdit = (props) => {
     const [inputValue, SetInputValue] = useState("");
 
     useEffect(() => {
-        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('username')) {
-            history.push('/login');
-        }
         getAllEmployees();
     }, []);
 
@@ -70,14 +67,14 @@ const EmployeeEdit = (props) => {
             if(willDelete) {
                 axios.delete(`${url}/employees/${id}`)
                 .then(response => {
-                    history.push("/employees")
+                    navigate("/employees")
                 })
                 swal("Poof! Your employee has been deleted!", {
                     icon: "success",
                 });
             } else {
                 swal("Your employee data was not deleted!");
-                history.push(`/editemployee/${id}`)
+                navigate(`/editemployee/${id}`)
             }
         }) 
                 

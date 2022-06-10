@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
@@ -10,7 +10,7 @@ function Estimates() {
     //Defining variables
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
-    let history = useHistory();
+    // let navigate = useNavigate();
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     // States to manage data
@@ -30,10 +30,6 @@ function Estimates() {
 
     //React Render Hook
     useEffect(() => {
-        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('username')) {
-            history.push('/login');
-        }
         getAllEstimates();
         getCustomers();
     }, []);

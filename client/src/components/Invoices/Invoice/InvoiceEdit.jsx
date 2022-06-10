@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
-import {Link, Redirect, useHistory} from 'react-router-dom';
+// import {Link, Redirect, useHistory} from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
 import swal from 'sweetalert';
 import {ChevronLeftIcon} from '@chakra-ui/icons'
@@ -22,18 +23,14 @@ const InvoiceEdit = (props) => {
     const [selectJobTypeOption, setJobTypeOption] = useState('');
 
     // Define variables
-    const {id} = props.match.params;
+    const {id} = useParams();
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
-    let history = useHistory();
+    let navigate = useNavigate();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
 
     //React functions
     useEffect(() => {
-        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('username')) {
-            history.push('/login');
-        }
         getInvoiceById();
     }, []);
 
@@ -124,14 +121,14 @@ const InvoiceEdit = (props) => {
             if(willDelete) {
                 axios.delete(`${url}/invoices/${id}`)
                 .then(response => {
-                    history.push("/invoices")
+                    navigate("/invoices")
                 })
                 swal("Poof! Your invoice has been deleted!", {
                     icon: "success",
                 });
             } else {
                 swal("Your invoice data was not deleted!");
-                history.push(`/editinvoice/${id}`)
+                navigate(`/editinvoice/${id}`)
             }
         })         
     }
@@ -233,7 +230,7 @@ const InvoiceEdit = (props) => {
                         <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                             <Box display='flex' mr='auto' pl='1rem'>
                                 <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
-                                    <Text fontWeight='light' fontSize='18px' fontWeight='bold' color='white'>Status:</Text>
+                                    <Text fontSize='18px' fontWeight='bold' color='white'>Status:</Text>
                                 </Box>
                                 <Box display='flex' flexDir='column' justifyContent='center' >
                                     {/* <Badge colorScheme='yellow' variant='solid' p='8px'>{cuStatus.status_name}</Badge> */}

@@ -1,18 +1,19 @@
 import React from 'react';
 import {Box, Badge, Flex, Grid, Text, Spinner} from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import {Link} from 'react-router-dom'
+// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom' 
 
 function Customer(props) {
-    const {menu, customers} = props;
+    const {customers} = props;
     if(customers.length > 0) {
         return(
             <Grid gap={4}>
                 {customers.map((customer, index) => {
                     return (
                         <Link to={`/editcustomer/${customer.id}`}>
-                            <Flex p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='md' pt='1.5rem' pb='1.5rem'>
-                                <Box key={customer.id} pl='1rem'>
+                            <Flex key={customer.id} p='4' justifyContent='space-between' rounded='xl' bg='gray.600' _hover={{bg: "gray.500"}} shadow='md' pt='1.5rem' pb='1.5rem'>
+                                <Box pl='1rem'>
                                     <Text fontFamily='sans-serif' fontWeight='light'>{customer.id}</Text>
                                 </Box>
                                 <Box pl='12'>

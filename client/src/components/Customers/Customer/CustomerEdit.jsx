@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import { Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
-import {Link, Redirect, useHistory} from 'react-router-dom';
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import axios from 'axios';
 import Select from "react-select";
 import swal from 'sweetalert';
 import supabase from '../../../utils/supabaseClient'
 import formatPhoneNumber from '../../../utils/formatPhoneNumber'
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const CustomerEdit = (props) => {
-    const {id} = props.match.params;
-    let history = useHistory();
+    const navigate = useNavigate();
+    
+    // const {id} = props.match.params;
+    const {id} = useParams();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
     //GET data from API
@@ -27,13 +29,13 @@ const CustomerEdit = (props) => {
     const [email, setEmail] = useState('');
     const [selectField, setSelectField] = useState('')
 
-    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
+    // const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('username')) {
-            history.push('/login');
-        }
+        // if (!localStorage.getItem('supabase.auth.token')) {
+        //     history.push('/login');
+        // }
         getAllCustomer();
     }, []);
     
@@ -61,7 +63,8 @@ const CustomerEdit = (props) => {
             console.log(error)
         }
         console.log(data)
-        history.push("/customers")
+        // history.push("/customers")
+        navigate("/customers")
     }
 
     // Function that programs delete button with alert and triggers action from delete request function to deleter customer
@@ -80,9 +83,11 @@ const CustomerEdit = (props) => {
                 swal("Poof! Your customer has been deleted!", {
                     icon: "success",
                 });
+                
             } else {
                 swal("Your customer data was not deleted!");
-                history.push(`/editcustomer/${id}`)
+                // history.push(`/editcustomer/${id}`)
+                // navigate(`/editcustomer/${id}`)
             }
         })          
     }

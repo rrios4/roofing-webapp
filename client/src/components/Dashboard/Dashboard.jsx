@@ -1,31 +1,29 @@
-import React, { useEffect } from 'react'
-import { Box, Flex, Avatar, Text, Grid, Button, Badge} from "@chakra-ui/react";
-import {ChevronRightIcon, ChevronLeftIcon} from '@chakra-ui/icons'
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import React, { useEffect} from 'react'
+import { Box, Flex, Text, Grid, Button } from "@chakra-ui/react";
 import DescriptionIcon from '@material-ui/icons/Description';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import BallotIcon from '@material-ui/icons/Ballot';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
-import {Link, useHistory} from 'react-router-dom';
-import swal from 'sweetalert'
+import swal from 'sweetalert';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Authentication/auth'
 
-function Dashboard() {
-
-    let history = useHistory();
-
+const Dashboard = ({children}) => {
+    const auth = useAuth()
+    const navigate = useNavigate()
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('username')) {
-            history.push('/login');
-        }
+        // if (!localStorage.getItem('supabase.auth.token')) {
+        //     history.push('/login');
+        // }
+        // console.log(localStorage.getItem('supabase.auth.token'))
     }, []);
 
     const logout = () => {
-        localStorage.clear();
+        // localStorage.clear();
+        auth.Logout()
         swal("Logged Out!", "You are now logged out from the system!", "success");
-        history.push('/login')
+        navigate("/login")
     }
 
     return (
@@ -39,6 +37,7 @@ function Dashboard() {
 
                         <Text fontWeight='light' fontSize='45px' align='center'>Welcome!</Text>
                         <Box><Text fontSize='18px'>Rios Roofing Web Application by CoogTech</Text></Box>
+                        <Box><Text fontSize='18px'>User Logged in: </Text></Box>
                     </Box>
                 </Box>
                 {/* <Box display='flex' pt='1rem'>

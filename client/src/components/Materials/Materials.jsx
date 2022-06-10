@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react'
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const Materials = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     useEffect(() => {
-        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('currentUser')) {
-            history.push('/login');
-        }
     }, []);
     return (
         <div>

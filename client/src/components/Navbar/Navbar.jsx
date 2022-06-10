@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, Text, Flex, UnorderedList, ListItem, Image, Avatar, AvatarBadge, AvatarGroup, Divider, Tooltip} from '@chakra-ui/react';
 import HomeIcon from '@material-ui/icons/Home';
 import Toggle from "./Toggle";
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 
 const Navbar = () => {

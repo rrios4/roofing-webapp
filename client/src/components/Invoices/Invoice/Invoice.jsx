@@ -1,7 +1,8 @@
 import React from 'react'
 import { Grid, Box, Flex, Text, Badge } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 
 function Invoice(props) {
     const {menu, invoices} = props;

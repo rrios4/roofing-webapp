@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
 import {ChevronRightIcon, ChevronLeftIcon, CheckIcon, CloseIcon, EditIcon} from '@chakra-ui/icons';
-import {Link, Redirect, useHistory} from 'react-router-dom';
+//import {Link, Redirect, useHistory} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import axios from 'axios';
 import swal from 'sweetalert';
 
@@ -19,18 +20,14 @@ const EstimateEdit = (props) => {
     const [sqMeasurement, setSqMeasurement] = useState('');
 
     // Define variables
-    const {id} = props.match.params;
+    const {id} = useParams();
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
-    let history = useHistory();
+    let navigate = useNavigate();
 
     //React functions
     useEffect(() => {
-        // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-        if (!localStorage.getItem('username')) {
-            history.push('/login');
-        }
         getInvoiceById();
     }, []);
 
@@ -80,14 +77,14 @@ const EstimateEdit = (props) => {
             if(willDelete) {
                 axios.delete(`${url}/estimates/${id}`)
                 .then(response => {
-                    history.push("/estimates")
+                    navigate("/estimates")
                 })
                 swal("Poof! Your estimate has been deleted!", {
                     icon: "success",
                 });
             } else {
                 swal("Your estimate data was not deleted!");
-                history.push(`/editestimate/${id}`)
+                navigate(`/editestimate/${id}`)
             }
         }) 
                 
@@ -177,14 +174,14 @@ const EstimateEdit = (props) => {
                     amount_due: invoice.quote_price
                 })
                 .then(response => {
-                    history.push("/invoices")
+                    navigate("/invoices")
                 })
                 swal("Poof! Your estimate has been transferred!", {
                     icon: "success",
                 });
             } else {
                 swal("Your estimate data was not converted!");
-                history.push(`/editestimate/${id}`)
+                navigate(`/editestimate/${id}`)
             }
         }) 
     }
