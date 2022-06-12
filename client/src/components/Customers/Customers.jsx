@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Customer from './Customer/Customer';
 import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner} from '@chakra-ui/react';
-import { AddIcon } from "@chakra-ui/icons";
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import CustomerTypeOptions from './Customer/CustomerTypeOptions';
@@ -9,9 +8,9 @@ import StateOptions from '../StateOptions';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import Card from '../Card'
 import { TableContainer } from '@material-ui/core';
-import { MdKeyboardArrowRight } from 'react-icons/md'
 import { IoMdPersonAdd } from 'react-icons/io'
 import { Link } from 'react-router-dom'
+import { MdKeyboardArrowLeft } from 'react-icons/md'
 
 export default function Customers() {
 
@@ -135,7 +134,12 @@ export default function Customers() {
 
     return (
         <main>
-        <VStack my={'5rem'}>
+        <VStack my={'2rem'}>
+            <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
+                <Link to={'/'}>
+                    <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                </Link>
+            </Box>
             <Card>
                 <HStack my={'1rem'} spacing='auto'>
                     <Box>
@@ -167,18 +171,7 @@ export default function Customers() {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {customers ? customers.map((customer) => (
-                            <>
-                                <Tr key={customer.id}>
-                                    <Td>{customer.first_name} {customer.last_name}</Td>
-                                    <Td>{customer.email}</Td>
-                                    <Td>{customer.phone_number}</Td>
-                                    <Td maxW={'200px'}><Text _hover={{textColor: "red"}} cursor={'pointer'} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`)}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text></Td>
-                                    <Td></Td>
-                                    <Td><Button colorScheme={'blue'} variant='ghost'>Edit</Button> <Button colorScheme={'red'} variant='ghost'>Delete</Button> <Link to={`/editcustomer/${customer.id}`}><Button ml={'1rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Link></Td>
-                                </Tr>
-                            </>
-                            )) : <><Td></Td><Td></Td><Td display={'flex'} justifyContent='center'><Spinner margin='1rem'/></Td> </>}
+                            <Customer customers={customers}/>
                             {/* {customers?.map((customer) => (
                                 <Tr key={customer.id} _hover={{ bg: "gray.100" }} rounded='md'>
                                     <Td>{customer.first_name} {customer.last_name}</Td>

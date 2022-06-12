@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import { Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider} from '@chakra-ui/react';
+import { Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner} from '@chakra-ui/react';
 import axios from 'axios';
 import Select from "react-select";
 import swal from 'sweetalert';
-import supabase from '../../../utils/supabaseClient'
-import formatPhoneNumber from '../../../utils/formatPhoneNumber'
+import supabase from '../../../utils/supabaseClient';
+import formatPhoneNumber from '../../../utils/formatPhoneNumber';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Card from '../../Card/index';
-import { MdKeyboardArrowLeft, MdLocationOn, MdEmail, MdPhone } from 'react-icons/md'
-import { IoPerson } from 'react-icons/io'
+import { MdKeyboardArrowLeft, MdLocationOn, MdEmail, MdPhone, MdOutlineDateRange } from 'react-icons/md';
+import CustomerDetailsCard from '../Customer/CustomerDetailsCard';
 
 const CustomerEdit = (props) => {
     const navigate = useNavigate();
@@ -19,6 +19,9 @@ const CustomerEdit = (props) => {
     const initialRef = React.useRef();
     //GET data from API
     const [customer, getCustomer] = useState('');
+    // Customer Registered Date
+    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+    let customerDate = customer ? new Date(`${customer.created_at}`).toLocaleDateString('en-us', options) : <><Spinner size={'xs'}/></>;
 
     // States that pick up the values from the input fields of the form
     const [name, setCustomerName] = useState('');
@@ -324,7 +327,6 @@ const CustomerEdit = (props) => {
         }
     }
 
-
     return (
         <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]} >
             <VStack spacing={4}>
@@ -333,32 +335,15 @@ const CustomerEdit = (props) => {
                         <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                     </Link>
                 </Box>
-                {/* Customer Card Info */}
-                <Card>
-                    <HStack divider={<StackDivider borderColor='gray.200' />}>
-                        <Box mr={'1rem'}>
-                            <Box rounded={'full'} w={'100px'} bg='gray.500' h={'100px'}><Image rounded={'full'} src='https://i.pinimg.com/originals/0b/3d/f1/0b3df19a63dfe264cfd984f6864a77b3.jpg'/></Box>
-                        </Box>
-                        <Stack marginLeft={'1rem'}>
-                            <Text fontSize={'2xl'} fontWeight='semibold' ml={'4px'}>{customer.first_name} {customer.last_name}</Text>
-                            <HStack>
-                                <MdEmail/>
-                                <Text fontSize={'sm'} fontWeight='light'>{customer.email}</Text>
-                                <MdPhone/>
-                                <Text fontSize={'sm'} fontWeight='light'>{customer.phone_number}</Text>
-                                <MdLocationOn/>
-                                <Text fontSize={'sm'} fontWeight='light'>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text>
-                            </HStack>    
-                        </Stack>
-                    </HStack>
-                </Card>
+                {/* Customer Details Card Info  Component */}
+                <CustomerDetailsCard onOpen={onOpen} deleteCustomer={deleteCustomer} customer={customer} customerDate={customerDate}/>
                 {/* Customer Estimates Card */}
-                <Card>
-                    <Text>Customer Estimates</Text>
+                <Card width={'full'}>
+                    <Text>Customer Invoice</Text>
                 </Card>
                 {/* Customer Invoices Card */}
-                <Card>
-                    <Text>Customer Invoices</Text>
+                <Card width={'full'}>
+                    <Text>Customer Estimates</Text>
                 </Card>
             </VStack>
              <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
@@ -404,27 +389,6 @@ const CustomerEdit = (props) => {
                     </Box>
                 </Box>
             </Link> */}
-            <Box display='flex' pt='1rem' justifyContent='center'>
-                <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
-                    <Box display='flex' mr='auto' pl='1rem'>
-                        <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
-                            {/* <Text fontWeight='bold' fontSize='20px' color='white'>Status:</Text> */}
-                            <Text color='white' fontSize='25px' letterSpacing='1px' fontWeight='bold'>Customer #{customer.id}</Text>
-                        </Box>
-                        <Box >
-                            {/* <Badge bg='green.600' p='8px'>Active</Badge> */}
-                        </Box>
-                    </Box>
-                    <Box display='flex' pr='1rem'>
-                        <Box pr='1rem'>
-                            <Button onClick={onOpen} colorScheme='blue'>Edit</Button>
-                        </Box>
-                        <Box  color='white'>
-                                <Button bg='red.600' onClick={deleteCustomer}>Delete</Button>
-                        </Box>
-                    </Box>
-                </Box>
-            </Box>
         </Flex>
     )
 }
