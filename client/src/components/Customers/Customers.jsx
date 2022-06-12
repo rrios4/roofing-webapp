@@ -162,18 +162,20 @@ export default function Customers() {
                                 <Th>Email</Th>
                                 <Th>Phone Number</Th>
                                 <Th>Address</Th>
+                                <Th>Type</Th>
                                 <Th>Actions</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {customers ? customers.map((customer) => (
                             <>
-                                <Tr key={customer.id} _hover={{ bg: "gray.100" }} rounded='md'>
+                                <Tr key={customer.id}>
                                     <Td>{customer.first_name} {customer.last_name}</Td>
                                     <Td>{customer.email}</Td>
                                     <Td>{customer.phone_number}</Td>
-                                    <Td maxW={'200px'}><Text cursor={'pointer'} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`)}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text></Td>
-                                    <Td><Button colorScheme={'yellow'} variant='outline'>Edit</Button> <Button colorScheme={'red'} variant='outline'>Delete</Button> <Link to={`/editcustomer/${customer.id}`}><Button colorScheme={'blue'} variant='outline'><MdKeyboardArrowRight size={'20px'}/></Button></Link></Td>
+                                    <Td maxW={'200px'}><Text _hover={{textColor: "red"}} cursor={'pointer'} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`)}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text></Td>
+                                    <Td></Td>
+                                    <Td><Button colorScheme={'blue'} variant='ghost'>Edit</Button> <Button colorScheme={'red'} variant='ghost'>Delete</Button> <Link to={`/editcustomer/${customer.id}`}><Button ml={'1rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Link></Td>
                                 </Tr>
                             </>
                             )) : <><Td></Td><Td></Td><Td display={'flex'} justifyContent='center'><Spinner margin='1rem'/></Td> </>}

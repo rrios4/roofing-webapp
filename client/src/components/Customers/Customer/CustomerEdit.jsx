@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import { Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
-import { ChevronLeftIcon } from '@chakra-ui/icons'
+import { Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider} from '@chakra-ui/react';
 import axios from 'axios';
 import Select from "react-select";
 import swal from 'sweetalert';
 import supabase from '../../../utils/supabaseClient'
 import formatPhoneNumber from '../../../utils/formatPhoneNumber'
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import Card from '../../Card/index';
+import { MdKeyboardArrowLeft, MdLocationOn, MdEmail, MdPhone } from 'react-icons/md'
+import { IoPerson } from 'react-icons/io'
 
 const CustomerEdit = (props) => {
     const navigate = useNavigate();
@@ -325,6 +327,40 @@ const CustomerEdit = (props) => {
 
     return (
         <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]} >
+            <VStack spacing={4}>
+                <Box display={'flex'} justifyContent='start' w='full'>
+                    <Link to={'/customers'}>
+                        <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                    </Link>
+                </Box>
+                {/* Customer Card Info */}
+                <Card>
+                    <HStack divider={<StackDivider borderColor='gray.200' />}>
+                        <Box mr={'1rem'}>
+                            <Box rounded={'full'} w={'100px'} bg='gray.500' h={'100px'}><Image rounded={'full'} src='https://i.pinimg.com/originals/0b/3d/f1/0b3df19a63dfe264cfd984f6864a77b3.jpg'/></Box>
+                        </Box>
+                        <Stack marginLeft={'1rem'}>
+                            <Text fontSize={'2xl'} fontWeight='semibold' ml={'4px'}>{customer.first_name} {customer.last_name}</Text>
+                            <HStack>
+                                <MdEmail/>
+                                <Text fontSize={'sm'} fontWeight='light'>{customer.email}</Text>
+                                <MdPhone/>
+                                <Text fontSize={'sm'} fontWeight='light'>{customer.phone_number}</Text>
+                                <MdLocationOn/>
+                                <Text fontSize={'sm'} fontWeight='light'>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text>
+                            </HStack>    
+                        </Stack>
+                    </HStack>
+                </Card>
+                {/* Customer Estimates Card */}
+                <Card>
+                    <Text>Customer Estimates</Text>
+                </Card>
+                {/* Customer Invoices Card */}
+                <Card>
+                    <Text>Customer Invoices</Text>
+                </Card>
+            </VStack>
              <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
@@ -360,14 +396,14 @@ const CustomerEdit = (props) => {
 
                     </ModalContent> 
                 </Modal>
-            <Link to='/customers'>
+            {/* <Link to='/customers'>
                 <Box display='flex' pt='1rem' pb='1rem' pl='1rem'>
                     <Box display='flex' _hover={{color: 'blue.400'}}>
                         <ChevronLeftIcon fontSize='35px'/>
                         <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text> 
                     </Box>
                 </Box>
-            </Link>
+            </Link> */}
             <Box display='flex' pt='1rem' justifyContent='center'>
                 <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
                     <Box display='flex' mr='auto' pl='1rem'>
@@ -387,85 +423,6 @@ const CustomerEdit = (props) => {
                                 <Button bg='red.600' onClick={deleteCustomer}>Delete</Button>
                         </Box>
                     </Box>
-                </Box>
-            </Box>
-            <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
-                <Box display='flex' flexDir='column' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
-                    <Box display='flex' p='2rem'>
-                        <Box>
-                            {/* <Text fontSize='25px' letterSpacing='1px' fontWeight='bold'>Customer #{customer.id}</Text> */}
-                        </Box>
-                        <Box display='flex' flexDir='column' ml='auto'>
-                            <Text fontWeight='bold'>Rios Roofing</Text>
-                            <Text textAlign='right' fontWeight='light'>150 Tallant St</Text>
-                            <Text textAlign='right' fontWeight='light'>Houston, TX </Text>
-                            <Text textAlign='right' fontWeight='light'> United States</Text>
-                        </Box>
-                    </Box>
-                    <Box display='flex' justifyContent='space-between' p='1rem'>
-                        {/* <Box>
-                            <Table variant="simple" size='sm'>
-                                <TableCaption color='white'>Customer Information</TableCaption>
-                                <Thead>
-                                    <Tr>
-                                    <Th color='white'>Name</Th>
-                                    <Th color='white'>Email</Th>
-                                    <Th color='white'>Phone</Th>
-                                    <Th color='white'>Address</Th>
-                                    <Th isNumeric color='white'>City</Th>
-                                    <Th color='white'>State</Th>
-                                    <Th color='white'>Zipcode</Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    <Tr>
-                                    <Td>{customer.name}</Td>
-                                    <Td>{customer.email}</Td>
-                                    <Td>{customer.phone_number}</Td>
-                                    <Td >{customer.address}</Td>
-                                    <Td>{customer.city}</Td>
-                                    <Td>{customer.state}</Td>
-                                    <Td>{customer.zipcode}</Td>
-                                    </Tr>
-                                </Tbody>
-                            </Table>
-                        </Box> */}
-                        <Box display='flex' flexDir='column' p='1rem' justifyContent='space-between'>
-                            <Box pb='1rem'>
-                                <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Name:</Text>
-                                <Text>{customer.first_name} {customer.last_name}</Text> 
-                                
-                            </Box>
-                            <Box>
-                                <Text fontSize='22px' fontWeight='bold' letterSpacing='1px' >Phone Number:</Text>
-                                <Text>{customer.phone_number}</Text>
-                            </Box>
-                        </Box>
-                        <Box display='flex' flexDir='column' p='1rem'>
-                            <Box>
-                                <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Address:</Text>
-                            </Box>
-                            <Box>
-                                {customer.street_address}
-                            </Box>
-                            <Box>
-                                {customer.city}, {customer.state} {customer.zipcode}
-                            </Box>
-                            <Box>
-                                United States
-                            </Box>
-                            
-                        </Box>
-                        <Box display='flex' flexDir='column' p='1rem'>
-                            <Box>
-                                <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Email: </Text>
-                            </Box>
-                            {customer.email}
-                        </Box>
-                    </Box>
-                    <Grid>
-
-                    </Grid>
                 </Box>
             </Box>
         </Flex>
