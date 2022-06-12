@@ -172,7 +172,7 @@ export default function Customers() {
                                     <Td>{customer.first_name} {customer.last_name}</Td>
                                     <Td>{customer.email}</Td>
                                     <Td>{customer.phone_number}</Td>
-                                    <Td maxW={'200px'}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Td>
+                                    <Td maxW={'200px'}><Text cursor={'pointer'} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`)}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text></Td>
                                     <Td><Button colorScheme={'yellow'} variant='outline'>Edit</Button> <Button colorScheme={'red'} variant='outline'>Delete</Button> <Link to={`/editcustomer/${customer.id}`}><Button colorScheme={'blue'} variant='outline'><MdKeyboardArrowRight size={'20px'}/></Button></Link></Td>
                                 </Tr>
                             </>
