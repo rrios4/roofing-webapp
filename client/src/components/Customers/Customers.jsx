@@ -1,17 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import Customer from './Customer/Customer';
-import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter} from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import CustomerTypeOptions from './Customer/CustomerTypeOptions';
 import StateOptions from '../StateOptions';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
+import Card from '../Card'
+import { TableContainer } from '@material-ui/core';
+import { MdKeyboardArrowRight } from 'react-icons/md'
+import { IoMdPersonAdd } from 'react-icons/io'
+import { Link } from 'react-router-dom'
 
 export default function Customers() {
 
         //GET data from API
-        const [customers, getCustomers] = useState('');
+        const [customers, getCustomers] = useState(null);
         const [searchCustomer, setSearchCustomer] = useState('');
 
         // useStates that pick up the values from the input fields of the form
@@ -40,7 +45,7 @@ export default function Customers() {
 
         // Gets a list of all customers stored in supabase DB
         const getAllCustomers = async() => {
-            let { data: customer, error } = await supabase 
+            let { data: customers, error } = await supabase 
             .from('customer')
             .select('*')
 
@@ -48,7 +53,7 @@ export default function Customers() {
                 console.log(error)
             }
 
-            getCustomers(customer)
+            getCustomers(customers)
         }
 
         // Gets a list of all customer types stored in supabase DB
@@ -130,13 +135,64 @@ export default function Customers() {
 
     return (
         <main>
-        {/* <Grid container justify="center" spacing={4}>
-            {customers.map((customer) => (
-                <Grid item key={customer.id} xs={12} sm={6} md={4} lg={3}>
-                        <Customer customer={customer} />
-                </Grid>
-            ))}
-        </Grid> */}
+        <VStack my={'5rem'}>
+            <Card>
+                <HStack my={'1rem'} spacing='auto'>
+                    <Box>
+                        <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Customers</Text>
+                    </Box>
+                    <Box display='flex' pr='1rem' justifyContent={'end'}>
+                            <Button leftIcon={<IoMdPersonAdd/>} colorScheme='blue' variant='solid' onClick={onOpen} mr='1rem'>
+                                New Customer 
+                            </Button>
+                            <form method='GET' onSubmit={getAllCustomersByName}>
+                                <FormControl>
+                                    <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search for Customer' colorScheme='blue' border='2px'/>
+                                </FormControl>
+                            </form>
+                    </Box>
+
+                </HStack>
+                <TableContainer>
+                    <Table variant='simple'>
+                        <TableCaption>Total of {customers?.length} customers registered in our system ✌️</TableCaption>
+                        <Thead>
+                            <Tr>
+                                <Th>Name</Th>
+                                <Th>Email</Th>
+                                <Th>Phone Number</Th>
+                                <Th>Address</Th>
+                                <Th>Actions</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {customers ? customers.map((customer) => (
+                            <>
+                                <Tr key={customer.id} _hover={{ bg: "gray.100" }} rounded='md'>
+                                    <Td>{customer.first_name} {customer.last_name}</Td>
+                                    <Td>{customer.email}</Td>
+                                    <Td>{customer.phone_number}</Td>
+                                    <Td maxW={'200px'}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Td>
+                                    <Td><Button colorScheme={'yellow'} variant='outline'>Edit</Button> <Button colorScheme={'red'} variant='outline'>Delete</Button> <Link to={`/editcustomer/${customer.id}`}><Button colorScheme={'blue'} variant='outline'><MdKeyboardArrowRight size={'20px'}/></Button></Link></Td>
+                                </Tr>
+                            </>
+                            )) : <><Td></Td><Td></Td><Td display={'flex'} justifyContent='center'><Spinner margin='1rem'/></Td> </>}
+                            {/* {customers?.map((customer) => (
+                                <Tr key={customer.id} _hover={{ bg: "gray.100" }} rounded='md'>
+                                    <Td>{customer.first_name} {customer.last_name}</Td>
+                                    <Td>{customer.email}</Td>
+                                    <Td>{customer.phone_number}</Td>
+                                    <Td width='250px'>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Td>
+                                    <Td><Button colorScheme={'yellow'} variant='outline'>Edit</Button> <Button colorScheme={'red'} variant='outline'>Delete</Button> <Button colorScheme={'blue'} variant='outline'><MdKeyboardArrowRight size={'20px'}/></Button></Td>
+                                </Tr>
+                            ))} */}
+                        </Tbody>
+
+                    </Table>
+                </TableContainer>
+
+            </Card>
+        </VStack>
             <Flex flexDir='column' justifyContent='center' pb='2rem'>
                 <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
@@ -199,44 +255,7 @@ export default function Customers() {
 
                     </ModalContent> 
                 </Modal>
-                <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
-                    <Box display='flex'>
-                        <Box display='flex' flexDir='column' pr='1rem'>
-                            <form method='GET' onSubmit={getAllCustomersByName}>
-                                <FormControl>
-                                    <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search for Customer' colorScheme='blue' border='2px'/>
-                                    <FormHelperText textAlign='right'>Press Enter key to search</FormHelperText>
-                                </FormControl>
-                            </form>
-                        </Box>
-                    </Box>
-                </Box>
-                <Box display='flex' pt='1rem' pb='2rem' pl='1rem' pr='1rem' >
-                    <Box>
-                        <Text fontSize='4xl'> Customers</Text>
-                        <Text>There is a total of {customers.length} customers</Text>    
-                    </Box>
-                    <Box display='flex' flexDir='column' justifyContent='center' ml='auto' pr='6rem'>
-                        
-                    </Box>
-                    <Box display='flex' flexDir='column' justifyContent='center'>
-                        <Button leftIcon={<AddIcon/>} colorScheme='blue' variant='solid' onClick={onOpen}>
-                            New Customer 
-                        </Button>
-                    </Box>
-                </Box>
-                <Box p='1rem' color='white' >
-                        <Customer customers={customers} />                
-                </Box>
-            </Flex>
-            {/* <Flex justify='center' flexDirection='column' p={2}>
-                {customers.map((customer) => (
-                        <Box p={2}  item key={customer.id} xs={12} sm={6} md={4} lg={3}>
-                                <Customer customer={customer} />
-                        </Box>
-                    ))}
-            </Flex> */}
-             
+            </Flex>         
     </main>
     )
 }

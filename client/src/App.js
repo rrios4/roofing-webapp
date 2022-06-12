@@ -25,7 +25,7 @@ const App = () => {
                         <CSSReset />
                         <ChakraProvider>
                             <Navbar/>
-                            <Flex ml='9rem' justifyContent='center' >
+                            <Flex ml='9rem' justifyContent='center'>
                             <Routes>
                                     <Route path="/" element={<ProtectedRoute><DashBoard/></ProtectedRoute>}/>
                                     <Route path="/login" element={<Login/>}/>
