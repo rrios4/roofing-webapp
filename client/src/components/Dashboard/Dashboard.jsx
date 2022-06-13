@@ -34,9 +34,9 @@ const Dashboard = ({children}) => {
 
     return (
         <main>
-            <Flex flexDir='column' px={'1rem'}>
-                <VStack>
-                    <Stack direction={'row'} justify='flex-start' marginBottom={'1rem'}>
+            <Flex flexDir='column' px={'1rem'} w={'full'}>
+                <VStack w='full' px={'1rem'}>
+                    <Stack direction={'row'} justify='flex-start' marginBottom={'1rem'}  w={'full'}>
                         <Text fontSize={'3xl'} fontWeight='bold' marginTop='2rem'>Main Dashboard</Text>
                     </Stack>
                     <Stack direction={["column", "column", "column", "row"]} align='center' spacing='1rem'>
