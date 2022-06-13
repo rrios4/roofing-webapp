@@ -133,14 +133,14 @@ export default function Customers() {
         };
 
     return (
-        <main>
-        <VStack my={'2rem'}>
+        <>
+        <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
             <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                 <Link to={'/'}>
                     <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                 </Link>
             </Box>
-            <Card>
+            <Card width='full'>
                 <HStack my={'1rem'} spacing='auto'>
                     <Box>
                         <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Customers</Text>
@@ -185,73 +185,72 @@ export default function Customers() {
 
                     </Table>
                 </TableContainer>
-
             </Card>
         </VStack>
-            <Flex flexDir='column' justifyContent='center' pb='2rem'>
-                <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent p='1rem' ml='6rem'>
-                        <ModalHeader textAlign='center'>Create New Customer</ModalHeader>
-                        <Text color='red' textAlign='center'>Fill all fields please!</Text>
-                        <ModalCloseButton />
-                        <form method='POST' onSubmit={handleSubmit}>
-                        <ModalBody>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Customer Type</FormLabel>
-                                    <Select placeholder='Select Customer Type' onChange={(e) => {setselectedCustomerType(e.target.value)}}>
-                                        <CustomerTypeOptions customerTypes={customerTypes}/>
-                                    </Select>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>First Name</FormLabel>
-                                    <Input value={firstName} onChange={({target}) => setfirstName(target.value)} id='name' ref={initialRef} placeholder='First Name'/>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Last Name</FormLabel>
-                                    <Input value={lastName} onChange={({target}) => setlastName(target.value)} id='name' ref={initialRef} placeholder='Last Name'/>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Address</FormLabel>
-                                    <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>City</FormLabel>
-                                    <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>State</FormLabel>
-                                    {/* <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/> */}
-                                    <Select placeholder='Select State' onChange={(e) => {setState(e.target.value)}}>
-                                        <StateOptions states={states}/>
-                                    </Select>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Zipcode</FormLabel>
-                                    <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
-                                </FormControl>
-                                <FormControl isRequired>
-                                <FormLabel pt='1rem'>Phone Number</FormLabel>
-                                    <InputGroup>
-                                    <InputLeftAddon children="+1" />
-                                    <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
-                                    </InputGroup>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Email</FormLabel>
-                                    <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
-                                </FormControl>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button colorScheme='blue' mr={3} type='submit' onClick={onClose} >Save</Button>
-                            <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
-                        </ModalFooter>
-                        </form>
+        <Flex flexDir='column' justifyContent='center' pb='2rem'>
+            <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent p='1rem' ml='6rem'>
+                    <ModalHeader textAlign='center'>Create New Customer</ModalHeader>
+                    <Text color='red' textAlign='center'>Fill all fields please!</Text>
+                    <ModalCloseButton />
+                    <form method='POST' onSubmit={handleSubmit}>
+                    <ModalBody>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>Customer Type</FormLabel>
+                                <Select placeholder='Select Customer Type' onChange={(e) => {setselectedCustomerType(e.target.value)}}>
+                                    <CustomerTypeOptions customerTypes={customerTypes}/>
+                                </Select>
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>First Name</FormLabel>
+                                <Input value={firstName} onChange={({target}) => setfirstName(target.value)} id='name' ref={initialRef} placeholder='First Name'/>
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>Last Name</FormLabel>
+                                <Input value={lastName} onChange={({target}) => setlastName(target.value)} id='name' ref={initialRef} placeholder='Last Name'/>
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>Address</FormLabel>
+                                <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>City</FormLabel>
+                                <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/>
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>State</FormLabel>
+                                {/* <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/> */}
+                                <Select placeholder='Select State' onChange={(e) => {setState(e.target.value)}}>
+                                    <StateOptions states={states}/>
+                                </Select>
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>Zipcode</FormLabel>
+                                <Input value={zipcode} onChange={({target}) => setZipcode(target.value)} id='zipcode' placeholder='Zipcode'/>
+                            </FormControl>
+                            <FormControl isRequired>
+                            <FormLabel pt='1rem'>Phone Number</FormLabel>
+                                <InputGroup>
+                                <InputLeftAddon children="+1" />
+                                <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+                                </InputGroup>
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel pt='1rem'>Email</FormLabel>
+                                <Input value={email} onChange={({target}) => setEmail(target.value)} placeholder='Email Address' type='email'/>
+                            </FormControl>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} type='submit' onClick={onClose} >Save</Button>
+                        <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
+                    </ModalFooter>
+                    </form>
 
-                    </ModalContent> 
-                </Modal>
-            </Flex>         
-    </main>
+                </ModalContent> 
+            </Modal>
+        </Flex>         
+    </>
     )
 }
 

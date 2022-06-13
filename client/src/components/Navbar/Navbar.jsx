@@ -1,8 +1,9 @@
 import React from 'react';
-import {Box, Text, Flex, UnorderedList, ListItem, Image, Avatar, AvatarBadge, AvatarGroup, Divider, Tooltip} from '@chakra-ui/react';
+import {Box, Text, Flex, UnorderedList, ListItem, Image, Avatar, AvatarBadge, AvatarGroup, Divider, Tooltip, VStack} from '@chakra-ui/react';
 import HomeIcon from '@material-ui/icons/Home';
 import Toggle from "./Toggle";
 import { Link } from 'react-router-dom';
+import {MdDashboard, MdRequestPage, MdScheduleSend, MdSquareFoot, MdPeopleAlt} from 'react-icons/md'
 
 
 const Navbar = () => {
@@ -13,15 +14,22 @@ const Navbar = () => {
                     <Image marginLeft={{base: '-2px',lg:'12px'}} boxSize={{base: '50px',lg:'100px'}} src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>
                 </Box>
             </Link>
+            <VStack mt={'6rem'} spacing='6'>
+                <Link to={'/'}><Tooltip label='Dashboard'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdDashboard size={'30px'} color='white'/></Box></Tooltip></Link>
+                <Link to={'/'}><Tooltip label='Estimate Requests'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdScheduleSend size={'30px'} color='white'/></Box></Tooltip></Link>
+                <Link to={'/invoices'}><Tooltip label='Invoices'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdRequestPage size={'30px'} color='white'/></Box></Tooltip></Link>
+                <Link to={'/estimates'}><Tooltip label='Estimates'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdSquareFoot size={'30px'} color='white'/></Box></Tooltip></Link>
+                <Link to={'/customers'}><Tooltip label='Customers'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdPeopleAlt size={'30px'} color='white'/></Box></Tooltip></Link>
+            </VStack>
             <Box display={{base:'none',lg:'flex'}} justifyContent='center' marginTop={{base:'0',lg:'auto'}} marginLeft={{base:'auto', lg:'0'}} p='1rem'>
-                <Link to='/'>
+                {/* <Link to='/'>
                     <Box _hover={{bg: "gray.600"}} rounded='md' p='8px' color='white'>
                         <Tooltip label='Home' bg="gray.500">
                             <HomeIcon fontSize='large' _hover={{bg: "red"}}/>
                         </Tooltip>
                     
                     </Box>
-                </Link>
+                </Link> */}
 
             </Box>
             <Box display={{base:'none', lg: 'flex'}}>

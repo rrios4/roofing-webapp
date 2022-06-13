@@ -27,7 +27,7 @@ const EstimateRequestCountCard = () => {
             <MdScheduleSend color='#2B6CB0' size={'30px'} />
         </Box>
         <Stack direction={'column'} pl={'1rem'} spacing='0'>
-            <Text fontSize={'xs'} textColor='gray.400' fontWeight={'bold'} margin='0' padding={'0'}>Total New Estimate Requests</Text>
+            <Text fontSize={'xs'} textColor='gray.400' fontWeight={'bold'} margin='0' padding={'0'}>New Estimate Requests</Text>
             <Text fontWeight={'bold'} fontSize={'2xl'} margin='0' padding={'0'}>{totalEstimateRequest ? totalEstimateRequest : <Spinner/>}</Text>
         </Stack>
     </HStack>
