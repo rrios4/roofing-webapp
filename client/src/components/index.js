@@ -7,3 +7,7 @@ export {default as Employees} from './Employees/Employees';
 export {default as Schedules} from './Schedules/Schedules';
 export {default as DashBoard} from './Dashboard/Dashboard';
 export {default as Card } from './Card/index';
+export {default as CustomerCountCard } from './Dashboard/Report/CustomerCountCard';
+export {default as EstimateRequestCountCard } from './Dashboard/Report/EstimateRequestCountCard';
+export {default as MonthlyRevenueCard} from './Dashboard/Report/MonthlyRevenueCard';
+export {default as EstimateCountCard} from './Dashboard/Report/EstimateCountCard';

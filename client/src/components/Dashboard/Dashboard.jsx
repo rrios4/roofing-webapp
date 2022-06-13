@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex, Text, Grid, Button, Image, VStack, HStack } from "@chakra-ui/react";
-import DescriptionIcon from '@material-ui/icons/Description';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
-import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
+import { Box, Flex, Text, Grid, Button, Image, VStack, HStack, Stack } from "@chakra-ui/react";
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Authentication/auth'
 import {FcRuler, FcMoneyTransfer, FcConferenceCall, FcDepartment } from 'react-icons/fc'
+import { Card, CustomerCountCard, EstimateRequestCountCard, MonthlyRevenueCard, EstimateCountCard } from '../../components';
 
 const Dashboard = ({children}) => {
     const auth = useAuth()
@@ -34,19 +31,29 @@ const Dashboard = ({children}) => {
         setloggedInUserData(auth.user.user_metadata)
     }
 
+
     return (
         <main>
-            <Flex flexDir='column' >
+            <Flex flexDir='column' px={'1rem'}>
                 <VStack>
-                    {/* Profile Card */}
-                    <HStack marginTop='2rem' marginBottom='0rem' spacing='1rem' shadow='md' padding='1rem' rounded='xl' borderWidth='1px'>
-                        <Image rounded='full' boxSize='70px' src={`${loggedInUserData.avatar_url}`} alt='user-profile'/>
-                        <VStack maxW='10rem' spacing='0rem' align='start' marginRight='8rem'>
-                            <Text fontSize='md' fontWeight='semibold' >{loggedInUserData.full_name}</Text>   
-                            <Text fontSize='sm'>{loggedInUserData.email}</Text>
-                        </VStack>
-                        <Button onClick={logout}>Logout</Button>
-                    </HStack>
+                    <Stack direction={'row'} justify='flex-start' marginBottom={'1rem'}>
+                        <Text fontSize={'3xl'} fontWeight='bold' marginTop='2rem'>Main Dashboard</Text>
+                    </Stack>
+                    <Stack direction={["column", "column", "column", "row"]} align='center' spacing='1rem'>
+                        <EstimateRequestCountCard/>
+                        <MonthlyRevenueCard/>
+                        <EstimateCountCard/>
+                        <CustomerCountCard/>
+                        {/* Profile Card */}
+                        <HStack marginBottom='0rem' spacing='1rem' shadow='md' padding='1rem' rounded='xl' borderWidth='1px'>
+                            <Image rounded='full' boxSize='70px' src={`${loggedInUserData.avatar_url}`} alt='user-profile'/>
+                            <VStack maxW='10rem' spacing='0rem' align='start' marginRight='8rem'>
+                                <Text fontSize='md' fontWeight='semibold' >{loggedInUserData.full_name}</Text>   
+                                <Text fontSize='sm'>{loggedInUserData.email}</Text>
+                            </VStack>
+                            <Button onClick={logout}>Logout</Button>
+                        </HStack>
+                    </Stack>
                     <VStack marginBottom='1rem' align='end' width='450px'>
                         <Text fontSize='md' color='gray.500'>Rios Roofing Web Application by CoogTech</Text>
                     </VStack>
