@@ -167,6 +167,7 @@ export default function Customers() {
                                 <Th>Phone Number</Th>
                                 <Th>Address</Th>
                                 <Th>Type</Th>
+                                <Th>Registered Date</Th>
                                 <Th>Actions</Th>
                             </Tr>
                         </Thead>
