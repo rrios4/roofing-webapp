@@ -1,11 +1,8 @@
 import React from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-//import {Employees, Navbar, Customers, Estimates, Invoices, Materials, Schedules} from './components';
-// import {BrowserRouter, Switch} from 'react-router-dom';
 import {ChakraProvider, Flex, ThemeProvider, theme, ColorModeProvider, CSSReset} from "@chakra-ui/react"
-import { Customers, Navbar, Invoices, Estimates, Employees, DashBoard  } from "./components/";
+import { Customers, Navbar, Invoices, Estimates, Employees, DashBoard, EstimateRequests  } from "./components/";
 import CustomerEdit from './components/Customers/Customer/CustomerEdit'
-// import DashBoard from './components/Dashboard/Dashboard'
 import InvoiceEdit from './components/Invoices/Invoice/InvoiceEdit'
 import EmployeeEdit from './components/Employees/Employee/EmployeeEdit';
 import EstimateEdit from './components/Estimates/Estimate/EstimateEdit';
@@ -30,6 +27,7 @@ const App = () => {
                                     <Route path="/" element={<ProtectedRoute><DashBoard/></ProtectedRoute>}/>
                                     <Route path="/login" element={<Login/>}/>
                                     <Route path="/signup" element={<SignUp/>}/>
+                                    <Route path='/estimate-requests' element={<ProtectedRoute><EstimateRequests/></ProtectedRoute>}/>
                                     <Route path='/customers' element={<ProtectedRoute><Customers/></ProtectedRoute>}/>
                                     <Route path='/invoices' element={<ProtectedRoute><Invoices/></ProtectedRoute>}/>
                                     <Route path='/estimates' element={<ProtectedRoute><Estimates/></ProtectedRoute>}/>

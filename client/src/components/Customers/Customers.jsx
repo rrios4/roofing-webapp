@@ -146,8 +146,8 @@ export default function Customers() {
                         <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Customers</Text>
                     </Box>
                     <Box display='flex' pr='1rem' justifyContent={'end'}>
-                            <Button leftIcon={<IoMdPersonAdd/>} colorScheme='blue' variant='solid' onClick={onOpen} mr='1rem'>
-                                New Customer 
+                            <Button colorScheme='blue' variant='solid' onClick={onOpen} mr='2rem'>
+                                <IoMdPersonAdd size={'20px'}/>
                             </Button>
                             <form method='GET' onSubmit={getAllCustomersByName}>
                                 <FormControl>

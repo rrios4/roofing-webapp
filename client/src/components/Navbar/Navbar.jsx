@@ -1,6 +1,5 @@
 import React from 'react';
 import {Box, Text, Flex, UnorderedList, ListItem, Image, Avatar, AvatarBadge, AvatarGroup, Divider, Tooltip, VStack} from '@chakra-ui/react';
-import HomeIcon from '@material-ui/icons/Home';
 import Toggle from "./Toggle";
 import { Link } from 'react-router-dom';
 import {MdDashboard, MdRequestPage, MdScheduleSend, MdSquareFoot, MdPeopleAlt} from 'react-icons/md'
@@ -16,7 +15,7 @@ const Navbar = () => {
             </Link>
             <VStack mt={'6rem'} spacing='6'>
                 <Link to={'/'}><Tooltip label='Dashboard'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdDashboard size={'30px'} color='white'/></Box></Tooltip></Link>
-                <Link to={'/'}><Tooltip label='Estimate Requests'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdScheduleSend size={'30px'} color='white'/></Box></Tooltip></Link>
+                <Link to={'/estimate-requests'}><Tooltip label='Estimate Requests'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdScheduleSend size={'30px'} color='white'/></Box></Tooltip></Link>
                 <Link to={'/invoices'}><Tooltip label='Invoices'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdRequestPage size={'30px'} color='white'/></Box></Tooltip></Link>
                 <Link to={'/estimates'}><Tooltip label='Estimates'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdSquareFoot size={'30px'} color='white'/></Box></Tooltip></Link>
                 <Link to={'/customers'}><Tooltip label='Customers'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdPeopleAlt size={'30px'} color='white'/></Box></Tooltip></Link>

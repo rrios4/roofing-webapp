@@ -1,5 +1,5 @@
 import React from 'react';
-import { Td, Tr, Text, Box, Button, Spinner } from '@chakra-ui/react';
+import { Td, Tr, Text, Box, Button, Spinner, Tooltip } from '@chakra-ui/react';
 import {MdKeyboardArrowRight} from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ const Customer = (props) => {
                     {customer.customer_type_id === 3 ? <><Box maxW={'100px'}><Text textAlign={'center'} p={'2'} rounded={'full'} bg={'yellow.500'} textColor={'white'} fontWeight={'light'}>Other</Text></Box></>   : ""}  
                 </Td>
                 <Td>{new Date(customer.created_at).toLocaleDateString('en-us', options)}</Td>
-                <Td><Link to={`/editcustomer/${customer.id}`}><Button ml={'1rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Link></Td>
+                <Td><Link to={`/editcustomer/${customer.id}`}><Tooltip label='Go to Customer Details '><Button ml={'1rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
             </Tr>
         )) : <><Td></Td><Td></Td><Td display={'flex'} justifyContent='center'><Spinner margin='1rem'/></Td> </>}
     </>
