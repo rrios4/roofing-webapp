@@ -1,10 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
+import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, Table, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 import Estimate from './Estimate/Estimate';
 import AsyncSelect from 'react-select/async';
+import supabase from '../../utils/supabaseClient';
+import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
+import { Card } from '../';
+import { TableContainer } from '@material-ui/core';
 
 function Estimates() {
     //Defining variables
@@ -14,9 +18,10 @@ function Estimates() {
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     // States to manage data
-    const [estimates, getEstimates] = useState('');
+    const [estimates, setEstimates] = useState(null);
     const [customers, setCustomers] = useState('');
     const [searchCustomer, setSearchCustomer] = useState('');
+    const [searchEstimateInput, setSearchEstimateInput] = useState('')
     const [name, setCustomerName] = useState('');
     const [etDate, setEtDate] = useState('');
     const [expDate, setExpDate] = useState('');
@@ -36,25 +41,32 @@ function Estimates() {
 
     //Functions for API calls or handling events across UI
     const getAllEstimates = async() => {
-        await axios.get(`${url}/estimates/`)
-        .then((response) => {
-            const allEstimates = response.data
-            //add our data to state
-            getEstimates(allEstimates);
-            console.log(allEstimates)
-        })
-        .catch(error => console.error(`Error: ${error}`));
+        const {data: estimates, error} = await supabase
+        .from('estimate')
+        .select(`*, customer:customer_id(*), estimate_status:est_status_id(*), service_type:service_type_id(*)`)
 
+        if(error){
+            console.log(error);
+        }
+
+        setEstimates(estimates)
+        console.log(estimates)
     }
 
     const getCustomers = async() => {
-        await axios.get(`http://${process.env.REACT_APP_BASE_URL}:8081/api/customers`)
-        .then((response) => {
-            const allCustomers = response.data;
-            //add data to state
-            setCustomers(allCustomers);
-        })
-        .catch(error => console.error(`Error: ${error}`))
+        const {data: customers, error} = await supabase
+        .from('customer')
+        .select('*')
+         
+        if(error){
+            console.log(error);
+        }
+
+        setCustomers(customers)
+    }
+
+    const searchEstimate = async() => {
+
     }
 
     const handleSubmit = async(event) => {
@@ -119,8 +131,73 @@ function Estimates() {
     }
 
     return (
-        <main>
-            <Flex flexDir='column' justifyContent='center' pb='2rem'>
+            <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
+                <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
+                    <Link to={'/'}>
+                        <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                    </Link>
+                </Box>
+                <Card width='full'>
+                    <HStack my={'1rem'}>
+                        <Box display={'flex'} mr={'auto'}>
+                            <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Estimates</Text>
+                        </Box>
+                        <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
+                            <form method='GET' onSubmit={searchEstimate}>
+                                <FormControl display={'flex'}>
+                                    <Input value={searchEstimateInput} onChange={({target}) => setSearchEstimateInput(target.value)} placeholder='Search for Request' colorScheme='blue' border='2px'/>
+                                    <Tooltip label='Search'><Button ml={'1rem'} type='submit'><MdSearch size={'25px'}/></Button></Tooltip>
+                                </FormControl>
+                            </form>
+                            <Tooltip label='Filter'><Button colorScheme={'gray'} ml='5rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
+                        </Box>
+                    </HStack>
+                    <TableContainer>
+                        <Table variant={'simple'} size='sm'>
+                                <TableCaption>Total of {estimates?.length} Estimates in our system ✌️</TableCaption>
+                                <Thead>
+                                    <Tr>
+                                        <Th textAlign={'center'}>Estimate#</Th>
+                                        <Th textAlign={'center'}>Status</Th>
+                                        <Th textAlign={'center'}>Service Type</Th>
+                                        <Th textAlign={'center'}>Estimate Date</Th>
+                                        <Th textAlign={'center'}>Issue Date</Th>
+                                        <Th textAlign={'center'}>Expiration Date</Th>
+                                        <Th textAlign={'center'}>Customer Name</Th>
+                                        <Th textAlign={'center'}>Customer Email</Th>
+                                        <Th textAlign={'center'}>Customer Number</Th>
+                                        <Th textAlign={'center'}>Total</Th>
+                                        <Th textAlign={'center'}>Actions</Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    {estimates?.map((estimate, index) => (
+                                        <Tr key={estimate.id}>
+                                            <Td textAlign={'center'}><Text>EST-{estimate.estimate_number}</Text></Td>    
+                                            <Td textAlign={'center'}><Text>{estimate.estimate_status.name === 'Sent'? <><Text mx={'auto'} bg={'yellow.500'} p='1' rounded={'xl'} align='center' w={'80px'}>Sent</Text></>: 'false'}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{estimate.service_type.name}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ new Date(estimate.estimate_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ new Date(estimate.issued_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ new Date(estimate.expiration_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{estimate.customer.first_name}</Text><Text>{estimate.customer.last_name}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{estimate.customer.email}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{estimate.customer.phone_number}</Text></Td>
+                                            <Td textAlign={'center'}><Text>${(estimate.total).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
+                                            <Td textAlign={'center'}><Link to={`/editestimate/${estimate.id}`}><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                        </Tr>
+
+                                    ))}
+                                </Tbody>
+                        </Table>
+                    </TableContainer>
+
+
+
+
+                </Card> 
+                <Flex flexDir='column' justifyContent='center' pb='2rem'>
                 <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
@@ -197,37 +274,8 @@ function Estimates() {
 
                     </ModalContent> 
                 </Modal>
-                <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
-                    <Box display='flex'>
-                        {/* <Box display='flex' flexDir='column' pr='1rem'>
-                            <form method='GET' >
-                                <FormControl>
-                                    <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search Customer Name' colorScheme='blue' border='2px'/>
-                                    <FormHelperText textAlign='right'>Press Enter key to search</FormHelperText>
-                                </FormControl>
-                            </form>
-                        </Box> */}
-                    </Box>
-                </Box>
-                <Box display='flex' pt='1rem' pb='2rem' pl='1rem' pr='1rem' >
-                    <Box>
-                        <Text letterSpacing='1px' fontWeight='normal' fontSize='4xl'>Estimates</Text>
-                        <Text>There is a total of {estimates.length} estimates</Text>    
-                    </Box>
-                    <Box display='flex' flexDir='column' justifyContent='center' ml='auto' pr='6rem'>
-                        
-                    </Box>
-                    <Box display='flex' flexDir='column' justifyContent='center'>
-                        <Button leftIcon={<AddIcon/>} colorScheme='blue' variant='solid' onClick={onOpen}>
-                            New Estimate
-                        </Button>
-                    </Box>
-                </Box>
-                <Box p='1rem' color='white' >
-                    <Estimate estimates={estimates} />                
-                </Box>
             </Flex>
-        </main>
+            </VStack>
     )
 }
 
