@@ -8,12 +8,12 @@ import { TableContainer } from '@material-ui/core';
 
 const EstimateRequests = () => {
 
-    // React Use State to store data 
+    // React Use State to store data from API requests
     const [estimateRequests, setEstimateRequests] = useState(null);
     const [searchEstimateRequestsInput, setSearchEstimateRequestsInput] = useState('');
 
     useEffect(() => {
-        getEstimateRequests()
+        getEstimateRequests();
     }, [])
     
     // Get all estimate requests
@@ -25,8 +25,8 @@ const EstimateRequests = () => {
         if(error){
             console.log(error)
         }
-        setEstimateRequests(requests)
-        console.log(estimateRequests)
+        setEstimateRequests(requests);
+        console.log(requests);
     }
 
     // Search for customer estimate request
@@ -75,18 +75,18 @@ const EstimateRequests = () => {
 
             </HStack>
             <TableContainer>
-                <Table variant='simple'>
+                <Table variant='simple' size={'sm'}>
                     <TableCaption>Total of {estimateRequests?.length} requests in our system ✌️</TableCaption>
                     <Thead>
                         <Tr>
                             <Th>Request #</Th>
                             <Th>Status</Th>
+                            <Th>Service Type</Th>
                             <Th>Requested Date</Th>
                             <Th>Name</Th>
                             <Th>Email</Th>
                             <Th>Address</Th>
-                            <Th>Service Type</Th>
-                            <Th>Date Created</Th>
+                            <Th>Entry Date</Th>
                             <Th>Actions</Th>
                         </Tr>
                     </Thead>
@@ -95,12 +95,12 @@ const EstimateRequests = () => {
                             <Tr key={request.id}>
                                 <Td><Text>{request.id}</Text></Td>
                                 <Td><Text>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} p='1' rounded={'xl'} align='center' w={'80px'}>New</Text></>: ''}</Text></Td>
-                                <Td><Text>{request.requested_date}</Text></Td>
-                                <Td><Text>{request.firstName} {request.lastName}</Text></Td>
+                                <Td><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
+                                <Td><Text>{new Date(request.requested_date).toDateString()}</Text></Td>
+                                <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
                                 <Td><Text>{request.email}</Text></Td>
-                                <Td><Text>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
-                                <Td><Text>{request.service_type_id}</Text></Td>
-                                <Td><Text>{request.created_at}</Text></Td>
+                                <Td><Text cursor={'pointer'} _hover={{textColor: "blue"}} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
+                                <Td><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
                                 <Td><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
                             </Tr>
                         ))}
