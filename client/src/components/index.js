@@ -11,4 +11,5 @@ export {default as CustomerCountCard } from './Dashboard/Report/CustomerCountCar
 export {default as EstimateRequestCountCard } from './Dashboard/Report/EstimateRequestCountCard';
 export {default as MonthlyRevenueCard} from './Dashboard/Report/MonthlyRevenueCard';
 export {default as EstimateCountCard} from './Dashboard/Report/EstimateCountCard';
-export {default as EstimateRequests} from './EstRequests/EstimateRequests'
+export {default as EstimateRequests} from './EstRequests/EstimateRequests';
+export {default as CustomerOptions} from './Customers/Customer/customerOptions';

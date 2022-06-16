@@ -7,7 +7,7 @@ import Estimate from './Estimate/Estimate';
 import AsyncSelect from 'react-select/async';
 import supabase from '../../utils/supabaseClient';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
-import { Card } from '../';
+import { Card, CustomerOptions } from '../';
 import { TableContainer } from '@material-ui/core';
 
 function Estimates() {
@@ -56,13 +56,14 @@ function Estimates() {
     const getCustomers = async() => {
         const {data: customers, error} = await supabase
         .from('customer')
-        .select('*')
+        .select('id, first_name, last_name, email')
          
         if(error){
             console.log(error);
         }
 
         setCustomers(customers)
+        console.log(customers)
     }
 
     const searchEstimate = async() => {
@@ -208,7 +209,7 @@ function Estimates() {
                         <ModalBody>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Customer Name</FormLabel>
-                                    <AsyncSelect 
+                                    {/* <AsyncSelect 
                                             onChange={handleSelectedCustomer} 
                                             loadOptions={loadOptions} 
                                             placeholder='Type Customer Name'
@@ -223,7 +224,10 @@ function Estimates() {
                                                     neutral0: 'white',
                                                     neutral90: 'white',
                                                 },
-                                            })}/>
+                                            })}/> */}
+                                    <Select placeholder='Select Customer'>
+                                        <CustomerOptions customers={customers}/>
+                                    </Select>
                                 </FormControl>
                                 {/* <FormControl isRequired>
                                     <FormLabel pt='1rem'>Job Type</FormLabel>
