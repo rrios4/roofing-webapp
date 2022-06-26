@@ -1,22 +1,26 @@
 import React, {useState, useEffect} from 'react';
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { Formik, Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure} from '@chakra-ui/react';
+import { Formik, Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 import axios from 'axios';
 import Invoice from "./Invoice/Invoice";
 import AsyncSelect from 'react-select/async';
-import swal from 'sweetalert'
+import swal from 'sweetalert';
+import supabase from '../../utils/supabaseClient';
+import { TableContainer } from '@material-ui/core';
+import { Card, CustomerOptions } from '../';
+import { Link } from 'react-router-dom';
+import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
 
 function Invoices() {
     //Defining variables
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
     let navigate = useNavigate();
-    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     //React States to manage data
-    const [invoices, getInvoices] = useState('');
+    const [invoices, getInvoices] = useState(null);
     const [customers, setCustomers] = useState('');
     const [selectedCustomer, setSelectedCustomer] = useState('');
     const [cuIdCaptured, setCuIdCaptured] = useState('');
@@ -27,6 +31,7 @@ function Invoices() {
     const [selectInvoiceStatus, setSelectInvoiceStatus] = useState('');
     const [serviceName, setServiceName] = useState('');
     const [selectJobTypeOption, setJobTypeOption] = useState('');
+    const [searchInvoiceInput, setSearchInvoiceInput] = useState('');
 
     // Functions to program events or actions
     useEffect(() => {
@@ -35,13 +40,19 @@ function Invoices() {
     }, []);
 
     const getAllInvoices = async() => {
-        await axios.get(`${url}/invoices/`)
-        .then((response) => {
-            const allInvoices = response.data
-            //add our data to state
-            getInvoices(allInvoices);
-        })
-        .catch(error => console.error(`Error: ${error}`));
+        const {data: allInvoices, error} = await supabase
+        .from('invoice')
+        .select('*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)')
+
+        if(error){
+            console.log(error)
+        }
+        getInvoices(allInvoices)
+        console.log(allInvoices)
+    }
+
+    const searchInvoice = async() => {
+
     }
 
     const handleSubmit = async(event) => {
@@ -120,8 +131,69 @@ function Invoices() {
     }
 
     return (
-        <main>
-            <Flex flexDir='column' justifyContent='center' pb='2rem'>
+        <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
+            <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
+                    <Link to={'/'}>
+                        <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                    </Link>
+                </Box>
+                <Card width='full'>
+                    <HStack my={'1rem'}>
+                        <Box display={'flex'} mr={'auto'}>
+                            <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Invoices</Text>
+                        </Box>
+                        <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
+                            <form method='GET' onSubmit={searchInvoice}>
+                                <FormControl display={'flex'}>
+                                    <Input value={searchInvoiceInput} onChange={({target}) => setSearchInvoiceInput(target.value)} placeholder='Search for Invoice' colorScheme='blue' border='2px'/>
+                                    <Tooltip label='Search'><Button ml={'1rem'} type='submit'><MdSearch size={'25px'}/></Button></Tooltip>
+                                </FormControl>
+                            </form>
+                            <Tooltip label='Filter'><Button colorScheme={'gray'} ml='5rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
+                        </Box>
+                    </HStack>
+                    <TableContainer>
+                        <Table variant={'simple'} size='sm'>
+                                <TableCaption>Total of {invoices?.length} Invoices in our system ✌️</TableCaption>
+                                <Thead>
+                                    <Tr>
+                                        <Th textAlign={'center'}>Invoice#</Th>
+                                        <Th textAlign={'center'}>Status</Th>
+                                        <Th textAlign={'center'}>Service Type</Th>
+                                        <Th textAlign={'center'}>Invoice Date</Th>
+                                        <Th textAlign={'center'}>Issue Date</Th>
+                                        <Th textAlign={'center'}>Due Date</Th>
+                                        <Th textAlign={'center'}>Customer Name</Th>
+                                        <Th textAlign={'center'}>Customer Email</Th>
+                                        <Th textAlign={'center'}>Customer Number</Th>
+                                        <Th textAlign={'center'}>Total</Th>
+                                        <Th textAlign={'center'}>Actions</Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    {invoices?.map((invoice, index) => (
+                                        <Tr key={invoice.id}>
+                                            <Td textAlign={'center'}><Text>INV-{invoice.invoice_number}</Text></Td>    
+                                            <Td textAlign={'center'}><Text>{invoice.invoice_status.name === 'New'? <><Text mx={'auto'} bg={'green.500'} p='1' rounded={'xl'} align='center' w={'80px'}>New</Text></>: 'false'}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{invoice.service_type.name}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ new Date(invoice.invoice_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ new Date(invoice.issue_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ new Date(invoice.due_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{invoice.customer.first_name}</Text><Text>{invoice.customer.last_name}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
+                                            <Td textAlign={'center'}><Text>${(invoice.total).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
+                                            <Td textAlign={'center'}><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                        </Tr>
+
+                                    ))}
+                                </Tbody>
+                        </Table>
+                    </TableContainer>
+                </Card> 
+                <Flex flexDir='column' justifyContent='center' pb='2rem'>
                 <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
@@ -200,37 +272,9 @@ function Invoices() {
 
                     </ModalContent> 
                 </Modal>
-                <Box pt='2rem' pb='1rem' ml='auto' pr='1rem'>
-                    <Box display='flex'>
-                        <Box display='flex' flexDir='column' pr='1rem'>
-                            {/* <form method='GET' >
-                                <FormControl>
-                                    <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search Invoices Name' colorScheme='blue' border='2px'/>
-                                    <FormHelperText textAlign='right'>Press Enter key to search</FormHelperText>
-                                </FormControl>
-                            </form> */}
-                        </Box>
-                    </Box>
-                </Box>
-                <Box display='flex' pt='1rem' pb='2rem' pl='1rem' pr='1rem' >
-                    <Box>
-                        <Text fontSize='4xl'>Invoices</Text>
-                        <Text>There is a total of {invoices.length} invoices</Text>    
-                    </Box>
-                    <Box display='flex' flexDir='column' justifyContent='center' ml='auto' pr='6rem'>
-                        
-                    </Box>
-                    <Box display='flex' flexDir='column' justifyContent='center'>
-                        <Button leftIcon={<AddIcon/>} colorScheme='blue' variant='solid' onClick={onOpen}>
-                            New Invoice
-                        </Button>
-                    </Box>
-                </Box>
-                <Box p='1rem' color='white' >
-                        <Invoice invoices={invoices} />                
-                </Box>
             </Flex>
-        </main>
+
+        </VStack>
     )
 }
 
