@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { HStack, Box, Stack, Text, Spinner } from '@chakra-ui/react';
+import { HStack, Box, Stack, Text, Spinner, useColorModeValue, border } from '@chakra-ui/react';
 import { Card } from '../..';
 import { MdPeopleAlt, MdScheduleSend } from 'react-icons/md';
 import supabase from '../../../utils/supabaseClient';
 
-const EstimateRequestCountCard = () => {
-    const [totalEstimateRequest, setTotalEstimateRequest] = useState('')
+const EstimateRequestCountCard = (props) => {
+    const [totalEstimateRequest, setTotalEstimateRequest] = useState('');
+    const {bg, borderColor} = props
 
     useEffect(() => {
       getTotalEstimateRequests()
@@ -21,7 +22,7 @@ const EstimateRequestCountCard = () => {
     }    
 
   return (
-    <Card width={'300px'}>
+    <Card width={'300px'} bg={bg} borderColor={borderColor}>
     <HStack>
         <Box display={'flex'} rounded={'full'} bg='gray.100' w={'60px'} h={'60px'} padding='1rem' justifyContent='center'>
             <MdScheduleSend color='#2B6CB0' size={'30px'} />

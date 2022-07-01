@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import {Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, Table, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
+import {Select, Box, Flex, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalHeader, Table, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 import Estimate from './Estimate/Estimate';
 import AsyncSelect from 'react-select/async';
@@ -16,6 +16,11 @@ function Estimates() {
     const initialRef = React.useRef();
     // let navigate = useNavigate();
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
+
+    //Style for Card component
+    const bg = useColorModeValue('white', 'gray.800');
+    const borderColor = useColorModeValue('gray.200', 'gray.700');
+    const buttonColorScheme = useColorModeValue('blue', 'gray');
 
     // States to manage data
     const [estimates, setEstimates] = useState(null);
@@ -135,10 +140,10 @@ function Estimates() {
             <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
                 <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
-                        <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                        <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                     </Link>
                 </Box>
-                <Card width='full'>
+                <Card width='full' bg={bg} borderColor={borderColor}>
                     <HStack my={'1rem'}>
                         <Box display={'flex'} mr={'auto'}>
                             <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Estimates</Text>

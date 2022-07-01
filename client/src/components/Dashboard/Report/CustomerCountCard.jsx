@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import Card from '../../Card/index';
-import { Box, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, Spinner, border } from "@chakra-ui/react";
 import { MdPeopleAlt } from 'react-icons/md'
 import supabase from '../../../utils/supabaseClient';
 
-const CustomerCountCard = () => {
-    const [totalCustomers, setTotalCustomers] = useState('')
+const CustomerCountCard = (props) => {
+    const [totalCustomers, setTotalCustomers] = useState('');
+    const {bg, borderColor} = props
+
 
     useEffect(() => {
       getTotalCustomers()
@@ -25,7 +27,7 @@ const CustomerCountCard = () => {
 
 
   return (
-    <Card width={'300px'}>
+    <Card width={'300px'} bg={bg} borderColor={borderColor}>
         <HStack>
             <Box display={'flex'} rounded={'full'} bg='gray.100' w={'60px'} h={'60px'} padding='1rem' justifyContent='center'>
                 <MdPeopleAlt color='#2B6CB0' size={'30px'} />

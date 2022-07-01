@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { Formik, Select, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack} from '@chakra-ui/react';
+import { Formik, Select, useColorModeValue, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, border} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 import axios from 'axios';
 import Invoice from "./Invoice/Invoice";
@@ -18,6 +18,11 @@ function Invoices() {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
     let navigate = useNavigate();
+
+    //Style for Card component
+    const bg = useColorModeValue('white', 'gray.800');
+    const borderColor = useColorModeValue('gray.200', 'gray.700');
+    const buttonColorScheme = useColorModeValue('blue', 'gray');
 
     //React States to manage data
     const [invoices, getInvoices] = useState(null);
@@ -134,10 +139,10 @@ function Invoices() {
         <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
             <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
-                        <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                        <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                     </Link>
                 </Box>
-                <Card width='full'>
+                <Card width='full' bg={bg} borderColor={borderColor}>
                     <HStack my={'1rem'}>
                         <Box display={'flex'} mr={'auto'}>
                             <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Invoices</Text>

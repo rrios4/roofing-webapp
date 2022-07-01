@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {HStack, Box, Stack, Text, Spinner} from '@chakra-ui/react';
+import {HStack, Box, Stack, Text, Spinner } from '@chakra-ui/react';
 import { MdEditLocationAlt } from 'react-icons/md';
 import {Card} from '../../';
 import supabase from '../../../utils/supabaseClient';
 
-const EstimateCountCard = () => {
+const EstimateCountCard = (props) => {
     const [totalEstimates, setTotalEstimates] = useState('');
+    const {bg, borderColor} = props
 
     useEffect(() => {
         getTotalEstimates()
@@ -20,7 +21,7 @@ const EstimateCountCard = () => {
     }
 
   return (
-    <Card width={'300px'}>
+    <Card width={'300px'} bg={bg} borderColor={borderColor}>
         <HStack>
             <Box display={'flex'} rounded={'full'} bg='gray.100' w={'60px'} h={'60px'} padding='1rem' justifyContent='center'>
                 <MdEditLocationAlt color='#2B6CB0' size={'30px'} />

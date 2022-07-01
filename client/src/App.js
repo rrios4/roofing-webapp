@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import { Flex } from "@chakra-ui/react";
+import { Flex, useColorModeValue } from "@chakra-ui/react";
 import { Customers, Navbar, Invoices, Estimates, Employees, DashBoard, EstimateRequests  } from "./components/";
 import CustomerEdit from './components/Customers/Customer/CustomerEdit'
 import InvoiceEdit from './components/Invoices/Invoice/InvoiceEdit'
@@ -11,10 +11,11 @@ import SignUp from './components/Authentication/SignUp';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
+    const bg = useColorModeValue('gray.50', 'gray.800')
     return (
         <BrowserRouter>
             <Navbar/>
-            <Flex ml={{base:'0rem', lg:'8rem'}} mt={{base:'4rem', lg:'0rem'}} justifyContent='center'>
+            <Flex bg={bg} ml={{base:'0rem', lg:'8rem'}} mt={{base:'4rem', lg:'0rem'}} justifyContent='center'>
             <Routes>
                     <Route path="/" element={<ProtectedRoute><DashBoard/></ProtectedRoute>}/>
                     <Route path="/login" element={<Login/>}/>

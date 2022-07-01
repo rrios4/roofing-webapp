@@ -1,18 +1,19 @@
 import React, {useState, useEffect} from 'react';
-import {Stack, Text, HStack, Box, Spinner} from '@chakra-ui/react';
+import {Stack, Text, HStack, Box, Spinner, border} from '@chakra-ui/react';
 import { Card } from '../..';
 import { MdAttachMoney } from 'react-icons/md';
 import supabase from '../../../utils/supabaseClient';
 
-const MonthlyRevenueCard = () => {
-    const [totalRevenues, setTotalRevenues] = useState('')
+const MonthlyRevenueCard = (props) => {
+    const [totalRevenues, setTotalRevenues] = useState('');
+    const {bg, borderColor} = props
 
     useEffect(() => {
       getMonthlyRevenue()
     }, [])
     
     const getMonthlyRevenue = async() => {
-        const {data, count } = await supabase
+        const { data, count } = await supabase
         .from('invoice')
         .select('*', {count: 'exact'})
 
@@ -21,7 +22,7 @@ const MonthlyRevenueCard = () => {
     }
 
   return (
-    <Card width={'300px'}>
+    <Card width={'300px'} bg={bg} borderColor={borderColor}>
         <HStack>
             <Box display={'flex'} rounded={'full'} bg='gray.100' w={'60px'} h={'60px'} padding='1rem' justifyContent='center'>
                 <MdAttachMoney color='#2B6CB0' size={'30px'} />

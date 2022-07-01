@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Customer from './Customer/Customer';
-import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner} from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, useColorModeValue, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner} from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import CustomerTypeOptions from './Customer/CustomerTypeOptions';
@@ -13,6 +13,10 @@ import { Link } from 'react-router-dom'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
 
 export default function Customers() {
+        //Style for Card component
+        const bg = useColorModeValue('white', 'gray.800');
+        const borderColor = useColorModeValue('gray.200', 'gray.700');
+        const buttonColorScheme = useColorModeValue('blue', 'gray');
 
         //GET data from API
         const [customers, getCustomers] = useState(null);
@@ -137,10 +141,10 @@ export default function Customers() {
         <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
             <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                 <Link to={'/'}>
-                    <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                    <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                 </Link>
             </Box>
-            <Card width='full'>
+            <Card width='full' bg={bg} borderColor={borderColor}>
                 <HStack my={'1rem'} spacing='auto'>
                     <Box>
                         <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Customers</Text>

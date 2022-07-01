@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner} from '@chakra-ui/react';
+import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner} from '@chakra-ui/react';
 import axios from 'axios';
 import Select from "react-select";
 import swal from 'sweetalert';
@@ -12,6 +12,11 @@ import CustomerDetailsCard from '../Customer/CustomerDetailsCard';
 
 const CustomerEdit = (props) => {
     const navigate = useNavigate();
+
+    //Style for Card component
+    const bg = useColorModeValue('white', 'gray.800');
+    const borderColor = useColorModeValue('gray.200', 'gray.700');
+    const buttonColorScheme = useColorModeValue('blue', 'gray');
     
     // const {id} = props.match.params;
     const {id} = useParams();
@@ -332,17 +337,17 @@ const CustomerEdit = (props) => {
             <VStack spacing={4}>
                 <Box display={'flex'} justifyContent='start' w='full'>
                     <Link to={'/customers'}>
-                        <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                        <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                     </Link>
                 </Box>
                 {/* Customer Details Card Info  Component */}
-                <CustomerDetailsCard onOpen={onOpen} deleteCustomer={deleteCustomer} customer={customer} customerDate={customerDate}/>
+                <CustomerDetailsCard bg={bg} borderColor={borderColor} onOpen={onOpen} deleteCustomer={deleteCustomer} customer={customer} customerDate={customerDate}/>
                 {/* Customer Estimates Card */}
-                <Card width={'full'}>
+                <Card width={'full'} bg={bg} borderColor={borderColor}>
                     <Text>Customer Invoice</Text>
                 </Card>
                 {/* Customer Invoices Card */}
-                <Card width={'full'}>
+                <Card width={'full'} bg={bg} borderColor={borderColor}>
                     <Text>Customer Estimates</Text>
                 </Card>
             </VStack>

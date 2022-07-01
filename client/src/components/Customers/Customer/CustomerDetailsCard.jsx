@@ -4,12 +4,12 @@ import { Box, Button, Text, Stack, VStack, HStack, Image, StackDivider, Spinner}
 import {  MdLocationOn, MdEmail, MdPhone, MdOutlineDateRange } from 'react-icons/md'
 
 const CustomerDetailsCard = (props) => {
-    const {customer, onOpen, deleteCustomer, customerDate} = props
+    const {customer, onOpen, deleteCustomer, customerDate, bg, borderColor} = props
 
   return (
     <>
     {/* Customer Card Info */}
-    <Card width={'70%'}>
+    <Card width={'70%'} bg={bg} borderColor={borderColor}>
         <HStack divider={<StackDivider borderColor='gray.200' />}>
             <Box mr={'1rem'}>
                 <Box rounded={'full'} w={'120px'} bg='gray.500' h={'120px'}><Image rounded={'full'} src='https://i.pinimg.com/originals/0b/3d/f1/0b3df19a63dfe264cfd984f6864a77b3.jpg'/></Box>

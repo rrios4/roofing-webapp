@@ -1,16 +1,21 @@
 import React,{useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip} from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
 import { Card } from '..';
 import supabase from '../../utils/supabaseClient';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd } from 'react-icons/md';
 import { TableContainer } from '@material-ui/core';
+import { blue } from '@material-ui/core/colors';
 
 const EstimateRequests = () => {
 
     // React Use State to store data from API requests
     const [estimateRequests, setEstimateRequests] = useState(null);
     const [searchEstimateRequestsInput, setSearchEstimateRequestsInput] = useState('');
+
+    const bg = useColorModeValue('white', 'gray.800');
+    const borderColor = useColorModeValue('gray.200', 'gray.700');
+    const buttonColorScheme = useColorModeValue('blue', 'gray');
 
     useEffect(() => {
         getEstimateRequests();
@@ -55,10 +60,10 @@ const EstimateRequests = () => {
     <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
         <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
             <Link to={'/'}>
-                <Button ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
             </Link>
         </Box>
-        <Card width='full'>
+        <Card width='full' bg={bg} borderColor={borderColor}>
             <HStack my={'1rem'}>
                 <Box display={'flex'} mr={'auto'}>
                     <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Estimate Requests</Text>

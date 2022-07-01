@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex, Text, Grid, Button, Image, VStack, HStack, Stack } from "@chakra-ui/react";
+import { Box, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border } from "@chakra-ui/react";
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Authentication/auth'
@@ -9,8 +9,11 @@ import { Card, CustomerCountCard, EstimateRequestCountCard, MonthlyRevenueCard, 
 const Dashboard = ({children}) => {
     const auth = useAuth()
     const navigate = useNavigate()
+    const bg = useColorModeValue('white', 'gray.800');
+    const borderColor = useColorModeValue('gray.200', 'gray.700');
     // console.log(auth.user.user_metadata.avatar_url)
     const [loggedInUserData, setloggedInUserData] = useState('')
+
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
         // if (!localStorage.getItem('supabase.auth.token')) {
@@ -41,7 +44,7 @@ const Dashboard = ({children}) => {
                             <Text fontSize='md' color='gray.500'>Rios Roofing Web Application by CoogTech</Text>
                         </Stack>
                         {/* Profile Card */}
-                        <HStack marginBottom='0rem' spacing='4' shadow='md' padding='4' rounded='xl' borderWidth='1px'>
+                        <HStack bg={bg} borderColor={borderColor} marginBottom='0rem' spacing='4' shadow='sm' padding='4' rounded='xl' borderWidth='1px'>
                             <Image rounded='full' boxSize='70px' src={`${loggedInUserData.avatar_url}`} alt='user-profile'/>
                             <VStack maxW='full' spacing='0rem' align='start'>
                                 <Text fontSize='md' fontWeight='semibold' >{loggedInUserData.full_name}</Text>   
@@ -51,10 +54,10 @@ const Dashboard = ({children}) => {
                         </HStack>
                     </Stack>
                     <Stack w={'full'} wrap='wrap' direction={["column", "column", "column", "row"]} align='center' spacing='1rem'>
-                        <EstimateRequestCountCard/>
-                        <MonthlyRevenueCard/>
-                        <EstimateCountCard/>
-                        <CustomerCountCard/>
+                        <EstimateRequestCountCard bg={bg} borderColor={borderColor}/>
+                        <MonthlyRevenueCard bg={bg} borderColor={borderColor}/>
+                        <EstimateCountCard bg={bg} borderColor={borderColor}/>
+                        <CustomerCountCard bg={bg} borderColor={borderColor}/>
                     </Stack>
 
                 </VStack>
