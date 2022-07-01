@@ -8,12 +8,10 @@ import EmployeeEdit from './components/Employees/Employee/EmployeeEdit';
 import EstimateEdit from './components/Estimates/Estimate/EstimateEdit';
 import Login from './components/Authentication/Login'
 import SignUp from './components/Authentication/SignUp';
-import { AuthProvider } from './components/Authentication/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
     return (
-        <AuthProvider>
             <BrowserRouter>
                     <ThemeProvider theme={theme}>
                         <ColorModeProvider options={{
@@ -42,7 +40,6 @@ const App = () => {
                         </ColorModeProvider>
                     </ThemeProvider>
             </BrowserRouter>
-        </AuthProvider>
     )
 }
 

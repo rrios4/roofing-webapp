@@ -44,12 +44,14 @@ function Login() {
   }
 
   const handleGoogleSignin = async (e) => {
-    // e.preventDefault()
+    e.preventDefault()
     const loginWithGoogle = await auth.googleLogin()
 
     if(loginWithGoogle.error){
       swal("Try Again!", loginWithGoogle.error.message, "error");
       navigate("/login"); 
+    } else{
+      navigate('/')
     }
 
   }
@@ -111,9 +113,9 @@ function Login() {
             <Divider maxW='6rem'/>
           </Flex>
           <HStack justify='center' spacing='2rem'>
-              <Button colorScheme='gray' variant='outline' leftIcon={<FcGoogle/>} onClick={(e) => handleGoogleSignin(e)}>Google</Button>
-              {/* <Button></Button>
-              <Button></Button> */}
+            <form onSubmit={handleGoogleSignin}>
+              <Button type='submit' colorScheme='gray' variant='outline' leftIcon={<FcGoogle/>}>Google</Button>
+            </form>
           </HStack>
 
         </Stack>

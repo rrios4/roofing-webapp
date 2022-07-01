@@ -71,7 +71,7 @@ function useProviderAuth() {
           }
       })
 
-      return () => auth.unsubscribe();
+      return () => auth.data.unsubscribe();
     
     }, [])
     
