@@ -4,9 +4,9 @@ import ReactDOM from 'react-dom';
 import { AuthProvider } from './contexts/auth';
 import theme from './theme';
 import { ColorModeScript, ThemeProvider, ChakraProvider, CSSReset, Flex } from '@chakra-ui/react';
-import { Layout, ProtectedRoute, Customers, Invoices, Estimates, EstimateRequests, CustomerEdit, InvoiceEdit, EmployeeEdit, Employees, EstimateEdit } from './components'
+import { Layout, ProtectedRoute, Invoices, Estimates, EstimateRequests, CustomerEdit, InvoiceEdit, EmployeeEdit, Employees, EstimateEdit } from './components'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Login, Signup, Dashboard } from './pages'
+import { Login, Signup, Dashboard, Customers } from './pages'
 
 ReactDOM.render(
     <AuthProvider>

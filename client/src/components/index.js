@@ -1,14 +1,12 @@
 export { default as Layout } from './Layout/Layout';
 export { default as Navbar} from './Layout/Navbar/Navbar';
-export { default as Login } from './Authentication/Login';
-export { default as SignUp} from './Authentication/SignUp';
 export { default as Customers} from './Customers/Customers';
+export { default as Customer } from './Customers/Customer/Customer'
 export { default as Estimates} from './Estimates/Estimates';
 export { default as Invoices} from './Invoices/Invoices';
 export { default as Materials} from './Materials/Materials';
 export { default as Employees} from './Employees/Employees';
 export { default as Schedules} from './Schedules/Schedules';
-export { default as DashBoard} from './Dashboard/Dashboard';
 export { default as Card } from './Card/index';
 export { default as CustomerCountCard } from './Dashboard/Report/CustomerCountCard';
 export { default as EstimateRequestCountCard } from './Dashboard/Report/EstimateRequestCountCard';
@@ -21,3 +19,5 @@ export { default as CustomerEdit } from './Customers/Customer/CustomerEdit';
 export { default as EmployeeEdit } from './Employees/Employee/EmployeeEdit';
 export { default as EstimateEdit } from './Estimates/Estimate/EstimateEdit';
 export { default as InvoiceEdit } from './Invoices/Invoice/InvoiceEdit';
+export { default as StateOptions } from './StateOptions';
+export { default as CustomerTypeOptions } from './Customers/Customer/CustomerTypeOptions'
