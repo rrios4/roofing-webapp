@@ -1,15 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import App from './App';
-import { AuthProvider } from './components/Authentication/auth';
-import { ColorModeScript, ThemeProvider, ChakraProvider, CSSReset, Flex } from '@chakra-ui/react';
+import { AuthProvider } from './contexts/auth';
 import theme from './theme';
-import { Layout, DashBoard, ProtectedRoute, Login, SignUp, Customers, Invoices, Estimates, EstimateRequests, CustomerEdit, InvoiceEdit, EmployeeEdit, Employees, EstimateEdit } from './components'
-import {
-    BrowserRouter,
-    Routes,
-    Route,
-} from "react-router-dom";
+import { ColorModeScript, ThemeProvider, ChakraProvider, CSSReset, Flex } from '@chakra-ui/react';
+import { Layout, ProtectedRoute, Customers, Invoices, Estimates, EstimateRequests, CustomerEdit, InvoiceEdit, EmployeeEdit, Employees, EstimateEdit } from './components'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Login, Signup, Dashboard } from './pages'
 
 ReactDOM.render(
     <AuthProvider>
@@ -20,9 +17,9 @@ ReactDOM.render(
                 <ColorModeScript initialColorMode={theme.config.initialColorMode}/>
                 <Layout>
                     <Routes>
-                        <Route path='/' element={<ProtectedRoute><DashBoard/></ProtectedRoute>}/>
+                        <Route path='/' element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
                         <Route path='/login' element={<Login/>}/>
-                        <Route path='/signup' element={<SignUp/>}/>
+                        <Route path='/signup' element={<Signup/>}/>
                         <Route path='/estimate-requests' element={<ProtectedRoute><EstimateRequests/></ProtectedRoute>}/>
                         <Route path='/customers' element={<ProtectedRoute><Customers/></ProtectedRoute>}/>
                         <Route path='/invoices' element={<ProtectedRoute><Invoices/></ProtectedRoute>}/>
