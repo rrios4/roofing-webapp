@@ -1,4 +1,7 @@
-export { default as Navbar} from './Navbar/Navbar';
+export { default as Layout } from './Layout/Layout';
+export { default as Navbar} from './Layout/Navbar/Navbar';
+export { default as Login } from './Authentication/Login';
+export { default as SignUp} from './Authentication/SignUp';
 export {default as Customers} from './Customers/Customers';
 export {default as Estimates} from './Estimates/Estimates';
 export {default as Invoices} from './Invoices/Invoices';
@@ -13,3 +16,8 @@ export {default as MonthlyRevenueCard} from './Dashboard/Report/MonthlyRevenueCa
 export {default as EstimateCountCard} from './Dashboard/Report/EstimateCountCard';
 export {default as EstimateRequests} from './EstRequests/EstimateRequests';
 export {default as CustomerOptions} from './Customers/Customer/customerOptions';
+export { default as ProtectedRoute } from './ProtectedRoute';
+export { default as CustomerEdit } from './Customers/Customer/CustomerEdit';
+export { default as EmployeeEdit } from './Employees/Employee/EmployeeEdit';
+export { default as EstimateEdit } from './Estimates/Estimate/EstimateEdit';
+export { default as InvoiceEdit } from './Invoices/Invoice/InvoiceEdit';

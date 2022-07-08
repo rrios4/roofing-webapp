@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { Formik, Select, useColorModeValue, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, border} from '@chakra-ui/react';
-import { AddIcon } from "@chakra-ui/icons";
 import axios from 'axios';
 import Invoice from "./Invoice/Invoice";
 import AsyncSelect from 'react-select/async';
