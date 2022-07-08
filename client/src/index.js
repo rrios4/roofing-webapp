@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 // import App from './App';
 import { AuthProvider } from './contexts/auth';
 import theme from './theme';
-import { ColorModeScript, ThemeProvider, ChakraProvider, CSSReset, Flex } from '@chakra-ui/react';
-import { Layout, ProtectedRoute, Invoices, Estimates, CustomerEdit, InvoiceEdit, EmployeeEdit, Employees, EstimateEdit } from './components'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Login, Signup, Dashboard, Customers, EstimateRequests } from './pages'
+import { ColorModeScript, ThemeProvider, ChakraProvider, CSSReset } from '@chakra-ui/react';
+import { Login, Signup, Dashboard, Customers, EstimateRequests, Invoices, Estimates } from './pages'
+import { Layout, ProtectedRoute, CustomerEdit, InvoiceEdit, EmployeeEdit, Employees, EstimateEdit } from './components'
 
 ReactDOM.render(
     <AuthProvider>

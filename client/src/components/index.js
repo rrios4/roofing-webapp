@@ -3,7 +3,9 @@ export { default as Navbar} from './Layout/Navbar/Navbar';
 export { default as Customers} from './Customers/Customers';
 export { default as Customer } from './Customers/Customer/Customer'
 export { default as Estimates} from './Estimates/Estimates';
+export { default as Estimate } from './Estimates/Estimate/Estimate'
 export { default as Invoices} from './Invoices/Invoices';
+export { default as Invoice } from './Invoices/Invoice/Invoice'
 export { default as Materials} from './Materials/Materials';
 export { default as Employees} from './Employees/Employees';
 export { default as Schedules} from './Schedules/Schedules';
