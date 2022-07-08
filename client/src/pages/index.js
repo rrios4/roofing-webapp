@@ -6,3 +6,5 @@ export { default as EstimateRequests } from './EstimateRequests/EstimateRequests
 export { default as Estimates } from './Estimates/Estimates';
 export { default as Invoices } from './Invoices/Invoices';
 export { default as CustomerDetails } from './CustomerDetails/CustomerDetails';
+export { default as InvoiceDetails } from './InvoiceDetails/InvoiceDetails';
+export { default as EstimateDetails } from './EstimateDetails/EstimateDetails';
