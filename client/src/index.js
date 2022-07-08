@@ -5,8 +5,8 @@ import { AuthProvider } from './contexts/auth';
 import theme from './theme';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ColorModeScript, ThemeProvider, ChakraProvider, CSSReset } from '@chakra-ui/react';
-import { Login, Signup, Dashboard, Customers, EstimateRequests, Invoices, Estimates } from './pages'
-import { Layout, ProtectedRoute, CustomerEdit, InvoiceEdit, EmployeeEdit, Employees, EstimateEdit } from './components'
+import { Login, Signup, Dashboard, Customers, EstimateRequests, Invoices, Estimates, CustomerDetails } from './pages'
+import { Layout, ProtectedRoute, InvoiceEdit, EmployeeEdit, Employees, EstimateEdit } from './components'
 
 ReactDOM.render(
     <AuthProvider>
@@ -25,7 +25,7 @@ ReactDOM.render(
                         <Route path='/invoices' element={<ProtectedRoute><Invoices/></ProtectedRoute>}/>
                         <Route path='/estimates' element={<ProtectedRoute><Estimates/></ProtectedRoute>}/>
                         <Route path='/employees' element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
-                        <Route path='/editcustomer/:id' element={<ProtectedRoute><CustomerEdit/></ProtectedRoute>}/>
+                        <Route path='/editcustomer/:id' element={<ProtectedRoute><CustomerDetails/></ProtectedRoute>}/>
                         <Route path='/editinvoice/:id' element={<ProtectedRoute><InvoiceEdit/></ProtectedRoute>}/>
                         <Route path="/editestimate/:id" element={<ProtectedRoute><EstimateEdit/></ProtectedRoute>}/>
                         <Route path="/editemployee/:id" element={<ProtectedRoute><EmployeeEdit/></ProtectedRoute>}/>

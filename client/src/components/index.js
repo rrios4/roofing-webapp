@@ -22,4 +22,5 @@ export { default as EmployeeEdit } from './Employees/Employee/EmployeeEdit';
 export { default as EstimateEdit } from './Estimates/Estimate/EstimateEdit';
 export { default as InvoiceEdit } from './Invoices/Invoice/InvoiceEdit';
 export { default as StateOptions } from './StateOptions';
-export { default as CustomerTypeOptions } from './Customers/Customer/CustomerTypeOptions'
+export { default as CustomerTypeOptions } from './Customers/Customer/CustomerTypeOptions';
+export { default as CustomerDetailsCard } from './Customers/Customer/CustomerDetailsCard';
