@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
-import { Card } from '../../components';
+import { Card, EditEstimateRequest } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd } from 'react-icons/md';
 import { TableContainer } from '@material-ui/core';
@@ -56,6 +56,7 @@ const EstimateRequests = () => {
 
   return (
     <>
+    <EditEstimateRequest initialRef={initialRef} isOpen={isOpen} onClose={onClose}/>
     <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
         <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
             <Link to={'/'}>
@@ -105,7 +106,7 @@ const EstimateRequests = () => {
                                 <Td><Text>{request.email}</Text></Td>
                                 <Td><Text cursor={'pointer'} _hover={{textColor: "blue"}} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
                                 <Td><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
-                                <Td><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
+                                <Td><Tooltip label='Edit'><Button mr={'1rem'} onClick={onOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
                             </Tr>
                         ))}
                         {/* <Customer customers={customers}/> */}
