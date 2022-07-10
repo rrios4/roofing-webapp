@@ -17,4 +17,6 @@ export { default as EmployeeEdit } from './Employees/Employee/EmployeeEdit';
 export { default as StateOptions } from './StateOptions';
 export { default as CustomerTypeOptions } from './Customers/Customer/CustomerTypeOptions';
 export { default as CustomerDetailsCard } from './Customers/Customer/CustomerDetailsCard';
-export { default as EditEstimateRequest } from './Forms/EditEstimateRequest'
+export { default as EditEstimateRequestForm } from './Forms/EditEstimateRequestForm';
+export { default as ModalIndex} from './Modals/index';
+export { default as EditInvoiceForm } from './Forms/EditInvoiceForm';

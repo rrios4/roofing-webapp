@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
-import { Card, EditEstimateRequest } from '../../components';
+import { Card, EditEstimateRequestForm } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd } from 'react-icons/md';
 
@@ -55,7 +55,7 @@ const EstimateRequests = () => {
 
   return (
     <>
-    <EditEstimateRequest initialRef={initialRef} isOpen={isOpen} onClose={onClose}/>
+    <EditEstimateRequestForm initialRef={initialRef} isOpen={isOpen} onClose={onClose}/>
     <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
         <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
             <Link to={'/'}>

@@ -7,13 +7,14 @@ import Invoice from "../../components";
 import AsyncSelect from 'react-select/async';
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
-import { Card, CustomerOptions } from '../../components';
+import { Card, CustomerOptions, EditInvoiceForm } from '../../components';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
 
 function Invoices() {
     //Defining variables
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const {isOpen: isNewOpen , onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
+    const {isOpen: isEditOpen , onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
     const initialRef = React.useRef();
     let navigate = useNavigate();
 
@@ -134,6 +135,8 @@ function Invoices() {
     }
 
     return (
+        <>
+        <EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose}/>
         <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
             <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
@@ -154,7 +157,7 @@ function Invoices() {
                             </form>
                             <Tooltip label='Filter'><Button colorScheme={'gray'} ml='5rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
                             <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'}/></Button></Tooltip>
-                            <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onNewOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
                         </Box>
                     </HStack>
                     <TableContainer>
@@ -188,7 +191,7 @@ function Invoices() {
                                             <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
                                             <Td textAlign={'center'}><Text>${(invoice.total).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
-                                            <Td textAlign={'center'}><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={onEditOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
                                     ))}
@@ -197,7 +200,7 @@ function Invoices() {
                     </TableContainer>
                 </Card> 
                 <Flex flexDir='column' justifyContent='center' pb='2rem'>
-                <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+                <Modal initialFocusRef={initialRef} isOpen={isNewOpen} onClose={onNewClose}>
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
                         <ModalHeader textAlign='center'>Create New Invoice</ModalHeader>
@@ -268,8 +271,8 @@ function Invoices() {
                                 </FormControl>
                         </ModalBody>
                         <ModalFooter>
-                            <Button colorScheme='blue' mr={3} type='submit' onClick={onClose} >Save</Button>
-                            <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
+                            <Button colorScheme='blue' mr={3} type='submit' onClick={onNewClose} >Save</Button>
+                            <Button onClick={onNewClose} colorScheme='blue'>Cancel</Button>
                         </ModalFooter>
                         </form>
 
@@ -278,6 +281,7 @@ function Invoices() {
             </Flex>
 
         </VStack>
+        </>
     )
 }
 
