@@ -83,8 +83,8 @@ const EstimateRequests = () => {
                     <TableCaption>Total of {estimateRequests?.length} requests in our system ✌️</TableCaption>
                     <Thead>
                         <Tr>
-                            <Th>Request #</Th>
                             <Th>Status</Th>
+                            <Th>Request #</Th>
                             <Th>Service Type</Th>
                             <Th>Requested Date</Th>
                             <Th>Name</Th>
@@ -97,8 +97,8 @@ const EstimateRequests = () => {
                     <Tbody>
                         {estimateRequests?.map((request, index) => (
                             <Tr key={request.id}>
+                                 <Td><Text>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: ''}</Text></Td>
                                 <Td><Text>{request.id}</Text></Td>
-                                <Td><Text>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} p='1' rounded={'xl'} align='center' w={'80px'}>New</Text></>: ''}</Text></Td>
                                 <Td><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
                                 <Td><Text>{new Date(request.requested_date).toDateString()}</Text></Td>
                                 <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>

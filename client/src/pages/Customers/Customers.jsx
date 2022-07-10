@@ -164,11 +164,11 @@ export default function Customers() {
                         <TableCaption>Total of {customers?.length} customers registered in our system ✌️</TableCaption>
                         <Thead>
                             <Tr>
+                                <Th>Type</Th>
                                 <Th>Name</Th>
                                 <Th>Email</Th>
                                 <Th>Phone Number</Th>
                                 <Th>Address</Th>
-                                <Th>Type</Th>
                                 <Th>Registered Date</Th>
                                 <Th>Actions</Th>
                             </Tr>
