@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { Customer, Card, StateOptions, CustomerTypeOptions } from '../../components';
-import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, useColorModeValue, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner} from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner} from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
-import { TableContainer } from '@material-ui/core';
 import { IoMdPersonAdd } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 import { MdKeyboardArrowLeft } from 'react-icons/md'
@@ -160,7 +159,7 @@ export default function Customers() {
                     </Box>
 
                 </HStack>
-                <TableContainer>
+                <TableContainer overflow={'auto'}>
                     <Table variant='simple' size={'sm'}>
                         <TableCaption>Total of {customers?.length} customers registered in our system ✌️</TableCaption>
                         <Thead>

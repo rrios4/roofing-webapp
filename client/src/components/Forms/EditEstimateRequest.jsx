@@ -10,7 +10,7 @@ const EditEstimateRequest = (props) => {
   return (
     <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} motionPreset={'slideInBottom'}>
     <ModalOverlay />
-        <ModalContent zIndex={'9997'} roundedRight={'25'} w={'450px'} h='100vh' position={'fixed'} left={'100px'} top={'-60px'} bg={'gray.800'}>
+        <ModalContent zIndex={'9990'} roundedRight={'25'} w={'450px'} h='100vh' position={'fixed'} left={'100px'} top={'-60px'} bg={'gray.800'}>
             <Flex pl={'4rem'} pr={'3rem'} py={'2rem'} flexDirection={'column'} left={'0px'} top={'0px'} w={'450px'} minH={'100vh'} overflow={'auto'}>
                 <Flex flexDir={'column'}>
                     <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>ESTR</Text>-0016</Text>

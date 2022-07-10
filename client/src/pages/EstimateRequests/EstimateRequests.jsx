@@ -1,10 +1,9 @@
 import React,{useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
 import { Card, EditEstimateRequest } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd } from 'react-icons/md';
-import { TableContainer } from '@material-ui/core';
 
 const EstimateRequests = () => {
 
@@ -79,7 +78,7 @@ const EstimateRequests = () => {
                 </Box>
 
             </HStack>
-            <TableContainer>
+            <TableContainer overflow={'auto'}>
                 <Table variant='simple' size={'sm'}>
                     <TableCaption>Total of {estimateRequests?.length} requests in our system ✌️</TableCaption>
                     <Thead>

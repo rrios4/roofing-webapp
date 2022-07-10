@@ -1,12 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import {Select, Box, Flex, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalHeader, Table, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
+import {Select, Box, Flex, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalHeader, Table, TableContainer, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
 import AsyncSelect from 'react-select/async';
 import supabase from '../../utils/supabaseClient';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
 import { Card, CustomerOptions, Estimate } from '../../components';
-import { TableContainer } from '@material-ui/core';
 
 function Estimates() {
     //Defining variables
@@ -158,7 +157,7 @@ function Estimates() {
                             <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
                         </Box>
                     </HStack>
-                    <TableContainer>
+                    <TableContainer overflow={'auto'}>
                         <Table variant={'simple'} size='sm'>
                                 <TableCaption>Total of {estimates?.length} Estimates in our system ✌️</TableCaption>
                                 <Thead>

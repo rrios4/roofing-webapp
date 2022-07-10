@@ -7,13 +7,13 @@ import {MdDashboard, MdRequestPage, MdScheduleSend, MdSquareFoot, MdPeopleAlt} f
 
 const Navbar = () => {
     return (
-        <Flex zIndex={'9999'} position='fixed' w={{base: 'full', lg:'8rem'}} h={{base: '4rem', lg:'100vh'}} bg='gray.700' roundedTopRight={{base: '0', lg:'25'}} roundedBottomRight={{base: '0', lg:'25'}} flexDir={{base: 'row',lg: 'column'}} p='0' m='0' top={{base:'0', lg:'0'}}>
+        <Flex zIndex={'9998'} position='fixed' w={{base: 'full', lg:'8rem'}} h={{base: '4rem', lg:'100vh'}} bg='gray.700' roundedTopRight={{base: '0', lg:'25'}} roundedBottomRight={{base: '0', lg:'25'}} flexDir={{base: 'row',lg: 'column'}} p='0' m='0' top={{base:'0', lg:'0'}}>
             <Link to='/'>
                 <Box display='flex' flexDir={{base: 'column',lg:'column'}} h={{base: '4rem',lg:'8rem'}} bg='blue.400' shadow='xl' roundedRight='25' justifyContent={{base:'center', lg:'center'}} px={{base:'6px', lg:'0px'}}>
                     <Image marginLeft={{base: '-2px',lg:'12px'}} boxSize={{base: '50px',lg:'100px'}} src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>
                 </Box>
             </Link>
-            <VStack mt={'6rem'} spacing='6'>
+            <VStack my={'auto'} spacing='6'>
                 <Link to={'/'}><Tooltip label='Dashboard'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdDashboard size={'30px'} color='white'/></Box></Tooltip></Link>
                 <Link to={'/estimate-requests'}><Tooltip label='Estimate Requests'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdScheduleSend size={'30px'} color='white'/></Box></Tooltip></Link>
                 <Link to={'/invoices'}><Tooltip label='Invoices'><Box p={'1'} rounded='md' _hover={{bg:'gray.600'}}><MdRequestPage size={'30px'} color='white'/></Box></Tooltip></Link>

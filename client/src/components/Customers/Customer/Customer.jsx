@@ -11,10 +11,10 @@ const Customer = (props) => {
     <>
         {customers ? customers.map((customer,index) => (
             <Tr key={index}>
-                <Td maxW={'150px'}>{customer.first_name && customer.last_name ? <><Text marginRight={'2px'}>{customer.first_name}</Text><Text>{customer.last_name}</Text></> : <>{customer.company_name}</>}</Td>
+                <Td>{customer.first_name && customer.last_name ? <><Text marginRight={'2px'}>{customer.first_name}</Text><Text>{customer.last_name}</Text></> : <>{customer.company_name}</>}</Td>
                 <Td>{customer.email}</Td>
                 <Td>{customer.phone_number}</Td>
-                <Td maxW={'200px'}><Text _hover={{textColor: "blue"}} cursor={'pointer'} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`)}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text></Td>
+                <Td><Text _hover={{textColor: "blue"}} cursor={'pointer'} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`)}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text></Td>
                 <Td>{customer.customer_type_id === 1 ? <><Box maxW={'100px'}><Text fontSize={'sm'} textAlign={'center'} p={'2'} rounded={'full'} bg={'blue.500'} textColor={'white'} fontWeight={'light'}>Residential</Text></Box></>  : ""}
                     {customer.customer_type_id === 2 ? <><Box maxW={'100px'}><Text fontSize={'sm'}  textAlign={'center'} p={'2'} rounded={'full'} bg={'green.500'} textColor={'white'} fontWeight={'light'}>Commercial</Text></Box></> : ""}
                     {customer.customer_type_id === 3 ? <><Box maxW={'100px'}><Text fontSize={'sm'}  textAlign={'center'} p={'2'} rounded={'full'} bg={'yellow.500'} textColor={'white'} fontWeight={'light'}>Other</Text></Box></>   : ""}  

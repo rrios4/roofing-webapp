@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { Formik, Select, useColorModeValue, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, border} from '@chakra-ui/react';
+import { Formik, Select, useColorModeValue, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, border} from '@chakra-ui/react';
 import axios from 'axios';
 import Invoice from "../../components";
 import AsyncSelect from 'react-select/async';
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
-import { TableContainer } from '@material-ui/core';
 import { Card, CustomerOptions } from '../../components';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
@@ -160,7 +159,7 @@ function Invoices() {
                     </HStack>
                     <TableContainer>
                         <Table variant={'simple'} size='sm'>
-                                <TableCaption>Total of {invoices?.length} Invoices in our system ✌️</TableCaption>
+                                <TableCaption overflowX={'auto'}>Total of {invoices?.length} Invoices in our system ✌️</TableCaption>
                                 <Thead>
                                     <Tr>
                                         <Th textAlign={'center'}>Invoice#</Th>
