@@ -136,7 +136,6 @@ function Invoices() {
 
     return (
         <>
-        <EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose}/>
         <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
             <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
@@ -191,7 +190,7 @@ function Invoices() {
                                             <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
                                             <Td textAlign={'center'}><Text>${(invoice.total).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
-                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={onEditOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                            <Td textAlign={'center'}><EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={invoice}/><Tooltip label='Edit'><Button mr={'1rem'} onClick={onEditOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
                                     ))}
