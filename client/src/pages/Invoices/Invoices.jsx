@@ -10,7 +10,7 @@ import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { Card, CustomerOptions, EditInvoiceForm, NewInvoiceForm } from '../../components';
 import { Link } from 'react-router-dom';
-import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
+import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt, MdToday } from 'react-icons/md';
 
 function Invoices() {
     //Defining variables
@@ -185,12 +185,12 @@ function Invoices() {
                                             <Td textAlign={'center'}><Text>{invoice.invoice_status.name === 'New'? <><Text mx={'auto'} bg={'green.500'} p='1' rounded={'xl'} align='center' w={'80px'}>New</Text></>: 'false'}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.service_type.name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ new Date(invoice.invoice_date).toLocaleDateString()}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{ new Date(invoice.issue_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ new Date(invoice.issue_date ? invoice.issue_date : '00/00/0000').toLocaleDateString()}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ new Date(invoice.due_date).toLocaleDateString()}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.first_name}</Text><Text>{invoice.customer.last_name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
-                                            <Td textAlign={'center'}><Text>${(invoice.total).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
+                                            <Td textAlign={'center'}><Text>${(invoice.total ? invoice.total : 0).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
                                             <Td textAlign={'center'}><EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={invoice}/><Tooltip label='Edit'><Button mr={'1rem'} onClick={onEditOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
@@ -199,7 +199,7 @@ function Invoices() {
                         </Table>
                     </TableContainer>
                 </Card> 
-                <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen}/>
+                <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} fetchInvoice={getAllInvoices}/>
 
         </VStack>
         </>
