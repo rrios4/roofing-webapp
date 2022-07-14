@@ -1,6 +1,8 @@
 <p align="center">
   <img src="./client/src/assets/LogoRR-blue-shadow.png" width="80%" height="60%" alt="Banner"><br>
-  <h1 align="center"> Roofing Web App v2.0 </h1>
+</p>
+<h1 align="center"> Roofing Web App v2.0 </h1>
+<p align="center">
   <b>A new web app experience for Rios Roofing Company based on React.js and Supabase written from scratch with performance & visuals in mind. 🚀</b>
   <br><br>
   <img src="https://img.shields.io/github/stars/rrios4/roofing-webapp" alt="GitHub Stars"/>
