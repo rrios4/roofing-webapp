@@ -6,7 +6,7 @@ import stateJSONData from '../../data/state_titlecase.json'
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import { IoMdPersonAdd } from 'react-icons/io'
 import { Link } from 'react-router-dom'
-import { MdKeyboardArrowLeft } from 'react-icons/md'
+import { MdKeyboardArrowLeft, MdSearch } from 'react-icons/md'
 
 export default function Customers() {
         //Style for Card component
@@ -141,21 +141,20 @@ export default function Customers() {
                 </Link>
             </Box>
             <Card width='full' bg={bg} borderColor={borderColor}>
-                <HStack my={'1rem'} spacing='auto'>
+                <HStack mt={'1rem'} mb={'2rem'} spacing='auto'>
                     <Box>
-                        <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Customers</Text>
+                        <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Customers</Text>
                     </Box>
                     <Box display='flex' pr='1rem' justifyContent={'end'}>
-                        <Tooltip label='Create new customer'>
-                        <Button colorScheme='blue' variant='solid' onClick={onOpen} mr='2rem'>
-                            <IoMdPersonAdd size={'20px'}/>
-                        </Button>
-                        </Tooltip>
-                            <form method='GET' onSubmit={getAllCustomersByName}>
-                                <FormControl>
+                        <form method='GET' onSubmit={getAllCustomersByName}>
+                            <FormControl>
+                                <Flex flexDir={'row'}>
                                     <Input value={searchCustomer} onChange={({target}) => setSearchCustomer(target.value)} placeholder='Search for Customer' colorScheme='blue' border='2px'/>
-                                </FormControl>
-                            </form>
+                                    <Tooltip label='Search'><Button ml={'1rem'} type='submit'><MdSearch size={'25px'}/></Button></Tooltip>
+                                </Flex>
+                            </FormControl>
+                        </form>
+                        <Tooltip label={'Create New Customer'}><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='2rem'><IoMdPersonAdd size={'20px'}/></Button></Tooltip>
                     </Box>
 
                 </HStack>
@@ -164,13 +163,13 @@ export default function Customers() {
                         <TableCaption>Total of {customers?.length} customers registered in our system ✌️</TableCaption>
                         <Thead>
                             <Tr>
-                                <Th>Type</Th>
-                                <Th>Name</Th>
-                                <Th>Email</Th>
-                                <Th>Phone Number</Th>
-                                <Th>Address</Th>
-                                <Th>Registered Date</Th>
-                                <Th>Actions</Th>
+                                <Th textAlign={'center'}>Name</Th>
+                                <Th textAlign={'center'}>Type</Th>
+                                <Th textAlign={'center'}>Email</Th>
+                                <Th textAlign={'center'}>Phone Number</Th>
+                                <Th textAlign={'center'}>Address</Th>
+                                <Th textAlign={'center'}>Registered Date</Th>
+                                <Th textAlign={'center'}>Actions</Th>
                             </Tr>
                         </Thead>
                         <Tbody>

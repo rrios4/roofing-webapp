@@ -1,21 +1,34 @@
-import React, { useState } from 'react';
-import { ModalIndex } from '..';
+import React, { useState, useEffect } from 'react';
+import { ModalIndex, ServiceTypeOptions, InvoiceStatusOptions } from '..';
 import supabase from '../../utils/supabaseClient';
 import AsyncSelect from 'react-select/async';
-import { Text, ModalCloseButton, ModalBody, FormControl, FormLabel, Select, Input, InputGroup, ModalFooter, Button, useColorModeValue, useColorMode } from '@chakra-ui/react'
+import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea } from '@chakra-ui/react'
 
 const NewInvoiceForm = (props) => {
     const { colorMode } = useColorMode();
     const { onNewClose, isNewOpen, onNewOpen, initialRef } =  props
     const bg = useColorModeValue('white', 'gray.800');
     //React States to temporarly hold data & detect changes to data when state updated
-    const [selectedCustomer, setSelectedCustomer] = useState('')
+    const [selectedCustomer, setSelectedCustomer] = useState('');
+    const [serviceTypesOptions, setServiceTypesOptions] = useState(null);
+    const [invoiceStatusOptions, setInvoiceStatusOptions] = useState(null)
+    const [selectedServiceType, setSelectedServiceType] = useState('');
+    const [selectedInvoiceStatus, setSelectedInvoiceStatus] = useState('');
+
     const [invoiceDate, setInvoiceDate] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [amountDue, setAmountDue] = useState('');
-    const [selectInvoiceStatus, setSelectInvoiceStatus] = useState('');
     const [serviceName, setServiceName] = useState('');
-    const [selectJobTypeOption, setJobTypeOption] = useState('');
+    const [selectServiceTypeOption, setServiceTypeOption] = useState('');
+
+
+    useEffect(() => {
+      getServiceTypesOptionsData();
+      getInvoiceStatusOptions();
+    
+
+    }, [])
+    
 
     const handleSubmit = () => {
 
@@ -52,14 +65,39 @@ const NewInvoiceForm = (props) => {
 
     }
 
+    // Function that gets all service types from supabase DB
+    const getServiceTypesOptionsData = async() => {
+        const { data: serviceTypes, error} = await supabase
+        .from('service_type')
+        .select('id, name')
+
+        if(error){
+            console.log(error);
+        }
+        setServiceTypesOptions(serviceTypes)
+        // console.log(serviceTypes)
+    }
+
+    // Function that gets all the invoice statuses from supabase DB
+    const getInvoiceStatusOptions = async() => {
+        // console.log(serviceTypesOptions)
+        const { data: invoiceStatuses, error} = await supabase
+        .from('invoice_status')
+        .select('id, name')
+
+        if(error){
+            console.log(error)
+        }
+        setInvoiceStatusOptions(invoiceStatuses)
+    }
+
   return (
     <ModalIndex initialFocusRef={initialRef} isOpen={isNewOpen} onClose={onNewClose} bg={bg}>
-        <ModalCloseButton />
         <form method='POST' onSubmit={handleSubmit}>
                 <FormControl isRequired>
-                <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>INVOICE</Text></Text>
-                <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Invoice</Text>
-                    <FormLabel pt='1rem'>Customer Name</FormLabel>
+                <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>Invoice</Text></Text>
+                <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Bill To</Text>
+                    <FormLabel mt='1rem'>Customer</FormLabel>
                         <AsyncSelect 
                             onChange={handleSelectedCustomer} 
                             loadOptions={loadOptions} 
@@ -78,52 +116,68 @@ const NewInvoiceForm = (props) => {
                                 },
 
                             })}/>
+                         <FormLabel mt='1rem'>Street Address</FormLabel>
+                         <Input type={'text'}/>
+                         <Flex flexDir={'row'} mb={'1rem'}>
+                            <Flex flexDirection={'column'}>
+                                <FormLabel pt='1rem'>City</FormLabel>
+                                <Input type={'text'}/>
+                            </Flex>
+                            <Flex flexDirection={'column'} ml={'1rem'}>
+                                <FormLabel pt='1rem'>State</FormLabel>
+                                <Input type='text'/>
+                            </Flex>
+                        </Flex>
+                        <FormLabel mt='1rem'>Zipcode</FormLabel>
+                        <Input type={'text'}/>
                 </FormControl>
                 <FormControl isRequired>
-                    <FormLabel pt='1rem'>Job Type</FormLabel>
-                    <Select defaultValue={null} value={selectJobTypeOption} placeholder='Select Job Type' onChange={(e) => handleJobTypeInput(e)}>
-                        <option value='1'>New Roof Installation</option>
-                        <option value='2'>Roof Repairs</option>
-                        <option value='3'>Structure Construction</option>
-                        <option value='4'>Siding Repair</option>
-                        <option value='5'>Roof Maintenance</option>
-                        <option value='6'>Painting Interior of Home</option>
-                        <option value='7'>Painting Exterior of Home</option>
-                        <option value='8'>Flooring Installation</option>
+                    <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Invoice</Text>
+                    <Flex flexDir={'row'} mb={'1rem'}>
+                        <Flex flexDirection={'column'}>
+                            <FormLabel pt='1rem'>Status</FormLabel>
+                            <Select value={selectedInvoiceStatus} placeholder='Select Status' onChange={(e) => setSelectedInvoiceStatus(e.target.value)}>
+                                <InvoiceStatusOptions data={invoiceStatusOptions}/>
+                            </Select>
+                        </Flex>
+                        <Flex flexDirection={'column'} ml={'1rem'}>
+                            <FormLabel pt='1rem'>Date</FormLabel>
+                            <Input type='date' value={invoiceDate} onChange={({target}) => setInvoiceDate(target.value)} id='invDate' placeholder='Invoice date'/>
+                        </Flex>
+                    </Flex>
+                    <FormControl isRequired>
+                        <FormLabel mt='1rem'>Due Date</FormLabel>
+                        <Input type='date' value={dueDate} onChange={({target}) => setDueDate(target.value)} id='dueDate' placeholder='Due date'/>
+                    </FormControl>
+                    <FormLabel mt='1rem'>Service Type</FormLabel>
+                    <Select value={selectedServiceType} placeholder='Select Service' onChange={(e) => setSelectedServiceType(e.target.value)}>
+                        <ServiceTypeOptions data={serviceTypesOptions}/>
                     </Select>
                     {/* <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/> */}
                 </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel pt='1rem'>Invoice Status</FormLabel>
-                    <Select defaultValue={null} value={selectInvoiceStatus} placeholder='Select Invoice Status' onChange={(e) => handleInvoiceStatusInput(e)}>
-                        <option value='2'>Paid</option>
-                        <option value='1'>Pending</option>
-                        <option value='3'>Outstanding</option>
-                    </Select>
-                    {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
-                </FormControl>
-                <FormControl isRequired>
-                    <FormLabel pt='1rem'>Invoice Date</FormLabel>
-                    <Input type='date' value={invoiceDate} onChange={({target}) => setInvoiceDate(target.value)} id='invDate' placeholder='Invoice date'/>
-                </FormControl>
-                <FormControl isRequired>
-                    <FormLabel pt='1rem'>Due Date</FormLabel>
-                    <Input type='date' value={dueDate} onChange={({target}) => setDueDate(target.value)} id='dueDate' placeholder='Due date'/>
-                </FormControl>
-                <FormControl isRequired>
-                <FormLabel pt='1rem'>Service Name</FormLabel>
+                {/* <FormControl isRequired>
+                <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Total</Text>
+                <FormLabel mt='1rem'>Service Name</FormLabel>
                     <InputGroup>
                         <Input value={serviceName} id='service' onChange={({target}) => setServiceName(target.value)} placeholder='Service Name' />
                     </InputGroup>
                 </FormControl>
                 <FormControl isRequired>
-                    <FormLabel pt='1rem'>Amount Due</FormLabel>
+                    <FormLabel mt='1rem'>Total</FormLabel>
                     <Input value={amountDue} onChange={({target}) => setAmountDue(target.value)} placeholder='Amount due' type='number'/>
+                </FormControl> */}
+                <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Extra</Text>
+                <FormControl>
+                    <FormLabel mt={'1rem'}>Measurements</FormLabel>
+                    <Textarea/>
+                    <FormLabel mt='1rem'>Note</FormLabel>
+                    <Textarea/>
                 </FormControl>
-        <ModalFooter>
-            <Button colorScheme='blue' mr={3} type='submit' onClick={onNewClose} >Save</Button>
-            <Button onClick={onNewClose} colorScheme='blue'>Cancel</Button>
-        </ModalFooter>
+
+                <Flex pt={'2rem'} justifyContent={'flex-end'}>
+                    <Button onClick={onNewClose} mr={3} colorScheme='gray'>Cancel</Button>
+                    <Button colorScheme='blue' type='submit' onClick={onNewClose} >Create</Button>
+                </Flex>
         </form>
     </ModalIndex>
   )

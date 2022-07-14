@@ -3,7 +3,8 @@ import {Link} from 'react-router-dom';
 import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
 import { Card, EditEstimateRequestForm } from '../../components';
 import supabase from '../../utils/supabaseClient';
-import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd } from 'react-icons/md';
+import formatNumber from '../../utils/formatNumber';
+import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 
 const EstimateRequests = () => {
 
@@ -63,18 +64,20 @@ const EstimateRequests = () => {
             </Link>
         </Box>
         <Card width='full' bg={bg} borderColor={borderColor}>
-            <HStack my={'1rem'}>
+            <HStack mt={'1rem'} mb={'2rem'}>
                 <Box display={'flex'} mr={'auto'}>
-                    <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Estimate Requests</Text>
+                    <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Estimate Requests</Text>
                 </Box>
                 <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
-                    <Tooltip label='Create New Request'><Button colorScheme='blue' variant='solid' onClick={onOpen} mr='2rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
                     <form method='GET' onSubmit={searchEstimateRequest}>
                         <FormControl display={'flex'}>
                             <Input value={searchEstimateRequestsInput} onChange={({target}) => setSearchEstimateRequestsInput(target.value)} placeholder='Search for Request' colorScheme='blue' border='2px'/>
                             <Tooltip label='Search'><Button ml={'1rem'} type='submit'><MdSearch size={'25px'}/></Button></Tooltip>
                         </FormControl>
                     </form>
+                    <Tooltip label='Filter'><Button colorScheme={'gray'} ml='2rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
+                    <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'}/></Button></Tooltip>
+                    <Tooltip label='Create New Request'><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
                 </Box>
 
             </HStack>
@@ -83,29 +86,29 @@ const EstimateRequests = () => {
                     <TableCaption>Total of {estimateRequests?.length} requests in our system ✌️</TableCaption>
                     <Thead>
                         <Tr>
-                            <Th>Status</Th>
-                            <Th>Request #</Th>
-                            <Th>Service Type</Th>
-                            <Th>Requested Date</Th>
-                            <Th>Name</Th>
-                            <Th>Email</Th>
-                            <Th>Address</Th>
-                            <Th>Entry Date</Th>
-                            <Th>Actions</Th>
+                            <Th textAlign={'center'}>Request #</Th>
+                            <Th textAlign={'center'}>Status</Th>
+                            <Th textAlign={'center'}>Service Type</Th>
+                            <Th textAlign={'center'}>Requested Date</Th>
+                            <Th textAlign={'center'}>Name</Th>
+                            <Th textAlign={'center'}>Email</Th>
+                            <Th textAlign={'center'}>Address</Th>
+                            <Th textAlign={'center'}>Entry Date</Th>
+                            <Th textAlign={'center'}>Actions</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {estimateRequests?.map((request, index) => (
                             <Tr key={request.id}>
-                                 <Td><Text>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: ''}</Text></Td>
-                                <Td><Text>{request.id}</Text></Td>
-                                <Td><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
-                                <Td><Text>{new Date(request.requested_date).toDateString()}</Text></Td>
-                                <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
-                                <Td><Text>{request.email}</Text></Td>
-                                <Td><Text cursor={'pointer'} _hover={{textColor: "blue"}} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
-                                <Td><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
-                                <Td><Tooltip label='Edit'><Button mr={'1rem'} onClick={onOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
+                                <Td textAlign={'center'}><Text>{formatNumber(request.id)}</Text></Td>
+                                <Td textAlign={'center'}><Text>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: ''}</Text></Td>
+                                <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
+                                <Td textAlign={'center'}><Text>{new Date(request.requested_date).toLocaleDateString()}</Text></Td>
+                                <Td textAlign={'center'}><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
+                                <Td textAlign={'center'}><Text>{request.email}</Text></Td>
+                                <Td textAlign={'center'}><Text cursor={'pointer'} _hover={{textColor: "blue"}} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
+                                <Td textAlign={'center'}><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
+                                <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={onOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
                             </Tr>
                         ))}
                         {/* <Customer customers={customers}/> */}

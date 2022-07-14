@@ -4,6 +4,7 @@ import axios from 'axios';
 import {Select, Box, Flex, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalHeader, Table, TableContainer, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
 import AsyncSelect from 'react-select/async';
 import supabase from '../../utils/supabaseClient';
+import formatNumber from '../../utils/formatNumber';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
 import { Card, CustomerOptions, Estimate } from '../../components';
 
@@ -141,9 +142,9 @@ function Estimates() {
                     </Link>
                 </Box>
                 <Card width='full' bg={bg} borderColor={borderColor}>
-                    <HStack my={'1rem'}>
+                    <HStack mt={'1rem'} mb={'2rem'}>
                         <Box display={'flex'} mr={'auto'}>
-                            <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Estimates</Text>
+                            <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Estimates</Text>
                         </Box>
                         <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
                             <form method='GET' onSubmit={searchEstimate}>
@@ -152,7 +153,7 @@ function Estimates() {
                                     <Tooltip label='Search'><Button ml={'1rem'} type='submit'><MdSearch size={'25px'}/></Button></Tooltip>
                                 </FormControl>
                             </form>
-                            <Tooltip label='Filter'><Button colorScheme={'gray'} ml='5rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Filter'><Button colorScheme={'gray'} ml='2rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
                             <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'}/></Button></Tooltip>
                             <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
                         </Box>
@@ -178,7 +179,7 @@ function Estimates() {
                                 <Tbody>
                                     {estimates?.map((estimate, index) => (
                                         <Tr key={estimate.id}>
-                                            <Td textAlign={'center'}><Text>EST-{estimate.estimate_number}</Text></Td>    
+                                            <Td textAlign={'center'}><Text>{formatNumber(estimate.estimate_number)}</Text></Td>    
                                             <Td textAlign={'center'}><Text>{estimate.estimate_status.name === 'Sent'? <><Text mx={'auto'} bg={'yellow.500'} p='1' rounded={'xl'} align='center' w={'80px'}>Sent</Text></>: 'false'}</Text></Td>
                                             <Td textAlign={'center'}><Text>{estimate.service_type.name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ new Date(estimate.estimate_date).toLocaleDateString()}</Text></Td>

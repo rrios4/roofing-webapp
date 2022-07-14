@@ -7,6 +7,7 @@ import Invoice from "../../components";
 import AsyncSelect from 'react-select/async';
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
+import formatNumber from '../../utils/formatNumber';
 import { Card, CustomerOptions, EditInvoiceForm, NewInvoiceForm } from '../../components';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
@@ -143,9 +144,9 @@ function Invoices() {
                     </Link>
                 </Box>
                 <Card width='full' bg={bg} borderColor={borderColor}>
-                    <HStack my={'1rem'}>
+                    <HStack mt={'1rem'} mb={'2rem'}>
                         <Box display={'flex'} mr={'auto'}>
-                            <Text fontSize={'2xl'} fontWeight='medium' p={'2'} mx='14px'>Invoices</Text>
+                            <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Invoices</Text>
                         </Box>
                         <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
                             <form method='GET' onSubmit={searchInvoice}>
@@ -154,9 +155,9 @@ function Invoices() {
                                     <Tooltip label='Search'><Button ml={'1rem'} type='submit'><MdSearch size={'25px'}/></Button></Tooltip>
                                 </FormControl>
                             </form>
-                            <Tooltip label='Filter'><Button colorScheme={'gray'} ml='5rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Filter'><Button colorScheme={'gray'} ml='2rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
                             <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'}/></Button></Tooltip>
-                            <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onNewOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Create New Invoice'><Button colorScheme='blue' variant='solid' onClick={onNewOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
                         </Box>
                     </HStack>
                     <TableContainer>
@@ -180,7 +181,7 @@ function Invoices() {
                                 <Tbody>
                                     {invoices?.map((invoice, index) => (
                                         <Tr key={invoice.id}>
-                                            <Td textAlign={'center'}><Text>INV-{invoice.invoice_number}</Text></Td>    
+                                            <Td textAlign={'center'}><Text>{formatNumber(invoice.invoice_number)}</Text></Td>    
                                             <Td textAlign={'center'}><Text>{invoice.invoice_status.name === 'New'? <><Text mx={'auto'} bg={'green.500'} p='1' rounded={'xl'} align='center' w={'80px'}>New</Text></>: 'false'}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.service_type.name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ new Date(invoice.invoice_date).toLocaleDateString()}</Text></Td>
