@@ -1,5 +1,6 @@
 <p align="center">
   <img src="./client/src/assets/LogoRR-blue-shadow.png" width="80%" height="60%" alt="Banner"><br>
+  <h1 align="center"> Roofing Web App v2.0 </h1>
   <b>A new web app experience for Rios Roofing Company based on React.js and Supabase written from scratch with performance & visuals in mind. 🚀</b>
   <br><br>
   <img src="https://img.shields.io/github/stars/rrios4/roofing-webapp" alt="GitHub Stars"/>
@@ -9,8 +10,6 @@
   <br>
 
 </p>
-
-<h1 align="center"> Roofing Web App v2.0 </h1>
 
 ## Overview
 #### A web application for Rios Roofing company that will help them manage data regarding invoices, estimates, customers, materials and estimate requests to reduce time to create invoices to be sent to customers, create estimates to sent to customers, refer to invoices/estimates when needed, get reports in a dashboard to see the companies progress on a monthly bases on login, and schedule for quote to houses base on estimate requests.
