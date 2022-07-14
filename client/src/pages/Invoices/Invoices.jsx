@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { Formik, Select, useColorModeValue, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, border} from '@chakra-ui/react';
+import { useColorModeValue, useToast, Box, Flex, FormControl, Input, Button, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack} from '@chakra-ui/react';
 import axios from 'axios';
 import Invoice from "../../components";
 import AsyncSelect from 'react-select/async';
@@ -18,6 +18,7 @@ function Invoices() {
     const {isOpen: isEditOpen , onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
     const initialRef = React.useRef();
     let navigate = useNavigate();
+    const toast = useToast()
 
     //Style for Card component
     const bg = useColorModeValue('white', 'gray.800');
@@ -135,9 +136,24 @@ function Invoices() {
         return error;
     }
 
+    const handleDeleteToast = () => {
+        toast({
+            title: 'Invoice deleted! ❌',
+            description: "We've delete invoice for you.",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+        })
+    }
+
     return (
-        <>
+        <>  
         <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
+            {/* <Alert status='success' mb={'1rem'} flexDir={'column'} alignItems={'center'} justifyContent={'center'} textAlign={'center'} height={'200px'} rounded={'8'}>
+                <AlertIcon boxSize='40px' mr={0} />
+                <AlertTitle mt={4} mb={1} fontSize='lg'>Invoice Submitted!</AlertTitle>
+                <AlertDescription maxWidth='sm'>New invoice saved to the server. Fire on! 👋</AlertDescription>
+            </Alert> */}
             <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
@@ -182,7 +198,7 @@ function Invoices() {
                                     {invoices?.map((invoice, index) => (
                                         <Tr key={invoice.id}>
                                             <Td textAlign={'center'}><Text>{formatNumber(invoice.invoice_number)}</Text></Td>    
-                                            <Td textAlign={'center'}><Text>{invoice.invoice_status.name === 'New'? <><Text mx={'auto'} bg={'green.500'} p='1' rounded={'xl'} align='center' w={'80px'}>New</Text></>: 'false'}</Text></Td>
+                                            <Td textAlign={'center'}><Text><Text color={'white'} mx={'auto'} bg={invoice.invoice_status.name === 'New' ? 'green.500' : '' || invoice.invoice_status.name === 'Paid' ? 'blue.500' : '' || invoice.invoice_status.name === 'Sent' ? 'yellow.500' : '' || invoice.invoice_status.name === 'Outstanding' ? 'red.500' : ''} p='1' rounded={'xl'} align='center' w={'80px'}>{invoice.invoice_status.name}</Text></Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.service_type.name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ new Date(invoice.invoice_date).toLocaleDateString()}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ new Date(invoice.issue_date ? invoice.issue_date : '00/00/0000').toLocaleDateString()}</Text></Td>
@@ -191,7 +207,7 @@ function Invoices() {
                                             <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
                                             <Td textAlign={'center'}><Text>${(invoice.total ? invoice.total : 0).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
-                                            <Td textAlign={'center'}><EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={invoice}/><Tooltip label='Edit'><Button mr={'1rem'} onClick={onEditOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                            <Td textAlign={'center'}><EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={invoice}/><Tooltip label='Edit'><Button mr={'1rem'} onClick={onEditOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={handleDeleteToast} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
                                     ))}
@@ -199,7 +215,7 @@ function Invoices() {
                         </Table>
                     </TableContainer>
                 </Card> 
-                <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} fetchInvoice={getAllInvoices}/>
+                <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} fetchInvoice={getAllInvoices} toast={toast}/>
 
         </VStack>
         </>

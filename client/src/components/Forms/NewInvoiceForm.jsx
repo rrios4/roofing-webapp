@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ModalIndex, ServiceTypeOptions, InvoiceStatusOptions } from '..';
 import supabase from '../../utils/supabaseClient';
 import AsyncSelect from 'react-select/async';
-import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea } from '@chakra-ui/react'
+import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea } from '@chakra-ui/react';
 
 const NewInvoiceForm = (props) => {
     const { colorMode } = useColorMode();
@@ -46,8 +46,8 @@ const NewInvoiceForm = (props) => {
                 invoice_status_id: selectedInvoiceStatus,
                 invoice_date: invoiceDateInput,
                 due_date: invoiceDueDateInput,
-                sqft_measurement: sqftInput,
-                note: noteInput,
+                sqft_measurement: sqftInput ? sqftInput : null,
+                note: noteInput ? noteInput : null,
                 bill_to_street_address: billToStreetAddressInput,
                 bill_to_city: billToCityInput,
                 bill_to_state: billToStateInput,
@@ -60,6 +60,7 @@ const NewInvoiceForm = (props) => {
             console.log(error)
             alert(error)
         }
+        
         fetchInvoice(); setInvoiceNumberInput(''); setSelectedCustomer(''); selectedServiceType(''); setSelectedInvoiceStatus(''); setInvoiceDateInput(''); setInvoiceDueDateInput(''); setSqftInput(''); setNoteInput(''); setBillToCityInput(''); setBillToStateInput(''); setBillToStreetAddressInput(''); setBillToZipcodeInput('')
     }
 
