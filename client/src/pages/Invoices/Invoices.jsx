@@ -3,12 +3,10 @@ import React, {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useColorModeValue, useToast, Box, Flex, FormControl, Input, Button, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack} from '@chakra-ui/react';
 import axios from 'axios';
-import Invoice from "../../components";
-import AsyncSelect from 'react-select/async';
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
-import { Card, CustomerOptions, EditInvoiceForm, NewInvoiceForm } from '../../components';
+import { Card, CustomerOptions, EditInvoiceForm, NewInvoiceForm, Invoice } from '../../components';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt, MdToday } from 'react-icons/md';
 
@@ -38,6 +36,7 @@ function Invoices() {
     const [serviceName, setServiceName] = useState('');
     const [selectJobTypeOption, setJobTypeOption] = useState('');
     const [searchInvoiceInput, setSearchInvoiceInput] = useState('');
+    const [selectedEditInvoice, setSelectedEditInvoice] = useState(null)
 
     // Functions to program events or actions
     useEffect(() => {
@@ -146,6 +145,11 @@ function Invoices() {
         })
     }
 
+    const handleEditModal = (invoice) => {
+        setSelectedEditInvoice(invoice)
+        onEditOpen()
+    }
+
     return (
         <>  
         <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
@@ -181,7 +185,7 @@ function Invoices() {
                                 <TableCaption overflowX={'auto'}>Total of {invoices?.length} Invoices in our system ✌️</TableCaption>
                                 <Thead>
                                     <Tr>
-                                        <Th textAlign={'center'}>Invoice#</Th>
+                                        <Th textAlign={'center'}>Invoice #</Th>
                                         <Th textAlign={'center'}>Status</Th>
                                         <Th textAlign={'center'}>Service Type</Th>
                                         <Th textAlign={'center'}>Invoice Date</Th>
@@ -207,7 +211,7 @@ function Invoices() {
                                             <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
                                             <Td textAlign={'center'}><Text>${(invoice.total ? invoice.total : 0).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
-                                            <Td textAlign={'center'}><EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={invoice}/><Tooltip label='Edit'><Button mr={'1rem'} onClick={onEditOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={handleDeleteToast} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => {handleEditModal(invoice)}}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={handleDeleteToast} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
                                     ))}
@@ -216,6 +220,7 @@ function Invoices() {
                     </TableContainer>
                 </Card> 
                 <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} fetchInvoice={getAllInvoices} toast={toast}/>
+                <EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={selectedEditInvoice}/>
 
         </VStack>
         </>

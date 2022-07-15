@@ -11,12 +11,12 @@ const EditInvoiceForm = (props) => {
 
   return (
     <ModalIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg}>
-        <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>INV</Text>-{formatNumber(invoice.invoice_number)}</Text>
+        <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>INV</Text>-{invoice?.invoice_number}</Text>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Invoice</Text>
         <Flex flexDir={'row'} mb={'1rem'}>
             <Flex flexDirection={'column'} mr={'1rem'}>
                 <FormLabel>Status</FormLabel>
-                <Select value={invoice.invoice_status.name}>
+                <Select value={invoice?.invoice_status.name}>
                     <option>New</option>
                     <option>Scheduled</option>
                     <option>Expired</option>
@@ -24,19 +24,19 @@ const EditInvoiceForm = (props) => {
             </Flex>
             <Flex flexDirection={'column'}>
                 <FormLabel>Invoice Date</FormLabel>
-                <Input type='date' value={invoice.invoice_date}/>
+                <Input type='date' value={invoice?.invoice_date}/>
             </Flex>
         </Flex>
         <Flex flexDirection={'column'} mb={'1rem'}>
             <FormLabel>Issue Date</FormLabel>
-            <Input type='date' value={invoice.issue_date}/>
+            <Input type='date' value={invoice?.issue_date}/>
         </Flex>
         <Flex flexDirection={'column'} mb={'1rem'}>
             <FormLabel>Due Date</FormLabel>
-            <Input type='date' value={invoice.due_date}/>
+            <Input type='date' value={invoice?.due_date}/>
         </Flex>
         <FormLabel>Service Type</FormLabel>
-        <Select value={invoice.service_type.name}>
+        <Select value={invoice?.service_type.name}>
             <option>Roof Replacement</option>
             <option>Roof Leak Repair</option>
             <option>Roof Maintenance</option>
@@ -64,16 +64,16 @@ const EditInvoiceForm = (props) => {
         <Flex flexDir={'row'} mb={'1rem'}>
             <Flex flexDirection={'column'} mr={'1rem'}>
                 <FormLabel>First Name</FormLabel>
-                <Input value={invoice.customer.first_name}/>
+                <Input value={invoice?.customer.first_name}/>
             </Flex>
             <Flex flexDirection={'column'} ml={'1rem'}>
                 <FormLabel>Last Name</FormLabel>
-                <Input value={invoice.customer.last_name}/>
+                <Input value={invoice?.customer.last_name}/>
             </Flex>
         </Flex>
         <FormControl>
             <FormLabel htmlFor='city'>Email</FormLabel>
-            <Input type={''} value={invoice.customer.email}/>
+            <Input type={''} value={invoice?.customer.email}/>
         </FormControl>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Item List</Text>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Total</Text>
@@ -88,7 +88,7 @@ const EditInvoiceForm = (props) => {
             </Flex>
         </Flex>
         <Text fontWeight={'bold'} color={'blue.500'} mb={'1rem'}>Notes</Text>
-        <Textarea>{invoice.note}</Textarea>
+        <Textarea>{invoice?.note}</Textarea>
         <Flex pt={'2rem'} justifyContent={'flex-end'}>
             <Button mx={'1rem'} onClick={onClose}>Cancel</Button>
             <Button colorScheme={'blue'}>Save Changes</Button>
