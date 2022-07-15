@@ -204,9 +204,9 @@ function Invoices() {
                                             <Td textAlign={'center'}><Text>{formatNumber(invoice.invoice_number)}</Text></Td>    
                                             <Td textAlign={'center'}><Text><Text color={'white'} mx={'auto'} bg={invoice.invoice_status.name === 'New' ? 'green.500' : '' || invoice.invoice_status.name === 'Paid' ? 'blue.500' : '' || invoice.invoice_status.name === 'Sent' ? 'yellow.500' : '' || invoice.invoice_status.name === 'Outstanding' ? 'red.500' : ''} p='1' rounded={'xl'} align='center' w={'80px'}>{invoice.invoice_status.name}</Text></Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.service_type.name}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{ new Date(invoice.invoice_date).toLocaleDateString()}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{ new Date(invoice.issue_date ? invoice.issue_date : '00/00/0000').toLocaleDateString()}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{ new Date(invoice.due_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{invoice.invoice_date}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{invoice.issue_date ? invoice.issue_date : ''}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{invoice.due_date}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.first_name}</Text><Text>{invoice.customer.last_name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
