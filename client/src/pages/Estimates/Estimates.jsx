@@ -6,11 +6,11 @@ import AsyncSelect from 'react-select/async';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
-import { Card, CustomerOptions, Estimate } from '../../components';
+import { Card, CustomerOptions, Estimate, NewEstimateForm, NewCustomerForm } from '../../components';
 
 function Estimates() {
     //Defining variables
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const {isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose} = useDisclosure();
     const initialRef = React.useRef();
     // let navigate = useNavigate();
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
@@ -135,6 +135,7 @@ function Estimates() {
     }
 
     return (
+        <>
             <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
                 <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
@@ -155,7 +156,7 @@ function Estimates() {
                             </form>
                             <Tooltip label='Filter'><Button colorScheme={'gray'} ml='2rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
                             <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'}/></Button></Tooltip>
-                            <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
+                            <Tooltip label='Create New Estimate'><Button colorScheme='blue' variant='solid' onClick={onNewOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
                         </Box>
                     </HStack>
                     <TableContainer overflow={'auto'}>
@@ -189,7 +190,7 @@ function Estimates() {
                                             <Td textAlign={'center'}><Text>{estimate.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{estimate.customer.phone_number}</Text></Td>
                                             <Td textAlign={'center'}><Text>${(estimate.total).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
-                                            <Td textAlign={'center'}><Link to={`/editestimate/${estimate.id}`}><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editestimate/${estimate.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
                                     ))}
@@ -201,88 +202,11 @@ function Estimates() {
 
 
                 </Card> 
-                <Flex flexDir='column' justifyContent='center' pb='2rem'>
-                <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent p='1rem' ml='6rem'>
-                        <ModalHeader textAlign='center'>Create New Estimate</ModalHeader>
-                        <Text color='red' textAlign='center'>Fill all fields please!</Text>
-                        <ModalCloseButton />
-                        <form method='POST' onSubmit={handleSubmit}>
-                        <ModalBody>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Customer Name</FormLabel>
-                                    {/* <AsyncSelect 
-                                            onChange={handleSelectedCustomer} 
-                                            loadOptions={loadOptions} 
-                                            placeholder='Type Customer Name'
-                                            getOptionLabel={option => `${option.label},  ${option.email}`}
-                                            theme={theme => ({
-                                                ...theme,
-                                                borderRadius: 0,
-                                                colors: {
-                                                    ...theme.colors,
-                                                    primary25: 'primary',
-                                                    primary: 'black',
-                                                    neutral0: 'white',
-                                                    neutral90: 'white',
-                                                },
-                                            })}/> */}
-                                    <Select placeholder='Select Customer'>
-                                        <CustomerOptions customers={customers}/>
-                                    </Select>
-                                </FormControl>
-                                {/* <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Job Type</FormLabel>
-                                    <Select placeholder='Select Job Type'>
-                                        <option value='Option 1'>New Roof Installation</option>
-                                        <option value='Option 2'>Roof Repair</option>
-                                        <option value='Option 3'>Construction</option>
-                                    </Select>
-                                    <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
-                                </FormControl> */}
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Estimate Status</FormLabel>
-                                    <Select placeholder='Select Invoice Status' defaultValue={null} value={estStatus} onChange={(e) => handleEstimateStatusInput(e)}>
-                                        <option value='2'>Approved</option>
-                                        <option value='1'>Pending</option>
-                                        <option value='3'>Expired</option>
-                                    </Select>
-                                    {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Estimate Date</FormLabel>
-                                    <Input type='date' value={etDate} onChange={({target}) => setEtDate(target.value)} id='state' placeholder='Invoice date'/>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Expiration Date</FormLabel>
-                                    <Input type='date' value={expDate} onChange={({target}) => setExpDate(target.value)} id='zipcode' placeholder='Due date'/>
-                                </FormControl>
-                                <FormControl isRequired>
-                                <FormLabel pt='1rem'>Service Name</FormLabel>
-                                    <InputGroup>
-                                    <Input id='service' placeholder='Service Name' value={serviceName} onChange={({target}) => setServiceName(target.value)} />
-                                    </InputGroup>
-                                </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel pt='1rem'>Estimate Total</FormLabel>
-                                    <Input value={quotePrice} onChange={({target}) => setQuotedPrice(target.value)} placeholder='Quote price' type='number'/>
-                                </FormControl>
-                                <FormControl>
-                                    <FormLabel pt='1rem'>Sqft Roof Measurement</FormLabel>
-                                    <Input type='number' placeholder='Sqft of Roof' value={measurement} onChange={({target}) => setMeasurement(target.value)}></Input>
-                                </FormControl>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button colorScheme='blue' mr={3} type='submit' onClick={onClose} >Save</Button>
-                            <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
-                        </ModalFooter>
-                        </form>
-
-                    </ModalContent> 
-                </Modal>
-            </Flex>
             </VStack>
+            <NewEstimateForm initialRef={initialRef} isOpen={isNewOpen} onClose={onNewClose}/>
+            {/* <NewCustomerForm initialRef={initialRef} isOpen={isNewOpen} onClose={onNewClose}/> */}
+        </>
+
     )
 }
 
