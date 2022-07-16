@@ -7,7 +7,7 @@ import {MdDashboard, MdRequestPage, MdScheduleSend, MdSquareFoot, MdPeopleAlt} f
 
 const Navbar = () => {
     return (
-        <Flex zIndex={'9998'} position='fixed' w={{base: 'full', lg:'8rem'}} h={{base: '5rem', lg:'100vh'}} bg='gray.700' roundedTopRight={{base: '0', lg:'25'}} roundedBottomRight={{base: '0', lg:'25'}} flexDir={{base: 'row',lg: 'column'}} p='0' m='0' top={{base:'0', lg:'0'}}>
+        <Flex zIndex={'1'} position='fixed' w={{base: 'full', lg:'8rem'}} h={{base: '5rem', lg:'100vh'}} bg='gray.700' roundedTopRight={{base: '0', lg:'25'}} roundedBottomRight={{base: '0', lg:'25'}} flexDir={{base: 'row',lg: 'column'}} p='0' m='0' top={{base:'0', lg:'0'}}>
             <Link to='/'>
                 <Box display='flex' flexDir={{base: 'column',lg:'column'}} h={{base: '5rem',lg:'8rem'}} bg='blue.400' shadow='xl' roundedRight='25' justifyContent={{base:'center', lg:'center'}} px={{base:'8px', lg:'0px'}}>
                     <Image mx={{base: 'auto', lg:'0px'}} marginLeft={{base: '0px',lg:'12px'}} boxSize={{base: '60px',lg:'100px'}} src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>

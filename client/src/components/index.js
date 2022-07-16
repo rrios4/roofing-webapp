@@ -18,7 +18,7 @@ export { default as StateOptions } from './StateOptions';
 export { default as CustomerTypeOptions } from './Customers/Customer/CustomerTypeOptions';
 export { default as CustomerDetailsCard } from './Customers/Customer/CustomerDetailsCard';
 export { default as EditEstimateRequestForm } from './Forms/EditEstimateRequestForm';
-export { default as ModalIndex} from './Modals/index';
+export { default as ModalIndex} from './Drawers/index';
 export { default as EditInvoiceForm } from './Forms/EditInvoiceForm';
 export { default as NewInvoiceForm } from './Forms/NewInvoiceForm';
 export { default as ServiceTypeOptions} from './Options/ServiceTypeOptions';
