@@ -141,7 +141,7 @@ const NewInvoiceForm = (props) => {
                                 neutral90: 'white',
                             },
 
-                        })}/>
+                    })}/>
                         <FormLabel mt='1rem'>Street Address</FormLabel>
                         <Input value={billToStreetAddressInput} onChange={(e) => setBillToStreetAddressInput(e.target.value)} type={'text'}/>
                         <Flex flexDir={'row'} mb={'1rem'}>
