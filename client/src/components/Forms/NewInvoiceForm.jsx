@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ModalIndex, ServiceTypeOptions, InvoiceStatusOptions } from '..';
+import { DrawerIndex, ServiceTypeOptions, InvoiceStatusOptions } from '..';
 import supabase from '../../utils/supabaseClient';
 import AsyncSelect from 'react-select/async';
 import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea } from '@chakra-ui/react';
@@ -118,7 +118,7 @@ const NewInvoiceForm = (props) => {
     }
 
   return (
-    <ModalIndex initialFocusRef={initialRef} isOpen={isNewOpen} onClose={onNewClose} bg={bg}>
+    <DrawerIndex initialFocusRef={initialRef} isOpen={isNewOpen} onClose={onNewClose} bg={bg}>
         <form method='POST' onSubmit={handleSubmit}>
             <FormControl isRequired>
             <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>Invoice</Text></Text>
@@ -195,7 +195,7 @@ const NewInvoiceForm = (props) => {
                 <Button colorScheme='blue' type='submit' onClick={onNewClose} >Create</Button>
             </Flex>
         </form>
-    </ModalIndex>
+    </DrawerIndex>
   )
 }
 

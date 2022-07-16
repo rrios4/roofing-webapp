@@ -1,6 +1,5 @@
 import React from 'react';
-import { Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton} from '@chakra-ui/react';
-import { MdOutlineClose } from 'react-icons/md'
+import { Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton} from '@chakra-ui/react';
 
 const index = (props) => {
   const { variant, children, onClose, isOpen, onOpen, initialRef, bg } = props

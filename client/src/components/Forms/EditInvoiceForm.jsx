@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalIndex } from '../';
+import { DrawerIndex } from '../';
 import { Text, Flex, FormLabel, Select, Input, FormControl, Button, useColorModeValue, Textarea } from '@chakra-ui/react';
 import formatNumber from '../../utils/formatNumber';
 
@@ -10,7 +10,7 @@ const EditInvoiceForm = (props) => {
 
 
   return (
-    <ModalIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg}>
+    <DrawerIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg}>
         <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>INV</Text>-{invoice?.invoice_number}</Text>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Invoice</Text>
         <Flex flexDir={'row'} mb={'1rem'}>
@@ -93,7 +93,7 @@ const EditInvoiceForm = (props) => {
             <Button mx={'1rem'} onClick={onClose}>Cancel</Button>
             <Button colorScheme={'blue'}>Save Changes</Button>
         </Flex>
-    </ModalIndex>
+    </DrawerIndex>
   )
 }
 

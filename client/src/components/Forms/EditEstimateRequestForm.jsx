@@ -1,6 +1,6 @@
 import React from 'react';
 import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border, Collapse, Slide} from '@chakra-ui/react';
-import { ModalIndex } from '../'
+import { DrawerIndex } from '../'
 
 const EditEstimateRequestForm = (props) => {
     const { onClose, isOpen, onOpen, initialRef } =  props
@@ -10,7 +10,7 @@ const EditEstimateRequestForm = (props) => {
     // const initialRef = React.useRef();
 
   return (
-    <ModalIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg}>
+    <DrawerIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg}>
         <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>ESTR</Text>-0016</Text>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Request</Text>
         <Flex flexDir={'row'} mb={'1rem'}>
@@ -71,7 +71,7 @@ const EditEstimateRequestForm = (props) => {
             <Button mx={'1rem'} onClick={onClose}>Cancel</Button>
             <Button colorScheme={'blue'}>Save Changes</Button>
         </Flex>
-    </ModalIndex>
+    </DrawerIndex>
   )
 }
 
