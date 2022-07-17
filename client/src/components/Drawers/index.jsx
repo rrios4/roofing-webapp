@@ -6,7 +6,7 @@ const index = (props) => {
 
   return (
     <Drawer placement='right' onClose={onClose} isOpen={isOpen} size='md'>
-      <DrawerOverlay bg={'none'} backdropFilter={'auto'} backdropBlur='2px'/>
+      <DrawerOverlay/>
       <DrawerContent>
       <DrawerCloseButton/>
         <DrawerBody flexDir={'column'} px={'3rem'} pt={'2rem'} pb={'3rem'}>

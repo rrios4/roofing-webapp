@@ -14,6 +14,7 @@ function Invoices() {
     //Defining variables
     const {isOpen: isNewOpen , onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
     const {isOpen: isEditOpen , onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+    const {isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose} = useDisclosure()
     const initialRef = React.useRef();
     let navigate = useNavigate();
     const toast = useToast()
@@ -36,7 +37,10 @@ function Invoices() {
     const [serviceName, setServiceName] = useState('');
     const [selectJobTypeOption, setJobTypeOption] = useState('');
     const [searchInvoiceInput, setSearchInvoiceInput] = useState('');
-    const [selectedEditInvoice, setSelectedEditInvoice] = useState(null)
+    const [selectedEditInvoice, setSelectedEditInvoice] = useState(null);
+
+    const [selectedInvoiceId, setSelectedInvoiceId] = useState('');
+    const [selectedInvoiceNumber, setSelectedInvoiceNumber] = useState('');
 
     // Functions to program events or actions
     useEffect(() => {
@@ -135,19 +139,27 @@ function Invoices() {
         return error;
     }
 
-    const handleDeleteToast = () => {
-        toast({
-            title: 'Invoice deleted! ❌',
-            description: "We've delete invoice for you.",
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-        })
-    }
 
     const handleEditModal = (invoice) => {
         setSelectedEditInvoice(invoice)
         onEditOpen()
+    }
+
+    const handleDeleteAlert = (invoiceId, invoice_number) => {
+        setSelectedInvoiceId(invoiceId);
+        setSelectedInvoiceNumber(invoice_number);
+        onDeleteOpen();
+    }
+
+    const handleDeleteToast = (invoice_number) => {
+        toast({
+            position: 'top-right',
+            title: `Invoice #${invoice_number} deleted!`,
+            description: "We've deleted invoice for you.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
     }
 
     return (
@@ -211,7 +223,7 @@ function Invoices() {
                                             <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
                                             <Td textAlign={'center'}><Text>${(invoice.total ? invoice.total : 0).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
-                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => {handleEditModal(invoice)}}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={handleDeleteToast} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => {handleEditModal(invoice)}}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={() => {handleDeleteAlert(invoice.id, invoice.invoice_number)}} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
                                     ))}
@@ -221,6 +233,7 @@ function Invoices() {
                 </Card> 
                 <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} fetchInvoice={getAllInvoices} toast={toast}/>
                 <EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={selectedEditInvoice}/>
+                <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} onOpen={onDeleteOpen} toast={handleDeleteToast} updateParentState={getAllInvoices} header={`Delete Invoice #${selectedInvoiceNumber}`} body={`Are you sure? You can't undo this action afterwards.`} tableName={'invoice'} itemId={selectedInvoiceId} itemNumber={selectedInvoiceNumber} />
         </VStack>
         </>
     )
