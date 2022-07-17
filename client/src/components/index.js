@@ -24,4 +24,5 @@ export { default as NewInvoiceForm } from './Forms/NewInvoiceForm';
 export { default as ServiceTypeOptions} from './Options/ServiceTypeOptions';
 export { default as InvoiceStatusOptions} from './Options/InvoiceStatusOptions';
 export { default as NewCustomerForm } from './Forms/NewCustomerForm';
-export { default as NewEstimateForm } from './Forms/NewEstimateForm'
+export { default as NewEstimateForm } from './Forms/NewEstimateForm';
+export { default as DeleteAlertDialog } from './Alerts/DeleteAlertDialog'

@@ -1,17 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import {Select, Box, Flex, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalHeader, Table, TableContainer, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
+import {Select, Spinner, Box, Flex, useToast, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalHeader, Table, TableContainer, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
 import AsyncSelect from 'react-select/async';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt } from 'react-icons/md';
-import { Card, CustomerOptions, Estimate, NewEstimateForm, NewCustomerForm } from '../../components';
+import { Card, CustomerOptions, Estimate, NewEstimateForm, DeleteAlertDialog } from '../../components';
 
 function Estimates() {
     //Defining variables
     const {isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose} = useDisclosure();
+    const {isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
     const initialRef = React.useRef();
+
+    //Define toast from chakra ui
+    const toast = useToast()
+
     // let navigate = useNavigate();
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
@@ -21,6 +26,9 @@ function Estimates() {
     const buttonColorScheme = useColorModeValue('blue', 'gray');
 
     // States to manage data
+    const [selectedEstimateId, setSelectedEstimateId] = useState('');
+    const [selectedEstimateNumber, setSelectedEstimateNumber] = useState('')
+
     const [estimates, setEstimates] = useState(null);
     const [customers, setCustomers] = useState('');
     const [searchCustomer, setSearchCustomer] = useState('');
@@ -134,6 +142,23 @@ function Estimates() {
         .catch(error => console.error(`Error: ${error}`))
     }
 
+    const handleDelete = (estimateId, estimate_number) => {
+        setSelectedEstimateId(estimateId)
+        setSelectedEstimateNumber(estimate_number)
+        onDeleteOpen();
+    }
+
+    const handleDeleteToast = (estimate_number) => {
+        toast({
+            position: 'top-right',
+            title: `Estimate #${estimate_number} deleted!`,
+            description: "We've deleted estimate for you.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
     return (
         <>
             <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
@@ -180,17 +205,17 @@ function Estimates() {
                                 <Tbody>
                                     {estimates?.map((estimate, index) => (
                                         <Tr key={estimate.id}>
-                                            <Td textAlign={'center'}><Text>{formatNumber(estimate.estimate_number)}</Text></Td>    
+                                            <Td textAlign={'center'}><Text fontWeight={'bold'}>{estimate.estimate_number ? formatNumber(estimate.estimate_number) : ''}</Text></Td>    
                                             <Td textAlign={'center'}><Text>{estimate.estimate_status.name === 'Sent'? <><Text mx={'auto'} bg={'yellow.500'} p='1' rounded={'xl'} align='center' w={'80px'}>Sent</Text></>: 'false'}</Text></Td>
                                             <Td textAlign={'center'}><Text>{estimate.service_type.name}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{ new Date(estimate.estimate_date).toLocaleDateString()}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{ new Date(estimate.issued_date).toLocaleDateString()}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{ new Date(estimate.expiration_date).toLocaleDateString()}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ estimate.estimate_date ? new Date(estimate.estimate_date).toLocaleDateString(): ''}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ estimate.issued_date ? new Date(estimate.issued_date).toLocaleDateString(): ''}</Text></Td>
+                                            <Td textAlign={'center'}><Text>{ estimate.expiration_date ? new Date(estimate.expiration_date).toLocaleDateString() : ''}</Text></Td>
                                             <Td textAlign={'center'}><Text>{estimate.customer.first_name}</Text><Text>{estimate.customer.last_name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{estimate.customer.email}</Text></Td>
                                             <Td textAlign={'center'}><Text>{estimate.customer.phone_number}</Text></Td>
-                                            <Td textAlign={'center'}><Text>${(estimate.total).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
-                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editestimate/${estimate.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                            <Td textAlign={'center'}><Text>${estimate.total ? (estimate.total).toLocaleString(undefined, {minimumFractionDigits : 2}) : '0'}</Text></Td>
+                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={() => {handleDelete(estimate.id, estimate.estimate_number)}} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editestimate/${estimate.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
                                     ))}
@@ -204,7 +229,7 @@ function Estimates() {
                 </Card> 
             </VStack>
             <NewEstimateForm initialRef={initialRef} isOpen={isNewOpen} onClose={onNewClose}/>
-            {/* <NewCustomerForm initialRef={initialRef} isOpen={isNewOpen} onClose={onNewClose}/> */}
+            <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} updateParentState={getAllEstimates} toast={handleDeleteToast} itemId={selectedEstimateId} itemNumber={selectedEstimateNumber} tableName={'estimate'} header={`Delete Estimate #${selectedEstimateNumber}`} body={`Are you sure? You can't undo this action afterwards.`}/>
         </>
 
     )

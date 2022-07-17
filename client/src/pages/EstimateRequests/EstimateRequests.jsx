@@ -100,7 +100,7 @@ const EstimateRequests = () => {
                     <Tbody>
                         {estimateRequests?.map((request, index) => (
                             <Tr key={request.id}>
-                                <Td textAlign={'center'}><Text>{formatNumber(request.id)}</Text></Td>
+                                <Td textAlign={'center'}><Text fontWeight={'bold'}>{formatNumber(request.id)}</Text></Td>
                                 <Td textAlign={'center'}><Text>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: ''}</Text></Td>
                                 <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
                                 <Td textAlign={'center'}><Text>{new Date(request.requested_date).toLocaleDateString()}</Text></Td>

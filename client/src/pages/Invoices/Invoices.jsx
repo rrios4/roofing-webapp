@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { useColorModeValue, useToast, Box, Flex, FormControl, Input, Button, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack} from '@chakra-ui/react';
+import { useColorModeValue, useToast, Box, Flex, FormControl, Input, Button, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay} from '@chakra-ui/react';
 import axios from 'axios';
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
-import { Card, CustomerOptions, EditInvoiceForm, NewInvoiceForm, Invoice } from '../../components';
+import { Card, CustomerOptions, EditInvoiceForm, NewInvoiceForm, Invoice, DeleteAlertDialog } from '../../components';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt, MdToday } from 'react-icons/md';
 
@@ -201,7 +201,7 @@ function Invoices() {
                                 <Tbody>
                                     {invoices?.map((invoice, index) => (
                                         <Tr key={invoice.id}>
-                                            <Td textAlign={'center'}><Text>{formatNumber(invoice.invoice_number)}</Text></Td>    
+                                            <Td textAlign={'center'}><Text fontWeight={'bold'}>{formatNumber(invoice.invoice_number)}</Text></Td>    
                                             <Td textAlign={'center'}><Text><Text color={'white'} mx={'auto'} bg={invoice.invoice_status.name === 'New' ? 'green.500' : '' || invoice.invoice_status.name === 'Paid' ? 'blue.500' : '' || invoice.invoice_status.name === 'Sent' ? 'yellow.500' : '' || invoice.invoice_status.name === 'Outstanding' ? 'red.500' : ''} p='1' rounded={'xl'} align='center' w={'80px'}>{invoice.invoice_status.name}</Text></Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.service_type.name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.invoice_date}</Text></Td>
@@ -221,7 +221,6 @@ function Invoices() {
                 </Card> 
                 <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} fetchInvoice={getAllInvoices} toast={toast}/>
                 <EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={selectedEditInvoice}/>
-
         </VStack>
         </>
     )
