@@ -1,17 +1,26 @@
 import React,{useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
-import { Card, EditEstimateRequestForm } from '../../components';
+import { Select, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
+import { Card, EditEstimateRequestForm, DeleteAlertDialog } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 
 const EstimateRequests = () => {
+    // Chakra UI Modal
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+    const initialRef = React.useRef();
+    //Define toast from chakra ui
+    const toast = useToast()
 
     // React Use State to store data from API requests
     const [estimateRequests, setEstimateRequests] = useState(null);
     const [searchEstimateRequestsInput, setSearchEstimateRequestsInput] = useState('');
+    const [selectedEstimateRequestId, setSelectedEstimateRequestId] = useState('');
+    const [selectedEstimateRequestNumber, setSelectedEstimateRequestNumber] = useState('');
 
+    //Chakra UI styling parameters
     const bg = useColorModeValue('white', 'gray.800');
     const borderColor = useColorModeValue('gray.200', 'gray.700');
     const buttonColorScheme = useColorModeValue('blue', 'gray');
@@ -49,14 +58,29 @@ const EstimateRequests = () => {
         }
     }
 
-    // Chakra UI Modal
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const initialRef = React.useRef();
+    const handleDeleteAlert = (estimateRequestId, estimateRequestNumber) => {
+        setSelectedEstimateRequestId(estimateRequestId);
+        // setSelectedEstimateRequestNumber(estimateRequestNumber);
+        onDeleteOpen()
+    }
+
+    const handleDeleteToast = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `Request #${requestId} deleted!`,
+            description: "We've deleted estimate for you.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
 
 
   return (
     <>
     <EditEstimateRequestForm initialRef={initialRef} isOpen={isOpen} onClose={onClose}/>
+    <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getEstimateRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'estimate_request'} header={`Delete Request # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`}/>
     <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
         <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
             <Link to={'/'}>
@@ -108,7 +132,7 @@ const EstimateRequests = () => {
                                 <Td textAlign={'center'}><Text>{request.email}</Text></Td>
                                 <Td textAlign={'center'}><Text cursor={'pointer'} _hover={{textColor: "blue"}} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
                                 <Td textAlign={'center'}><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
-                                <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={onOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
+                                <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={onOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => {handleDeleteAlert(request.id)}}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
                             </Tr>
                         ))}
                         {/* <Customer customers={customers}/> */}
