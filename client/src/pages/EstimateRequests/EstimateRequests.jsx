@@ -8,8 +8,9 @@ import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAdd
 
 const EstimateRequests = () => {
     // Chakra UI Modal
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
     const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+    const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose} = useDisclosure();
     const initialRef = React.useRef();
     //Define toast from chakra ui
     const toast = useToast()
@@ -17,6 +18,7 @@ const EstimateRequests = () => {
     // React Use State to store data from API requests
     const [estimateRequests, setEstimateRequests] = useState(null);
     const [searchEstimateRequestsInput, setSearchEstimateRequestsInput] = useState('');
+    const [selectedEstimateRequestObject, setSelectedEstimateRequestObject] = useState('')
     const [selectedEstimateRequestId, setSelectedEstimateRequestId] = useState('');
     const [selectedEstimateRequestNumber, setSelectedEstimateRequestNumber] = useState('');
 
@@ -75,11 +77,16 @@ const EstimateRequests = () => {
         })
     }
 
+    const handleEdit = (estimate_request) => {
+        setSelectedEstimateRequestObject(estimate_request);
+        onEditOpen()
+    }
+
 
 
   return (
     <>
-    <EditEstimateRequestForm initialRef={initialRef} isOpen={isOpen} onClose={onClose}/>
+    <EditEstimateRequestForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} objectData={selectedEstimateRequestObject}/>
     <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getEstimateRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'estimate_request'} header={`Delete Request # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`}/>
     <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
         <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
@@ -101,7 +108,7 @@ const EstimateRequests = () => {
                     </form>
                     <Tooltip label='Filter'><Button colorScheme={'gray'} ml='2rem'><MdFilterAlt size={'20px'}/></Button></Tooltip>
                     <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'}/></Button></Tooltip>
-                    <Tooltip label='Create New Request'><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
+                    <Tooltip label='Create New Request'><Button colorScheme='blue' variant='solid' onClick={onNewOpen} ml='1rem'><MdPostAdd size={'20px'}/></Button></Tooltip>
                 </Box>
 
             </HStack>
@@ -132,7 +139,7 @@ const EstimateRequests = () => {
                                 <Td textAlign={'center'}><Text>{request.email}</Text></Td>
                                 <Td textAlign={'center'}><Text cursor={'pointer'} _hover={{textColor: "blue"}} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
                                 <Td textAlign={'center'}><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
-                                <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={onOpen}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => {handleDeleteAlert(request.id)}}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
+                                <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => {handleEdit(request)}}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => {handleDeleteAlert(request.id)}}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
                             </Tr>
                         ))}
                         {/* <Customer customers={customers}/> */}
