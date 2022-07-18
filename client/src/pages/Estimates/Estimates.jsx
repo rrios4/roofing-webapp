@@ -206,7 +206,7 @@ function Estimates() {
                                     {estimates?.map((estimate, index) => (
                                         <Tr key={estimate.id}>
                                             <Td textAlign={'center'}><Text fontWeight={'bold'}>{estimate.estimate_number ? formatNumber(estimate.estimate_number) : ''}</Text></Td>    
-                                            <Td textAlign={'center'}><Text>{estimate.estimate_status.name === 'Sent'? <><Text mx={'auto'} bg={'yellow.500'} p='1' rounded={'xl'} align='center' w={'80px'}>Sent</Text></>: 'false'}</Text></Td>
+                                            <Td textAlign={'center'}><Text color={'white'}>{estimate.estimate_status.name === 'Sent'? <><Text mx={'auto'} bg={'yellow.500'} p='1' rounded={'xl'} align='center' w={'80px'}>Sent</Text></>: 'false'}</Text></Td>
                                             <Td textAlign={'center'}><Text>{estimate.service_type.name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ estimate.estimate_date ? new Date(estimate.estimate_date).toLocaleDateString(): ''}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ estimate.issued_date ? new Date(estimate.issued_date).toLocaleDateString(): ''}</Text></Td>

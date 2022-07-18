@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import { Select, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border} from '@chakra-ui/react';
-import { Card, EditEstimateRequestForm, DeleteAlertDialog } from '../../components';
+import { Card, EditEstimateRequestForm, DeleteAlertDialog, NewEstimateRequestForm, NewCustomerForm } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
@@ -86,6 +86,7 @@ const EstimateRequests = () => {
 
   return (
     <>
+    <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef}/>
     <EditEstimateRequestForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} objectData={selectedEstimateRequestObject}/>
     <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getEstimateRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'estimate_request'} header={`Delete Request # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`}/>
     <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
@@ -132,7 +133,7 @@ const EstimateRequests = () => {
                         {estimateRequests?.map((request, index) => (
                             <Tr key={request.id}>
                                 <Td textAlign={'center'}><Text fontWeight={'bold'}>{formatNumber(request.id)}</Text></Td>
-                                <Td textAlign={'center'}><Text>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: ''}</Text></Td>
+                                <Td textAlign={'center'}><Text color={'white'}>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: ''}</Text></Td>
                                 <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
                                 <Td textAlign={'center'}><Text>{new Date(request.requested_date).toLocaleDateString()}</Text></Td>
                                 <Td textAlign={'center'}><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>

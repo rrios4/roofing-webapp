@@ -144,7 +144,7 @@ const NewInvoiceForm = (props) => {
                     })}/>
                         <FormLabel mt='1rem'>Street Address</FormLabel>
                         <Input value={billToStreetAddressInput} onChange={(e) => setBillToStreetAddressInput(e.target.value)} type={'text'}/>
-                        <Flex flexDir={'row'} mb={'1rem'}>
+                    <Flex flexDir={'row'} mb={'1rem'}>
                         <Flex flexDirection={'column'}>
                             <FormLabel pt='1rem'>City</FormLabel>
                             <Input value={billToCityInput} onChange={(e) => setBillToCityInput(e.target.value)} type={'text'}/>
