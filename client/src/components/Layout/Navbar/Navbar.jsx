@@ -9,19 +9,19 @@ import { useAuth } from '../../../contexts/auth';
 const Navbar = () => {
     const auth = useAuth()
     //Style for Card component
-    const bg = useColorModeValue('white', 'gray.700');
-    const buttonBackground = useColorModeValue('gray.100','gray.600')
-    const tooltipBackground = useColorModeValue('gray.600','gray.100');
+    const bg = useColorModeValue('gray.600', 'gray.700');
+    const buttonBackground = useColorModeValue('gray.600','gray.600')
+    const tooltipBackground = useColorModeValue('gray.700','gray.100');
 
     const [loggedInUserData, setloggedInUserData] = useState('')
     return (
-        <Flex zIndex={'1'} position='fixed' w={{base: 'full', lg:'8rem'}} h={{base: '5rem', lg:'100vh'}} bg={bg} roundedTopRight={{base: '0', lg:'25'}} roundedBottomRight={{base: '0', lg:'25'}} flexDir={{base: 'row',lg: 'column'}} shadow={'2xl'} p='0' m='0' top={{base:'0', lg:'0'}}>
+        <Flex zIndex={'1'}  position='fixed' w={{base: 'full', lg:'8rem'}} h={{base: '5rem', lg:'100vh'}} bg={bg} roundedTopRight={{base: '0', lg:'25'}} roundedBottomRight={{base: '0', lg:'25'}} flexDir={{base: 'row',lg: 'column'}} shadow={'md'} p='0' m='0' top={{base:'0', lg:'0'}}>
             <Link to='/'>
                 <Box display='flex' flexDir={{base: 'column',lg:'column'}} h={{base: '5rem',lg:'8rem'}} bg={'blue.500'} shadow='sm' roundedRight='25' justifyContent={{base:'center', lg:'center'}} px={{base:'8px', lg:'0px'}}>
                     <Image mx={{base: 'auto', lg:'0px'}} marginLeft={{base: '0px',lg:'12px'}} boxSize={{base: '60px',lg:'100px'}} src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>
                 </Box>
             </Link>
-            <VStack my={'auto'} spacing='7'>
+            <VStack my={'auto'} spacing='7' color={'white'}>
                 <Link to={'/'}><Tooltip label='Dashboard' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdDashboard size={'30px'}/></Box></Tooltip></Link>
                 <Link to={'/estimate-requests'}><Tooltip label='Estimate Requests' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdScheduleSend size={'30px'}/></Box></Tooltip></Link>
                 <Link to={'/invoices'}><Tooltip label='Invoices' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdRequestPage size={'30px'}/></Box></Tooltip></Link>
