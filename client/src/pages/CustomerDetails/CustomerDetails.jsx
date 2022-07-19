@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react'
-import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner} from '@chakra-ui/react';
+import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast} from '@chakra-ui/react';
 import axios from 'axios';
 import Select from "react-select";
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Card, CustomerDetailsCard } from '../../components'
+import { Card, CustomerDetailsCard, EditCustomerForm } from '../../components'
 import { MdKeyboardArrowLeft, MdLocationOn, MdEmail, MdPhone, MdOutlineDateRange } from 'react-icons/md';
 
 const CustomerDetails = (props) => {
     const navigate = useNavigate();
+    const {isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose} = useDisclosure();
+    const toast = useToast()
 
     //Style for Card component
     const bg = useColorModeValue('white', 'gray.800');
@@ -331,6 +333,17 @@ const CustomerDetails = (props) => {
         }
     }
 
+    const handleCustomerEditToast = () => {
+        toast({
+            position: 'top-right',
+            title: `Customer updated!`,
+            description: "We've updated customer for you 🚀.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
     return (
         <Flex direction='column' justifyContent='center' pb='2rem' pt='2rem' w={[300, 400, 800]} >
             <VStack spacing={4}>
@@ -340,7 +353,7 @@ const CustomerDetails = (props) => {
                     </Link>
                 </Box>
                 {/* Customer Details Card Info  Component */}
-                <CustomerDetailsCard bg={bg} borderColor={borderColor} onOpen={onOpen} deleteCustomer={deleteCustomer} customer={customer} customerDate={customerDate}/>
+                <CustomerDetailsCard bg={bg} borderColor={borderColor} onOpen={onEditOpen} deleteCustomer={deleteCustomer} customer={customer} customerDate={customerDate}/>
                 {/* Customer Estimates Card */}
                 <Card width={'full'} bg={bg} borderColor={borderColor}>
                     <Text>Customer Invoice</Text>
@@ -350,6 +363,7 @@ const CustomerDetails = (props) => {
                     <Text>Customer Estimates</Text>
                 </Card>
             </VStack>
+            <EditCustomerForm isOpen={isEditOpen} onClose={onEditClose} customer={customer} updateParentState={getAllCustomer} toast={handleCustomerEditToast}/>
              <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
                     <ModalContent p='1rem' ml='6rem'>
