@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Customer, Card, StateOptions, CustomerTypeOptions, NewCustomerForm } from '../../components';
-import { Select, Flex, Box, Text, Button, Input, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner} from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, useBreakpointValue, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner} from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
@@ -22,6 +22,11 @@ export default function Customers() {
     //GET data from API
     const [customers, setCustomers] = useState(null);
     const [searchCustomer, setSearchCustomer] = useState('');
+
+    const isWideVersion = useBreakpointValue({
+        base: false,
+        '2xl': true
+      })
 
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
@@ -103,17 +108,17 @@ export default function Customers() {
                         <TableCaption>Total of {customers?.length} customers registered in our system ✌️</TableCaption>
                         <Thead>
                             <Tr>
-                                <Th textAlign={'center'}>Name</Th>
+                                <Th>Customer</Th>
                                 <Th textAlign={'center'}>Type</Th>
-                                <Th textAlign={'center'}>Email</Th>
+                                {/* <Th>Email</Th> */}
                                 <Th textAlign={'center'}>Phone Number</Th>
-                                <Th textAlign={'center'}>Address</Th>
-                                <Th textAlign={'center'}>Registered Date</Th>
+                                <Th>Address</Th>
+                                {isWideVersion && <Th textAlign={'center'}>Registered Date</Th>}
                                 <Th textAlign={'center'}>Actions</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
-                            <Customer customers={customers}/>
+                            <Customer customers={customers} isWideVersion={isWideVersion}/>
                             {/* {customers?.map((customer) => (
                                 <Tr key={customer.id} _hover={{ bg: "gray.100" }} rounded='md'>
                                     <Td>{customer.first_name} {customer.last_name}</Td>
