@@ -98,7 +98,7 @@ const EstimateRequests = () => {
         <Card width='full' bg={bg} borderColor={borderColor}>
             <HStack mt={'1rem'} mb={'2rem'}>
                 <Box display={'flex'} mr={'auto'}>
-                    <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Estimate Requests</Text>
+                    <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Quote Requests</Text>
                 </Box>
                 <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
                     <form method='GET' onSubmit={searchEstimateRequest}>

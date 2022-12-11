@@ -3,6 +3,7 @@ import {Box, Text, Flex, UnorderedList, ListItem, Image, Avatar, AvatarBadge, Av
 import Toggle from "./Toggle";
 import { Link } from 'react-router-dom';
 import {MdDashboard, MdRequestPage, MdScheduleSend, MdSquareFoot, MdPeopleAlt} from 'react-icons/md';
+import {AiFillSchedule} from 'react-icons/ai'
 import { useAuth } from '../../../contexts/auth';
 
 
@@ -23,9 +24,12 @@ const Navbar = () => {
             </Link>
             <VStack my={'auto'} spacing='7' color={'white'}>
                 <Link to={'/'}><Tooltip label='Dashboard' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdDashboard size={'30px'}/></Box></Tooltip></Link>
-                <Link to={'/estimate-requests'}><Tooltip label='Estimate Requests' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdScheduleSend size={'30px'}/></Box></Tooltip></Link>
+                <Link to={'/estimate-requests'}><Tooltip label='Quote Requests' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}>
+                    {/* <MdScheduleSend size={'30px'}/> */}
+                    <AiFillSchedule size={'30px'}/>
+                    </Box></Tooltip></Link>
                 <Link to={'/invoices'}><Tooltip label='Invoices' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdRequestPage size={'30px'}/></Box></Tooltip></Link>
-                <Link to={'/estimates'}><Tooltip label='Estimates' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdSquareFoot size={'30px'}/></Box></Tooltip></Link>
+                <Link to={'/estimates'}><Tooltip label='Quotes' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdSquareFoot size={'30px'}/></Box></Tooltip></Link>
                 <Link to={'/customers'}><Tooltip label='Customers' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdPeopleAlt size={'30px'}/></Box></Tooltip></Link>
             </VStack>
             <Box display={{base:'none',lg:'flex'}} justifyContent='center' marginTop={{base:'0',lg:'auto'}} marginLeft={{base:'auto', lg:'0'}} p='0rem'>
