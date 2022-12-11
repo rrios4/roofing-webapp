@@ -1,6 +1,5 @@
 import React, {useState, useEffect } from 'react'
 import { DrawerIndex } from '..';
-import { useDisclosure } from '@chakra-ui/hooks';
 import { Flex, DrawerFooter, FormControl, FormLabel, Select, Button, Box, Input, FormHelperText, Text } from '@chakra-ui/react';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import supabase from '../../utils/supabaseClient';
