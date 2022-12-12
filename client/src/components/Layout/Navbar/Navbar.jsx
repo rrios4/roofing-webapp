@@ -24,12 +24,12 @@ const Navbar = () => {
                     </Box>
                 </Box>
             </Link>
-            <Box display="flex" color='white' justifyContent='center' paddingTop='10px' paddingBottom='0px'>
-                <Tooltip label='SimplyNex' bg="gray.500">
-                    <Avatar shadow='sm' size='md' src={'https://64.media.tumblr.com/073578da50f557bd56caef112e255950/b754da231bb4bd69-34/s640x960/4f8c9cf93d4f03c42d448eba0dac2a9cbb2a69e2.jpg'}/>
-                </Tooltip>
-            </Box>
-            <VStack my={'auto'} spacing='7' color={'white'}>
+            <VStack my={'auto'} spacing='8' color={'white'}>
+                <Box display="flex" color='white' justifyContent='center' paddingTop='10px' paddingBottom='0px'>
+                    <Tooltip label='SimplyNex' bg="gray.500">
+                        <Avatar shadow='sm' size='md' src={'https://64.media.tumblr.com/073578da50f557bd56caef112e255950/b754da231bb4bd69-34/s640x960/4f8c9cf93d4f03c42d448eba0dac2a9cbb2a69e2.jpg'}/>
+                    </Tooltip>
+                </Box>
                 <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>ANALYTICS</Text>
                 <Link to={'/'}><Tooltip label='Dashboard' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{bg:buttonBackground}}><MdDashboard size={'28px'}/></Box></Tooltip></Link>
                 <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>CONTENT</Text>
