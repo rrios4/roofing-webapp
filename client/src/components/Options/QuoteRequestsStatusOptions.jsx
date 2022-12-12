@@ -1,0 +1,22 @@
+import React from 'react'
+
+const QuoteRequestStatusOptions = (props) => {
+    const { data } = props 
+    if(data?.length > 0){
+        return(
+            <>
+                {data?.map((quoteRequestStatus) => (
+                    <option key={quoteRequestStatus.id} value={quoteRequestStatus.id}>{quoteRequestStatus.name}</option>
+                ))}
+            </>
+        )
+    } else {
+        return(
+            <>
+                <option>Data not available! ❌</option>
+            </>
+        )
+    }
+}
+
+export default QuoteRequestStatusOptions

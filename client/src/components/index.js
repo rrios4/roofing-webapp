@@ -26,4 +26,5 @@ export { default as NewCustomerForm } from './Forms/NewCustomerForm';
 export { default as NewEstimateForm } from './Forms/NewEstimateForm';
 export { default as DeleteAlertDialog } from './Alerts/DeleteAlertDialog';
 export { default as NewEstimateRequestForm } from './Forms/NewEstimateRequestForm';
-export { default as EditCustomerForm} from './Forms/EditCustomerForm'
+export { default as EditCustomerForm} from './Forms/EditCustomerForm';
+export { default as QuoteRequestStatusOptions } from './Options/QuoteRequestsStatusOptions'
