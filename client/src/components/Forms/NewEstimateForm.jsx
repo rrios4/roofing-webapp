@@ -59,7 +59,7 @@ const NewEstimateForm = (props) => {
   return (
     <DrawerIndex isOpen={isOpen} onClose={onClose} initialRef={initialRef}>
         <form method='POST' onSubmit={handleSubmit}>
-        <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>Estimate</Text></Text>
+        <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>Quote</Text></Text>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Quote To</Text>
                 <FormControl isRequired>
                     <FormLabel pt='1rem'>Customer</FormLabel>
@@ -105,7 +105,7 @@ const NewEstimateForm = (props) => {
                     </Select>
                     <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
                 </FormControl> */}
-                <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Estimate Description</Text>
+                <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Quote Description</Text>
                 <FormControl isRequired>
                 <FormLabel>Invoice Number</FormLabel>
                 <Input type={'number'} placeholder='Type Invoice Number' value={estimateNumberInput} onChange={(e) => setEstimateNumberInput(e.target.value)}/>

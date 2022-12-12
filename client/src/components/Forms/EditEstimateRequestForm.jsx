@@ -11,7 +11,7 @@ const EditEstimateRequestForm = (props) => {
 
   return (
     <DrawerIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg}>
-        <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>ESTR</Text>-{objectData.id}</Text>
+        <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>QR</Text>-{objectData.id}</Text>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Request</Text>
         <Flex flexDir={'row'} mb={'1rem'}>
             <Flex flexDirection={'column'} mr={'1rem'}>

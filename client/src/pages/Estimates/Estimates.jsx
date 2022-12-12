@@ -170,7 +170,7 @@ function Estimates() {
                 <Card width='full' bg={bg} borderColor={borderColor}>
                     <HStack mt={'1rem'} mb={'2rem'}>
                         <Box display={'flex'} mr={'auto'}>
-                            <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Estimates</Text>
+                            <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Quotes</Text>
                         </Box>
                         <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
                             <form method='GET' onSubmit={searchEstimate}>
@@ -186,10 +186,10 @@ function Estimates() {
                     </HStack>
                     <TableContainer overflow={'auto'}>
                         <Table variant={'simple'} size='sm'>
-                                <TableCaption>Total of {estimates?.length} Estimates in our system ✌️</TableCaption>
+                                <TableCaption>Total of {estimates?.length} Quotes in our system ✌️</TableCaption>
                                 <Thead>
                                     <Tr>
-                                        <Th textAlign={'center'}>Estimate#</Th>
+                                        <Th textAlign={'center'}>Quote#</Th>
                                         <Th textAlign={'center'}>Status</Th>
                                         <Th textAlign={'center'}>Service Type</Th>
                                         <Th textAlign={'center'}>Estimate Date</Th>
@@ -205,7 +205,7 @@ function Estimates() {
                                 <Tbody>
                                     {estimates?.map((estimate, index) => (
                                         <Tr key={estimate.id}>
-                                            <Td textAlign={'center'}><Text fontWeight={'bold'}>{estimate.estimate_number ? formatNumber(estimate.estimate_number) : ''}</Text></Td>    
+                                            <Td textAlign={'center'}><Text fontWeight={'bold'} fontSize={'md'}>{estimate.estimate_number ? formatNumber(estimate.estimate_number) : ''}</Text></Td>    
                                             <Td textAlign={'center'}><Text color={'white'}>{estimate.estimate_status.name === 'Sent'? <><Text mx={'auto'} bg={'yellow.500'} p='1' rounded={'xl'} align='center' w={'80px'}>Sent</Text></>: 'false'}</Text></Td>
                                             <Td textAlign={'center'}><Text>{estimate.service_type.name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{ estimate.estimate_date ? new Date(estimate.estimate_date).toLocaleDateString(): ''}</Text></Td>
