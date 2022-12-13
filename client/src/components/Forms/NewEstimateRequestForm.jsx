@@ -3,16 +3,18 @@ import { DrawerIndex } from '..';
 import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea, DrawerFooter } from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient';
 import { QuoteRequestStatusOptions, ServiceTypeOptions, StateOptions } from '../'
-import { MdToday } from 'react-icons/md';
+import stateJSONData from '../../data/state_titlecase.json'
 
 const NewEstimateRequestForm = (props) => {
-    const {isOpen, onOpen, onClose, initialRef} = props
+    const {isOpen, onOpen, onClose, initialRef, updateQRData} = props
 
     //React UseStates
     const [quoteStatuses, setQuoteStatuses] = useState('');
     const [selectedQuoteStatus, setSelectedQuoteStatus] = useState('');
     const [selectedService, setSelectedService] = useState('');
-    const [selectedQuoteDate, setSelectedQuoteDate] = useState('')
+    const [selectedQuoteDate, setSelectedQuoteDate] = useState('');
+    const [states, setStates] = useState(null)
+    const [selectedState, setSelectedState] = useState('')
     const [qrDate, setQrDate] = useState('');
     const [qrServiceType, setQrServiceType] = useState('');
     const [qrStreetAddress, setQrStreetAddress] = useState('');
@@ -28,6 +30,7 @@ const NewEstimateRequestForm = (props) => {
     useEffect(() => {
       getAllQuoteStatuses();
       getAllServices();
+      setStates(stateJSONData)
     
 
     }, [])
@@ -46,7 +49,7 @@ const NewEstimateRequestForm = (props) => {
             lastName: qrClientLastname,
             streetAddress: qrStreetAddress,
             city: qrCity,
-            state: qrState,
+            state: selectedState,
             zipcode: qrPostalCode,
             //Add field to form
             customer_typeID: 1,
@@ -57,7 +60,8 @@ const NewEstimateRequestForm = (props) => {
         if(error){
             console.log(error)
         }
-        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress('');
+        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState('');
+        updateQRData();
         onClose();
 
     }
@@ -86,6 +90,12 @@ const NewEstimateRequestForm = (props) => {
             console.log(error)
         }
         setQrServiceType(services)
+    }
+
+    //Clear values when cancel button is presses
+    const handleCancel = async() => {
+        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState('');
+        onClose();
     }
 
 
@@ -122,10 +132,13 @@ const NewEstimateRequestForm = (props) => {
                     </Flex>
                     <Flex flexDir={'column'}>
                         <FormLabel>State</FormLabel>
-                        <Input type={'text'} value={qrState} onChange={({target}) => setQrState(target.value)}/>
+                        {/* <Input type={'text'} value={qrState} onChange={({target}) => setQrState(target.value)}/> */}
+                        <Select value={selectedState} onChange={(e) => {setSelectedState(e.target.value)}} placeholder={'Select State'}>
+                            <StateOptions states={states}/>
+                        </Select>
                     </Flex>
                     <Flex flexDir={'column'} ml={'1rem'}>
-                        <FormLabel>Postal Code</FormLabel>
+                        <FormLabel>Zipcode</FormLabel>
                         <Input type={'text'} value={qrPostalCode} onChange={({target}) => setQrPostalCode(target.value)}/>
                     </Flex>
                 </Flex>
@@ -145,7 +158,7 @@ const NewEstimateRequestForm = (props) => {
                 <Input type={'email'} value={qrClientEmail} onChange={({target}) => setQrClientEmail(target.value)}/>
             </FormControl>
             <DrawerFooter mt={'2rem'}>
-                <Button onClick={onClose} mr='1rem'>Cancel</Button>
+                <Button onClick={handleCancel} mr='1rem'>Cancel</Button>
                 <Button type='submit' colorScheme={'blue'}>Create</Button>
             </DrawerFooter>
 
