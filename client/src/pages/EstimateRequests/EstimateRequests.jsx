@@ -34,7 +34,7 @@ const EstimateRequests = () => {
     // Get all estimate requests
     const getEstimateRequests = async() => {
         const {data: requests, error} = await supabase
-        .from('estimate_request')
+        .from('quote_request')
         .select('*')
 
         if(error){
@@ -50,7 +50,7 @@ const EstimateRequests = () => {
 
         if(searchEstimateRequestsInput === ''){
             let {data: requests, error} = await supabase
-            .from('estimate_request')
+            .from('quote_request')
             .select('*')
 
             if(error){
@@ -120,7 +120,7 @@ const EstimateRequests = () => {
                         <Tr>
                             <Th textAlign={'center'}>QR #</Th>
                             <Th textAlign={'center'}>Status</Th>
-                            <Th textAlign={'center'}>Service Type</Th>
+                            <Th textAlign={'center'}>Service</Th>
                             <Th textAlign={'center'}>Requested Date</Th>
                             <Th textAlign={'center'}>Name</Th>
                             <Th textAlign={'center'}>Email</Th>
