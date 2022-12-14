@@ -28,11 +28,11 @@ const EstimateRequests = () => {
     const buttonColorScheme = useColorModeValue('blue', 'gray');
 
     useEffect(() => {
-        getEstimateRequests();
+        getQuoteRequests();
     }, [])
     
-    // Get all estimate requests
-    const getEstimateRequests = async() => {
+    // Get all quote requests
+    const getQuoteRequests = async() => {
         const {data: requests, error} = await supabase
         .from('quote_request')
         .select('*')
@@ -69,7 +69,7 @@ const EstimateRequests = () => {
     const handleDeleteToast = (requestId) => {
         toast({
             position: 'top-right',
-            title: `Request #${requestId} deleted!`,
+            title: `Quote Request #${requestId} deleted!`,
             description: "We've deleted estimate for you.",
             status: 'success',
             duration: 5000,
@@ -86,9 +86,9 @@ const EstimateRequests = () => {
 
   return (
     <>
-    <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getEstimateRequests}/>
+    <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getQuoteRequests}/>
     <EditEstimateRequestForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} objectData={selectedEstimateRequestObject}/>
-    <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getEstimateRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'estimate_request'} header={`Delete Request # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`}/>
+    <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getQuoteRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'quote_request'} header={`Delete QR # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`}/>
     <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
         <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
             <Link to={'/'}>
