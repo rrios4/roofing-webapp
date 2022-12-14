@@ -89,8 +89,8 @@ const EstimateRequests = () => {
     <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getEstimateRequests}/>
     <EditEstimateRequestForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} objectData={selectedEstimateRequestObject}/>
     <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getEstimateRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'estimate_request'} header={`Delete Request # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`}/>
-    <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
-        <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
+    <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
+        <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
             <Link to={'/'}>
                 <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
             </Link>

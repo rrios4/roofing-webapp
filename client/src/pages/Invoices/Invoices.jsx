@@ -164,13 +164,13 @@ function Invoices() {
 
     return (
         <>  
-        <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
+        <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
             {/* <Alert status='success' mb={'1rem'} flexDir={'column'} alignItems={'center'} justifyContent={'center'} textAlign={'center'} height={'200px'} rounded={'8'}>
                 <AlertIcon boxSize='40px' mr={0} />
                 <AlertTitle mt={4} mb={1} fontSize='lg'>Invoice Submitted!</AlertTitle>
                 <AlertDescription maxWidth='sm'>New invoice saved to the server. Fire on! 👋</AlertDescription>
             </Alert> */}
-            <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
+            <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                     </Link>
@@ -213,7 +213,7 @@ function Invoices() {
                                 <Tbody>
                                     {invoices?.map((invoice, index) => (
                                         <Tr key={invoice.id}>
-                                            <Td textAlign={'center'}><Text fontWeight={'bold'}>{formatNumber(invoice.invoice_number)}</Text></Td>    
+                                            <Td textAlign={'center'}><Text fontSize={'md'} fontWeight={'bold'}>{formatNumber(invoice.invoice_number)}</Text></Td>    
                                             <Td textAlign={'center'}><Text><Text color={'white'} mx={'auto'} bg={invoice.invoice_status.name === 'New' ? 'green.500' : '' || invoice.invoice_status.name === 'Paid' ? 'blue.500' : '' || invoice.invoice_status.name === 'Sent' ? 'yellow.500' : '' || invoice.invoice_status.name === 'Outstanding' ? 'red.500' : ''} p='1' rounded={'xl'} align='center' w={'80px'}>{invoice.invoice_status.name}</Text></Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.service_type.name}</Text></Td>
                                             <Td textAlign={'center'}><Text>{invoice.invoice_date}</Text></Td>

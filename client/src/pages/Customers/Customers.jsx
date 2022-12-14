@@ -79,7 +79,7 @@ export default function Customers() {
     return (
         <>
         <NewCustomerForm isOpen={isOpen} onClose={onClose} initialRef={initialRef} updateCustomerData={getAllCustomers}/>
-        <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
+        <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
             <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
                 <Link to={'/'}>
                     <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 

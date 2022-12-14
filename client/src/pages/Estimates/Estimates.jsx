@@ -161,8 +161,8 @@ function Estimates() {
 
     return (
         <>
-            <VStack my={'2rem'} w='100%' mx={'auto'} px='4rem'>
-                <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
+            <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
+                <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                     </Link>

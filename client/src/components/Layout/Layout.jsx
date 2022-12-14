@@ -10,7 +10,7 @@ const Layout = (props) => {
         <header>
             <Navbar/>
         </header>
-        <Flex w={'full'} minH={'100vh'} pl={{base:'0rem', lg:'8rem'}} mt={{base:'4rem', lg:'0rem'}} justifyContent='center'>
+        <Flex w={'full'} minH={'100vh'} pl={{base:'0rem', lg:'6rem'}} mt={{base:'4rem', lg:'0rem'}} justifyContent='center'>
             {props.children}
         </Flex>
     </Flex>

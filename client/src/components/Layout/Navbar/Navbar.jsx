@@ -24,7 +24,7 @@ const Navbar = () => {
                     </Box>
                 </Box>
             </Link>
-            <VStack my={'auto'} spacing='8' color={'white'}>
+            <VStack spacing='8' color={'white'}>
                 <Box display="flex" color='white' justifyContent='center' paddingTop='10px' paddingBottom='0px'>
                     <Tooltip label='SimplyNex' bg="gray.500">
                         <Avatar shadow='sm' size='md' src={'https://64.media.tumblr.com/073578da50f557bd56caef112e255950/b754da231bb4bd69-34/s640x960/4f8c9cf93d4f03c42d448eba0dac2a9cbb2a69e2.jpg'}/>
