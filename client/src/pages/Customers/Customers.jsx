@@ -109,6 +109,8 @@ export default function Customers() {
                         <Thead>
                             <Tr>
                                 <Th>Customer</Th>
+                                <Th textAlign={'center'}>Type</Th>
+                                <Th>Phone Number</Th>
                                 {isWideVersion && <Th>Address</Th>}
                                 {isWideVersion && <Th>Registered Date</Th>}
                                 <Th textAlign={'center'}>Actions</Th>
