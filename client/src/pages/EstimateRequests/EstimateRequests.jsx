@@ -95,6 +95,13 @@ const EstimateRequests = () => {
         onEditOpen()
     }
 
+    const handleSQLFormatDate = (date) => {
+        let parsedDate = new Date(Date.parse(date));
+        let options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC'};
+        let dateString = parsedDate.toLocaleDateString('en-US', options);
+        return dateString
+    }
+
 
   return (
     <>
@@ -148,7 +155,7 @@ const EstimateRequests = () => {
                                 <Td textAlign={'center'}><Text fontWeight={'bold'} fontSize={'md'}>{formatNumber(request.id)}</Text></Td>
                                 <Td textAlign={'center'}><Text color={'white'}>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: '' || request.est_request_status_id === 2 ? <><Text bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Scheduled</Text></>: '' || request.est_request_status_id === 5 ? <><Text bg={'red.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Closed</Text></>: '' || request.est_request_status_id === 3 ? <><Text bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Pending</Text></>: ''  }</Text></Td>
                                 <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
-                                <Td><Text>{request.requested_date}</Text></Td>
+                                <Td><Text>{handleSQLFormatDate(request.requested_date)}</Text></Td>
                                 <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
                                 <Td><Text>{request.email}</Text></Td>
                                 <Td><Text>{request.phone_number ? request.phone_number : 'Not Available ❌'}</Text></Td>
