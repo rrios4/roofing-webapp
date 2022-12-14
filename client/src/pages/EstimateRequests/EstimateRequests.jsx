@@ -44,7 +44,7 @@ const EstimateRequests = () => {
         console.log(requests);
     }
 
-    // Search for customer estimate request
+    // Search for customer quote request
     const searchEstimateRequest = async(event) => {
         event.preventDefault();
 
@@ -56,7 +56,20 @@ const EstimateRequests = () => {
             if(error){
                 console.log(error)
             }
-            searchEstimateRequestsInput(requests)
+            // searchEstimateRequestsInput(requests)
+            setEstimateRequests(requests)
+        } else{
+            let {data: qrSearchResult, error } = await supabase
+            .from('quote_request')
+            .select('*')
+            .or(`firstName.ilike.%${searchEstimateRequestsInput}%,lastName.ilike.%${searchEstimateRequestsInput}%,email.ilike.%${searchEstimateRequestsInput}%,phone_number.ilike.%${searchEstimateRequestsInput}%`)
+
+            if(error){
+                console.log(error)
+            }
+            console.log(qrSearchResult)
+            // setCustomers(customersSearchResult);
+            setEstimateRequests(qrSearchResult)
         }
     }
 
@@ -81,7 +94,6 @@ const EstimateRequests = () => {
         setSelectedEstimateRequestObject(estimate_request);
         onEditOpen()
     }
-
 
 
   return (
@@ -136,7 +148,7 @@ const EstimateRequests = () => {
                                 <Td textAlign={'center'}><Text fontWeight={'bold'} fontSize={'md'}>{formatNumber(request.id)}</Text></Td>
                                 <Td textAlign={'center'}><Text color={'white'}>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: '' || request.est_request_status_id === 2 ? <><Text bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Scheduled</Text></>: '' || request.est_request_status_id === 5 ? <><Text bg={'red.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Closed</Text></>: '' || request.est_request_status_id === 3 ? <><Text bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Pending</Text></>: ''  }</Text></Td>
                                 <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
-                                <Td><Text>{new Date(request.requested_date).toLocaleDateString()}</Text></Td>
+                                <Td><Text>{request.requested_date}</Text></Td>
                                 <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
                                 <Td><Text>{request.email}</Text></Td>
                                 <Td><Text>{request.phone_number ? request.phone_number : 'Not Available ❌'}</Text></Td>
