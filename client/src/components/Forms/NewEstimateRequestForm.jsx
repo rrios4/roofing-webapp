@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { DrawerIndex } from '..';
-import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea, DrawerFooter } from '@chakra-ui/react';
+import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea, DrawerFooter, InputLeftAddon } from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient';
+import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import { QuoteRequestStatusOptions, ServiceTypeOptions, StateOptions } from '../'
 import stateJSONData from '../../data/state_titlecase.json'
 
@@ -53,14 +54,14 @@ const NewEstimateRequestForm = (props) => {
             zipcode: qrPostalCode,
             //Add field to form
             customer_typeID: 1,
-            // phone_number: inputValue,
+            phone_number: inputValue,
             email: qrClientEmail,
         }])
 
         if(error){
             console.log(error)
         }
-        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState('');
+        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState(''); SetInputValue('');
         updateQRData();
         onClose();
 
@@ -94,8 +95,17 @@ const NewEstimateRequestForm = (props) => {
 
     //Clear values when cancel button is presses
     const handleCancel = async() => {
-        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState('');
+        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState(''); SetInputValue('');
         onClose();
+    }
+
+    //Formats phone number input from user
+    const handlePhoneInput = (e) => {
+        //This is where we'll call our future formatPhoneNumber function
+        const formattedPhoneNumber = formatPhoneNumber(e.target.value);
+        //We'll set the input value using our setInputValue
+        SetInputValue(formattedPhoneNumber);
+
     }
 
 
@@ -156,6 +166,13 @@ const NewEstimateRequestForm = (props) => {
                 </Flex>
                 <FormLabel mt={'1rem'}>Email</FormLabel>
                 <Input type={'email'} value={qrClientEmail} onChange={({target}) => setQrClientEmail(target.value)}/>
+            </FormControl>
+            <FormControl>
+            <FormLabel pt='1rem'>Phone Number</FormLabel>
+                <InputGroup>
+                <InputLeftAddon children="+1" />
+                <Input id='phone' type='tel' placeholder='Phone number' onChange={(e) => handlePhoneInput(e)} value={inputValue}/>
+                </InputGroup>
             </FormControl>
             <DrawerFooter mt={'2rem'}>
                 <Button onClick={handleCancel} mr='1rem'>Cancel</Button>

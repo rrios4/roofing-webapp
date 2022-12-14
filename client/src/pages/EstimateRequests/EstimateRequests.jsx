@@ -121,9 +121,10 @@ const EstimateRequests = () => {
                             <Th textAlign={'center'}>QR #</Th>
                             <Th textAlign={'center'}>Status</Th>
                             <Th textAlign={'center'}>Service</Th>
-                            <Th textAlign={'center'}>Desired Date</Th>
-                            <Th textAlign={'center'}>Name</Th>
-                            <Th textAlign={'center'}>Email</Th>
+                            <Th>Desired Date</Th>
+                            <Th>Name</Th>
+                            <Th>Email</Th>
+                            <Th>Phone Number</Th>
                             <Th textAlign={'center'}>Address</Th>
                             <Th textAlign={'center'}>Entry Date</Th>
                             <Th textAlign={'center'}>Actions</Th>
@@ -135,11 +136,12 @@ const EstimateRequests = () => {
                                 <Td textAlign={'center'}><Text fontWeight={'bold'} fontSize={'md'}>{formatNumber(request.id)}</Text></Td>
                                 <Td textAlign={'center'}><Text color={'white'}>{request.est_request_status_id === 1 ? <><Text bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></>: '' || request.est_request_status_id === 2 ? <><Text bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Scheduled</Text></>: '' || request.est_request_status_id === 5 ? <><Text bg={'red.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Closed</Text></>: '' || request.est_request_status_id === 3 ? <><Text bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Pending</Text></>: ''  }</Text></Td>
                                 <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
-                                <Td textAlign={'center'}><Text>{new Date(request.requested_date).toLocaleDateString()}</Text></Td>
-                                <Td textAlign={'center'}><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
-                                <Td textAlign={'center'}><Text>{request.email}</Text></Td>
-                                <Td textAlign={'center'}><Text cursor={'pointer'} _hover={{textColor: "blue"}} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
-                                <Td textAlign={'center'}><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
+                                <Td><Text>{new Date(request.requested_date).toLocaleDateString()}</Text></Td>
+                                <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
+                                <Td><Text>{request.email}</Text></Td>
+                                <Td><Text>{request.phone_number ? request.phone_number : 'Not Available ❌'}</Text></Td>
+                                <Td><Text cursor={'pointer'} _hover={{textColor: "blue"}} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
+                                <Td><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
                                 <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => {handleEdit(request)}}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => {handleDeleteAlert(request.id)}}><MdDelete/></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox/></Button></Tooltip></Td>
                             </Tr>
                         ))}
