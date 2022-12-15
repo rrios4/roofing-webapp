@@ -18,7 +18,7 @@ const Navbar = () => {
     return (
         <Flex zIndex={'1'}  position='fixed' w={{base: 'full', lg:'6rem'}} h={{base: '5rem', lg:'100vh'}} bg={bg} roundedTopRight={{base: '0', lg:'0'}} roundedBottomRight={{base: '0', lg:'0'}} flexDir={{base: 'row',lg: 'column'}} shadow={'md'} p='0' m='0' top={{base:'0', lg:'0'}}>
             <Link to='/'>
-                <Box display={'flex'} p='1rem' justifyContent={'center'} _hover={{padding:'15px'}}>
+                <Box display={'flex'} p='1rem' justifyContent={'center'}>
                     <Box display='flex' flexDir={{base: 'column',lg:'column'}} h={{base: '5rem',lg:'4rem'}} bg={'blue.500'} shadow='sm' rounded='18' justifyContent={{base:'center', lg:'center'}} px={{base:'8px', lg:'0rem'}} _hover={{bg: 'blue.600'}}>
                         <Image p={'4px'} mx={{base: 'auto', lg:'auto'}} marginLeft={{base: '0px',lg:'0'}} boxSize={{base: '60px',lg:'90px'}} src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>
                     </Box>
