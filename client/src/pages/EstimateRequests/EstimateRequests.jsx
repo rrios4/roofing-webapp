@@ -36,8 +36,8 @@ const EstimateRequests = () => {
         const { data: requests, error } = await supabase
             .from('quote_request')
             .select('*')
+            .order('est_request_status_id', { ascending: true } )
             .order('created_at', { ascending: false })
-            .order('updated_at', { ascending: false } )
 
         if (error) {
             console.log(error)
@@ -82,12 +82,36 @@ const EstimateRequests = () => {
         onDeleteOpen()
     }
 
+    //Function that shows a toast once the user creates a new qr
+    const handleNewToast = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `Quote Request created!`,
+            description: "We've created a new quote request for you 🚀",
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+        })
+    }
+
     //Function that shows a toast once the user confirmed that the data has been deleted
     const handleDeleteToast = (requestId) => {
         toast({
             position: 'top-right',
             title: `Quote Request #${requestId} deleted!`,
-            description: "We've deleted estimate for you.",
+            description: "We've deleted quote request for you 🚀",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
+    //Function that shows a toast once the user confirmed that the data has been updated
+    const handleEditChangeToast = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `QR# ${requestId} updated!`,
+            description: "We've updated quote request for you 🚀",
             status: 'success',
             duration: 5000,
             isClosable: true,
@@ -144,13 +168,13 @@ const EstimateRequests = () => {
         onEditClose();
         setSelectedEstimateRequestObject({ id: '', est_request_status_id: '', requested_date: '', service_type_id: '', streetAddress: '', city: '', state: '', zipcode: '', firstName: '', lastName: '', email: '' });
         await getQuoteRequests();
-
+        handleEditChangeToast(selectedEstimateRequestObject.id)
         // console.log(selectedEstimateRequestObject)
     }
 
     return (
         <>
-            <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getQuoteRequests} />
+            <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getQuoteRequests} toast={handleNewToast}/>
             <EditEstimateRequestForm initialRef={initialRef} handleSubmit={handleEditSubmit} isOpen={isEditOpen} handleEditCancel={handleEditCancel} objectData={selectedEstimateRequestObject} handleEditOnChange={handleEditChange} />
             <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getQuoteRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'quote_request'} header={`Delete QR # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`} />
             <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>

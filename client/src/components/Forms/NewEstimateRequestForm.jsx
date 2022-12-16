@@ -7,7 +7,7 @@ import { QuoteRequestStatusOptions, ServiceTypeOptions, StateOptions } from '../
 import stateJSONData from '../../data/state_titlecase.json'
 
 const NewEstimateRequestForm = (props) => {
-    const {isOpen, onOpen, onClose, initialRef, updateQRData} = props
+    const {isOpen, onOpen, onClose, initialRef, updateQRData, toast} = props
 
     //React UseStates
     const [quoteStatuses, setQuoteStatuses] = useState('');
@@ -63,6 +63,7 @@ const NewEstimateRequestForm = (props) => {
         }
         setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState(''); SetInputValue('');
         updateQRData();
+        toast();
         onClose();
 
     }
