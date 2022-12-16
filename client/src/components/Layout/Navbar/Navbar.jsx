@@ -10,9 +10,10 @@ import { useAuth } from '../../../contexts/auth';
 const Navbar = () => {
     const auth = useAuth()
     //Style for Card component
-    const bg = useColorModeValue('gray.600', 'gray.700');
-    const buttonBackground = useColorModeValue('gray.600', 'gray.600')
+    const bg = useColorModeValue('white', 'gray.700');
+    const buttonBackground = useColorModeValue('gray.100', 'gray.600')
     const tooltipBackground = useColorModeValue('gray.700', 'gray.100');
+    const iconColors = useColorModeValue('#454947','white')
 
     const [loggedInUserData, setloggedInUserData] = useState('')
     return (
@@ -31,12 +32,12 @@ const Navbar = () => {
                     </Tooltip>
                 </Box>
                 <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>ANALYTICS</Text>
-                <Link to={'/'}><Tooltip label='Dashboard' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}><MdDashboard size={'28px'} /></Box></Tooltip></Link>
+                <Link to={'/'}><Tooltip label='Dashboard' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}><MdDashboard color={iconColors} size={'28px'} /></Box></Tooltip></Link>
                 <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>CONTENT</Text>
-                <Link to={'/estimate-requests'}><Tooltip label='Quote Requests' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}>{/* <MdScheduleSend size={'30px'}/> */}<AiFillSchedule size={'28px'} /></Box></Tooltip></Link>
-                <Link to={'/invoices'}><Tooltip label='Invoices' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}><MdRequestPage size={'28px'} /></Box></Tooltip></Link>
-                <Link to={'/estimates'}><Tooltip label='Quotes' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}><MdSquareFoot size={'28px'} /></Box></Tooltip></Link>
-                <Link to={'/customers'}><Tooltip label='Customers' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}><MdPeopleAlt size={'28px'} /></Box></Tooltip></Link>
+                <Link to={'/estimate-requests'}><Tooltip label='Quote Requests' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}>{/* <MdScheduleSend size={'30px'}/> */}<AiFillSchedule color={iconColors} size={'28px'} /></Box></Tooltip></Link>
+                <Link to={'/invoices'}><Tooltip label='Invoices' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}><MdRequestPage color={iconColors} size={'28px'} /></Box></Tooltip></Link>
+                <Link to={'/estimates'}><Tooltip label='Quotes' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}><MdSquareFoot color={iconColors} size={'28px'} /></Box></Tooltip></Link>
+                <Link to={'/customers'}><Tooltip label='Customers' bg={tooltipBackground}><Box p={'1'} rounded='md' _hover={{ bg: buttonBackground }}><MdPeopleAlt color={iconColors} size={'28px'} /></Box></Tooltip></Link>
             </VStack>
             <Box display={{ base: 'none', lg: 'flex' }} justifyContent='center' marginTop={{ base: '0', lg: 'auto' }} marginLeft={{ base: 'auto', lg: '0' }} p='0rem'>
                 {/* <Link to='/'>
