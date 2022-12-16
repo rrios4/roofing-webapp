@@ -36,12 +36,14 @@ const EstimateRequests = () => {
         const { data: requests, error } = await supabase
             .from('quote_request')
             .select('*')
+            .order('created_at', { ascending: false })
+            .order('updated_at', { ascending: false } )
 
         if (error) {
             console.log(error)
         }
         setEstimateRequests(requests);
-        console.log(requests);
+        // console.log(requests);
     }
 
     // Search for customer quote request
@@ -119,11 +121,12 @@ const EstimateRequests = () => {
         // console.log(selectedEstimateRequestObject.streetAddress)
     }
 
-    const handleEditSubmit = async(e) => {
+    const handleEditSubmit = async (e) => {
         e.preventDefault();
         const { error } = await supabase
-            .from('qr_request')
+            .from('quote_request')
             .update({
+                id: selectedEstimateRequestObject.id,
                 service_type_id: selectedEstimateRequestObject.service_type_id,
                 est_request_status_id: selectedEstimateRequestObject.est_request_status_id,
                 requested_date: selectedEstimateRequestObject.requested_date,
@@ -134,10 +137,10 @@ const EstimateRequests = () => {
                 state: selectedEstimateRequestObject.state,
                 zipcode: selectedEstimateRequestObject.zipcode,
                 email: selectedEstimateRequestObject.email,
-                phone_number: selectedEstimateRequestObject.phone_number
-
+                phone_number: selectedEstimateRequestObject.phone_number,
+                updated_at: new Date()
             })
-            .eq('id', selectedEstimateRequestObject.id )
+            .eq('id', selectedEstimateRequestObject.id)
         onEditClose();
         setSelectedEstimateRequestObject({ id: '', est_request_status_id: '', requested_date: '', service_type_id: '', streetAddress: '', city: '', state: '', zipcode: '', firstName: '', lastName: '', email: '' });
         await getQuoteRequests();

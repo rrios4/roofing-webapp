@@ -14,6 +14,7 @@ const EditEstimateRequestForm = (props) => {
         <DrawerIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={handleEditCancel} bg={bg}>
             <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>QR</Text>-{objectData.id}</Text>
             <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Request</Text>
+            <form onSubmit={handleSubmit} method='PATCH'>
                 <Flex flexDir={'row'} mb={'1rem'}>
                     <Flex flexDirection={'column'} mr={'1rem'}>
                         <FormLabel>Status</FormLabel>
@@ -69,10 +70,11 @@ const EditEstimateRequestForm = (props) => {
                     <FormLabel htmlFor='city'>Email</FormLabel>
                     <Input name='email' type={'email'} value={objectData.email} onChange={handleEditOnChange} />
                 </FormControl>
-            <Flex pt={'2rem'} justifyContent={'flex-end'}>
-                <Button mx={'1rem'} onClick={handleEditCancel}>Cancel</Button>
-                <Button colorScheme={'blue'} onClick={handleSubmit}>Save Changes</Button>
-            </Flex>
+                <Flex pt={'2rem'} justifyContent={'flex-end'}>
+                    <Button mx={'1rem'} onClick={handleEditCancel}>Cancel</Button>
+                    <Button colorScheme={'blue'} type='submit'>Save Changes</Button>
+                </Flex>
+            </form>
         </DrawerIndex>
     )
 }
