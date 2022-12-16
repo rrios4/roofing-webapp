@@ -254,6 +254,7 @@ const EstimateRequests = () => {
                                     <Th textAlign={'center'}>Status</Th>
                                     <Th textAlign={'center'}>Service</Th>
                                     <Th>Desired Date</Th>
+                                    <Th>Customer Type</Th>
                                     <Th>Name</Th>
                                     <Th>Email</Th>
                                     <Th>Phone Number</Th>
@@ -269,6 +270,7 @@ const EstimateRequests = () => {
                                         <Td textAlign={'center'}>{request.est_request_status_id === 1 ? <><Text textColor={'white'} bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></> : '' || request.est_request_status_id === 2 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Scheduled</Text></> : '' || request.est_request_status_id === 5 ? <><Text textColor={'white'} bg={'red.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Closed</Text></> : '' || request.est_request_status_id === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Pending</Text></> : ''}</Td>
                                         <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
                                         <Td><Text>{handleSQLFormatDate(request.requested_date)}</Text></Td>
+                                        <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td>
                                         <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
                                         <Td><Text>{request.email}</Text></Td>
                                         <Td><Text>{request.phone_number ? request.phone_number : 'Not Available ❌'}</Text></Td>
