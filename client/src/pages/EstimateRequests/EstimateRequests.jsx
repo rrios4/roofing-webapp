@@ -36,7 +36,7 @@ const EstimateRequests = () => {
         const { data: requests, error } = await supabase
             .from('quote_request')
             .select('*')
-            .order('est_request_status_id', { ascending: true } )
+            .order('est_request_status_id', { ascending: true })
             .order('created_at', { ascending: false })
 
         if (error) {
@@ -118,6 +118,30 @@ const EstimateRequests = () => {
         })
     }
 
+    //Function that shows a toast when the user click to save qr as a customer
+    const handleEmailValidationToastError = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `Customer already exist!`,
+            description: `${requestId[0].email} email already exist! 🚀`,
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+        })
+    }
+
+    //Function that shows a toast when the user click to save qr as a customer
+    const handleEmailValidationToastSuccess = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `New customer has been saved!`,
+            description: `Customer with ${requestId} email has been saved! 🚀`,
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+        })
+    }
+
     //Formats SQL date from DB to present in GUI table
     const handleSQLFormatDate = (date) => {
         let parsedDate = new Date(Date.parse(date));
@@ -172,9 +196,29 @@ const EstimateRequests = () => {
         // console.log(selectedEstimateRequestObject)
     }
 
+    //Handles to determine if email alredy exist in DB
+    const handleEmailValidation = async (email) => {
+        const { data: resEmail, error } = await supabase
+            .from('customer')
+            .select('id, email')
+            .eq('email', `${email}`)
+
+        if (error) {
+            console.log(error);
+        }
+        // console.log(resEmail.length)
+        if (resEmail.length === 0) {
+            // console.log('Email is not available in DB!')
+            handleEmailValidationToastSuccess(email);
+        } else {
+            // console.log('Email is available in DB.')
+            handleEmailValidationToastError(resEmail);
+        }
+    }
+
     return (
         <>
-            <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getQuoteRequests} toast={handleNewToast}/>
+            <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getQuoteRequests} toast={handleNewToast} />
             <EditEstimateRequestForm initialRef={initialRef} handleSubmit={handleEditSubmit} isOpen={isEditOpen} handleEditCancel={handleEditCancel} objectData={selectedEstimateRequestObject} handleEditOnChange={handleEditChange} />
             <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getQuoteRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'quote_request'} header={`Delete QR # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`} />
             <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
@@ -230,7 +274,7 @@ const EstimateRequests = () => {
                                         <Td><Text>{request.phone_number ? request.phone_number : 'Not Available ❌'}</Text></Td>
                                         <Td><Text cursor={'pointer'} _hover={{ textColor: "blue" }} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
                                         <Td><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
-                                        <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => { handleEdit(request) }}><MdEdit /></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => { handleDeleteAlert(request.id) }}><MdDelete /></Button></Tooltip><Tooltip label='Save as Customer'><Button><MdAddBox /></Button></Tooltip></Td>
+                                        <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => { handleEdit(request) }}><MdEdit /></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => { handleDeleteAlert(request.id) }}><MdDelete /></Button></Tooltip><Tooltip label='Save as Customer'><Button onClick={() => handleEmailValidation(request.email)}><MdAddBox /></Button></Tooltip></Td>
                                     </Tr>
                                 ))}
                             </Tbody>
