@@ -198,11 +198,11 @@ const EstimateRequests = () => {
     }
 
     //Handles to determine if email alredy exist in DB
-    const handleEmailValidation = async (email) => {
+    const handleEmailValidation = async (request) => {
         const { data: resEmail, error } = await supabase
             .from('customer')
-            .select('id, email')
-            .eq('email', `${email}`)
+            .select('id, customer_type_id, email, phone_number, first_name, last_name, street_address, zipcode, state')
+            .eq('email', `${request.email}`)
 
         if (error) {
             console.log(error);
@@ -210,7 +210,26 @@ const EstimateRequests = () => {
         // console.log(resEmail.length)
         if (resEmail.length === 0) {
             // console.log('Email is not available in DB!')
-            handleEmailValidationToastSuccess(email);
+            // console.log(request)
+            const { error } = await supabase
+                .from('customer')
+                .insert({
+                    first_name: request.firstName,
+                    last_name: request.lastName,
+                    street_address: request.streetAddress,
+                    city: request.city,
+                    state: request.state,
+                    zipcode: request.zipcode,
+                    phone_number: request.phone_number,
+                    email: request.email,
+                    customer_type_id: request.customer_typeID,
+                })
+
+            if(error){
+                console.log(error)
+            }
+            
+            handleEmailValidationToastSuccess(request.email);
         } else {
             // console.log('Email is available in DB.')
             handleEmailValidationToastError(resEmail);
@@ -277,7 +296,7 @@ const EstimateRequests = () => {
                                         <Td><Text>{request.phone_number ? request.phone_number : 'Not Available ❌'}</Text></Td>
                                         <Td><Text cursor={'pointer'} _hover={{ textColor: "blue" }} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
                                         <Td><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
-                                        <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => { handleEdit(request) }}><MdEdit /></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => { handleDeleteAlert(request.id) }}><MdDelete /></Button></Tooltip><Tooltip label='Save as Customer'><Button onClick={() => handleEmailValidation(request.email)}><MdAddBox /></Button></Tooltip></Td>
+                                        <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => { handleEdit(request) }}><MdEdit /></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => { handleDeleteAlert(request.id) }}><MdDelete /></Button></Tooltip><Tooltip label='Save as Customer'><Button onClick={() => handleEmailValidation(request)}><MdAddBox /></Button></Tooltip></Td>
                                     </Tr>
                                 ))}
                             </Tbody>
