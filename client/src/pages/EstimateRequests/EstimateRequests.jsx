@@ -51,15 +51,16 @@ const EstimateRequests = () => {
         event.preventDefault();
 
         if (searchEstimateRequestsInput === '') {
-            let { data: requests, error } = await supabase
-                .from('quote_request')
-                .select('*')
+            // let { data: requests, error } = await supabase
+            //     .from('quote_request')
+            //     .select('*')
 
-            if (error) {
-                console.log(error)
-            }
+            // if (error) {
+            //     console.log(error)
+            // }
             // searchEstimateRequestsInput(requests)
-            setEstimateRequests(requests)
+            // setEstimateRequests(requests)
+            getQuoteRequests();
         } else {
             let { data: qrSearchResult, error } = await supabase
                 .from('quote_request')
