@@ -5,6 +5,7 @@ import { Card, EditEstimateRequestForm, DeleteAlertDialog, NewEstimateRequestFor
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
+import formatPhoneNumber from '../../utils/formatPhoneNumber';
 
 const EstimateRequests = () => {
     // Chakra UI Modal
@@ -18,9 +19,11 @@ const EstimateRequests = () => {
     // React Use State to store data from API requests
     const [estimateRequests, setEstimateRequests] = useState(null);
     const [searchEstimateRequestsInput, setSearchEstimateRequestsInput] = useState('');
-    const [selectedEstimateRequestObject, setSelectedEstimateRequestObject] = useState({ id: '', est_request_status_id: '', requested_date: '', service_type_id: '', streetAddress: '', city: '', state: '', zipcode: '', firstName: '', lastName: '', email: '' })
+    const [selectedEstimateRequestObject, setSelectedEstimateRequestObject] = useState({ id: '', est_request_status_id: '', requested_date: '', service_type_id: '', streetAddress: '', city: '', state: '', zipcode: '', firstName: '', lastName: '', email: '', customer_typeID: '', phone_number: '' })
     const [selectedEstimateRequestId, setSelectedEstimateRequestId] = useState('');
     const [selectedEstimateRequestNumber, setSelectedEstimateRequestNumber] = useState('');
+
+    const [inputValue, SetInputValue] = useState("");
 
     //Chakra UI styling parameters
     const bg = useColorModeValue('white', 'gray.800');
@@ -154,7 +157,7 @@ const EstimateRequests = () => {
     //Handles edit data 
     const handleEdit = (estimate_request) => {
         // setSelectedEstimateRequestObject(estimate_request);
-        setSelectedEstimateRequestObject({ id: estimate_request.id, est_request_status_id: estimate_request.est_request_status_id, requested_date: estimate_request.requested_date, service_type_id: estimate_request.service_type_id, streetAddress: estimate_request.streetAddress, city: estimate_request.city, state: estimate_request.state, zipcode: estimate_request.zipcode, firstName: estimate_request.firstName, lastName: estimate_request.lastName, email: estimate_request.email });
+        setSelectedEstimateRequestObject({ id: estimate_request.id, est_request_status_id: estimate_request.est_request_status_id, customer_typeID: estimate_request.customer_typeID, requested_date: estimate_request.requested_date, service_type_id: estimate_request.service_type_id, streetAddress: estimate_request.streetAddress, city: estimate_request.city, state: estimate_request.state, zipcode: estimate_request.zipcode, firstName: estimate_request.firstName, lastName: estimate_request.lastName, email: estimate_request.email, phone_number: estimate_request.phone_number });
         onEditOpen();
     }
 
@@ -187,6 +190,7 @@ const EstimateRequests = () => {
                 zipcode: selectedEstimateRequestObject.zipcode,
                 email: selectedEstimateRequestObject.email,
                 phone_number: selectedEstimateRequestObject.phone_number,
+                customer_typeID: selectedEstimateRequestObject.customer_typeID,
                 updated_at: new Date()
             })
             .eq('id', selectedEstimateRequestObject.id)
@@ -290,7 +294,7 @@ const EstimateRequests = () => {
                                         <Td textAlign={'center'}>{request.est_request_status_id === 1 ? <><Text textColor={'white'} bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></> : '' || request.est_request_status_id === 2 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Scheduled</Text></> : '' || request.est_request_status_id === 5 ? <><Text textColor={'white'} bg={'red.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Closed</Text></> : '' || request.est_request_status_id === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Pending</Text></> : ''}</Td>
                                         <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
                                         <Td><Text>{handleSQLFormatDate(request.requested_date)}</Text></Td>
-                                        <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td>
+                                        <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'purple.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td>
                                         <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
                                         <Td><Text>{request.email}</Text></Td>
                                         <Td><Text>{request.phone_number ? request.phone_number : 'Not Available ❌'}</Text></Td>

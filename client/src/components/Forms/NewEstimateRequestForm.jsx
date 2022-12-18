@@ -13,6 +13,7 @@ const NewEstimateRequestForm = (props) => {
     const [quoteStatuses, setQuoteStatuses] = useState('');
     const [selectedQuoteStatus, setSelectedQuoteStatus] = useState('');
     const [selectedService, setSelectedService] = useState('');
+    const [selectedCustomerType, setSelectedCustomerType] = useState('')
     const [selectedQuoteDate, setSelectedQuoteDate] = useState('');
     const [states, setStates] = useState(null)
     const [selectedState, setSelectedState] = useState('')
@@ -52,8 +53,7 @@ const NewEstimateRequestForm = (props) => {
             city: qrCity,
             state: selectedState,
             zipcode: qrPostalCode,
-            //Add field to form
-            customer_typeID: 1,
+            customer_typeID: selectedCustomerType,
             phone_number: inputValue,
             email: qrClientEmail,
         }])
@@ -61,7 +61,7 @@ const NewEstimateRequestForm = (props) => {
         if(error){
             console.log(error)
         }
-        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState(''); SetInputValue('');
+        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState(''); SetInputValue(''); setSelectedCustomerType('');
         updateQRData();
         toast();
         onClose();
@@ -96,7 +96,7 @@ const NewEstimateRequestForm = (props) => {
 
     //Clear values when cancel button is presses
     const handleCancel = async() => {
-        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState(''); SetInputValue('');
+        setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState(''); SetInputValue(''); setSelectedCustomerType('');
         onClose();
     }
 
@@ -128,6 +128,12 @@ const NewEstimateRequestForm = (props) => {
                         <Input type={'date'} value={selectedQuoteDate} onChange={(e) => setSelectedQuoteDate(e.target.value)}/>
                     </Flex>
                 </Flex>
+                <FormLabel mt={'1rem'}>Customer Type</FormLabel>
+                <Select placeholder='Select Customer Type' value={selectedCustomerType} onChange={(e) => {setSelectedCustomerType(e.target.value)}}>
+                        <option value={1}>Residential</option>
+                        <option value={2}>Commercial</option>
+                        <option value={3}>Other</option>
+                </Select>
                 <FormLabel mt={'1rem'}>Service Type</FormLabel>
                 <Select placeholder='Select Service' value={selectedService} onChange={(e) => {setSelectedService(e.target.value)}}>
                     <ServiceTypeOptions data={qrServiceType}/>

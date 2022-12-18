@@ -30,12 +30,24 @@ const EditEstimateRequestForm = (props) => {
                         <Input name='requested_date' type='date' value={objectData.requested_date} onChange={handleEditOnChange} />
                     </Flex>
                 </Flex>
-                <FormLabel>Service Type</FormLabel>
-                <Select name='service_type_id' value={objectData.service_type_id} onChange={handleEditOnChange}>
-                    <option value={1}>Roof Replacement</option>
-                    <option value={3}>Roof Maintenance</option>
-                    <option value={2}>Roof Repair</option>
-                </Select>
+                <Flex flexDir={'row'} >
+                    <Flex flexDirection={'column'} mr={'1rem'}>
+                            <FormLabel>Customer Type</FormLabel>
+                            <Select name='customer_typeID' value={objectData.customer_typeID} onChange={handleEditOnChange}>
+                                <option value={1}>Residential</option>
+                                <option value={2}>Commercial</option>
+                                <option value={3}>Other</option>
+                            </Select>
+                    </Flex>
+                    <Flex flexDirection={'column'}>
+                        <FormLabel>Service Type</FormLabel>
+                        <Select name='service_type_id' value={objectData.service_type_id} onChange={handleEditOnChange}>
+                            <option value={1}>Roof Replacement</option>
+                            <option value={3}>Roof Maintenance</option>
+                            <option value={2}>Roof Repair</option>
+                        </Select>
+                    </Flex>
+                </Flex>
                 <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Address</Text>
                 <FormControl>
                     <FormLabel htmlFor='city'>Street Address</FormLabel>
@@ -67,8 +79,12 @@ const EditEstimateRequestForm = (props) => {
                     </Flex>
                 </Flex>
                 <FormControl>
-                    <FormLabel htmlFor='city'>Email</FormLabel>
+                    <FormLabel htmlFor='email'>Email</FormLabel>
                     <Input name='email' type={'email'} value={objectData.email} onChange={handleEditOnChange} />
+                </FormControl>
+                <FormControl>
+                <FormLabel htmlFor='phone' mt={'1rem'}>Phone Number</FormLabel>
+                    <Input name='phone_number' type={'tel'} value={objectData.phone_number} onChange={handleEditOnChange} />
                 </FormControl>
                 <Flex pt={'2rem'} justifyContent={'flex-end'}>
                     <Button mx={'1rem'} onClick={handleEditCancel}>Cancel</Button>
