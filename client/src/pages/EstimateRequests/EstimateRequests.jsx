@@ -194,6 +194,10 @@ const EstimateRequests = () => {
                 updated_at: new Date()
             })
             .eq('id', selectedEstimateRequestObject.id)
+            
+        if(error) {
+            console.log(error)
+        }
         onEditClose();
         setSelectedEstimateRequestObject({ id: '', est_request_status_id: '', requested_date: '', service_type_id: '', streetAddress: '', city: '', state: '', zipcode: '', firstName: '', lastName: '', email: '' });
         await getQuoteRequests();
