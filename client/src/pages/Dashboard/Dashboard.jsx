@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border } from "@chakra-ui/react";
+import { Box, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border, SimpleGrid, StatLabel, StatNumber, StatHelpText, StatArrow, Stat, Tabs, TabList, TabPanels, Tab, TabPanel, Icon, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider} from "@chakra-ui/react";
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth'
 import {FcRuler, FcMoneyTransfer, FcConferenceCall, FcDepartment } from 'react-icons/fc'
 import { Card, CustomerCountCard, EstimateRequestCountCard, MonthlyRevenueCard, EstimateCountCard } from '../../components';
+import { FiActivity, FiBarChart2 } from 'react-icons/fi'
 
 const Dashboard = ({children}) => {
     const auth = useAuth()
@@ -32,18 +33,18 @@ const Dashboard = ({children}) => {
 
     const userData = async() => {
         setloggedInUserData(auth.user.user_metadata)
+        console.log(loggedInUserData)
     }
 
 
     return (
             <Flex flexDir='column' px={{base: '1rem', lg: '1rem'}} w={'full'}>
-                <VStack w='full' px={'1rem'}>
+                {/* <VStack w='full' px={'1rem'}>
                     <Stack direction={'row'} justify='flex-start' marginBottom={'1rem'}  w={'full'} spacing='0' mt={'1rem'}>
                         <Stack direction={'column'} spacing='0' mr={'auto'}>
                             <Text fontSize={'3xl'} fontWeight='bold' marginTop='2rem'>Main Dashboard</Text>
                             <Text fontSize='md' color='gray.500'>Rios Roofing Web Application by CoogTech</Text>
                         </Stack>
-                        {/* Profile Card */}
                         <HStack bg={bg} borderColor={borderColor} marginBottom='0rem' spacing='4' shadow='sm' padding='4' rounded='xl' borderWidth='1px'>
                             <Image rounded='full' boxSize='70px' src={`${loggedInUserData.avatar_url}`} alt='user-profile'/>
                             <VStack maxW='full' spacing='0rem' align='start'>
@@ -60,7 +61,126 @@ const Dashboard = ({children}) => {
                         <CustomerCountCard bg={bg} borderColor={borderColor}/>
                     </Stack>
 
-                </VStack>
+                </VStack> */}
+                <Box mt={'1rem'} display={{base: 'none', lg:'block'}}>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Flex justifyContent={'space-between'}>
+                            {/* <Text>{loggedInUserData.email}</Text> */}
+                            <Box></Box>
+                            <Flex>
+                                <Flex flexDir={'column'} mr={'1rem'} textAlign='end' alignItems={'center'}>
+                                    <Text fontSize={'12px'} fontWeight={'bold'} fontFamily={'sans-serif'}>{loggedInUserData.full_name}</Text>
+                                    <Text fontSize={'8px'}>{loggedInUserData.email}</Text>
+                                </Flex>
+                                <Menu>
+                                    <MenuButton flexDir={'row'}>
+                                        <Avatar size={'sm'} src={`${loggedInUserData.avatar_url}`}/>
+                                    </MenuButton>
+                                    <MenuList bg={useColorModeValue('white', 'gray.700' )}>
+                                    <MenuItem>Profile</MenuItem>
+                                    <MenuItem>Settings</MenuItem>
+                                    <MenuDivider />
+                                    <MenuItem onClick={logout}>Sign out</MenuItem>
+                                    </MenuList>
+                                </Menu>
+                            </Flex>
+                        </Flex>
+                    </Card>
+                </Box>
+                <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(250px, 1fr))' pb={'1rem'} pt={{base:'2rem', lg: '1rem'}}>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Stat>
+                            <StatLabel fontWeight={'bold'}>Weekly New QR</StatLabel>
+                            <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                            <StatNumber>10</StatNumber>
+                            <StatHelpText>
+                                <StatArrow type='increase'/>
+                                    5%
+                            </StatHelpText>
+                        </Stat>
+                    </Card>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Stat>
+                            <StatLabel fontWeight={'bold'}>Invoices Overdue</StatLabel>
+                            <Flex bg={'red.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                                <StatNumber>2</StatNumber>
+                                <StatHelpText>
+                                    <StatArrow type='increase' color={'red.500'}/>
+                                        1%
+                                </StatHelpText>
+                        </Stat>
+                    </Card>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Stat>
+                            <StatLabel fontWeight={'bold'}>Pending Quotes</StatLabel>
+                            <Flex bg={'yellow.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                                <StatNumber>12</StatNumber>
+                                <StatHelpText>
+                                    <StatArrow type='increase'/>
+                                        8%
+                                </StatHelpText>
+                        </Stat>
+                    </Card>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Stat>
+                            <StatLabel fontWeight={'bold'}>Montly Revenue</StatLabel>
+                            <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                                <StatNumber>$34,500</StatNumber>
+                                <StatHelpText>
+                                    <StatArrow type='increase'/>
+                                        14%
+                                </StatHelpText>
+                        </Stat>
+                    </Card>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Stat>
+                            <StatLabel fontWeight={'bold'}>New Customers</StatLabel>
+                            <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                                <StatNumber>23</StatNumber>
+                                <StatHelpText>
+                                    <StatArrow type='increase'/>
+                                        32%
+                                </StatHelpText>
+                        </Stat>
+                    </Card>
+                </SimpleGrid>
+                <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(400px, 1fr))' mb={'2rem'}>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Flex alignItems={'center'} mb={'1rem'} ml='8px' >
+                            <Icon as={FiActivity} boxSize={6}/>
+                            <Text ml={'1rem'} fontSize='2xl' fontWeight={'bold'}>Recent Activity</Text>
+                        </Flex>
+                        <Tabs variant={'soft-rounded'} >
+                            <TabList>
+                                <Tab>Quote Request</Tab>
+                                <Tab>Invoices</Tab>
+                                <Tab>Quotes</Tab>
+                            </TabList>
+                            <TabPanels>
+                                <TabPanel>
+                                    <p>Quote Request Data Here!</p>
+                                </TabPanel>
+                                <TabPanel>
+                                    <p>Invoices Data Here!</p>
+                                </TabPanel>
+                                <TabPanel>
+                                    <p>Quotes Data Here!</p>
+                                </TabPanel>
+                            </TabPanels>
+                        </Tabs>
+                        
+                    </Card>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Flex alignItems={'center'} mb={'1rem'} ml='8px' >
+                                <Icon as={FiBarChart2} boxSize={6}/>
+                                <Text ml={'10px'} fontSize='2xl' fontWeight={'bold'}>Revenue</Text>
+                        </Flex>
+                        <Flex>
+                            <Text>Chart goes here</Text>
+                        </Flex>
+
+                    </Card>
+                </SimpleGrid>
             </Flex>
     )
 }
