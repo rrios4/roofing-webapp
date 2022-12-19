@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./client/src/assets/LogoRR-blue-shadow.png" width="80%" height="60%" alt="Banner"><br>
+  <img src="./client/src/assets/LogoRR-blue-shadow.png" width="40%" height="60%" alt="Banner"><br>
 </p>
 <h1 align="center"> Roofing Web App v2.0 </h1>
 <p align="center">
