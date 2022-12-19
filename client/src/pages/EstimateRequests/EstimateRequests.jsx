@@ -249,7 +249,7 @@ const EstimateRequests = () => {
             <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getQuoteRequests} toast={handleNewToast} />
             <EditEstimateRequestForm initialRef={initialRef} handleSubmit={handleEditSubmit} isOpen={isEditOpen} handleEditCancel={handleEditCancel} objectData={selectedEstimateRequestObject} handleEditOnChange={handleEditChange} />
             <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getQuoteRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'quote_request'} header={`Delete QR # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`} />
-            <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
+            <VStack my={'2rem'} w='100%' mx={'auto'} px={{base: '1rem', lg: '2rem'}}>
                 <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>

@@ -77,8 +77,8 @@ export default function Customers() {
     return (
         <>
             <NewCustomerForm isOpen={isOpen} onClose={onClose} initialRef={initialRef} updateCustomerData={getAllCustomers} />
-            <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
-                <Box display={'flex'} marginBottom={'1rem'} justifyContent='start' w='full'>
+            <VStack my={'2rem'} w='100%' mx={'auto'} px={{base: '1rem', lg: '2rem'}}>
+                <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
                     </Link>
@@ -108,7 +108,7 @@ export default function Customers() {
                                 <Tr>
                                     <Th>Customer</Th>
                                     <Th textAlign={'center'}>Type</Th>
-                                    <Th>Phone Number</Th>
+                                    {isWideVersion && <Th>Phone Number</Th>}
                                     {isWideVersion && <Th>Address</Th>}
                                     {isWideVersion && <Th>Registered Date</Th>}
                                     <Th textAlign={'center'}>Actions</Th>

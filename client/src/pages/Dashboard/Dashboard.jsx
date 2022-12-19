@@ -36,7 +36,7 @@ const Dashboard = ({children}) => {
 
 
     return (
-            <Flex flexDir='column' px={'1rem'} w={'full'}>
+            <Flex flexDir='column' px={{base: '1rem', lg: '1rem'}} w={'full'}>
                 <VStack w='full' px={'1rem'}>
                     <Stack direction={'row'} justify='flex-start' marginBottom={'1rem'}  w={'full'} spacing='0' mt={'1rem'}>
                         <Stack direction={'column'} spacing='0' mr={'auto'}>

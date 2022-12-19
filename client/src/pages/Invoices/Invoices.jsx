@@ -164,7 +164,7 @@ function Invoices() {
 
     return (
         <>  
-        <VStack my={'2rem'} w='100%' mx={'auto'} px='2rem'>
+        <VStack my={'2rem'} w='100%' mx={'auto'} px={{base: '1rem', lg: '2rem'}}>
             {/* <Alert status='success' mb={'1rem'} flexDir={'column'} alignItems={'center'} justifyContent={'center'} textAlign={'center'} height={'200px'} rounded={'8'}>
                 <AlertIcon boxSize='40px' mr={0} />
                 <AlertTitle mt={4} mb={1} fontSize='lg'>Invoice Submitted!</AlertTitle>
