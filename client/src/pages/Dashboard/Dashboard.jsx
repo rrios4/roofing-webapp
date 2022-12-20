@@ -124,23 +124,23 @@ const Dashboard = ({children}) => {
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
-                            <Icon as={FiCreditCard} boxSize={'6'}/>
-                            <StatLabel display={'flex'} fontWeight={'bold'}>Weekly Revenue<Flex bg={'green.400'} rounded='full' w={'1px'} p='1'  my={2} ml='10px'></Flex></StatLabel>
-                                <StatNumber>$34,500</StatNumber>
-                                <StatHelpText>
-                                    <StatArrow type='increase'/>
-                                        14%
-                                </StatHelpText>
-                        </Stat>
-                    </Card>
-                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                        <Stat>
                             <Icon as={FiUsers} boxSize={'6'}/>
                             <StatLabel display={'flex'} fontWeight={'bold'}>New Customers<Flex bg={'green.400'} rounded='full' w={'1px'} p='1'  my={2} ml='10px'></Flex></StatLabel>
                                 <StatNumber>23</StatNumber>
                                 <StatHelpText>
                                     <StatArrow type='increase'/>
                                         32%
+                                </StatHelpText>
+                        </Stat>
+                    </Card>
+                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <Stat>
+                            <Icon as={FiCreditCard} boxSize={'6'}/>
+                            <StatLabel display={'flex'} fontWeight={'bold'}>Weekly Revenue<Flex bg={'green.400'} rounded='full' w={'1px'} p='1'  my={2} ml='10px'></Flex></StatLabel>
+                                <StatNumber>$34,500</StatNumber>
+                                <StatHelpText>
+                                    <StatArrow type='increase'/>
+                                        14%
                                 </StatHelpText>
                         </Stat>
                     </Card>
