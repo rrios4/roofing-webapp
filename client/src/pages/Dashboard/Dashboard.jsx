@@ -6,7 +6,62 @@ import { useAuth } from '../../contexts/auth'
 import {FcRuler, FcMoneyTransfer, FcConferenceCall, FcDepartment } from 'react-icons/fc'
 import { Card, CustomerCountCard, EstimateRequestCountCard, MonthlyRevenueCard, EstimateCountCard } from '../../components';
 import { FiActivity, FiBarChart2, FiUsers, FiInbox, FiGrid, FiFileText, FiMenu, FiCreditCard, FiDollarSign } from 'react-icons/fi';
+import {faker} from '@faker-js/faker';
 import { TbRuler } from "react-icons/tb";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
+export const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: false,
+        text: 'Chart.js Line Chart',
+      },
+    },
+};
+
+const labels = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export const data = {
+    labels,
+    datasets: [
+      {
+        label: '2021',
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 100000 })),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: '2022',
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 100000 })),
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  };
 
 const Dashboard = ({children}) => {
     const auth = useAuth()
@@ -162,10 +217,9 @@ const Dashboard = ({children}) => {
                                 <Icon as={FiBarChart2} boxSize={6}/>
                                 <Text ml={'10px'} fontSize='2xl' fontWeight={'bold'}>Monthly Revenue</Text>
                         </Flex>
-                        <Flex>
-                            <Text>Chart goes here</Text>
+                        <Flex justifyContent={'center'} pb={'1rem'}>
+                            <Line options={options} data={data}/>
                         </Flex>
-
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Flex alignItems={'center'} mb={'1rem'} ml='8px' >
@@ -190,7 +244,6 @@ const Dashboard = ({children}) => {
                                 </TabPanel>
                             </TabPanels>
                         </Tabs>
-                        
                     </Card>
                 </SimpleGrid>
             </Flex>
