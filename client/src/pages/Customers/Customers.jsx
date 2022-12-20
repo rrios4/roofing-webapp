@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Customer, Card, StateOptions, CustomerTypeOptions, NewCustomerForm } from '../../components';
-import { Select, Flex, Box, Text, Button, Input, useBreakpointValue, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner } from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, useBreakpointValue, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Icon, Stack } from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import { IoMdPersonAdd } from 'react-icons/io'
 import { Link } from 'react-router-dom'
-import { MdKeyboardArrowLeft, MdSearch } from 'react-icons/md'
+import { MdKeyboardArrowLeft, MdSearch } from 'react-icons/md';
+import {
+    FiUsers,
+  } from "react-icons/fi";
 
 export default function Customers() {
     //For opening drawer components
@@ -15,7 +18,7 @@ export default function Customers() {
     //const finalRef = React.useRef();
 
     //Style for Card component
-    const bg = useColorModeValue('white', 'gray.800');
+    const bg = useColorModeValue('white', 'gray.700');
     const borderColor = useColorModeValue('gray.200', 'gray.700');
     const buttonColorScheme = useColorModeValue('blue', 'gray');
 
@@ -84,11 +87,12 @@ export default function Customers() {
                     </Link>
                 </Box>
                 <Card width='full' bg={bg} borderColor={borderColor}>
-                    <HStack mt={'1rem'} mb={'2rem'} spacing='auto'>
-                        <Box>
+                    <Stack direction={{base: 'column', lg:'row'}} mt={'1rem'} mb={'2rem'} spacing='auto'>
+                        <Flex alignItems={'center'} ml='24px'>
+                            <Icon as={FiUsers} boxSize={'7'}/>
                             <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Customers</Text>
-                        </Box>
-                        <Box display='flex' pr='1rem' justifyContent={'end'}>
+                        </Flex>
+                        <Box display='flex' pr='1rem' pt={{base: '1rem', lg: '0rem'}} justifyContent={{base:'center', lg: 'normal'}} >
                             <form method='GET' onSubmit={getAllCustomersByName}>
                                 <FormControl>
                                     <Flex flexDir={'row'}>
@@ -100,7 +104,7 @@ export default function Customers() {
                             <Tooltip label={'Create New Customer'}><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='2rem'><IoMdPersonAdd size={'20px'} /></Button></Tooltip>
                         </Box>
 
-                    </HStack>
+                    </Stack>
                     <TableContainer overflow={'auto'}>
                         <Table variant='simple' size={'sm'}>
                             <TableCaption>Total of {customers?.length} customers registered in our system ✌️</TableCaption>

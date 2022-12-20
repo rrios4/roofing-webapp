@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Select, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border } from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border, Icon } from '@chakra-ui/react';
 import { Card, EditEstimateRequestForm, DeleteAlertDialog, NewEstimateRequestForm, NewCustomerForm } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
+import {
+    FiInbox
+  } from "react-icons/fi";
 
 const EstimateRequests = () => {
     // Chakra UI Modal
@@ -26,7 +29,7 @@ const EstimateRequests = () => {
     const [inputValue, SetInputValue] = useState("");
 
     //Chakra UI styling parameters
-    const bg = useColorModeValue('white', 'gray.800');
+    const bg = useColorModeValue('white', 'gray.700');
     const borderColor = useColorModeValue('gray.200', 'gray.700');
     const buttonColorScheme = useColorModeValue('blue', 'gray');
 
@@ -250,16 +253,17 @@ const EstimateRequests = () => {
             <EditEstimateRequestForm initialRef={initialRef} handleSubmit={handleEditSubmit} isOpen={isEditOpen} handleEditCancel={handleEditCancel} objectData={selectedEstimateRequestObject} handleEditOnChange={handleEditChange} />
             <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getQuoteRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'quote_request'} header={`Delete QR # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`} />
             <VStack my={'2rem'} w='100%' mx={'auto'} px={{base: '1rem', lg: '2rem'}}>
-                <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
+                {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
                     </Link>
-                </Box>
+                </Box> */}
                 <Card width='full' bg={bg} borderColor={borderColor}>
                     <HStack mt={'1rem'} mb={'2rem'}>
-                        <Box display={'flex'} mr={'auto'}>
+                        <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
+                            <Icon as={FiInbox} boxSize={'7'}/>
                             <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Quote Requests</Text>
-                        </Box>
+                        </Flex>
                         <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
                             <form method='GET' onSubmit={searchEstimateRequest}>
                                 <FormControl display={'flex'}>

@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth'
 import {FcRuler, FcMoneyTransfer, FcConferenceCall, FcDepartment } from 'react-icons/fc'
 import { Card, CustomerCountCard, EstimateRequestCountCard, MonthlyRevenueCard, EstimateCountCard } from '../../components';
-import { FiActivity, FiBarChart2 } from 'react-icons/fi'
+import { FiActivity, FiBarChart2, FiUsers, FiInbox, FiGrid, FiFileText, FiMenu, FiCreditCard } from 'react-icons/fi';
+import { TbRuler } from "react-icons/tb";
 
 const Dashboard = ({children}) => {
     const auth = useAuth()
@@ -87,11 +88,11 @@ const Dashboard = ({children}) => {
                         </Flex>
                     </Card>
                 </Box>
-                <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(250px, 1fr))' pb={'1rem'} pt={{base:'2rem', lg: '1rem'}}>
+                <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(250px, 2fr))' pb={'1rem'} pt={{base:'2rem', lg: '1rem'}}>
                     <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
-                            <StatLabel fontWeight={'bold'}>Weekly New QR</StatLabel>
-                            <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                            <Icon as={FiInbox} boxSize={'6'}/>
+                            <StatLabel display={'flex'} fontWeight={'bold'}>Weekly New QR    <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
                             <StatNumber>10</StatNumber>
                             <StatHelpText>
                                 <StatArrow type='increase'/>
@@ -101,8 +102,8 @@ const Dashboard = ({children}) => {
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
-                            <StatLabel fontWeight={'bold'}>Invoices Overdue</StatLabel>
-                            <Flex bg={'red.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                            <Icon as={FiFileText} boxSize={'6'}/>
+                            <StatLabel display={'flex'} fontWeight={'bold'}>Invoices Overdue<Flex bg={'red.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
                                 <StatNumber>2</StatNumber>
                                 <StatHelpText>
                                     <StatArrow type='increase' color={'red.500'}/>
@@ -112,8 +113,8 @@ const Dashboard = ({children}) => {
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
-                            <StatLabel fontWeight={'bold'}>Pending Quotes</StatLabel>
-                            <Flex bg={'yellow.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                            <Icon as={TbRuler} boxSize={'6'}/>
+                            <StatLabel display={'flex'} fontWeight={'bold'}>Pending Quotes<Flex bg={'yellow.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
                                 <StatNumber>12</StatNumber>
                                 <StatHelpText>
                                     <StatArrow type='increase'/>
@@ -123,8 +124,8 @@ const Dashboard = ({children}) => {
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
-                            <StatLabel fontWeight={'bold'}>Montly Revenue</StatLabel>
-                            <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
+                            <Icon as={FiCreditCard} boxSize={'6'}/>
+                            <StatLabel display={'flex'} fontWeight={'bold'}>Montly Revenue<Flex bg={'green.400'} rounded='full' w={'1px'} p='1'  my={2} ml='10px'></Flex></StatLabel>
                                 <StatNumber>$34,500</StatNumber>
                                 <StatHelpText>
                                     <StatArrow type='increase'/>
@@ -132,7 +133,7 @@ const Dashboard = ({children}) => {
                                 </StatHelpText>
                         </Stat>
                     </Card>
-                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                    {/* <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
                             <StatLabel fontWeight={'bold'}>New Customers</StatLabel>
                             <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={1}></Flex>
@@ -142,9 +143,9 @@ const Dashboard = ({children}) => {
                                         32%
                                 </StatHelpText>
                         </Stat>
-                    </Card>
+                    </Card> */}
                 </SimpleGrid>
-                <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(400px, 1fr))' mb={'2rem'}>
+                <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(500px, 1fr))' mb={'2rem'}>
                     <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Flex alignItems={'center'} mb={'1rem'} ml='8px' >
                             <Icon as={FiActivity} boxSize={6}/>

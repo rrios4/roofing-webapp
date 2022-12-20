@@ -66,7 +66,7 @@ const Navbar = () => {
         m="0"
         top={{ base: "0", lg: "0" }}
         borderRightWidth="1px"
-        borderRightColor={useColorModeValue("gray.200", "gray.700")}
+        borderRightColor={useColorModeValue("gray.200", "gray.600")}
       >
         <Link to="/">
           <Box
@@ -205,7 +205,7 @@ const Navbar = () => {
         zIndex={"1"}
         justifyContent="space-between"
         borderBottomWidth="1px"
-        borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+        borderBottomColor={useColorModeValue("gray.200", "gray.600")}
       >
         <Flex alignItems={"center"}>
           <IconButton
@@ -372,7 +372,7 @@ const Navbar = () => {
                       _groupHover={{ color: "white" }}
                       as={TbRuler}
                     />
-                    Quote Requests
+                    Quotes
                   </Flex>
                 </Link>
                 <Link to={"/customers"}>

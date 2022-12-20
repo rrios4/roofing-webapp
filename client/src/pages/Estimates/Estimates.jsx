@@ -21,7 +21,7 @@ function Estimates() {
     const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     //Style for Card component
-    const bg = useColorModeValue('white', 'gray.800');
+    const bg = useColorModeValue('white', 'gray.700');
     const borderColor = useColorModeValue('gray.200', 'gray.700');
     const buttonColorScheme = useColorModeValue('blue', 'gray');
 

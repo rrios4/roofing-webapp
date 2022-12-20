@@ -6,14 +6,17 @@ import { useColorModeValue } from "@chakra-ui/react";
 const Layout = (props) => {
   const bg = useColorModeValue('gray.100', 'gray.800')
   return (
-    <Flex bg={bg}>
-        <header>
-            <Navbar/>
-        </header>
-        <Flex w={'full'} minH={'100vh'} pl={{base:'0rem', lg:'6rem'}} mt={{base:'4rem', lg:'0rem'}} justifyContent='center'>
+    <>
+      <header>
+          <Navbar/>
+      </header>
+      <Flex bg={bg} justifyContent={'center'}>
+        <Flex w={'full'} minH={'100vh'} pl={{base:'0rem', lg:'6rem'}} mt={{base:'4rem', lg:'0rem'}} justifyContent='center' maxW={'1440px'}>
             {props.children}
         </Flex>
     </Flex>
+    </>
+  
   )
 }
 
