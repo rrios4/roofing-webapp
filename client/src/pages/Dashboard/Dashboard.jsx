@@ -43,20 +43,20 @@ export const options = {
     },
 };
 
-const labels = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export const data = {
     labels,
     datasets: [
       {
         label: '2021',
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 100000 })),
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 200000 })),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
         label: '2022',
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 100000 })),
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 200000 })),
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },
@@ -143,8 +143,8 @@ const Dashboard = ({children}) => {
                         </Flex>
                     </Card>
                 </Box>
-                <SimpleGrid spacing={4} minChildWidth='170px'  pb={'1rem'} pt={{base:'2rem', lg: '1rem'}}>
-                    <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                <SimpleGrid spacing={4} columns={2} minChildWidth='170px'  pb={'0rem'} pt={{base:'2rem', lg: '1rem'}}>
+                <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
                             <Icon as={FiInbox} boxSize={'6'}/>
                             <StatLabel display={'flex'} fontWeight={'bold'}>Weekly New QR    <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
@@ -188,6 +188,8 @@ const Dashboard = ({children}) => {
                                 </StatHelpText>
                         </Stat>
                     </Card>
+                </SimpleGrid>
+                <SimpleGrid spacing={4} minChildWidth='170px'  pb={'1rem'} pt={{base:'2rem', lg: '1rem'}}>
                     <Card bg={useColorModeValue('white', 'gray.700' )} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
                             <Icon as={FiCreditCard} boxSize={'6'}/>
