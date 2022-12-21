@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, useDisclosure, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border, Input, SimpleGrid, StatLabel, StatNumber, StatHelpText, StatArrow, Stat, Tabs, TabList, TabPanels, Tab, TabPanel, Icon, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, SkeletonCircle, IconButton, AvatarBadge, SkeletonText, Divider, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerBody, DrawerHeader } from "@chakra-ui/react";
+import { Box, useDisclosure, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border, Input, SimpleGrid, StatLabel, StatNumber, StatHelpText, StatArrow, Stat, Tabs, TabList, TabPanels, Tab, TabPanel, Icon, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, SkeletonCircle, IconButton, AvatarBadge, SkeletonText, Divider, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerBody, DrawerHeader, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody } from "@chakra-ui/react";
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth'
@@ -134,10 +134,22 @@ const Dashboard = ({ children }) => {
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Flex justifyContent={'space-between'}>
                             {/* <Text>{loggedInUserData.email}</Text> */}
-                            <Box display={'flex'} alignItems={'center'}><IconButton onClick={onSearchOpen} aria-label='Search database' icon={<FiSearch />} size={'md'} /></Box>
+                            <Box display={'flex'} alignItems={'center'}><IconButton variant={'ghost'} onClick={onSearchOpen} aria-label='Search database' icon={<FiSearch />} size={'md'} /></Box>
                             <Flex>
                                 <Flex alignItems={'center'}>
-                                    <Icon _hover={{ bg: handleHoverBG }} p={'6px'} as={FiBell} mx={'1rem'} boxSize={'8'} rounded={'10px'} />
+                                    <Popover>
+                                        <PopoverTrigger>
+                                            <IconButton variant={'ghost'} icon={<FiBell/>} mx={'10px'} size={'md'}/>
+                                        </PopoverTrigger>
+                                        <PopoverContent>
+                                            <PopoverArrow/>
+                                            <PopoverCloseButton/>
+                                            <PopoverHeader fontWeight={'bold'}><Flex alignItems={'center'}><Icon as={FiBell} mr={'2'}/>Notifications</Flex></PopoverHeader>
+                                            <PopoverBody display={'flex'} justifyContent={'center'}>
+                                                <Text>No Notification!</Text>
+                                            </PopoverBody>
+                                        </PopoverContent>
+                                    </Popover>
                                     <Divider orientation='vertical' px={'10px'} mx={'1px'} />
                                 </Flex>
                                 <Menu>
@@ -151,8 +163,8 @@ const Dashboard = ({ children }) => {
                                     <MenuList bg={useColorModeValue('white', 'gray.700')}>
                                         <MenuItem display={'flex'} flexDir={'column'}>
                                             {loggedInUserData ? <Image boxSize={'3rem'} borderRadius='full' src={loggedInUserData.avatar_url} /> : <SkeletonCircle />}
-                                            <span>{loggedInUserData.full_name}</span>
-                                            <span>{loggedInUserData.email}</span>
+                                            <span>{loggedInUserData ? <Text mt={'2'} fontWeight={'bold'} fontSize={'lg'}>{loggedInUserData.full_name}</Text> : <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2'/>}</span>
+                                            <span>{loggedInUserData ? <Text fontSize={'sm'}>{loggedInUserData.email}</Text> : <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2'/>}</span>
                                         </MenuItem>
                                         <MenuDivider />
                                         <MenuItem>Profile</MenuItem>
