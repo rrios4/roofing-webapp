@@ -10,8 +10,8 @@ const Layout = (props) => {
       <header>
           <Navbar/>
       </header>
-      <Flex bg={bg} justifyContent={'center'}>
-        <Flex w={'full'} minH={'100vh'} pl={{base:'0rem', lg:'6rem'}} mt={{base:'4rem', lg:'0rem'}} justifyContent='center' maxW={'1440px'}>
+      <Flex bg={bg} justifyContent={'center'} pl={{base:'0rem', lg:'6rem'}}>
+        <Flex w={'full'} minH={'100vh'} mt={{base:'4rem', lg:'0rem'}} justifyContent='center' maxW={'1440px'}>
             {props.children}
         </Flex>
     </Flex>

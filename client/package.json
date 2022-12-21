@@ -48,6 +48,6 @@
     ]
   },
   "devDependencies": {
-    " ": "^7.6.0"
+    "@faker-js/faker1": "^7.6.0"
   }
 }
