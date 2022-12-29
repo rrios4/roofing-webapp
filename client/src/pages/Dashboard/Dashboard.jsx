@@ -95,15 +95,6 @@ const Dashboard = ({ children }) => {
         console.log(bg)
     }
 
-    const handleHoverBG = () => {
-        if (bg === 'white') {
-            return 'gray.200'
-        } else {
-            return 'gray.600'
-        }
-    }
-
-
     return (
         <>
             <Flex flexDir='column' px={{ base: '1rem', lg: '1rem' }} w={'full'}>
@@ -153,7 +144,7 @@ const Dashboard = ({ children }) => {
                                     <Divider orientation='vertical' px={'10px'} mx={'1px'} />
                                 </Flex>
                                 <Menu>
-                                    <MenuButton _hover={{ bg: handleHoverBG }} p={1} rounded='10'>
+                                    <MenuButton _hover={{ bg: useColorModeValue('gray.100','gray.600') }} py={1} px={2} rounded='10'>
                                         <Flex flexDir={'row'} alignItems='center'>
                                             {loggedInUserData ? <Avatar size={'sm'} src={`${loggedInUserData.avatar_url}`}><AvatarBadge boxSize='1.25em' bg='green.500' /></Avatar> : <SkeletonCircle size='10' />}
                                             <Flex><Text ml={'10px'} fontSize={'16px'}>Hi,</Text><Text ml={'4px'} fontWeight={'bold'} fontSize={'16px'}>{loggedInUserData ? loggedInUserData.full_name : <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />}</Text></Flex>
