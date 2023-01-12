@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DateTime } from "luxon";
-import { Box, useDisclosure, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border, Input, SimpleGrid, StatLabel, StatNumber, StatHelpText, StatArrow, Stat, Tabs, TabList, TabPanels, Tab, TabPanel, Icon, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, SkeletonCircle, IconButton, AvatarBadge, SkeletonText, Divider, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerBody, DrawerHeader, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody } from "@chakra-ui/react";
+import { Box, useDisclosure, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border, Input, SimpleGrid, StatLabel, StatNumber, StatHelpText, StatArrow, Stat, Tabs, TabList, TabPanels, Tab, TabPanel, Icon, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, SkeletonCircle, IconButton, AvatarBadge, SkeletonText, Divider, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerBody, DrawerHeader, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody, Spinner } from "@chakra-ui/react";
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth'
@@ -21,6 +21,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import supabase from '../../utils/supabaseClient';
 
 ChartJS.register(
     CategoryScale,
@@ -78,6 +79,12 @@ const Dashboard = ({ children }) => {
     const startOfWeek = DateTime.local().startOf("week").toJSDate();
     const endOfWeek = DateTime.local().endOf("week").toJSDate();
 
+    //React states 
+    const [overdueInvoicesCount, setoverdueInvoicesCount] = useState('');
+    const [newQRRequestCount, setNewQRRequestCount] = useState('');
+    const [pendingQuotesCount, setPendingQuotesCount] = useState('');
+    const [totalCustomersCount, setTotalCustomersCount] = useState('')
+
 
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
@@ -85,8 +92,11 @@ const Dashboard = ({ children }) => {
         //     history.push('/login');
         // }
         // console.log(localStorage.getItem('supabase.auth.token'))
-        userData()
-        overdueInvoices();
+        userData();
+        invoicesOverDueCount();
+        qrRequestNewCount();
+        quotesPendingCount();
+        totalCustomers();
     }, []);
 
     const logout = () => {
@@ -102,20 +112,47 @@ const Dashboard = ({ children }) => {
         console.log(bg)
     }
 
-    const overdueInvoices = async() => {
+    const invoicesOverDueCount = async() => {
         console.log(startOfWeek);
-        console.log(endOfWeek)
-        // const invoices = await prisma.invoice.findMany({
-        //     where: {
-        //         invoice_status_id: 1,
-        //         created_at: {
-        //             gte: startOfWeek,
-        //             lt: endOfWeek
-        //         }
-        //     }
-        // });
+        console.log(endOfWeek);
+        // const count = await supabase.sql`
+        //     SELECT COUNT(*)
+        //     FROM invoice
+        //     WHERE status = 1 AND created_at BETWEEN ${startOfWeek} AND ${endOfWeek}
+        // `
+        const { count } = await supabase
+        .from('invoice')
+        .select('*', { count: 'exact' })
+        .eq('invoice_status_id', 4)
 
-        // console.log(invoices)
+        setoverdueInvoicesCount(count)
+    }
+
+    const qrRequestNewCount = async() => {
+        const { count } = await supabase
+        .from('quote_request')
+        .select('*', {count: 'exact'})
+        .eq('est_request_status_id', 1)
+
+        setNewQRRequestCount(count)
+    }
+
+    const quotesPendingCount = async() => {
+        const { count } = await supabase
+        .from('estimate')
+        .select('*', {count: 'exact'})
+        .eq('est_status_id', 4)
+
+        setPendingQuotesCount(count);
+    }
+
+    const totalCustomers = async() => {
+        const { count } = await supabase
+        .from('customer')
+        .select('*', {count: 'exact'})
+
+        setTotalCustomersCount(count);
+
     }
 
     return (
@@ -195,45 +232,45 @@ const Dashboard = ({ children }) => {
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
                             <Icon as={FiInbox} boxSize={'6'} />
-                            <StatLabel display={'flex'} fontWeight={'bold'}>Weekly New QR    <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
-                            <StatNumber>10</StatNumber>
-                            <StatHelpText>
+                            <StatLabel display={'flex'} fontWeight={'bold'}>New QR's    <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
+                            <StatNumber>{newQRRequestCount ? newQRRequestCount: <Spinner speed='0.65s'/>}</StatNumber>
+                            {/* <StatHelpText>
                                 <StatArrow type='increase' />
                                 5%
-                            </StatHelpText>
+                            </StatHelpText> */}
                         </Stat>
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
                             <Icon as={FiFileText} boxSize={'6'} />
                             <StatLabel display={'flex'} fontWeight={'bold'}>Invoices Overdue<Flex bg={'red.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
-                            <StatNumber>2</StatNumber>
-                            <StatHelpText>
+                            <StatNumber>{overdueInvoicesCount ? overdueInvoicesCount : overdueInvoicesCount === 0 ? overdueInvoicesCount : <Spinner speed='0.60s'/> }</StatNumber>
+                            {/* <StatHelpText>
                                 <StatArrow type='increase' color={'red.500'} />
                                 1%
-                            </StatHelpText>
+                            </StatHelpText> */}
                         </Stat>
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
                             <Icon as={TbRuler} boxSize={'6'} />
                             <StatLabel display={'flex'} fontWeight={'bold'}>Pending Quotes<Flex bg={'yellow.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
-                            <StatNumber>12</StatNumber>
-                            <StatHelpText>
+                            <StatNumber>{pendingQuotesCount ? pendingQuotesCount : pendingQuotesCount === 0 ? pendingQuotesCount : <Spinner speed='0.60s'/>}</StatNumber>
+                            {/* <StatHelpText>
                                 <StatArrow type='increase' />
                                 8%
-                            </StatHelpText>
+                            </StatHelpText> */}
                         </Stat>
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
                         <Stat>
                             <Icon as={FiUsers} boxSize={'6'} />
-                            <StatLabel display={'flex'} fontWeight={'bold'}>New Customers<Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
-                            <StatNumber>23</StatNumber>
-                            <StatHelpText>
+                            <StatLabel display={'flex'} fontWeight={'bold'}>Total Customers<Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
+                            <StatNumber>{totalCustomersCount ? totalCustomersCount : totalCustomersCount === 0 ? totalCustomersCount : <Spinner speed='0.60s'/>}</StatNumber>
+                            {/* <StatHelpText>
                                 <StatArrow type='increase' />
                                 32%
-                            </StatHelpText>
+                            </StatHelpText> */}
                         </Stat>
                     </Card>
                 </SimpleGrid>
