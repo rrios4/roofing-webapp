@@ -7,6 +7,7 @@
     "@chakra-ui/react": "^2.4.4",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@prisma/client": "^4.8.1",
     "@supabase/supabase-js": "^1.35.3",
     "axios": "^0.21.1",
     "chart.js": "^4.1.1",
@@ -48,6 +49,7 @@
     ]
   },
   "devDependencies": {
-    "@faker-js/faker1": "^7.6.0"
+    "@faker-js/faker": "^7.6.0",
+    "prisma": "^4.8.1"
   }
 }
