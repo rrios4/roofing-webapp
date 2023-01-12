@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { DateTime } from "luxon";
 import { Box, useDisclosure, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border, Input, SimpleGrid, StatLabel, StatNumber, StatHelpText, StatArrow, Stat, Tabs, TabList, TabPanels, Tab, TabPanel, Icon, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, SkeletonCircle, IconButton, AvatarBadge, SkeletonText, Divider, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerBody, DrawerHeader, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody } from "@chakra-ui/react";
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -73,6 +74,11 @@ const Dashboard = ({ children }) => {
     const [loggedInUserData, setloggedInUserData] = useState('');
     const { isOpen: isSearchOpen, onOpen: onSearchOpen, onClose: onSearchClose } = useDisclosure();
 
+    //Luxon date to make it easier to query conditions using date for DB
+    const startOfWeek = DateTime.local().startOf("week").toJSDate();
+    const endOfWeek = DateTime.local().endOf("week").toJSDate();
+
+
     useEffect(() => {
         // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
         // if (!localStorage.getItem('supabase.auth.token')) {
@@ -80,6 +86,7 @@ const Dashboard = ({ children }) => {
         // }
         // console.log(localStorage.getItem('supabase.auth.token'))
         userData()
+        overdueInvoices();
     }, []);
 
     const logout = () => {
@@ -93,6 +100,22 @@ const Dashboard = ({ children }) => {
         setloggedInUserData(auth.user.user_metadata)
         console.log(loggedInUserData)
         console.log(bg)
+    }
+
+    const overdueInvoices = async() => {
+        console.log(startOfWeek);
+        console.log(endOfWeek)
+        // const invoices = await prisma.invoice.findMany({
+        //     where: {
+        //         invoice_status_id: 1,
+        //         created_at: {
+        //             gte: startOfWeek,
+        //             lt: endOfWeek
+        //         }
+        //     }
+        // });
+
+        // console.log(invoices)
     }
 
     return (
