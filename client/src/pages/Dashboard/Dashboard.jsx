@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { DateTime } from "luxon";
-import { Box, useDisclosure, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border, Input, SimpleGrid, StatLabel, StatNumber, StatHelpText, StatArrow, Stat, Tabs, TabList, TabPanels, Tab, TabPanel, Icon, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, SkeletonCircle, IconButton, AvatarBadge, SkeletonText, Divider, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerBody, DrawerHeader, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody, Spinner } from "@chakra-ui/react";
+import { Box, useDisclosure, Flex, Text, Grid, Button, Image, VStack, HStack, Stack, useColorModeValue, border, Input, SimpleGrid, StatLabel, StatNumber, StatHelpText, StatArrow, Stat, Tabs, TabList, TabPanels, Tab, TabPanel, Icon, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, SkeletonCircle, IconButton, AvatarBadge, SkeletonText, Divider, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerBody, DrawerHeader, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody, Spinner, Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer, Skeleton } from "@chakra-ui/react";
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth'
 import { FcRuler, FcMoneyTransfer, FcConferenceCall, FcDepartment, FcGallery } from 'react-icons/fc'
 import { Card, CustomerCountCard, EstimateRequestCountCard, MonthlyRevenueCard, EstimateCountCard } from '../../components';
+import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt, MdToday } from 'react-icons/md';
 import { FiActivity, FiBarChart2, FiUsers, FiInbox, FiGrid, FiFileText, FiMenu, FiCreditCard, FiDollarSign, FiSearch, FiArrowDown, FiBell, FiX } from 'react-icons/fi';
 import { BsChevronDown } from 'react-icons/bs'
 import { faker } from '@faker-js/faker';
@@ -80,6 +81,7 @@ const Dashboard = ({ children }) => {
     const endOfWeek = DateTime.local().endOf("week").toJSDate();
 
     //React states 
+    const [quoteRequestsRecentData, setQuoteRequestsRecentData] = useState('')
     const [overdueInvoicesCount, setoverdueInvoicesCount] = useState('');
     const [newQRRequestCount, setNewQRRequestCount] = useState('');
     const [pendingQuotesCount, setPendingQuotesCount] = useState('');
@@ -93,6 +95,7 @@ const Dashboard = ({ children }) => {
         // }
         // console.log(localStorage.getItem('supabase.auth.token'))
         userData();
+        getRecentQR();
         invoicesOverDueCount();
         qrRequestNewCount();
         quotesPendingCount();
@@ -153,6 +156,19 @@ const Dashboard = ({ children }) => {
 
         setTotalCustomersCount(count);
 
+    }
+
+    const getRecentQR = async() => {
+        const { data, error } = await supabase
+        .from('quote_request')
+        .select('id, est_request_status_id, service_type_id, firstName, lastName')
+        .order('updated_at', { ascending: false})
+        .limit(4)
+
+        if(error){
+            console.log(error)
+        }
+        setQuoteRequestsRecentData(data);
     }
 
     return (
@@ -230,48 +246,56 @@ const Dashboard = ({ children }) => {
                 </Box>
                 <SimpleGrid spacing={4} columns={2} minChildWidth='170px' pb={'0rem'} pt={{ base: '2rem', lg: '1rem' }}>
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                        <Stat>
-                            <Icon as={FiInbox} boxSize={'6'} />
-                            <StatLabel display={'flex'} fontWeight={'bold'}>New QR's    <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
-                            <StatNumber>{newQRRequestCount ? newQRRequestCount: <Spinner speed='0.65s'/>}</StatNumber>
-                            {/* <StatHelpText>
-                                <StatArrow type='increase' />
-                                5%
-                            </StatHelpText> */}
-                        </Stat>
+                        {newQRRequestCount === 0 || newQRRequestCount ? <>
+                            <Stat>
+                                <Icon as={FiInbox} boxSize={'6'} />
+                                <StatLabel display={'flex'} fontWeight={'bold'}>New QR's    <Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
+                                <StatNumber>{newQRRequestCount ? newQRRequestCount: <Spinner speed='0.65s'/>}</StatNumber>
+                                {/* <StatHelpText>
+                                    <StatArrow type='increase' />
+                                    5%
+                                </StatHelpText> */}
+                            </Stat>                        
+                        </> : <Skeleton height={'90px'} rounded={'md'}/>}
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                        <Stat>
-                            <Icon as={FiFileText} boxSize={'6'} />
-                            <StatLabel display={'flex'} fontWeight={'bold'}>Invoices Overdue<Flex bg={'red.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
-                            <StatNumber>{overdueInvoicesCount ? overdueInvoicesCount : overdueInvoicesCount === 0 ? overdueInvoicesCount : <Spinner speed='0.60s'/> }</StatNumber>
-                            {/* <StatHelpText>
-                                <StatArrow type='increase' color={'red.500'} />
-                                1%
-                            </StatHelpText> */}
-                        </Stat>
+                        {overdueInvoicesCount === 0 || overdueInvoicesCount ? <>
+                            <Stat>
+                                <Icon as={FiFileText} boxSize={'6'} />
+                                <StatLabel display={'flex'} fontWeight={'bold'}>Invoices Overdue<Flex bg={'red.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
+                                <StatNumber>{overdueInvoicesCount ? overdueInvoicesCount : overdueInvoicesCount === 0 ? overdueInvoicesCount : <Spinner speed='0.60s'/> }</StatNumber>
+                                {/* <StatHelpText>
+                                    <StatArrow type='increase' color={'red.500'} />
+                                    1%
+                                </StatHelpText> */}
+                            </Stat>
+                        </> : <Skeleton height={'90px'} rounded={'md'}/>}
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                        <Stat>
-                            <Icon as={TbRuler} boxSize={'6'} />
-                            <StatLabel display={'flex'} fontWeight={'bold'}>Pending Quotes<Flex bg={'yellow.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
-                            <StatNumber>{pendingQuotesCount ? pendingQuotesCount : pendingQuotesCount === 0 ? pendingQuotesCount : <Spinner speed='0.60s'/>}</StatNumber>
-                            {/* <StatHelpText>
-                                <StatArrow type='increase' />
-                                8%
-                            </StatHelpText> */}
-                        </Stat>
+                        {pendingQuotesCount === 0 || pendingQuotesCount ? <>
+                            <Stat>
+                                <Icon as={TbRuler} boxSize={'6'} />
+                                <StatLabel display={'flex'} fontWeight={'bold'}>Pending Quotes<Flex bg={'yellow.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
+                                <StatNumber>{pendingQuotesCount ? pendingQuotesCount : pendingQuotesCount === 0 ? pendingQuotesCount : <Spinner speed='0.60s'/>}</StatNumber>
+                                {/* <StatHelpText>
+                                    <StatArrow type='increase' />
+                                    8%
+                                </StatHelpText> */}
+                            </Stat>
+                        </> : <Skeleton height={'90px'} rounded={'md'}/>}
                     </Card>
                     <Card bg={useColorModeValue('white', 'gray.700')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                        <Stat>
-                            <Icon as={FiUsers} boxSize={'6'} />
-                            <StatLabel display={'flex'} fontWeight={'bold'}>Total Customers<Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
-                            <StatNumber>{totalCustomersCount ? totalCustomersCount : totalCustomersCount === 0 ? totalCustomersCount : <Spinner speed='0.60s'/>}</StatNumber>
-                            {/* <StatHelpText>
-                                <StatArrow type='increase' />
-                                32%
-                            </StatHelpText> */}
-                        </Stat>
+                        {totalCustomersCount === 0 || totalCustomersCount ? <>
+                            <Stat>
+                                <Icon as={FiUsers} boxSize={'6'} />
+                                <StatLabel display={'flex'} fontWeight={'bold'}>Total Customers<Flex bg={'green.400'} rounded='full' w={'1px'} p='1' my={2} ml='10px'></Flex></StatLabel>
+                                <StatNumber>{totalCustomersCount ? totalCustomersCount : totalCustomersCount === 0 ? totalCustomersCount : <Spinner speed='0.60s'/>}</StatNumber>
+                                {/* <StatHelpText>
+                                    <StatArrow type='increase' />
+                                    32%
+                                </StatHelpText> */}
+                            </Stat>
+                        </>: <Skeleton height={'90px'} rounded={'md'}/>}
                     </Card>
                 </SimpleGrid>
                 <SimpleGrid spacing={4} minChildWidth='170px' pb={'1rem'} pt={{ base: '2rem', lg: '1rem' }}>
@@ -315,13 +339,42 @@ const Dashboard = ({ children }) => {
                         </Flex>
                         <Tabs variant={'soft-rounded'} >
                             <TabList>
-                                <Tab>Quote Request</Tab>
-                                <Tab>Invoices</Tab>
+                                <Tab>QR's</Tab>
                                 <Tab>Quotes</Tab>
+                                <Tab>Invoices</Tab>
+                                <Tab>Customers</Tab>
                             </TabList>
                             <TabPanels>
                                 <TabPanel>
-                                    <p>Quote Request Data Here!</p>
+                                    {quoteRequestsRecentData ?
+                                        <TableContainer>
+                                            <Table variant='ghost' size={'sm'}>
+                                                <TableCaption>Recent Quotes Request Updated 👋</TableCaption>
+                                                <Thead>
+                                                <Tr>
+                                                    <Th>QR#</Th>
+                                                    <Th>Status</Th>
+                                                    <Th>Service</Th>
+                                                    <Th>Name</Th>
+                                                    <Th></Th>
+                                                </Tr>
+                                                </Thead>
+                                                <Tbody>
+                                                {quoteRequestsRecentData?.map((item, index) => (
+                                                    <Tr key={item.id}>
+                                                        <Td fontWeight={'bold'}>{item.id}</Td>
+                                                        <Td>{item.est_request_status_id === 1 ? <><Text textColor={'white'} bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></> : '' || item.est_request_status_id === 2 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Scheduled</Text></> : '' || item.est_request_status_id === 5 ? <><Text textColor={'white'} bg={'red.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Closed</Text></> : '' || item.est_request_status_id === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Pending</Text></> : ''}</Td>
+                                                        <Td><Text>{item.service_type_id === 1 ? 'Roof Replacement' : ''}{item.service_type_id === 2 ? 'Roof Leak Repair' : ''}{item.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
+                                                        <Td><Flex><Text>{item.firstName}</Text><Text ml={'5px'}>{item.lastName}</Text></Flex></Td>
+                                                        <Td><Link to={'/estimate-requests'}><Button colorScheme={'gray'} variant={'solid'}><MdKeyboardArrowRight size={'20px'}/></Button></Link></Td>
+                                                        {/* <Td><Link to={`/estimate-request`}><Tooltip label='Go to QR Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td> */}
+                                                    </Tr>
+                                                ))}
+                                                </Tbody>
+                                            </Table>
+                                        </TableContainer>
+                                    : <Skeleton height='300px' rounded={'md'}/>}
+                                
                                 </TabPanel>
                                 <TabPanel>
                                     <p>Invoices Data Here!</p>

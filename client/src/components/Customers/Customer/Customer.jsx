@@ -9,7 +9,7 @@ const Customer = (props) => {
 
   return (
     <>
-      {customers ? customers.map((customer, index) => (
+      {customers?.map((customer, index) => (
         <Tr key={index}>
           <Td>{customer.first_name && customer.last_name ? <><Flex><Avatar size={'sm'} mr={'18px'} my={'auto'} /><Flex flexDir={'column'}><Flex fontWeight={'bold'} fontSize={'md'}><Text marginRight={'4px'}>{customer.first_name}</Text><Text>{customer.last_name}</Text></Flex><Flex mt={'4px'} fontWeight={'light'}>{customer.email}</Flex></Flex></Flex></> : <>{customer.company_name}</>}</Td>
           <Td><Badge padding={'8px'} rounded={'full'} colorScheme={customer.customer_type_id === 1 ? 'blue' : customer.customer_type_id === 2 ? 'green' : customer.customer_type_id === 3 ? 'yellow' : ''} variant={'solid'} ml={'1rem'}>{customer.customer_type_id === 1 ? 'Residential' : customer.customer_type_id === 2 ? 'Commercial' : customer.customer_type_id === 3 ? 'Other' : ''}</Badge></Td>
@@ -18,7 +18,7 @@ const Customer = (props) => {
           {isWideVersion && <Td>{new Date(customer.created_at).toLocaleDateString('en-us', options)}</Td>}
           <Td textAlign={'center'}><Link to={`/editcustomer/${customer.id}`}><Tooltip label='Go to Customer Details '><Button ml={'1rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'} /></Button></Tooltip></Link></Td>
         </Tr>
-      )) : <Tr><Td><Spinner padding={'1rem'} /></Td></Tr>}
+      ))}
     </>
   )
 }

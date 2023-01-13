@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import {Select, Spinner, Box, Flex, useToast, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalHeader, Table, TableContainer, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody} from '@chakra-ui/react';
+import {Select, Spinner, Box, Flex, useToast, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalHeader, Table, TableContainer, Td, ModalCloseButton, HStack, Tooltip, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, VStack, TableCaption, Thead, Tr, Th, Tbody, Skeleton} from '@chakra-ui/react';
 import AsyncSelect from 'react-select/async';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
@@ -185,7 +185,9 @@ function Estimates() {
                         </Box>
                     </HStack>
                     <TableContainer overflow={'auto'}>
-                        <Table variant={'simple'} size='sm'>
+                        {estimates ? 
+                        <>
+                            <Table variant={'simple'} size='sm'>
                                 <TableCaption>Total of {estimates?.length} Quotes in our system ✌️</TableCaption>
                                 <Thead>
                                     <Tr>
@@ -220,7 +222,8 @@ function Estimates() {
 
                                     ))}
                                 </Tbody>
-                        </Table>
+                            </Table>
+                        </> : <Skeleton height={'100px'} rounded={'md'}/>}
                     </TableContainer>
 
 

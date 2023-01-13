@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Customer, Card, StateOptions, CustomerTypeOptions, NewCustomerForm } from '../../components';
-import { Select, Flex, Box, Text, Button, Input, useBreakpointValue, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Icon, Stack } from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, useBreakpointValue, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Icon, Stack, Skeleton } from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
@@ -106,22 +106,24 @@ export default function Customers() {
 
                     </Stack>
                     <TableContainer overflow={'auto'}>
-                        <Table variant='simple' size={'sm'}>
-                            <TableCaption>Total of {customers?.length} customers registered in our system ✌️</TableCaption>
-                            <Thead>
-                                <Tr>
-                                    <Th>Customer</Th>
-                                    <Th textAlign={'center'}>Type</Th>
-                                    {isWideVersion && <Th>Phone Number</Th>}
-                                    {isWideVersion && <Th>Address</Th>}
-                                    {isWideVersion && <Th>Registered Date</Th>}
-                                    <Th textAlign={'center'}>Actions</Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody>
-                                <Customer customers={customers} isWideVersion={isWideVersion} />
-                            </Tbody>
-                        </Table>
+                        {customers ? <>
+                            <Table variant='simple' size={'sm'}>
+                                <TableCaption>Total of {customers?.length} customers registered in our system ✌️</TableCaption>
+                                <Thead>
+                                    <Tr>
+                                        <Th>Customer</Th>
+                                        <Th textAlign={'center'}>Type</Th>
+                                        {isWideVersion && <Th>Phone Number</Th>}
+                                        {isWideVersion && <Th>Address</Th>}
+                                        {isWideVersion && <Th>Registered Date</Th>}
+                                        <Th textAlign={'center'}>Actions</Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    <Customer customers={customers} isWideVersion={isWideVersion} />
+                                </Tbody>
+                            </Table> 
+                        </> : <Skeleton height={'100px'} rounded={'md'}/>}
                     </TableContainer>
                 </Card>
             </VStack>

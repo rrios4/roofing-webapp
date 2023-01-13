@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
 // import { useHistory } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
-import { useColorModeValue, useToast, Box, Flex, FormControl, Input, Button, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay} from '@chakra-ui/react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useColorModeValue, useToast, Box, Flex, FormControl, Input, Button, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Skeleton} from '@chakra-ui/react';
 import axios from 'axios';
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { Card, CustomerOptions, EditInvoiceForm, NewInvoiceForm, Invoice, DeleteAlertDialog } from '../../components';
-import { Link } from 'react-router-dom';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt, MdToday } from 'react-icons/md';
 
 function Invoices() {
@@ -193,7 +192,8 @@ function Invoices() {
                         </Box>
                     </HStack>
                     <TableContainer>
-                        <Table variant={'simple'} size='sm'>
+                        {invoices ? <>
+                            <Table variant={'simple'} size='sm'>
                                 <TableCaption overflowX={'auto'}>Total of {invoices?.length} Invoices in our system ✌️</TableCaption>
                                 <Thead>
                                     <Tr>
@@ -228,7 +228,8 @@ function Invoices() {
 
                                     ))}
                                 </Tbody>
-                        </Table>
+                            </Table>
+                        </> : <Skeleton height={'100px'} rounded={'md'}/>}
                     </TableContainer>
                 </Card> 
                 <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} fetchInvoice={getAllInvoices} toast={toast}/>
