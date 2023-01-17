@@ -139,7 +139,7 @@ export const options = {
     },
     title: {
       display: false,
-      text: "Chart.js Line Chart",
+      text: "Monthly Revenue",
     },
   },
 };
@@ -159,23 +159,23 @@ const labels = [
   "Dec",
 ];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "2021",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 20000 })),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "2022",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 20000 })),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+// export const data = {
+//   labels,
+//   datasets: [
+//     {
+//       label: "2021",
+//       data: labels.map(() => faker.datatype.number({ min: 0, max: 20000 })),
+//       borderColor: "rgb(255, 99, 132)",
+//       backgroundColor: "rgba(255, 99, 132, 0.5)",
+//     },
+//     {
+//       label: "2022",
+//       data: labels.map(() => faker.datatype.number({ min: 0, max: 20000 })),
+//       borderColor: "rgb(53, 162, 235)",
+//       backgroundColor: "rgba(53, 162, 235, 0.5)",
+//     }
+//   ],
+// };
 
 const Dashboard = ({ children }) => {
   const auth = useAuth();
@@ -193,8 +193,14 @@ const Dashboard = ({ children }) => {
   //Luxon date to make it easier to query conditions using date for DB
   const startOfWeek = DateTime.local().startOf("week").toJSDate();
   const endOfWeek = DateTime.local().endOf("week").toJSDate();
+  const currentYear = DateTime.local().year;
+  const lastYear = currentYear - 1;
+  const twoYearsAgo = currentYear - 2;
 
   //React states
+  const [monthlyGraphRevenueDataSet01, setMonthlyGraphRevenueDataSet01] = useState('');
+  const [monthlyGraphRevenueDataSet02, setMonthlyGraphRevenueDataSet02] = useState('');
+  const [monthlyGraphRevenueDataSet03, setMonthlyGraphRevenueDataSet03] = useState('');
   const [quoteRequestsRecentData, setQuoteRequestsRecentData] = useState("");
   const [quotesRecentData, setQuotesRecentData] = useState("");
   const [customerRecentData, setCustomerRecentData] = useState("");
@@ -219,6 +225,9 @@ const Dashboard = ({ children }) => {
     getRecentQuotes();
     getRecentCustomer();
     getRecentInvoices();
+    getMonthlyRevenues();
+    getMonthlyRevenues02();
+    getMonthlyRevenues03();
   }, []);
 
   const logout = () => {
@@ -328,7 +337,66 @@ const Dashboard = ({ children }) => {
       console.log(error);
     }
     setInvoiceRecentData(data);
-    console.log(invoiceRecentData);
+    // console.log(invoiceRecentData);
+  };
+
+  const getMonthlyRevenues = async() => {
+    const { data, error } = await supabase
+    .rpc('get_monthly_invoice_revenue_dataset', { year_input: currentYear})
+
+    if(error){
+      console.log(error)
+    }
+    setMonthlyGraphRevenueDataSet01(data);
+
+    console.log(data)
+
+  }
+
+  const getMonthlyRevenues02 = async() => {
+    const { data, error } = await supabase
+    .rpc('get_monthly_invoice_revenue_dataset', { year_input: lastYear})
+
+    if(error){
+      console.log(error)
+    }
+    setMonthlyGraphRevenueDataSet02(data)
+    console.log(data)
+  }
+
+  const getMonthlyRevenues03 = async() => {
+    const { data, error } = await supabase
+    .rpc('get_monthly_invoice_revenue_dataset', { year_input: twoYearsAgo})
+
+    if(error){
+      console.log(error)
+    }
+    setMonthlyGraphRevenueDataSet03(data)
+    console.log(data)
+  }
+
+  const data = {
+    labels,  
+    datasets: [
+      {
+        label: currentYear,
+        data: labels.map((label, index) => monthlyGraphRevenueDataSet01 ? monthlyGraphRevenueDataSet01[index]?.month_total : 0),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.3)",
+      },
+      {
+        label: lastYear,
+        data: labels.map((label, index) => monthlyGraphRevenueDataSet02 ? monthlyGraphRevenueDataSet02[index]?.month_total : 0),
+        borderColor: "rgba(255, 99, 132, .7)",
+        backgroundColor: "rgba(255, 99, 132, 0.3",
+      },
+      {
+        label: twoYearsAgo,
+        data: labels.map((label, index) => monthlyGraphRevenueDataSet03 ? monthlyGraphRevenueDataSet03[index]?.month_total : 0),
+        borderColor: "rgba(43, 166, 37, 0.7)",
+        backgroundColor: "rgba(59, 225, 51, 0.3)",
+      }
+    ],
   };
 
   return (
