@@ -1,7 +1,0 @@
-id,status_name,description
-1,Active,employee is currently working with the company.
-2,Hold,employee is currently on hold due to personal reasons.
-3,Injured,employee is currently injured and is not able to work at this very monment in time.
-4,Vacation,employee is currently taking time off
-5,Terminated,employee has been fired from the company
-

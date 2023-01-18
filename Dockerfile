@@ -1,11 +1,18 @@
-FROM node:16.13.1
-WORKDIR /usr/app/roofing-app
-COPY client ./client
-COPY server ./server
-WORKDIR /usr/app/roofing-app/client
-RUN npm install
+# FROM nginx:alpine
+# COPY build /usr/share/nginx/html
+
+FROM node:16.13.1 AS build
+WORKDIR /build
+
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+RUN npm ci
+
+COPY public/ public
+COPY src/ src
+COPY .env .
 RUN npm run build
-WORKDIR /usr/app/roofing-app/server
-RUN npm install
-EXPOSE 8081
-CMD [ "node", "app.js" ]
+
+FROM nginx:alpine
+COPY ./etc/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /build/build/ /usr/share/nginx/html
