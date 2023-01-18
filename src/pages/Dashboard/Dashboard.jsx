@@ -808,7 +808,7 @@ const Dashboard = ({ children }) => {
                         : "decrease"
                     }
                   />
-                  {currentMonthRevenuesWithPercentageChange?.percentage_change}%
+                  {currentMonthRevenuesWithPercentageChange?.percentage_change.toFixed(2)}%
                 </StatHelpText>
               </Stat>
             )}
@@ -852,7 +852,7 @@ const Dashboard = ({ children }) => {
                       }
                     />
                     {
-                      currentYearTotalRevenueWithPercentageChange?.percent_change
+                      currentYearTotalRevenueWithPercentageChange?.percent_change.toFixed(2)
                     }
                     %
                   </StatHelpText>
