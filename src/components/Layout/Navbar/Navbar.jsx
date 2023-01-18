@@ -226,7 +226,7 @@ const Navbar = () => {
               <Image
                 p={{ base: "2px", lg: "4px" }}
                 boxSize={{ base: "50px", lg: "90px" }}
-                src="https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true"
+                src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
               />
             </Box>
           </Link>
@@ -292,7 +292,7 @@ const Navbar = () => {
                 <Image
                   p={{ base: "2px", lg: "4px" }}
                   boxSize={{ base: "50px", lg: "90px" }}
-                  src="https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true"
+                  src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
                 />
               </Box>
               <CloseButton display={"flex"} onClick={onNavClose} />
