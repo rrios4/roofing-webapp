@@ -20,13 +20,11 @@
 ## Usage
 This section will include installation intructions, running the app, additional resources, and deployment guides.
 
-</br>
 
 #### 1. Install npm packages for react-app
 ```
   npm install
 ```
-
 
 #### 2. Add .env variables to root of react-app folder
 ```
@@ -40,15 +38,11 @@ This section will include installation intructions, running the app, additional 
 ```
 To allow communication between the client-side and the backend, add the Supabase URL and private key to the .env file by copying them over. Supabase acts as the backend, replacing the need for a separate Node.js server.
 
-</br>
-
 #### 3. Start app from client folder by running this command in the terminal
 ```
   npm start
 ```
 After installing the necessary packages and creating your Supabase instance, including adding the URL and Key, you can start the app by running the command. The application will be available on localhost:3000 and will prompt you to login. The login credentials can be managed in the settings of the Supabase dashboard. To ensure proper functionality, please use the provided schema for the database, including the names and fields as outlined.
-
-</br>
 
 #### 4. Build to docker image for deployment
 ```
@@ -60,15 +54,11 @@ After installing the necessary packages and creating your Supabase instance, inc
 ```
   docker run -p 80:80 my-roofing-app
 ```
-</br>
 
 ## Roadmap
 - [x] Initial release, version 1.0, of the Roofing web application, featuring the ability to effectively store and manage invoices, estimates, and customer information..
 - [ ] Introduce version 2.0 of the Rios Roofing Company web application, featuring a complete rewrite of the React codebase, a redesigned user experience for optimized data management, the ability to handle quote requests, a replacement of Node.js backend with Supabase technology, enhanced customer, invoice, quote and dashboard views for improved reporting capabilities.
 - [ ] Introduce version 2.5 of the Roofing Company web application, featuring a variety of improvements such as the implementation of react-tables for all current basic tables within the app, the ability to generate PDF documents for invoices and quotes, the option to send email directly to customers with just one click, a global search function across quote requests, quotes, invoices, and customers, a customer details page that lists all associated invoices, quotes, and requests, google maps integration for address fields, and the capability to upload images and documents for each quote and invoice.
-
-
-</br>
 
 ## Package List
 
@@ -94,8 +84,6 @@ After installing the necessary packages and creating your Supabase instance, inc
 |     react-select      |  5.4.0   |                           A library for creating select input components in React.                           |
 |      sweetalert       |  2.1.2   |                          A library for creating customizable alerts in JavaScript.                           |
 |      web-vitals       |  2.1.4   |                               A library for measuring web performance metrics.                               |
-
-</br>
 
 ## Contribution
 
