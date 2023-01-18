@@ -210,6 +210,10 @@ const Dashboard = ({ children }) => {
     currentMonthRevenuesWithPercentageChange,
     setCurrentMonthRevenuesWithPercentageChange,
   ] = useState("");
+  const [
+    currentYearTotalRevenueWithPercentageChange,
+    setCurrentYearTotalRevenueWithPercentageChange,
+  ] = useState("");
   const [quoteRequestsRecentData, setQuoteRequestsRecentData] = useState("");
   const [quotesRecentData, setQuotesRecentData] = useState("");
   const [customerRecentData, setCustomerRecentData] = useState("");
@@ -238,6 +242,7 @@ const Dashboard = ({ children }) => {
     getMonthlyRevenues02();
     getMonthlyRevenues03();
     getCurrentMonthRevenuesWithPercentageChange();
+    getCurrentYearTotalRevenueWithPercentageChange();
   }, []);
 
   const logout = () => {
@@ -399,6 +404,18 @@ const Dashboard = ({ children }) => {
     }
     setCurrentMonthRevenuesWithPercentageChange(data[0]);
     // console.log(currentMonthRevenuesWithPercentageChange)
+  };
+
+  const getCurrentYearTotalRevenueWithPercentageChange = async () => {
+    const { data, error } = await supabase.rpc(
+      "get_current_year_total_revenue_with_percent_change"
+    );
+
+    if (error) {
+      console.log(error);
+    }
+    setCurrentYearTotalRevenueWithPercentageChange(data[0]);
+    console.log(data[0]);
   };
 
   const data = {
@@ -769,7 +786,7 @@ const Dashboard = ({ children }) => {
               <Stat>
                 <Icon as={FiCreditCard} boxSize={"6"} />
                 <StatLabel display={"flex"} fontWeight={"bold"}>
-                  {currentMonthAcronym} {currentYear} Revenue
+                  Revenue for {currentMonthAcronym} {currentYear}
                   <Flex
                     bg={"green.400"}
                     rounded="full"
@@ -800,25 +817,48 @@ const Dashboard = ({ children }) => {
             bg={useColorModeValue("white", "gray.700")}
             borderColor={useColorModeValue("gray.200", "gray.700")}
           >
-            <Stat>
-              <Icon as={FiDollarSign} boxSize={"6"} />
-              <StatLabel display={"flex"} fontWeight={"bold"}>
-                Weekly Profits
-                <Flex
-                  bg={"green.400"}
-                  rounded="full"
-                  w={"1px"}
-                  p="1"
-                  my={2}
-                  ml="10px"
-                ></Flex>
-              </StatLabel>
-              <StatNumber>$24,150</StatNumber>
-              <StatHelpText>
-                <StatArrow type="increase" />
-                32%
-              </StatHelpText>
-            </Stat>
+            {!currentYearTotalRevenueWithPercentageChange ? (
+              <>
+                <Skeleton height={"100px"} rounded={"md"} />
+              </>
+            ) : (
+              <>
+                <Stat>
+                  <Icon as={FiDollarSign} boxSize={"6"} />
+                  <StatLabel display={"flex"} fontWeight={"bold"}>
+                    Total Revenue for {currentYear}
+                    <Flex
+                      bg={"green.400"}
+                      rounded="full"
+                      w={"1px"}
+                      p="1"
+                      my={2}
+                      ml="10px"
+                    ></Flex>
+                  </StatLabel>
+                  <StatNumber>
+                    $
+                    {
+                      currentYearTotalRevenueWithPercentageChange?.current_year_revenue
+                    }
+                  </StatNumber>
+                  <StatHelpText>
+                    <StatArrow
+                      type={
+                        currentYearTotalRevenueWithPercentageChange?.percent_change >=
+                        0
+                          ? "increase"
+                          : "decrease"
+                      }
+                    />
+                    {
+                      currentYearTotalRevenueWithPercentageChange?.percent_change
+                    }
+                    %
+                  </StatHelpText>
+                </Stat>
+              </>
+            )}
           </Card>
         </SimpleGrid>
         <SimpleGrid spacing={4} mb={"2rem"} minChildWidth={"420px"}>
