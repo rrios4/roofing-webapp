@@ -191,16 +191,25 @@ const Dashboard = ({ children }) => {
   } = useDisclosure();
 
   //Luxon date to make it easier to query conditions using date for DB
+  const date = DateTime.local();
   const startOfWeek = DateTime.local().startOf("week").toJSDate();
   const endOfWeek = DateTime.local().endOf("week").toJSDate();
   const currentYear = DateTime.local().year;
   const lastYear = currentYear - 1;
   const twoYearsAgo = currentYear - 2;
+  const currentMonthAcronym = date.toFormat("MMM");
 
   //React states
-  const [monthlyGraphRevenueDataSet01, setMonthlyGraphRevenueDataSet01] = useState('');
-  const [monthlyGraphRevenueDataSet02, setMonthlyGraphRevenueDataSet02] = useState('');
-  const [monthlyGraphRevenueDataSet03, setMonthlyGraphRevenueDataSet03] = useState('');
+  const [monthlyGraphRevenueDataSet01, setMonthlyGraphRevenueDataSet01] =
+    useState("");
+  const [monthlyGraphRevenueDataSet02, setMonthlyGraphRevenueDataSet02] =
+    useState("");
+  const [monthlyGraphRevenueDataSet03, setMonthlyGraphRevenueDataSet03] =
+    useState("");
+  const [
+    currentMonthRevenuesWithPercentageChange,
+    setCurrentMonthRevenuesWithPercentageChange,
+  ] = useState("");
   const [quoteRequestsRecentData, setQuoteRequestsRecentData] = useState("");
   const [quotesRecentData, setQuotesRecentData] = useState("");
   const [customerRecentData, setCustomerRecentData] = useState("");
@@ -228,6 +237,7 @@ const Dashboard = ({ children }) => {
     getMonthlyRevenues();
     getMonthlyRevenues02();
     getMonthlyRevenues03();
+    getCurrentMonthRevenuesWithPercentageChange();
   }, []);
 
   const logout = () => {
@@ -340,62 +350,90 @@ const Dashboard = ({ children }) => {
     // console.log(invoiceRecentData);
   };
 
-  const getMonthlyRevenues = async() => {
-    const { data, error } = await supabase
-    .rpc('get_monthly_invoice_revenue_dataset', { year_input: currentYear})
+  const getMonthlyRevenues = async () => {
+    const { data, error } = await supabase.rpc(
+      "get_monthly_invoice_revenue_dataset",
+      { year_input: currentYear }
+    );
 
-    if(error){
-      console.log(error)
+    if (error) {
+      console.log(error);
     }
     setMonthlyGraphRevenueDataSet01(data);
+    // console.log(data)
+  };
 
-    console.log(data)
+  const getMonthlyRevenues02 = async () => {
+    const { data, error } = await supabase.rpc(
+      "get_monthly_invoice_revenue_dataset",
+      { year_input: lastYear }
+    );
 
-  }
-
-  const getMonthlyRevenues02 = async() => {
-    const { data, error } = await supabase
-    .rpc('get_monthly_invoice_revenue_dataset', { year_input: lastYear})
-
-    if(error){
-      console.log(error)
+    if (error) {
+      console.log(error);
     }
-    setMonthlyGraphRevenueDataSet02(data)
-    console.log(data)
-  }
+    setMonthlyGraphRevenueDataSet02(data);
+    // console.log(data)
+  };
 
-  const getMonthlyRevenues03 = async() => {
-    const { data, error } = await supabase
-    .rpc('get_monthly_invoice_revenue_dataset', { year_input: twoYearsAgo})
+  const getMonthlyRevenues03 = async () => {
+    const { data, error } = await supabase.rpc(
+      "get_monthly_invoice_revenue_dataset",
+      { year_input: twoYearsAgo }
+    );
 
-    if(error){
-      console.log(error)
+    if (error) {
+      console.log(error);
     }
-    setMonthlyGraphRevenueDataSet03(data)
-    console.log(data)
-  }
+    setMonthlyGraphRevenueDataSet03(data);
+    // console.log(data)
+  };
+
+  const getCurrentMonthRevenuesWithPercentageChange = async () => {
+    const { data, error } = await supabase.rpc(
+      "get_current_month_revenue_with_percentage_change"
+    );
+
+    if (error) {
+      console.log(error);
+    }
+    setCurrentMonthRevenuesWithPercentageChange(data[0]);
+    // console.log(currentMonthRevenuesWithPercentageChange)
+  };
 
   const data = {
-    labels,  
+    labels,
     datasets: [
       {
         label: currentYear,
-        data: labels.map((label, index) => monthlyGraphRevenueDataSet01 ? monthlyGraphRevenueDataSet01[index]?.month_total : 0),
+        data: labels.map((label, index) =>
+          monthlyGraphRevenueDataSet01
+            ? monthlyGraphRevenueDataSet01[index]?.month_total
+            : 0
+        ),
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.3)",
       },
       {
         label: lastYear,
-        data: labels.map((label, index) => monthlyGraphRevenueDataSet02 ? monthlyGraphRevenueDataSet02[index]?.month_total : 0),
+        data: labels.map((label, index) =>
+          monthlyGraphRevenueDataSet02
+            ? monthlyGraphRevenueDataSet02[index]?.month_total
+            : 0
+        ),
         borderColor: "rgba(255, 99, 132, .7)",
         backgroundColor: "rgba(255, 99, 132, 0.3",
       },
       {
         label: twoYearsAgo,
-        data: labels.map((label, index) => monthlyGraphRevenueDataSet03 ? monthlyGraphRevenueDataSet03[index]?.month_total : 0),
+        data: labels.map((label, index) =>
+          monthlyGraphRevenueDataSet03
+            ? monthlyGraphRevenueDataSet03[index]?.month_total
+            : 0
+        ),
         borderColor: "rgba(43, 166, 37, 0.7)",
         backgroundColor: "rgba(59, 225, 51, 0.3)",
-      }
+      },
     ],
   };
 
@@ -723,25 +761,40 @@ const Dashboard = ({ children }) => {
             bg={useColorModeValue("white", "gray.700")}
             borderColor={useColorModeValue("gray.200", "gray.700")}
           >
-            <Stat>
-              <Icon as={FiCreditCard} boxSize={"6"} />
-              <StatLabel display={"flex"} fontWeight={"bold"}>
-                Weekly Revenue
-                <Flex
-                  bg={"green.400"}
-                  rounded="full"
-                  w={"1px"}
-                  p="1"
-                  my={2}
-                  ml="10px"
-                ></Flex>
-              </StatLabel>
-              <StatNumber>$34,500</StatNumber>
-              <StatHelpText>
-                <StatArrow type="increase" />
-                14%
-              </StatHelpText>
-            </Stat>
+            {!currentMonthRevenuesWithPercentageChange ? (
+              <>
+                <Skeleton height={"100px"} rounded={"md"} />
+              </>
+            ) : (
+              <Stat>
+                <Icon as={FiCreditCard} boxSize={"6"} />
+                <StatLabel display={"flex"} fontWeight={"bold"}>
+                  {currentMonthAcronym} {currentYear} Revenue
+                  <Flex
+                    bg={"green.400"}
+                    rounded="full"
+                    w={"1px"}
+                    p="1"
+                    my={2}
+                    ml="10px"
+                  ></Flex>
+                </StatLabel>
+                <StatNumber>
+                  ${currentMonthRevenuesWithPercentageChange?.monthly_revenue}
+                </StatNumber>
+                <StatHelpText>
+                  <StatArrow
+                    type={
+                      currentMonthRevenuesWithPercentageChange?.percentage_change >=
+                      0
+                        ? "increase"
+                        : "decrease"
+                    }
+                  />
+                  {currentMonthRevenuesWithPercentageChange?.percentage_change}%
+                </StatHelpText>
+              </Stat>
+            )}
           </Card>
           <Card
             bg={useColorModeValue("white", "gray.700")}
