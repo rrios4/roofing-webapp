@@ -1,5 +1,6 @@
 <p align="center">
   <img src="src/assets/LogoRR-blue-shadow.png" width="40%" height="60%" alt="Banner"><br>
+  <!-- <img src="https://github.com/rrios4/portfolio-v2/blob/master/assets/projects/roofingv2-webapp-poster.png?raw=true"/> -->
 </p>
 <h1 align="center"> Roofing Web App v2.0 </h1>
 <p align="center">
@@ -11,6 +12,11 @@
     <a title="Crowdin" target="_blank" href="https://crowdin.com/project/cider-music"><img src="  https://img.shields.io/github/license/rrios4/roofing-webapp"></a>
   <br>
 
+</p>
+
+</br>
+<p align="center">
+  <img src="https://github.com/rrios4/portfolio-v2/blob/master/assets/projects/roofingv2-webapp-poster.png?raw=true"/>
 </p>
 
 ## Overview
