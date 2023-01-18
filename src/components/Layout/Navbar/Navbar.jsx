@@ -91,7 +91,7 @@ const Navbar = () => {
                 mx={{ base: "auto", lg: "auto" }}
                 marginLeft={{ base: "0px", lg: "0" }}
                 boxSize={{ base: "50px", lg: "90px" }}
-                src="https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true"
+                src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
               />
             </Box>
           </Box>

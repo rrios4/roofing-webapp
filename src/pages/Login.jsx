@@ -64,7 +64,7 @@ function Login() {
     >
     <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
       <Stack align={'center'}>
-          <Image w='100px' rounded='full' bg='blue.500' src='https://github.com/rrios4/roofing-webapp/blob/main/client/src/assets/LogoRR.png?raw=true'/>
+          <Image w='100px' rounded='full' bg='blue.500' src='https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true'/>
         <Heading pt='2px' fontSize={'4xl'}>Sign in to your account</Heading>
         <Text fontSize={'lg'} color={'gray.600'}>
           to enjoy all of our cool features ✌️
