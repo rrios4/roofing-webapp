@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast, Container, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react';
+import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast, Container, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Card, CardBody } from '@chakra-ui/react';
 import axios from 'axios';
 import Select from "react-select";
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Card, CustomerDetailsCard, EditCustomerForm } from '../../components'
+import { CustomerDetailsCard, EditCustomerForm } from '../../components'
 import { MdKeyboardArrowLeft, MdLocationOn, MdEmail, MdPhone, MdOutlineDateRange } from 'react-icons/md';
 import {
     FiUsers,
@@ -408,45 +408,50 @@ const CustomerDetails = (props) => {
                     {/* Customer Details Card Info  Component */}
                     <CustomerDetailsCard bg={bg} borderColor={borderColor} onOpen={onEditOpen} deleteCustomer={onDeleteOpen} customer={customer} customerDate={customerDate} />
                     {/* Customer Estimates Card */}
-                    <Card width={'full'} bg={bg} borderColor={borderColor}>
-                        <Accordion allowToggle>
-                            <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
-                                <h2>
-                                    <AccordionButton rounded={'md'}>
-                                        <FiFileText size={'20px'}/>
-                                        <Box as='span' flex='1' textAlign='left' fontWeight={'bold'} fontSize={'md'} ml={'4'}>
-                                            Customer's Invoices
-                                        </Box>
-                                        <AccordionIcon/>
-                                    </AccordionButton>
-                                </h2>
-                                <AccordionPanel pb={4} >
+                    <Card width={'full'} rounded={'xl'}>
+                        <CardBody>
+                            <Accordion allowToggle>
+                                <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
+                                    <h2>
+                                        <AccordionButton rounded={'md'}>
+                                            <FiFileText size={'20px'}/>
+                                            <Box as='span' flex='1' textAlign='left' fontWeight={'bold'} fontSize={'md'} ml={'4'}>
+                                                Customer's Invoices
+                                            </Box>
+                                            <AccordionIcon/>
+                                        </AccordionButton>
+                                    </h2>
+                                    <AccordionPanel pb={4} >
 
-                                </AccordionPanel>
-                            </AccordionItem>
-                        </Accordion>
+                                    </AccordionPanel>
+                                </AccordionItem>
+                            </Accordion>
+                        </CardBody>
                     </Card>
                     {/* Customer Invoices Card */}
-                    <Card width={'full'} bg={bg} borderColor={borderColor}>
-                        <Accordion allowToggle>
-                            <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
-                                <h2>
-                                    <AccordionButton rounded={'md'}>
-                                        <TbRuler size={'20px'}/>
-                                        <Box as='span' flex='1' textAlign='left' fontWeight={'bold'} fontSize={'md'} ml={'4'}>
-                                            Customer's Quotes
-                                        </Box>
-                                        <AccordionIcon/>
-                                    </AccordionButton>
-                                </h2>
-                                <AccordionPanel pb={4} >
+                    <Card w={'full'} rounded={'xl'}>
+                        <CardBody rounded={'xl'}>
+                            <Accordion allowToggle>
+                                <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
+                                    <h2>
+                                        <AccordionButton rounded={'md'}>
+                                            <TbRuler size={'20px'}/>
+                                            <Box as='span' flex='1' textAlign='left' fontWeight={'bold'} fontSize={'md'} ml={'4'}>
+                                                Customer's Quotes
+                                            </Box>
+                                            <AccordionIcon/>
+                                        </AccordionButton>
+                                    </h2>
+                                    <AccordionPanel pb={4} >
 
-                                </AccordionPanel>
-                            </AccordionItem>
-                        </Accordion>
+                                    </AccordionPanel>
+                                </AccordionItem>
+                            </Accordion>
+                        </CardBody>
                     </Card>
                 </VStack>
                 <EditCustomerForm isOpen={isEditOpen} onClose={onEditClose} customer={customer} updateParentState={getAllCustomer} toast={handleCustomerEditToast} />
+
                 {/* Modal to prompt the user that they will be deleting a user */}
                 <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
                     <ModalOverlay />
