@@ -1,5 +1,4 @@
 import React from 'react'
-import CardP from '../../Card/index'
 import { Box, Button, Text, Stack, VStack, HStack, Image, StackDivider, Spinner, Tooltip, Badge, Avatar, Card, CardBody} from '@chakra-ui/react';
 import {  MdLocationOn, MdEmail, MdPhone, MdOutlineDateRange, MdEdit, MdDelete } from 'react-icons/md'
 import { FiMail, FiPhone, FiMapPin, FiCalendar } from 'react-icons/fi'
@@ -13,8 +12,8 @@ const CustomerDetailsCard = (props) => {
     <Card rounded={'xl'} minW={{base: '350px', md: '500', lg: '600px'}}>
         <CardBody padding={'2rem'}>
         <Stack divider={<StackDivider borderColor='gray.200' />} direction={{base: 'column', lg: 'row'}} justifyContent={'center'}>
-            <Box mr={{base: '0rem', lg: '2rem'}} mb={{base: '1rem', lg: '0rem'}} p={{base: '0rem', lg: '0rem'}} mx={{base:'auto', lg: '0'}}>
-                <Box rounded={'full'} w={'128px'} bg='gray.300' h={'128px'}><Avatar rounded={'full'} size={'2xl'} src='https://i.pinimg.com/originals/0b/3d/f1/0b3df19a63dfe264cfd984f6864a77b3.jpg'/></Box>
+            <Box mb={{base: '1rem', lg: '0rem'}} p={{base: '1rem', lg: '0rem'}} mx={{base:'auto', lg: '0'}} >
+                <Box mx={'1rem'} rounded={'full'} w={'128px'} bg='gray.300' h={'128px'}><Avatar rounded={'full'} size={'2xl'} src='https://i.pinimg.com/originals/0b/3d/f1/0b3df19a63dfe264cfd984f6864a77b3.jpg'/></Box>
             </Box>
             <Stack marginLeft={{base: '0rem', lg: '1rem' }} margin={{base:'1'}}>
                 <HStack>
