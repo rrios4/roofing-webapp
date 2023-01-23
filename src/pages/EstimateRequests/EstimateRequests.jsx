@@ -118,7 +118,7 @@ const EstimateRequests = () => {
         toast({
             position: 'top-right',
             title: `QR# ${requestId} updated!`,
-            description: "We've updated quote request for you 🚀",
+            description: "We've updated quote request for you 🎉",
             status: 'success',
             duration: 5000,
             isClosable: true,
@@ -130,7 +130,7 @@ const EstimateRequests = () => {
         toast({
             position: 'top-right',
             title: `Customer already exist!`,
-            description: `${requestId[0].email} email already exist! 🚀`,
+            description: `${requestId[0].email} email already exist! 👮‍♂️`,
             status: 'error',
             duration: 5000,
             isClosable: true
