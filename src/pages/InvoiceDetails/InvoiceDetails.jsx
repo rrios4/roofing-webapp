@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, Container, Card, CardBody, Image, Divider, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Tooltip, Avatar} from '@chakra-ui/react';
+import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, Container, Card, CardBody, Image, Divider, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Tooltip, Avatar, Accordion, Skeleton} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 // import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -8,11 +8,13 @@ import swal from 'sweetalert';
 import {ChevronLeftIcon} from '@chakra-ui/icons'
 import { FiArrowLeft, FiMoreHorizontal, FiLin, FiShare2, FiUploadCloud, FiPaperclip, FiSend, FiClock, FiAlignLeft, FiCircle } from 'react-icons/fi'
 import { MdOutlinePayments } from 'react-icons/md'
+import supabase from '../../utils/supabaseClient';
 
 const InvoiceDetails = (props) => { 
     
     // React States
-    const [invoice, setInvoice] = useState('');
+    const [invoice, setInvoice] = useState();
+    const [invoicePayments, setInvoicePayments] = useState();
     const [customer, setCustomer] = useState('');
     const [cuStatus, setCuStatus] = useState('');
     const [jobType, setJobType] = useState('');
@@ -33,7 +35,8 @@ const InvoiceDetails = (props) => {
 
     //React functions
     useEffect(() => {
-        getInvoiceById();
+        getInvoiceDetailsById()
+        getAllInvoicePayments()
     }, []);
 
     // functions created by me to get what I need of data
@@ -166,15 +169,42 @@ const InvoiceDetails = (props) => {
         })
         .catch(error => console.error(`Error: ${error}`));
     };
+
+    // Function that call the supabase DB to get invoice info
+    const getInvoiceDetailsById = async() => {
+        const { data, error } = await supabase
+        .from('invoice')
+        .select('*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)')
+        .eq('invoice_number', `${id}`)
+
+        if(error){
+            console.log(error)
+        }
+        setInvoice(data[0])
+        // console.log(invoice)
+    }
+
+    const getAllInvoicePayments = async() => {
+        const { data, error } = await supabase
+        .from('payment')
+        .select('amount, payment_method, date_received')
+        .eq('invoice_id', `${id}`)
+
+        if(error){
+            console.log(error)
+        }
+        setInvoicePayments(data)
+        console.log(data)
+    }
     
     
     return (
         <Container maxW={'1400px'} pt={'2rem'} pb={'4rem'}>
             {/* Header */}
-            <Flex justify={'space-between'} mb={'1rem'} flexDir={{base: 'column', lg: 'row'}}>
-                <Flex px={'1rem'} gap={4} mb={{base: '1rem', lg: '0'}}>
+            <Flex justify={'space-between'} mb={'1rem'} flexDir={{base: 'row', lg: 'row'}}>
+                <Flex px={'1rem'} gap={4} mb={{base: '0rem', lg: '0'}}>
                     <Button variant={'outline'} borderColor={'gray.300'}><FiArrowLeft/></Button>
-                    <Text my={'auto'} fontSize={'xl'} fontWeight={'bold'}>INV #{id}</Text>
+                    {/* <Text my={'auto'} fontSize={'xl'} fontWeight={'bold'}>INV #{id}</Text> */}
                 </Flex>
                 <Flex px={'1rem'} gap={4} ml={{base: 'auto', lg: '0'}}>
                     <Tooltip hasArrow label="More"><Button variant={'outline'} borderColor={'gray.300'}><FiMoreHorizontal/></Button></Tooltip>
@@ -195,22 +225,32 @@ const InvoiceDetails = (props) => {
                             <Flex px={'2rem'} pb='3rem'>
                                 <Image src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true" maxW={'70px'} p={'1'} bg={'blue.500'} rounded={'2xl'}/>
                                 <Box ml={'2rem'}>
-                                    <Text fontWeight={'semibold'} fontSize={'3xl'} letterSpacing={'1px'}>Invoice 00{id}</Text>
-                                    <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'gray.500'}>Due January 28, 2023</Text>
+                                    <Text fontWeight={'semibold'} fontSize={'3xl'} letterSpacing={'0px'}>Invoice <Text as={'span'} color={'blue.400'}>#</Text> {id}</Text>
+                                    <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'gray.500'}>Due {invoice?.due_date}</Text>
                                 </Box>
                             </Flex>
-                            <Box px={'2rem'} mb={'3rem'}>
+                            <Box  px={'2rem'} mb={'3rem'}>
                                 <Flex mb={'1rem'}>
                                     <Text w='50px' fontWeight={'bold'} textColor={'gray.500'}>To</Text>
-                                    <Text ml={'3rem'}>Osman Quinteros, oaq123@gmail.com</Text>
+                                    <Box>
+                                        <Text ml={'3rem'} fontWeight={'semibold'}>Osman Quinteros</Text>
+                                        <Text ml={'3rem'}>{invoice?.bill_to_street_address}</Text>
+                                        <Text ml={'3rem'}>{invoice?.bill_to_city}, {invoice?.bill_to_state} {invoice?.bill_to_zipcode}</Text>
+                                        <Text ml={'3rem'} color={'blue.400'}>oaq123@gmail.com</Text>
+                                    </Box>
                                 </Flex>
                                 <Flex mb={'1rem'}>
                                     <Text w='50px' fontWeight={'bold'} textColor={'gray.500'}>From</Text>
-                                    <Text ml={'3rem'}>Rogelio Rios, riosroofing@gmail.com</Text>
+                                    <Box>
+                                        <Text ml={'3rem'} fontWeight={'semibold'}>Rios Roofing</Text>
+                                        <Text ml={'3rem'}>150 Tallant St</Text>
+                                        <Text ml={'3rem'}>Houston, TX 77076</Text>
+                                        <Text ml={'3rem'} color={'blue.400'}>rroofing@gmail.com</Text>
+                                    </Box>
                                 </Flex>
                                 <Flex>
                                     <Text w='50px' fontWeight={'bold'} textColor={'gray.500'}>Notes</Text>
-                                    <Text ml={'3rem'}>Thank you for your business! 🙂</Text>
+                                    <Text ml={'3rem'}>{invoice?.cust_note}</Text>
                                 </Flex>
                             </Box>
                             <Divider w={'95%'} mx={'auto'}/>
@@ -243,11 +283,11 @@ const InvoiceDetails = (props) => {
                             <Box px={'4rem'} pb='2rem'>
                                 <Flex mb={'2rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'}>Subtotal</Text>
-                                    <Text ml={'auto'} mr={'1rem'}>$40,000</Text>
+                                    <Text ml={'auto'} mr={'1rem'}>${invoice?.subtotal}</Text>
                                 </Flex>
                                 <Flex mb={'2rem'}>
                                     <Text fontWeight={'bold'} fontSize={'xl'}>Amount Due</Text>
-                                    <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'} mr={'1rem'}>$40,000</Text>
+                                    <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'} mr={'1rem'}>${invoice?.total}</Text>
                                 </Flex>
                                 <Flex w={'full'}>
                                     <Button w={'full'}>Add Payment</Button>
@@ -259,37 +299,42 @@ const InvoiceDetails = (props) => {
                 {/* Right Section */}
                 <Flex w={{base:'full', lg:'40%'}} >
                     <Card w={'full'} rounded={'xl'}>
-                        <CardBody>
-                            <Box p={'2rem'}>
+                        <CardBody overflowY={'auto'}>
+                            <Box px={'2rem'} py={'1rem'}>
                                 <Flex alignItems={'center'} gap={3} mb={'1rem'}>
                                     <FiAlignLeft size={'25px'} color='gray'/>
                                     <Text fontSize={'2xl'} fontWeight={'semibold'} color={'gray.500'}>Details</Text>
                                 </Flex>
                                 <Flex justifyContent={'space-between'} mb={'1rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'} my={'auto'}>Status</Text>
-                                    <Badge colorScheme={'red'}  variant={'subtle'} mr={'1rem'} pt={'2px'} maxW={'120px'} rounded={'lg'} px={'8px'}>Outstanding</Badge>
+                                    {!invoice ? <Skeleton height={'20px'}/> : <Badge colorScheme={invoice?.invoice_status.name === 'New' ? 'green' : invoice?.invoice_status.name === 'Sent' ? 'yellow' : invoice?.invoice_status.name === 'Paid' ? 'blue' : invoice?.invoice_status.name === 'Outstanding' ? 'red' : 'purple'}  variant={'subtle'} mr={'1rem'} pt={'2px'} maxW={'120px'} rounded={'lg'} px={'8px'}>{invoice?.invoice_status.name}</Badge>}
                                 </Flex>
                                 <Flex justifyContent={'space-between'} mb={'1rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'}>Service Type</Text>
-                                    <Text mr={'1rem'}>Exterior Siding Installation</Text>
+                                    {!invoice ? <Skeleton height={'20px'}/> : <Text mr={'1rem'}>{invoice?.service_type.name}</Text> }
+                                    {/* <Text mr={'1rem'}>{invoice?.service_type.name}</Text> */}
                                 </Flex>
                                 <Flex justifyContent={'space-between'} mb={'1rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'}>Invoice Date</Text>
-                                    <Text mr={'1rem'}>24 Jan 2023</Text>
+                                    <Text mr={'1rem'}>{invoice?.invoice_date ? invoice?.invoice_date : <Skeleton height={'20px'}/>}</Text>
                                 </Flex>
                                 <Flex justifyContent={'space-between'} mb={'1rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'}>Issue Date</Text>
-                                    <Text mr={'1rem'}>25 Jan 2023</Text>
+                                    <Text mr={'1rem'}>{invoice?.issue_date}</Text>
                                 </Flex>
                                 <Flex justifyContent={'space-between'} mb={'1rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'} my={'auto'}>Customer</Text>
                                     <Flex>
                                         <Button variant={'ghost'}>
                                             <Avatar size={'xs'}/>
-                                            <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>Osman Quinteros</Text>
+                                            {!invoice ? <Skeleton height={'20px'}/> : <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>{invoice?.customer.first_name} {invoice?.customer.last_name}</Text> }
                                         </Button>
                                     </Flex>
                                 </Flex>
+                                <Box>
+                                    <Text fontWeight={'semibold'} textColor={'gray.500'} my={'auto'} mb={'8px'}>Note</Text>
+                                    {!invoice ? <Skeleton height={'20px'}/> : <Text>{invoice.note}</Text>}
+                                </Box>
                             </Box>
                             <Divider w={'95%'} mx={'auto'}/>
                             <Box px={'2rem'} py={'1rem'}>
@@ -297,44 +342,22 @@ const InvoiceDetails = (props) => {
                                     <FiClock size={'25px'} color='gray'/>
                                     <Text fontSize={'2xl'} fontWeight={'semibold'} color={'gray.500'}>Payment History</Text>
                                 </Flex>
-                                <Flex direction={'column'} py={'2rem'} px={'1rem'}>
+                                <Flex direction={'column'} py={'1rem'} px={'8px'}>
                                     {/* Timeline Component */}
-                                    <Flex>
-                                        <Flex direction={'column'} h={'70px'} gap={1}>
-                                            {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
-                                            <FiCircle color='green' size={'15px'} />
-                                            <Divider orientation='vertical' mx={'auto'} bg={"slate.100"}/>
+                                    {invoicePayments?.map((item, index) => (
+                                        <Flex key={index}>
+                                            <Flex direction={'column'} h={'70px'} gap={1}>
+                                                {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
+                                                <FiCircle color='green' size={'15px'} />
+                                                <Divider orientation='vertical' mx={'auto'} bg={"slate.100"}/>
+                                            </Flex>
+                                            <Box ml={'1rem'}>
+                                                <Text fontSize={'sm'} fontWeight={'bold'}>{item.date_received}</Text>
+                                                <Text fontSize={'xs'}>{item.payment_method}</Text>
+                                                <Text fontSize={'xs'} fontWeight={'semibold'}>${item.amount}</Text>
+                                            </Box>
                                         </Flex>
-                                        <Box ml={'1rem'}>
-                                            <Text fontSize={'sm'} fontWeight={'bold'}>Febuary 10, 2023</Text>
-                                            <Text fontSize={'xs'}>Check</Text>
-                                            <Text fontSize={'xs'} fontWeight={'semibold'}>$10,000</Text>
-                                        </Box>
-                                    </Flex>
-                                    <Flex>
-                                        <Flex direction={'column'} h={'70px'} gap={1}>
-                                            {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
-                                            <FiCircle color='green' size={'15px'} />
-                                            <Divider orientation='vertical' mx={'auto'} bg={"slate.100"}/>
-                                        </Flex>
-                                        <Box ml={'1rem'}>
-                                            <Text fontSize={'sm'} fontWeight={'bold'}>Febuary 01, 2023</Text>
-                                            <Text fontSize={'xs'}>Check</Text>
-                                            <Text fontSize={'xs'} fontWeight={'semibold'}>$15,000</Text>
-                                        </Box>
-                                    </Flex>
-                                    <Flex>
-                                        <Flex direction={'column'} h={'70px'} gap={1}>
-                                            {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
-                                            <FiCircle color='green' size={'15px'} />
-                                            <Divider orientation='vertical' mx={'auto'} bg={"slate.100"}/>
-                                        </Flex>
-                                        <Box ml={'1rem'}>
-                                            <Text fontSize={'sm'} fontWeight={'bold'}>January 28, 2023</Text>
-                                            <Text fontSize={'xs'}>Credit Card</Text>
-                                            <Text fontSize={'xs'} fontWeight={'semibold'}>$15,000</Text>
-                                        </Box>
-                                    </Flex>
+                                    ))}
                                 </Flex>
 
                             </Box>
