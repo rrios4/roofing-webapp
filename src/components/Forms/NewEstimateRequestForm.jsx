@@ -111,7 +111,7 @@ const NewEstimateRequestForm = (props) => {
 
 
   return (
-    <DrawerIndex isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef}>
+    <DrawerIndex isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} size="lg">
         <form method='POST' onSubmit={handleSubmit}>
             <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>Quote Request</Text></Text>
             <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Request</Text>

@@ -117,8 +117,10 @@ const NewInvoiceForm = (props) => {
     const newInvoiceNumberLogic = async() => {
     }
 
+    // 
+
   return (
-    <DrawerIndex initialFocusRef={initialRef} isOpen={isNewOpen} onClose={onNewClose} bg={bg}>
+    <DrawerIndex initialFocusRef={initialRef} isOpen={isNewOpen} onClose={onNewClose} bg={bg} size="xl">
         <form method='POST' onSubmit={handleSubmit}>
             <FormControl isRequired>
             <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>Invoice</Text></Text>

@@ -10,7 +10,7 @@ const EditInvoiceForm = (props) => {
 
 
   return (
-    <DrawerIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg}>
+    <DrawerIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg} size="lg">
         <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>INV</Text>-{invoice?.invoice_number}</Text>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Invoice</Text>
         <Flex flexDir={'row'} mb={'1rem'}>

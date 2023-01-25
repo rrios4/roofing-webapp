@@ -76,7 +76,7 @@ const EditCustomerForm = (props) => {
 
 
   return (
-    <DrawerIndex isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+    <DrawerIndex isOpen={isOpen} onOpen={onOpen} onClose={onClose} size="lg">
         <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>Customer</Text></Text>
         <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Contact</Text>
         <form method='PATCH' onSubmit={handleEditSubmit}>

@@ -2,10 +2,10 @@ import React from 'react';
 import { Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton} from '@chakra-ui/react';
 
 const index = (props) => {
-  const { variant, children, onClose, isOpen, onOpen, initialRef, bg } = props
+  const { variant, children, onClose, isOpen, onOpen, initialRef, bg, size } = props
 
   return (
-    <Drawer placement='right' onClose={onClose} isOpen={isOpen} size='md'>
+    <Drawer placement='right' onClose={onClose} isOpen={isOpen} size={size}>
       <DrawerOverlay/>
       <DrawerContent>
       <DrawerCloseButton/>

@@ -82,7 +82,7 @@ const NewCustomerForm = (props) => {
     }
 
     return (
-        <DrawerIndex isOpen={isOpen} onClose={onClose} initialRef={initialRef}>
+        <DrawerIndex isOpen={isOpen} onClose={onClose} initialRef={initialRef} size="lg">
             <form method='POST' onSubmit={handleSubmit}>
                 <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>Customer</Text></Text>
                 <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Description</Text>
