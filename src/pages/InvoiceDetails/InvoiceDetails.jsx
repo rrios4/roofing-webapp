@@ -9,6 +9,7 @@ import {ChevronLeftIcon} from '@chakra-ui/icons'
 import { FiArrowLeft, FiMoreHorizontal, FiLin, FiShare2, FiUploadCloud, FiPaperclip, FiSend, FiClock, FiAlignLeft, FiCircle } from 'react-icons/fi'
 import { MdOutlinePayments } from 'react-icons/md'
 import supabase from '../../utils/supabaseClient';
+import formatMoneyValue from '../../utils/formatMoneyValue';
 
 const InvoiceDetails = (props) => { 
     const bgColorMode = useColorModeValue('gray.100','gray.600')
@@ -291,7 +292,7 @@ const InvoiceDetails = (props) => {
                                                     <Td>{item.description}</Td>
                                                     <Td>{item.qty}</Td>
                                                     <Td>{item.item_rate === true ? item.rate : 'Fixed'}</Td>
-                                                    <Td>{item.amount}</Td>
+                                                    <Td>${formatMoneyValue(item.amount)}</Td>
                                                 </Tr>
                                             ))}
                                         </Tbody>
@@ -301,11 +302,11 @@ const InvoiceDetails = (props) => {
                             <Box px={'4rem'} pb='2rem'>
                                 <Flex mb={'2rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'}>Subtotal</Text>
-                                    <Text ml={'auto'} mr={'1rem'}>${invoice?.subtotal}</Text>
+                                    <Text ml={'auto'} mr={'1rem'}>${formatMoneyValue(invoice?.subtotal)}</Text>
                                 </Flex>
                                 <Flex mb={'2rem'}>
                                     <Text fontWeight={'bold'} fontSize={'xl'}>Amount Due</Text>
-                                    <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'} mr={'1rem'}>${invoice?.total}</Text>
+                                    <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'} mr={'1rem'}>${formatMoneyValue(invoice?.total)}</Text>
                                 </Flex>
                                 <Flex w={'full'}>
                                     <Button w={'full'}>Add Payment</Button>
@@ -372,7 +373,7 @@ const InvoiceDetails = (props) => {
                                             <Box ml={'1rem'}>
                                                 <Text fontSize={'sm'} fontWeight={'bold'}>{item.date_received}</Text>
                                                 <Text fontSize={'xs'}>{item.payment_method}</Text>
-                                                <Text fontSize={'xs'} fontWeight={'semibold'}>${item.amount}</Text>
+                                                <Text fontSize={'xs'} fontWeight={'semibold'}>${formatMoneyValue(item.amount)}</Text>
                                             </Box>
                                         </Flex>
                                     ))}
