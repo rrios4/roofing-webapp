@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, Container, Card, CardBody, Image, Divider, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Tooltip, Avatar, Accordion, Skeleton} from '@chakra-ui/react';
+import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, Container, Card, CardBody, Image, Divider, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Tooltip, Avatar, Accordion, Skeleton, useColorModeValue} from '@chakra-ui/react';
 import { AddIcon } from "@chakra-ui/icons";
 // import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -11,10 +11,12 @@ import { MdOutlinePayments } from 'react-icons/md'
 import supabase from '../../utils/supabaseClient';
 
 const InvoiceDetails = (props) => { 
+    const bgColorMode = useColorModeValue('gray.100','gray.600')
     
     // React States
     const [invoice, setInvoice] = useState();
     const [invoicePayments, setInvoicePayments] = useState();
+    const [invoiceServiceLineItems, setInvoiceServiceLineItems] = useState();
     const [customer, setCustomer] = useState('');
     const [cuStatus, setCuStatus] = useState('');
     const [jobType, setJobType] = useState('');
@@ -37,6 +39,7 @@ const InvoiceDetails = (props) => {
     useEffect(() => {
         getInvoiceDetailsById()
         getAllInvoicePayments()
+        getAllInvoiceServiceLineItems()
     }, []);
 
     // functions created by me to get what I need of data
@@ -184,6 +187,7 @@ const InvoiceDetails = (props) => {
         // console.log(invoice)
     }
 
+    // Get is a list of all payment associated to invoice number
     const getAllInvoicePayments = async() => {
         const { data, error } = await supabase
         .from('payment')
@@ -196,6 +200,21 @@ const InvoiceDetails = (props) => {
         setInvoicePayments(data)
         console.log(data)
     }
+
+    // Get a list of all service line items associated to invoice number
+    const getAllInvoiceServiceLineItems = async() => {
+        const { data, error } = await supabase
+        .from('invoice_line_service')
+        .select('*')
+        .eq('invoice_id', `${id}`)
+
+        if(error){
+            console.log(error)
+        }
+
+        setInvoiceServiceLineItems(data)
+        console.log(data)
+    }
     
     
     return (
@@ -203,12 +222,12 @@ const InvoiceDetails = (props) => {
             {/* Header */}
             <Flex justify={'space-between'} mb={'1rem'} flexDir={{base: 'row', lg: 'row'}}>
                 <Flex px={'1rem'} gap={4} mb={{base: '0rem', lg: '0'}}>
-                    <Button variant={'outline'} borderColor={'gray.300'}><FiArrowLeft/></Button>
+                    <Button borderColor={'gray.300'} colorScheme={'gray'}><FiArrowLeft/></Button>
                     {/* <Text my={'auto'} fontSize={'xl'} fontWeight={'bold'}>INV #{id}</Text> */}
                 </Flex>
                 <Flex px={'1rem'} gap={4} ml={{base: 'auto', lg: '0'}}>
-                    <Tooltip hasArrow label="More"><Button variant={'outline'} borderColor={'gray.300'}><FiMoreHorizontal/></Button></Tooltip>
-                    <Tooltip hasArrow label="Share"><Button colorScheme={'green'}><FiShare2/></Button></Tooltip>
+                    <Tooltip hasArrow label="More"><Button colorScheme={'gray'}><FiMoreHorizontal/></Button></Tooltip>
+                    <Tooltip hasArrow label="Share"><Button colorScheme={'gray'}><FiShare2/></Button></Tooltip>
                     <Tooltip hasArrow label="Send invoice"><Button colorScheme={'blue'} gap={2}><FiSend/>Send invoice</Button></Tooltip>
                 </Flex>
             </Flex>
@@ -233,10 +252,10 @@ const InvoiceDetails = (props) => {
                                 <Flex mb={'1rem'}>
                                     <Text w='50px' fontWeight={'bold'} textColor={'gray.500'}>To</Text>
                                     <Box>
-                                        <Text ml={'3rem'} fontWeight={'semibold'}>Osman Quinteros</Text>
+                                        <Text ml={'3rem'} fontWeight={'semibold'}>{invoice?.customer.first_name} {invoice?.customer.last_name}</Text>
                                         <Text ml={'3rem'}>{invoice?.bill_to_street_address}</Text>
                                         <Text ml={'3rem'}>{invoice?.bill_to_city}, {invoice?.bill_to_state} {invoice?.bill_to_zipcode}</Text>
-                                        <Text ml={'3rem'} color={'blue.400'}>oaq123@gmail.com</Text>
+                                        <Text ml={'3rem'} color={'blue.400'}>{invoice?.customer.email}</Text>
                                     </Box>
                                 </Flex>
                                 <Flex mb={'1rem'}>
@@ -255,27 +274,26 @@ const InvoiceDetails = (props) => {
                             </Box>
                             <Divider w={'95%'} mx={'auto'}/>
                             {/* Line Item Table */}
-                            <Box px={'2rem'} py={'2rem'}>
-                                <TableContainer>
+                            <Box px={'2rem'} py={'2rem'} >
+                                <TableContainer rounded={'xl'}>
                                     <Table variant={'simple'}>
-                                        <Thead>
+                                        <Thead bg={bgColorMode} rounded={'xl'}>
                                             <Tr>
-                                                <Th>Service</Th>
+                                                <Th>Description</Th>
+                                                <Th>Qty</Th>
                                                 <Th>Rate</Th>
                                                 <Th>Amount</Th>
                                             </Tr>
                                         </Thead>
                                         <Tbody>
-                                            <Tr>
-                                                <Td>Labor & Materials for Siding Replacement</Td>
-                                                <Td>Fixed</Td>
-                                                <Td>$30,000</Td>
-                                            </Tr>
-                                            <Tr>
-                                                <Td>Electric Light Labor</Td>
-                                                <Td>Fixed</Td>
-                                                <Td>$10,000</Td>
-                                            </Tr>
+                                            {invoiceServiceLineItems?.map((item, index) => (
+                                                <Tr key={index}>
+                                                    <Td>{item.description}</Td>
+                                                    <Td>{item.qty}</Td>
+                                                    <Td>{item.item_rate === true ? item.rate : 'Fixed'}</Td>
+                                                    <Td>{item.amount}</Td>
+                                                </Tr>
+                                            ))}
                                         </Tbody>
                                     </Table>
                                 </TableContainer>
@@ -310,7 +328,7 @@ const InvoiceDetails = (props) => {
                                     {!invoice ? <Skeleton height={'20px'}/> : <Badge colorScheme={invoice?.invoice_status.name === 'New' ? 'green' : invoice?.invoice_status.name === 'Sent' ? 'yellow' : invoice?.invoice_status.name === 'Paid' ? 'blue' : invoice?.invoice_status.name === 'Outstanding' ? 'red' : 'purple'}  variant={'subtle'} mr={'1rem'} pt={'2px'} maxW={'120px'} rounded={'lg'} px={'8px'}>{invoice?.invoice_status.name}</Badge>}
                                 </Flex>
                                 <Flex justifyContent={'space-between'} mb={'1rem'}>
-                                    <Text fontWeight={'semibold'} textColor={'gray.500'}>Service Type</Text>
+                                    <Text fontWeight={'semibold'} textColor={'gray.500'}>Service</Text>
                                     {!invoice ? <Skeleton height={'20px'}/> : <Text mr={'1rem'}>{invoice?.service_type.name}</Text> }
                                     {/* <Text mr={'1rem'}>{invoice?.service_type.name}</Text> */}
                                 </Flex>

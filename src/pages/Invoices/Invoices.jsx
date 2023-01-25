@@ -21,7 +21,7 @@ function Invoices() {
     //Style for Card component
     const bg = useColorModeValue('white', 'gray.700');
     const borderColor = useColorModeValue('gray.200', 'gray.700');
-    const buttonColorScheme = useColorModeValue('blue', 'gray');
+    const buttonColorScheme = useColorModeValue('gray', 'gray');
 
     //React States to manage data
     const [invoices, getInvoices] = useState(null);
@@ -171,7 +171,7 @@ function Invoices() {
             </Alert> */}
             <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
-                        <Button colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
+                        <Button colorScheme={'gray'} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'}/>}>Back</Button> 
                     </Link>
                 </Box>
                 <Card width='full' bg={bg} borderColor={borderColor}>
