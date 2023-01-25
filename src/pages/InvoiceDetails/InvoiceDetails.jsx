@@ -10,9 +10,10 @@ import { FiArrowLeft, FiMoreHorizontal, FiLin, FiShare2, FiUploadCloud, FiPaperc
 import { MdOutlinePayments } from 'react-icons/md'
 import supabase from '../../utils/supabaseClient';
 import formatMoneyValue from '../../utils/formatMoneyValue';
+import formatNumber from '../../utils/formatNumber';
 
 const InvoiceDetails = (props) => { 
-    const bgColorMode = useColorModeValue('gray.100','gray.600')
+    const bgColorMode = useColorModeValue('gray.100','gray.600');
     
     // React States
     const [invoice, setInvoice] = useState();
@@ -245,7 +246,7 @@ const InvoiceDetails = (props) => {
                             <Flex px={'2rem'} pb='3rem'>
                                 <Image src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true" maxW={'70px'} p={'1'} bg={'blue.500'} rounded={'2xl'}/>
                                 <Box ml={'2rem'}>
-                                    <Text fontWeight={'semibold'} fontSize={'3xl'} letterSpacing={'0px'}>Invoice <Text as={'span'} color={'blue.400'}>#</Text> {id}</Text>
+                                    <Text fontWeight={'semibold'} fontSize={'3xl'} letterSpacing={'0px'}>Invoice <Text as={'span'} color={'blue.400'}>#</Text> {formatNumber(invoice?.id)}</Text>
                                     <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'gray.500'}>Due {invoice?.due_date}</Text>
                                 </Box>
                             </Flex>
@@ -325,25 +326,25 @@ const InvoiceDetails = (props) => {
                                     <FiAlignLeft size={'25px'} color='gray'/>
                                     <Text fontSize={'2xl'} fontWeight={'semibold'} color={'gray.500'}>Details</Text>
                                 </Flex>
-                                <Flex justifyContent={'space-between'} mb={'1rem'}>
-                                    <Text fontWeight={'semibold'} textColor={'gray.500'} my={'auto'}>Status</Text>
+                                <Flex mb={'1rem'}>
+                                    <Text w={'40%'} fontWeight={'semibold'} textColor={'gray.500'} my={'auto'}>Status</Text>
                                     {!invoice ? <Skeleton height={'20px'}/> : <Badge colorScheme={invoice?.invoice_status.name === 'New' ? 'green' : invoice?.invoice_status.name === 'Sent' ? 'yellow' : invoice?.invoice_status.name === 'Paid' ? 'blue' : invoice?.invoice_status.name === 'Overdue' ? 'red' : 'purple'}  variant={'solid'} mr={'1rem'} pt={'2px'} w={'80px'} rounded={'xl'} textAlign={'center'}>{invoice?.invoice_status.name}</Badge>}
                                 </Flex>
-                                <Flex justifyContent={'space-between'} mb={'1rem'}>
-                                    <Text fontWeight={'semibold'} textColor={'gray.500'}>Service</Text>
+                                <Flex mb={'1rem'}>
+                                    <Text w={'40%'} fontWeight={'semibold'} textColor={'gray.500'}>Service</Text>
                                     {!invoice ? <Skeleton height={'20px'}/> : <Text mr={'1rem'}>{invoice?.service_type.name}</Text> }
                                     {/* <Text mr={'1rem'}>{invoice?.service_type.name}</Text> */}
                                 </Flex>
-                                <Flex justifyContent={'space-between'} mb={'1rem'}>
-                                    <Text fontWeight={'semibold'} textColor={'gray.500'}>Invoice Date</Text>
+                                <Flex mb={'1rem'}>
+                                    <Text w={'40%'} fontWeight={'semibold'} textColor={'gray.500'}>Invoice Date</Text>
                                     <Text mr={'1rem'}>{invoice?.invoice_date ? invoice?.invoice_date : <Skeleton height={'20px'}/>}</Text>
                                 </Flex>
-                                <Flex justifyContent={'space-between'} mb={'1rem'}>
-                                    <Text fontWeight={'semibold'} textColor={'gray.500'}>Issue Date</Text>
+                                <Flex   mb={'1rem'}>
+                                    <Text w={'40%'} fontWeight={'semibold'} textColor={'gray.500'}>Issue Date</Text>
                                     <Text mr={'1rem'}>{invoice?.issue_date}</Text>
                                 </Flex>
-                                <Flex justifyContent={'space-between'} mb={'1rem'}>
-                                    <Text fontWeight={'semibold'} textColor={'gray.500'} my={'auto'}>Customer</Text>
+                                <Flex mb={'1rem'}>
+                                    <Text w={'36%'} fontWeight={'semibold'} textColor={'gray.500'} my={'auto'}>Customer</Text>
                                     <Flex>
                                         <Button variant={'ghost'}>
                                             <Avatar size={'xs'}/>
