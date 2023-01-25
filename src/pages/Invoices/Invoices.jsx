@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react';
 // import { useHistory } from "react-router-dom";
 import { useNavigate, Link } from 'react-router-dom';
-import { useColorModeValue, useToast, Box, Flex, FormControl, Input, Button, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Skeleton} from '@chakra-ui/react';
+import { useColorModeValue, useToast, Box, Flex, FormControl, Input, Button, Text, useDisclosure, VStack, TableContainer, Td, Tr, Tooltip, Th, Tbody, TableCaption, Table, Thead, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Skeleton, Avatar, Badge} from '@chakra-ui/react';
 import axios from 'axios';
 import swal from 'sweetalert';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { Card, CustomerOptions, EditInvoiceForm, NewInvoiceForm, Invoice, DeleteAlertDialog } from '../../components';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdKeyboardArrowRight, MdEdit, MdDelete, MdFilterList, MdFilterAlt, MdToday } from 'react-icons/md';
+import formatMoneyValue from '../../utils/formatMoneyValue';
 
 function Invoices() {
     //Defining variables
@@ -199,31 +200,33 @@ function Invoices() {
                                     <Tr>
                                         <Th textAlign={'center'}>Invoice #</Th>
                                         <Th textAlign={'center'}>Status</Th>
-                                        <Th textAlign={'center'}>Service Type</Th>
-                                        <Th textAlign={'center'}>Invoice Date</Th>
-                                        <Th textAlign={'center'}>Issue Date</Th>
-                                        <Th textAlign={'center'}>Due Date</Th>
-                                        <Th textAlign={'center'}>Customer Name</Th>
-                                        <Th textAlign={'center'}>Customer Email</Th>
-                                        <Th textAlign={'center'}>Customer Number</Th>
-                                        <Th textAlign={'center'}>Total</Th>
+                                        <Th>Service</Th>
+                                        <Th>Invoice Date</Th>
+                                        {/* <Th>Issue Date</Th> */}
+                                        <Th>Due Date</Th>
+                                        <Th>Customer</Th>
+                                        {/* <Th>Customer Email</Th> */}
+                                        <Th>Phone Number</Th>
+                                        <Th>Total</Th>
                                         <Th textAlign={'center'}>Actions</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
+                                    {/* Table Row Data Component */}
                                     {invoices?.map((invoice, index) => (
                                         <Tr key={invoice.id}>
                                             <Td textAlign={'center'}><Text fontSize={'md'} fontWeight={'bold'}>{formatNumber(invoice.invoice_number)}</Text></Td>    
-                                            <Td textAlign={'center'}><Text color={'white'} mx={'auto'} bg={invoice.invoice_status.name === 'New' ? 'green.500' : '' || invoice.invoice_status.name === 'Paid' ? 'blue.500' : '' || invoice.invoice_status.name === 'Sent' ? 'yellow.500' : '' || invoice.invoice_status.name === 'Outstanding' ? 'red.500' : ''} p='1' rounded={'xl'} align='center' w={'80px'}>{invoice.invoice_status.name}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{invoice.service_type.name}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{invoice.invoice_date}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{invoice.issue_date ? invoice.issue_date : ''}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{invoice.due_date}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{invoice.customer.first_name}</Text><Text>{invoice.customer.last_name}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{invoice.customer.email}</Text></Td>
-                                            <Td textAlign={'center'}><Text>{invoice.customer.phone_number}</Text></Td>
-                                            <Td textAlign={'center'}><Text>${(invoice.total ? invoice.total : 0).toLocaleString(undefined, {minimumFractionDigits : 2})}</Text></Td>
-                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => {handleEditModal(invoice)}}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={() => {handleDeleteAlert(invoice.id, invoice.invoice_number)}} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.id}`}><Tooltip label='Go to Estimate Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
+                                            <Td textAlign={'center'}><Badge w={'80px'} variant={'solid'} mx={'auto'} colorScheme={invoice.invoice_status.name === 'New' ? 'green' : '' || invoice.invoice_status.name === 'Paid' ? 'blue' : '' || invoice.invoice_status.name === 'Sent' ? 'yellow' : '' || invoice.invoice_status.name === 'Overdue' ? 'red' : ''} p='1' rounded={'xl'} align='center'>{invoice.invoice_status.name}</Badge></Td>
+                                            <Td><Text>{invoice.service_type.name}</Text></Td>
+                                            <Td><Text>{invoice.invoice_date}</Text></Td>
+                                            {/* <Td><Text>{invoice.issue_date ? invoice.issue_date : ''}</Text></Td> */}
+                                            <Td><Text>{invoice.due_date}</Text></Td>
+                                            {/* <Td><Flex>{invoice.customer.first_name} {invoice.customer.last_name}</Flex></Td> */}
+                                            <Td>{invoice.customer.first_name && invoice.customer.last_name ? <><Flex><Link to={`/editcustomer/${invoice.customer.id}`}><Button variant={'ghost'} colorScheme={'facebook'}><Avatar size={'xs'} mr={'8px'} my={'auto'} /><Flex flexDir={'column'}><Flex fontWeight={'bold'} fontSize={'xs'}><Text marginRight={'4px'}>{invoice.customer.first_name}</Text><Text>{invoice.customer.last_name}</Text></Flex><Flex mt={'4px'} fontWeight={'light'} fontSize={'xs'}>{invoice.customer.email}</Flex></Flex></Button></Link></Flex></> : <>{invoice.customer.company_name}</>}</Td>
+                                            {/* <Td><Text>{invoice.customer.email}</Text></Td> */}
+                                            <Td><Text>{invoice.customer.phone_number}</Text></Td>
+                                            <Td><Text>${formatMoneyValue(invoice.total ? invoice.total : 0)}</Text></Td>
+                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => {handleEditModal(invoice)}}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={() => {handleDeleteAlert(invoice.id, invoice.invoice_number)}} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.invoice_number}`}><Tooltip label='Go to Invoice Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
                                     ))}

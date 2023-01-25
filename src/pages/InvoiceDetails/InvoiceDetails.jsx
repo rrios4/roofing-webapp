@@ -319,6 +319,7 @@ const InvoiceDetails = (props) => {
                 <Flex w={{base:'full', lg:'40%'}} >
                     <Card w={'full'} rounded={'xl'}>
                         <CardBody overflowY={'auto'}>
+                            {/* Invoice Extra Details */}
                             <Box px={'2rem'} py={'1rem'}>
                                 <Flex alignItems={'center'} gap={3} mb={'1rem'}>
                                     <FiAlignLeft size={'25px'} color='gray'/>
@@ -326,7 +327,7 @@ const InvoiceDetails = (props) => {
                                 </Flex>
                                 <Flex justifyContent={'space-between'} mb={'1rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'} my={'auto'}>Status</Text>
-                                    {!invoice ? <Skeleton height={'20px'}/> : <Badge colorScheme={invoice?.invoice_status.name === 'New' ? 'green' : invoice?.invoice_status.name === 'Sent' ? 'yellow' : invoice?.invoice_status.name === 'Paid' ? 'blue' : invoice?.invoice_status.name === 'Outstanding' ? 'red' : 'purple'}  variant={'subtle'} mr={'1rem'} pt={'2px'} maxW={'120px'} rounded={'lg'} px={'8px'}>{invoice?.invoice_status.name}</Badge>}
+                                    {!invoice ? <Skeleton height={'20px'}/> : <Badge colorScheme={invoice?.invoice_status.name === 'New' ? 'green' : invoice?.invoice_status.name === 'Sent' ? 'yellow' : invoice?.invoice_status.name === 'Paid' ? 'blue' : invoice?.invoice_status.name === 'Overdue' ? 'red' : 'purple'}  variant={'solid'} mr={'1rem'} pt={'2px'} w={'80px'} rounded={'xl'} textAlign={'center'}>{invoice?.invoice_status.name}</Badge>}
                                 </Flex>
                                 <Flex justifyContent={'space-between'} mb={'1rem'}>
                                     <Text fontWeight={'semibold'} textColor={'gray.500'}>Service</Text>
@@ -356,6 +357,7 @@ const InvoiceDetails = (props) => {
                                 </Box>
                             </Box>
                             <Divider w={'95%'} mx={'auto'}/>
+                            {/* Invoice Payment History */}
                             <Box px={'2rem'} py={'1rem'}>
                             <Flex alignItems={'center'} gap={3} mb={'1rem'}>
                                     <FiClock size={'25px'} color='gray'/>
