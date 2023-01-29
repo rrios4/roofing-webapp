@@ -11,20 +11,46 @@ import {
 } from '@chakra-ui/react';
 
 const DeleteAlertDialog = (props) => {
-    const {header, body, isOpen, onClose, leastDestructiveRef, itemId, itemNumber, tableName, toast, updateParentState} = props
+    const {header, body, isOpen, onClose, leastDestructiveRef, itemId, itemNumber, tableName, toast, errorToast, updateParentState} = props
 
     const deleteItem = async() => {
         const { data, error } = await supabase
         .from(tableName)
         .delete()
-        .eq('id', itemId)
+        .eq('invoice_number', itemNumber)
+
+        if(error){
+            console.log(error)
+            // errorToast(itemNumber, error)
+
+        }
+        await deletePaymentsByInvoiceNumber()
+        await deleteInvoiceLineItems()
+        await updateParentState()
+        onClose()
+        toast(itemNumber)
+    }
+
+    const deletePaymentsByInvoiceNumber = async() => {
+        const { data, error } = await supabase
+        .from('payment')
+        .delete()
+        .eq('invoice_id', itemNumber)
 
         if(error){
             console.log(error)
         }
-        await updateParentState()
-        onClose()
-        toast(itemNumber)
+    }
+
+    const deleteInvoiceLineItems = async() => {
+        const { data, error } = await supabase
+        .from('invoice_line_service')
+        .delete()
+        .eq('invoice_id', itemNumber)
+
+        if(error){
+            console.log(error)
+        }
     }
 
   return (
