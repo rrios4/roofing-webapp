@@ -1,29 +1,39 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, Container, Card, CardBody, Image, Divider, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Tooltip, Avatar, Accordion, Skeleton, useColorModeValue} from '@chakra-ui/react';
-import { AddIcon } from "@chakra-ui/icons";
+import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, Container, Card, CardBody, Image, Divider, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Tooltip, Avatar, Accordion, Skeleton, useColorModeValue, IconButton, useEditableControls, ButtonGroup, Editable, EditablePreview, EditableInput, Menu, MenuButton, MenuList, MenuItem, useToast} from '@chakra-ui/react';
 // import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
-import swal from 'sweetalert';
-import {ChevronLeftIcon} from '@chakra-ui/icons'
-import { FiArrowLeft, FiMoreHorizontal, FiLin, FiShare2, FiUploadCloud, FiPaperclip, FiSend, FiClock, FiAlignLeft, FiCircle, FiCheck } from 'react-icons/fi'
-import { MdOutlinePayments } from 'react-icons/md'
+import { FiArrowLeft, FiBriefcase, FiCalendar, FiMoreHorizontal, FiLin, FiUser, FiShare2, FiUploadCloud, FiPaperclip, FiSend, FiClock, FiAlignLeft, FiCircle, FiCheck, FiX, FiEdit, FiFolder } from 'react-icons/fi'
+import { MdOutlinePayments, MdPendingActions } from 'react-icons/md'
+import { BsChevronDown, BsChevronUp } from 'react-icons/bs'
+import { AiOutlineDown, AiOutlineCheckCircle } from 'react-icons/ai'
+import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
+import { HiStatusOnline } from 'react-icons/hi'
 import supabase from '../../utils/supabaseClient';
 import formatMoneyValue from '../../utils/formatMoneyValue';
 import formatNumber from '../../utils/formatNumber';
+import { DeleteAlertDialog } from '../../components';
+import DeleteInvoiceLineServiceAlertDialog from '../../components/Alerts/DeleteInvoiceLineServiceAlertDialog';
 
 const InvoiceDetails = (props) => { 
+    // Chakra UI states
+    const toast = useToast()
     // Custom color configs for UX elements
     const bgColorMode = useColorModeValue('gray.100','gray.600');
     const bg = useColorModeValue('white', 'gray.800');
     const paymentCardBgColor = useColorModeValue('gray.100', 'gray.600');
     const paymentBorderColor = useColorModeValue('gray.200', 'gray.400');
-    const secondaryTextColor = useColorModeValue('gray.600', 'gray.300')
+    const secondaryTextColor = useColorModeValue('gray.600', 'gray.300');
     
     // React States
     const [invoice, setInvoice] = useState();
     const [invoicePayments, setInvoicePayments] = useState();
     const [invoiceServiceLineItems, setInvoiceServiceLineItems] = useState();
+    const [selectedInvoiceLineService, setSelectedInvoiceLineService] = useState('');
+    const [loadingInvoiceStatusIsOn, setLoadingInvoiceStatusIsOn] = useState(false)
+
+    // React state toggles
+    const [editSwitchIsOn, setEditSwitchIsOn] = useState(false);
 
     // Define variables
     const {id} = useParams();
@@ -32,7 +42,7 @@ const InvoiceDetails = (props) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
 
-    //React functions
+    //React functions to load when component is rendering
     useEffect(() => {
         getInvoiceDetailsById()
         getAllInvoicePayments()
@@ -82,14 +92,56 @@ const InvoiceDetails = (props) => {
         console.log(data)
     }
 
+    // Handle deleting a line item
+    const handleLineItemDelete = async({line_item_id}) => {
+        const { data, error } = await supabase
+        .from('invoice_line_service')
+        
+    }
+
+    // Handle success message toast when invoice has been deleted
+    const handleDeleteToast = (invoice_number) => {
+        toast({
+            position: 'top',
+            title: `Invoice #${invoice_number} deleted! 🚀`,
+            description: "We've deleted invoice for you.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
+    // Handle custom editable controls for line items
+
     // Upcoming functions & changes
     // Function to handle the updating of invoice status but might be done using forms
     // Modal to delete invoice just like in the invoices page
     // Drawer to update invoices such as the invoices page
     
+    // Handle selection from menu item for invoice status
+    const handleInvoiceStatusMenuSelection = async(status_id) => {
+        setLoadingInvoiceStatusIsOn(true)
+        // console.log(status_id)
+        if(status_id === invoice?.invoice_status.id){
+            // Create toast feedback to let user know that they
+            console.log(status_id)
+        } else {
+            const { data, error } = await supabase
+            .from('invoice')
+            .update({invoice_status_id: status_id})
+            .eq('invoice_number', invoice.invoice_number)
+    
+            if(error){
+                console.log(error);
+            }
+            await getInvoiceDetailsById()
+        }
+        setLoadingInvoiceStatusIsOn(false)
+    }
     
     return (
         <Container maxW={'1400px'} pt={'2rem'} pb={'4rem'}>
+            <DeleteInvoiceLineServiceAlertDialog toast={handleDeleteToast} updateParentState={getInvoiceDetailsById}/>
             {/* Header */}
             <Flex justify={'space-between'} mb={'1rem'} flexDir={{base: 'row', lg: 'row'}}>
                 <Flex px={'1rem'} gap={4} mb={{base: '0rem', lg: '0'}}>
@@ -97,6 +149,7 @@ const InvoiceDetails = (props) => {
                     {/* <Text my={'auto'} fontSize={'xl'} fontWeight={'bold'}>INV #{id}</Text> */}
                 </Flex>
                 <Flex px={'1rem'} gap={4} ml={{base: 'auto', lg: '0'}}>
+                    <Tooltip hasArrow label="Edit"><IconButton icon={editSwitchIsOn === true ? <FiX/> :  <FiEdit/> } onClick={() => setEditSwitchIsOn(!editSwitchIsOn)}/></Tooltip>
                     <Tooltip hasArrow label="More"><Button colorScheme={'gray'}><FiMoreHorizontal/></Button></Tooltip>
                     <Tooltip hasArrow label="Share"><Button colorScheme={'gray'}><FiShare2/></Button></Tooltip>
                     <Tooltip hasArrow label="Send invoice"><Button colorScheme={'blue'} gap={2}><FiSend/>Send invoice</Button></Tooltip>
@@ -174,15 +227,18 @@ const InvoiceDetails = (props) => {
                                                     <Th>Qty</Th>
                                                     <Th>Rate</Th>
                                                     <Th>Amount</Th>
+                                                    {editSwitchIsOn === true ? <Th></Th> : <></> }
                                                 </Tr>
                                             </Thead>
                                             <Tbody>
+                                                {/* Table Row Data Component */}
                                                 {invoiceServiceLineItems?.map((item, index) => (
                                                     <Tr key={index}>
-                                                        <Td>{item.description}</Td>
+                                                        <Td whiteSpace="normal" height="auto" blockSize="auto">{item.description}</Td>
                                                         <Td>{item.qty}</Td>
                                                         <Td>{item.item_rate === true ? item.rate : 'Fixed'}</Td>
                                                         <Td>${formatMoneyValue(item.amount)}</Td>
+                                                        {editSwitchIsOn === true ? <Td><IconButton icon={<FiX/>}/></Td> : <></> }
                                                     </Tr>
                                                 ))}
                                             </Tbody>
@@ -192,12 +248,12 @@ const InvoiceDetails = (props) => {
                             </Box>
                             <Box px={'4rem'} pb='2rem'>
                                 <Flex mb={'2rem'} px={4} py={2}>
-                                    <Text fontWeight={'semibold'} textColor={secondaryTextColor}>Subtotal</Text>
-                                    <Text ml={'auto'} mr={'1rem'}>${formatMoneyValue(invoice?.subtotal)}</Text>
+                                    <Text fontWeight={'semibold'} textColor={secondaryTextColor}>Total</Text>
+                                    <Text ml={'auto'} mr={'1rem'}>${formatMoneyValue(invoice?.total)}</Text>
                                 </Flex>
-                                <Flex mb={'2rem'} bg={'blue.500'} color={'white'} px={4} py={2} rounded={'xl'}>
+                                <Flex mb={'2rem'} bg={'blue.500'} color={'white'} px={4} py={4} rounded={'xl'}>
                                     <Text fontWeight={'bold'} fontSize={'xl'}>Amount Due</Text>
-                                    <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'}>${formatMoneyValue(invoice?.total)}</Text>
+                                    <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'}>${formatMoneyValue(invoice?.amount_due)}</Text>
                                 </Flex>
                                 <Flex w={'full'}>
                                     <Button w={'full'}>Add Payment</Button>
@@ -207,7 +263,30 @@ const InvoiceDetails = (props) => {
                     </Card>
                 </Flex>
                 {/* Right Section */}
-                <Flex w={{base:'full', lg:'40%'}} >
+                <Flex w={{base:'full', lg:'40%'}} direction={'column'} gap={4}>
+                    <Card rounded={'xl'} >
+                        <CardBody>
+                            <Flex px={'8px'}>
+                                {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(invoice?.amount_due)}</Text> */}
+                                {/* Menu Button to update status of invoice */}
+                                <Menu>
+                                    {({ isOpen }) => (
+                                        <>
+                                            <MenuButton isLoading={loadingInvoiceStatusIsOn} isActive={isOpen} as={Button} rightIcon={isOpen ? <BsChevronDown size='10px'/> : <BsChevronUp size='10px'/>}>
+                                                {invoice?.invoice_status.name === 'Draft' ? <><Flex gap='2'><Box my='auto'><FiFolder/></Box>{invoice?.invoice_status.name}</Flex></> : invoice?.invoice_status.name === 'Pending' ? <><Flex gap='2'><Box my='auto'><MdPendingActions/></Box>{invoice?.invoice_status.name}</Flex></> : invoice?.invoice_status.name === 'Paid' ? <><Flex gap='2'><Box my='auto'><AiOutlineCheckCircle/></Box>{invoice?.invoice_status.name}</Flex></> : invoice?.invoice_status.name === 'Overdue' ? <><Flex gap='2'><Box my='auto'><BiCalendarExclamation/></Box>{invoice?.invoice_status.name}</Flex></> : <></> }
+                                            </MenuButton> 
+                                            <MenuList>
+                                                <MenuItem onClick={() => handleInvoiceStatusMenuSelection(4)}><Flex gap='2'><Box my='auto'><FiFolder size='20px'/></Box><Text>Draft</Text>{invoice?.invoice_status.name === 'Draft' ? <Box my='auto' ml='1rem'><FiCheck size='15px'/></Box> : <></>}</Flex></MenuItem>
+                                                <MenuItem onClick={() => handleInvoiceStatusMenuSelection(1)}><Flex gap='2'><Box my='auto'><AiOutlineCheckCircle size='20px'/></Box><Text>Paid</Text>{invoice?.invoice_status.name === 'Paid' ? <Box my='auto' ml='1rem'><FiCheck size='15px'/></Box> : <></>}</Flex></MenuItem>
+                                                <MenuItem onClick={() => handleInvoiceStatusMenuSelection(2)}><Flex gap='2'><Box my='auto'><MdPendingActions size='20px'/></Box><Text>Pending</Text>{invoice?.invoice_status.name === 'Pending' ? <Box my='auto' ml='1rem'><FiCheck size='15px'/></Box> : <></>}</Flex></MenuItem>
+                                                <MenuItem onClick={() => handleInvoiceStatusMenuSelection(3)}><Flex gap='2'><Box my='auto'><BiCalendarExclamation size='20px'/></Box><Text>Overdue</Text>{invoice?.invoice_status.name === 'Overdue' ? <Box my='auto' ml='1rem'><FiCheck size='15px'/></Box> : <></>}</Flex></MenuItem>
+                                            </MenuList>                                       
+                                        </>
+                                    )}
+                                </Menu>
+                            </Flex>
+                        </CardBody>
+                    </Card>
                     <Card w={'full'} rounded={'xl'}>
                         <CardBody overflowY={'auto'}>
                             {/* Invoice Extra Details */}
@@ -216,28 +295,33 @@ const InvoiceDetails = (props) => {
                                     <FiAlignLeft size={'25px'} color='gray'/>
                                     <Text fontSize={'2xl'} fontWeight={'semibold'} color={secondaryTextColor}>Details</Text>
                                 </Flex>
-                                <Flex mb={'1rem'}>
+                                <Flex mb={'1rem'} gap='2'>
+                                    <Box my='auto'><HiStatusOnline/></Box>
                                     <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor} my={'auto'}>Status</Text>
-                                    {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <Badge colorScheme={invoice?.invoice_status.name === 'New' ? 'green' : invoice?.invoice_status.name === 'Sent' ? 'yellow' : invoice?.invoice_status.name === 'Paid' ? 'blue' : invoice?.invoice_status.name === 'Overdue' ? 'red' : 'purple'}  variant={'solid'} mr={'1rem'} pt={'2px'} w={'80px'} rounded={'xl'} textAlign={'center'}>{invoice?.invoice_status.name}</Badge>}
+                                    {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <Badge colorScheme={invoice?.invoice_status.name === 'Paid' ? 'green' : invoice?.invoice_status.name === 'Pending' ? 'yellow' : invoice?.invoice_status.name === 'Overdue' ? 'red' : invoice?.invoice_status.name === 'Draft' ? 'gray' : 'facebook'}  variant={'subtle'} mr={'1rem'} pt={'2px'} w={'80px'} rounded={'xl'} textAlign={'center'}>{invoice?.invoice_status.name}</Badge>}
                                 </Flex>
-                                <Flex mb={'1rem'}>
+                                <Flex mb={'1rem'} gap='2'>
+                                    <Box my='auto'><FiBriefcase/></Box>
                                     <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor}>Service</Text>
                                     {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <Text mr={'1rem'}>{invoice?.service_type.name}</Text> }
                                     {/* <Text mr={'1rem'}>{invoice?.service_type.name}</Text> */}
                                 </Flex>
-                                <Flex mb={'1rem'}>
+                                <Flex mb={'1rem'} gap='2'>
+                                    <Box my='auto'><FiCalendar/></Box>
                                     <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor}>Invoice Date</Text>
                                     {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <>
                                         <Text mr={'1rem'}>{invoice?.invoice_date}</Text>        
                                     </>}
                                 </Flex>
-                                <Flex   mb={'1rem'}>
+                                <Flex mb={'1rem'} gap='2'>
+                                    <Box my='auto'><FiSend/></Box>
                                     <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor}>Issue Date</Text>
                                     {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <>
                                         <Text mr={'1rem'}>{invoice?.issue_date}</Text>
                                     </>}
                                 </Flex>
-                                <Flex mb={'1rem'}>
+                                <Flex mb={'1rem'} gap='2'>
+                                    <Box my='auto'><FiUser/></Box>
                                     <Text w={'36%'} fontWeight={'semibold'} textColor={secondaryTextColor} my={'auto'}>Customer</Text>
                                     {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <>
                                         <Flex>
@@ -248,8 +332,11 @@ const InvoiceDetails = (props) => {
                                         </Flex>  
                                     </>}
                                 </Flex>
-                                <Box w='full' mb='1rem'>
-                                    <Text fontWeight={'semibold'} textColor={secondaryTextColor} my={'auto'} mb={'8px'}>Note</Text>
+                                <Box w='full' mb='2rem'>
+                                    <Flex mb={'1rem'} gap={2}>
+                                        <Box my='auto'><BiNote/></Box>
+                                        <Text fontWeight={'semibold'} textColor={secondaryTextColor}>Note</Text>
+                                    </Flex>
                                     {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'}/> : <>
                                         <Box bg={paymentCardBgColor} p='4' rounded='xl'>
                                             {!invoice?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>}
@@ -257,7 +344,10 @@ const InvoiceDetails = (props) => {
                                     </>}
                                 </Box>
                                 <Box w='full'>
-                                    <Text fontWeight={'semibold'} textColor={secondaryTextColor} my={'auto'} mb={'8px'}>Measurements</Text>
+                                    <Flex mb={'1rem'} gap={2}>
+                                        <Box my='auto'><BiRuler/></Box>
+                                        <Text fontWeight={'semibold'} textColor={secondaryTextColor}>Measurements</Text>
+                                    </Flex>
                                     {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'}/> : <>
                                         <Box bg={paymentCardBgColor} p='4' rounded='xl'>
                                             <Text>{!invoice?.sqft_measurement ? '❌ No measurement information...' : invoice?.sqft_measurement}</Text>
@@ -265,52 +355,57 @@ const InvoiceDetails = (props) => {
                                     </>}
                                 </Box>
                             </Box>
-                            <Divider w={'95%'} mx={'auto'}/>
-                            {/* Invoice Payment History */}
-                            <Box px={'2rem'} py={'1rem'}>
-                            <Flex alignItems={'center'} gap={3} mb={'1rem'}>
-                                    <FiClock size={'25px'} color='gray'/>
-                                    <Text fontSize={'2xl'} fontWeight={'semibold'} color={secondaryTextColor}>Payments</Text>
-                                </Flex>
-                                <Flex direction={'column'} w={'full'} mx={'auto'}>
-                                    {/* Timeline Component */}
-                                    {!invoicePayments ? <Skeleton height={'200px'} w={'full'} bg={paymentCardBgColor} rounded={'xl'}/> : <>
-                                        {invoicePayments.length === 0 ? <Box bg={paymentCardBgColor} p='4' rounded='xl'><Text>❌ No Payment information...</Text></Box> : <>
-                                            {invoicePayments?.map((item, index) => (
-                                                <Flex key={index} w={'full'}>
-                                                    <Flex direction={'column'} maxH={'300px'} gap={2}>
-                                                        {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
-                                                        <Divider orientation='vertical' mx={'auto'} bg={"gray.400"} variant={'dashed'}/>
-                                                        <Box bg={'green.300'} rounded={'full'} p={1} >
-                                                            <FiCheck color='white' size={'12px'} />
-                                                        </Box>
-                                                        <Divider orientation='vertical' mx={'auto'} bg={"gray.400"} variant={'dashed'}/>
-                                                    </Flex>
-                                                    <Flex direction={{base: 'column', md: 'row', lg: 'row'}} gap={4} px={4} py={6} bg={paymentCardBgColor} mx={4} my={6} rounded={'xl'} border={'1px'} borderColor={paymentBorderColor} w={'full'}>
-                                                        <Box>
-                                                            <Text fontSize={'sm'}>Payment Date</Text>
-                                                            <Text fontSize={'sm'} fontWeight={'bold'}>{item.date_received}</Text>
-                                                        </Box>
-                                                        <Box>
-                                                            <Text fontSize={'sm'}>Payment Method</Text>
-                                                            <Text fontSize={'sm'} fontWeight={'bold'}>{item.payment_method}</Text>
-                                                        </Box>
-                                                        <Box>
-                                                            <Text fontSize={'sm'}>Amount</Text>
-                                                            <Text fontSize={'sm'} fontWeight={'bold'}>${formatMoneyValue(item.amount)}</Text>
-                                                        </Box>
-                                                    </Flex>
-                                            </Flex>
-                                            ))}         
-                                        </>}
-                                    </>}
-                                </Flex>
-                            </Box>
                         </CardBody>
                     </Card>
-
                 </Flex>
             </Flex>
+            {/* Payments Card Section */}
+            <Box px={'1rem'} flexDir={{base: 'column', lg: 'row'}} mt={'1rem'}>
+                <Card rounded={'xl'}>
+                    <CardBody>
+                        {/* Invoice Payment History */}
+                        <Box px={'2rem'} py={'1rem'}>
+                            <Flex alignItems={'center'} gap={3} mb={'1rem'}>
+                                <FiClock size={'25px'} color='gray'/>
+                                <Text fontSize={'2xl'} fontWeight={'semibold'} color={secondaryTextColor}>Payments</Text>
+                            </Flex>
+                            <Flex direction={'column'} w={'full'} mx={'auto'}>
+                                {/* Timeline Component */}
+                                {!invoicePayments ? <Skeleton height={'200px'} w={'full'} bg={paymentCardBgColor} rounded={'xl'}/> : <>
+                                    {invoicePayments.length === 0 ? <Box bg={paymentCardBgColor} p='4' rounded='xl'><Text>❌ No Payment information...</Text></Box> : <>
+                                        {invoicePayments?.map((item, index) => (
+                                            <Flex key={index} w={'full'}>
+                                                <Flex direction={'column'} maxH={'300px'} gap={2}>
+                                                    {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
+                                                    <Divider orientation='vertical' mx={'auto'} bg={"gray.400"} variant={'dashed'}/>
+                                                    <Box bg={'green.300'} rounded={'full'} p={1} >
+                                                        <FiCheck color='white' size={'12px'} />
+                                                    </Box>
+                                                    <Divider orientation='vertical' mx={'auto'} bg={"gray.400"} variant={'dashed'}/>
+                                                </Flex>
+                                                <Flex direction={{base: 'column', md: 'row', lg: 'row'}} gap={4} px={4} py={6} bg={paymentCardBgColor} mx={4} my={6} rounded={'xl'} border={'1px'} borderColor={paymentBorderColor} w={'full'}>
+                                                    <Box>
+                                                        <Text fontSize={'sm'}>Payment Date</Text>
+                                                        <Text fontSize={'sm'} fontWeight={'bold'}>{item.date_received}</Text>
+                                                    </Box>
+                                                    <Box>
+                                                        <Text fontSize={'sm'}>Payment Method</Text>
+                                                        <Text fontSize={'sm'} fontWeight={'bold'}>{item.payment_method}</Text>
+                                                    </Box>
+                                                    <Box>
+                                                        <Text fontSize={'sm'}>Amount</Text>
+                                                        <Text fontSize={'sm'} fontWeight={'bold'}>${formatMoneyValue(item.amount)}</Text>
+                                                    </Box>
+                                                </Flex>
+                                        </Flex>
+                                        ))}         
+                                    </>}
+                                </>}
+                            </Flex>
+                            </Box>
+                    </CardBody>
+                </Card>
+            </Box>
         </Container>
     )
 }

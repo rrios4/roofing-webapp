@@ -68,10 +68,11 @@ function Invoices() {
         onDeleteOpen();
     }
 
+    // Handle success message toast when invoice has been deleted
     const handleDeleteToast = (invoice_number) => {
         toast({
-            position: 'top-right',
-            title: `Invoice #${invoice_number} deleted!`,
+            position: 'top',
+            title: `Invoice #${invoice_number} deleted! 🚀`,
             description: "We've deleted invoice for you.",
             status: 'success',
             duration: 5000,
@@ -85,7 +86,10 @@ function Invoices() {
     }
 
     return (
-        <>  
+        <> 
+        <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} updateParentData={getAllInvoices} toast={toast} data={invoices} nextInvoiceNumberValue={nextInvoiceNumber}/>
+        <EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={selectedEditInvoice}/>
+        <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} onOpen={onDeleteOpen} toast={handleDeleteToast} updateParentState={getAllInvoices} header={`Delete Invoice #${selectedInvoiceNumber}`} body={`Are you sure? You can't undo this action afterwards.`} tableName={'invoice'} itemId={selectedInvoiceId} itemNumber={selectedInvoiceNumber} /> 
         <VStack my={'2rem'} w='100%' mx={'auto'} px={{base: '1rem', lg: '2rem'}}>
             {/* <Alert status='success' mb={'1rem'} flexDir={'column'} alignItems={'center'} justifyContent={'center'} textAlign={'center'} height={'200px'} rounded={'8'}>
                 <AlertIcon boxSize='40px' mr={0} />
@@ -129,8 +133,9 @@ function Invoices() {
                                         <Th>Due Date</Th>
                                         <Th>Customer</Th>
                                         {/* <Th>Customer Email</Th> */}
-                                        <Th>Phone Number</Th>
+                                        {/* <Th>Phone Number</Th> */}
                                         <Th>Total</Th>
+                                        <Th>Amount Due</Th>
                                         <Th textAlign={'center'}>Actions</Th>
                                     </Tr>
                                 </Thead>
@@ -139,7 +144,7 @@ function Invoices() {
                                     {invoices?.map((invoice, index) => (
                                         <Tr key={invoice.id}>
                                             <Td textAlign={'center'}><Text fontSize={'md'} fontWeight={'bold'}>{formatNumber(invoice.invoice_number)}</Text></Td>    
-                                            <Td textAlign={'center'}><Badge w={'80px'} variant={'solid'} mx={'auto'} colorScheme={invoice.invoice_status.name === 'New' ? 'green' : '' || invoice.invoice_status.name === 'Paid' ? 'blue' : '' || invoice.invoice_status.name === 'Pending' ? 'yellow' : '' || invoice.invoice_status.name === 'Overdue' ? 'red' : 'purple'} p='1' rounded={'xl'} align='center'>{invoice.invoice_status.name}</Badge></Td>
+                                            <Td textAlign={'center'}><Badge w={'80px'} variant={'subtle'} mx={'auto'} colorScheme={invoice.invoice_status.name === 'New' ? 'green' : '' || invoice.invoice_status.name === 'Paid' ? 'green' : '' || invoice.invoice_status.name === 'Pending' ? 'yellow' : '' || invoice.invoice_status.name === 'Overdue' ? 'red' : 'gray'} p='1' rounded={'xl'} align='center'>{invoice.invoice_status.name}</Badge></Td>
                                             <Td><Text>{invoice.service_type.name}</Text></Td>
                                             <Td><Text>{invoice.invoice_date}</Text></Td>
                                             {/* <Td><Text>{invoice.issue_date ? invoice.issue_date : ''}</Text></Td> */}
@@ -147,8 +152,9 @@ function Invoices() {
                                             {/* <Td><Flex>{invoice.customer.first_name} {invoice.customer.last_name}</Flex></Td> */}
                                             <Td>{invoice.customer.first_name && invoice.customer.last_name ? <><Flex><Link to={`/editcustomer/${invoice.customer.id}`}><Button variant={'ghost'} colorScheme={'facebook'}><Avatar size={'xs'} mr={'8px'} my={'auto'} /><Flex flexDir={'column'}><Flex fontWeight={'bold'} fontSize={'xs'}><Text marginRight={'4px'}>{invoice.customer.first_name}</Text><Text>{invoice.customer.last_name}</Text></Flex><Flex mt={'4px'} fontWeight={'light'} fontSize={'xs'}>{invoice.customer.email}</Flex></Flex></Button></Link></Flex></> : <>{invoice.customer.company_name}</>}</Td>
                                             {/* <Td><Text>{invoice.customer.email}</Text></Td> */}
-                                            <Td><Text>{invoice.customer.phone_number}</Text></Td>
+                                            {/* <Td><Text>{invoice.customer.phone_number}</Text></Td> */}
                                             <Td><Text>${formatMoneyValue(invoice.total ? invoice.total : 0)}</Text></Td>
+                                            <Td><Text>${!invoice.amount_due ? '0.00' : formatMoneyValue(invoice.amount_due)}</Text></Td>
                                             <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => {handleEditModal(invoice)}}><MdEdit/></Button></Tooltip><Tooltip label='Delete'><Button onClick={() => {handleDeleteAlert(invoice.id, invoice.invoice_number)}} mr={'1rem'}><MdDelete/></Button></Tooltip><Link to={`/editinvoice/${invoice.invoice_number}`}><Tooltip label='Go to Invoice Details '><Button ml={'0rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'}/></Button></Tooltip></Link></Td>
                                         </Tr>
 
@@ -158,9 +164,6 @@ function Invoices() {
                         </> : <Skeleton height={'100px'} rounded={'md'}/>}
                     </TableContainer>
                 </Card> 
-                <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} updateParentData={getAllInvoices} toast={toast} data={invoices} nextInvoiceNumberValue={nextInvoiceNumber}/>
-                <EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={selectedEditInvoice}/>
-                <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} onOpen={onDeleteOpen} toast={handleDeleteToast} updateParentState={getAllInvoices} header={`Delete Invoice #${selectedInvoiceNumber}`} body={`Are you sure? You can't undo this action afterwards.`} tableName={'invoice'} itemId={selectedInvoiceId} itemNumber={selectedInvoiceNumber} />
         </VStack>
         </>
     )

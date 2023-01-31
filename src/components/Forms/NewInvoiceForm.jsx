@@ -7,7 +7,7 @@ import formatMoneyValue from '../../utils/formatMoneyValue';
 
 const NewInvoiceForm = (props) => {
     const { colorMode } = useColorMode();
-    const { onNewClose, isNewOpen, onNewOpen, initialRef, data, updateParentData, nextInvoiceNumberValue } =  props
+    const { onNewClose, isNewOpen, onNewOpen, initialRef, data, updateParentData, nextInvoiceNumberValue, toast } =  props
 
     // Custom color configs for UX elements
     const bg = useColorModeValue('white', 'gray.800');
@@ -85,9 +85,10 @@ const NewInvoiceForm = (props) => {
                 bill_from_city: 'Houston',
                 bill_from_state: 'TX',
                 bill_from_zipcode: '77076',
+                bill_to: billToSwitchIsOn === true ? true : false,
                 subtotal: invoiceSubTotalCalculatedvalue >= 0 ? invoiceSubTotalCalculatedvalue : 0,
                 total: invoiceTotalCalculatedValue >= 0 ? invoiceTotalCalculatedValue : 0 ,
-                bill_to: billToSwitchIsOn === true ? true : false
+                amount_due: invoiceTotalCalculatedValue >= 0 ? invoiceTotalCalculatedValue : 0,
 
             }
         ])
@@ -103,9 +104,10 @@ const NewInvoiceForm = (props) => {
         setNumOfLineItemFields(0)
         setInvoiceTotalCalculatedValue(lineItemList.reduce((total, currentItem) => total = parseFloat(total) + parseFloat(currentItem.amount), 0));
         setInvoiceSubTotalCalculatedvalue(lineItemList.reduce((total, currentItem) => total = parseFloat(total) + parseFloat(currentItem.amount), 0))
-
+        handleCreateInvoiceSuccessToast(invoiceNumberInput)
         
-        updateParentData(); setInvoiceNumberInput(''); setSelectedCustomer(''); setSelectedServiceType(''); setSelectedInvoiceStatus(''); setInvoiceDateInput(''); setInvoiceDueDateInput(''); setSqftInput(''); setNoteInput(''); setBillToCityInput(''); setBillToStateInput(''); setBillToStreetAddressInput(''); setBillToZipcodeInput('')
+        updateParentData(); setInvoiceNumberInput(''); setSelectedCustomer(''); setSelectedServiceType(''); setSelectedInvoiceStatus(''); setInvoiceDateInput(''); setInvoiceDueDateInput(''); setSqftInput(''); setNoteInput(''); setBillToCityInput(''); setBillToStateInput(''); setBillToStreetAddressInput(''); setBillToZipcodeInput(''); setCustomerNoteMessage('');
+        setFixedRateSwitchIsOn(true); setBillToSwitchIsOn(false); setNoteSwitchIsOn(false); setMeasurementNoteSwitchIsOn(false); setCustomerNoteSwitchIsOn(false);
     }
 
     const handleLineItemSubmit = async() => {
@@ -214,6 +216,30 @@ const NewInvoiceForm = (props) => {
         setLineItemList(list)
         setInvoiceTotalCalculatedValue(lineItemList.reduce((total, currentItem) => total = parseFloat(total) + parseFloat(currentItem.amount), 0))
         setInvoiceSubTotalCalculatedvalue(lineItemList.reduce((total, currentItem) => total = parseFloat(total) + parseFloat(currentItem.amount), 0))
+    }
+
+    // Handle sucess message toast when invoice was created
+    const handleCreateInvoiceSuccessToast = (invoice_number) => {
+        toast({
+            position: 'top',
+            title: `Invoice #${invoice_number} was created succesfully! 🎉`,
+            description: "We've sucessfully created an invoice for you!",
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+        })
+    }
+
+    // Handle cancel button to clear all states such when the submit happens
+    const handleCancelButton = () => {
+        onNewClose()
+        setLineItemList([])
+        setNumOfLineItemFields(0)
+        setInvoiceTotalCalculatedValue(lineItemList.reduce((total, currentItem) => total = parseFloat(total) + parseFloat(currentItem.amount), 0));
+        setInvoiceSubTotalCalculatedvalue(lineItemList.reduce((total, currentItem) => total = parseFloat(total) + parseFloat(currentItem.amount), 0))
+
+        setInvoiceNumberInput(''); setSelectedCustomer(''); setSelectedServiceType(''); setSelectedInvoiceStatus(''); setInvoiceDateInput(''); setInvoiceDueDateInput(''); setSqftInput(''); setNoteInput(''); setBillToCityInput(''); setBillToStateInput(''); setBillToStreetAddressInput(''); setBillToZipcodeInput(''); setCustomerNoteMessage('');
+        setFixedRateSwitchIsOn(true); setBillToSwitchIsOn(false); setNoteSwitchIsOn(false); setMeasurementNoteSwitchIsOn(false); setCustomerNoteSwitchIsOn(false);
     }
 
     // I want to use this for the future
@@ -411,7 +437,7 @@ const NewInvoiceForm = (props) => {
             </Flex>           
             <Flex pt={'2rem'} justifyContent={'flex-end'} gap={4}>
                 <Button colorScheme='blue' type='submit' onClick={onNewClose}>Create</Button>
-                <Button onClick={onNewClose} colorScheme='gray'>Cancel</Button>
+                <Button onClick={handleCancelButton} colorScheme='gray'>Cancel</Button>
             </Flex>
         </form>
     </DrawerIndex>
