@@ -120,6 +120,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import supabase from "../../utils/supabaseClient";
+import formatMoneyValue from '../../utils/formatMoneyValue';
 
 ChartJS.register(
   CategoryScale,
@@ -267,7 +268,7 @@ const Dashboard = ({ children }) => {
     const { count } = await supabase
       .from("invoice")
       .select("*", { count: "exact" })
-      .eq("invoice_status_id", 4);
+      .eq("invoice_status_id", 3);
 
     setoverdueInvoicesCount(count);
   };
@@ -797,7 +798,7 @@ const Dashboard = ({ children }) => {
                   ></Flex>
                 </StatLabel>
                 <StatNumber>
-                  ${currentMonthRevenuesWithPercentageChange?.monthly_revenue}
+                  ${formatMoneyValue(currentMonthRevenuesWithPercentageChange?.monthly_revenue)}
                 </StatNumber>
                 <StatHelpText>
                   <StatArrow
@@ -842,7 +843,7 @@ const Dashboard = ({ children }) => {
                   <StatNumber>
                     $
                     {
-                      currentYearTotalRevenueWithPercentageChange?.current_year_revenue
+                      formatMoneyValue(currentYearTotalRevenueWithPercentageChange?.current_year_revenue)
                     }
                   </StatNumber>
                   <StatHelpText>

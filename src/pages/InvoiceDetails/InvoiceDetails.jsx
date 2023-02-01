@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useContext} from 'react'
-import {Select, Badge, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, Container, Card, CardBody, Image, Divider, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Tooltip, Avatar, Accordion, Skeleton, useColorModeValue, IconButton, useEditableControls, ButtonGroup, Editable, EditablePreview, EditableInput, Menu, MenuButton, MenuList, MenuItem, useToast} from '@chakra-ui/react';
+import {Select, Badge, Textarea, Grid, Box, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Button, FormHelperText, Text, useDisclosure, Container, Card, CardBody, Image, Divider, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Tooltip, Avatar, Accordion, Skeleton, useColorModeValue, IconButton, useEditableControls, ButtonGroup, Editable, EditablePreview, EditableInput, Menu, MenuButton, MenuList, MenuItem, useToast} from '@chakra-ui/react';
 // import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
 import { FiArrowLeft, FiBriefcase, FiCalendar, FiMoreHorizontal, FiLin, FiUser, FiShare2, FiUploadCloud, FiPaperclip, FiSend, FiClock, FiAlignLeft, FiCircle, FiCheck, FiX, FiEdit, FiFolder } from 'react-icons/fi'
 import { MdOutlinePayments, MdPendingActions } from 'react-icons/md'
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs'
-import { AiOutlineDown, AiOutlineCheckCircle } from 'react-icons/ai'
+import { AiOutlineDown, AiOutlineCheckCircle, AiOutlineBars } from 'react-icons/ai'
 import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
 import { HiStatusOnline } from 'react-icons/hi'
 import supabase from '../../utils/supabaseClient';
@@ -25,15 +25,19 @@ const InvoiceDetails = (props) => {
     const paymentBorderColor = useColorModeValue('gray.200', 'gray.400');
     const secondaryTextColor = useColorModeValue('gray.600', 'gray.300');
     
-    // React States
+    // React Array Object States
     const [invoice, setInvoice] = useState();
     const [invoicePayments, setInvoicePayments] = useState();
     const [invoiceServiceLineItems, setInvoiceServiceLineItems] = useState();
     const [selectedInvoiceLineService, setSelectedInvoiceLineService] = useState('');
-    const [loadingInvoiceStatusIsOn, setLoadingInvoiceStatusIsOn] = useState(false)
 
     // React state toggles
     const [editSwitchIsOn, setEditSwitchIsOn] = useState(false);
+    const [loadingInvoiceStatusIsOn, setLoadingInvoiceStatusIsOn] = useState(false);
+
+    // React Input States
+    const [invoiceServiceInputField, setInvoiceServiceInputField] = useState('');
+    const [invoiceDateInputField, setInvoiceDateInputField] = useState('');
 
     // Define variables
     const {id} = useParams();
@@ -92,32 +96,6 @@ const InvoiceDetails = (props) => {
         console.log(data)
     }
 
-    // Handle deleting a line item
-    const handleLineItemDelete = async({line_item_id}) => {
-        const { data, error } = await supabase
-        .from('invoice_line_service')
-        
-    }
-
-    // Handle success message toast when invoice has been deleted
-    const handleDeleteToast = (invoice_number) => {
-        toast({
-            position: 'top',
-            title: `Invoice #${invoice_number} deleted! 🚀`,
-            description: "We've deleted invoice for you.",
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-        })
-    }
-
-    // Handle custom editable controls for line items
-
-    // Upcoming functions & changes
-    // Function to handle the updating of invoice status but might be done using forms
-    // Modal to delete invoice just like in the invoices page
-    // Drawer to update invoices such as the invoices page
-    
     // Handle selection from menu item for invoice status
     const handleInvoiceStatusMenuSelection = async(status_id) => {
         setLoadingInvoiceStatusIsOn(true)
@@ -138,6 +116,62 @@ const InvoiceDetails = (props) => {
         }
         setLoadingInvoiceStatusIsOn(false)
     }
+
+    // Handle deleting a line item
+    const handleLineItemDelete = async({line_item_id}) => {
+        const { data, error } = await supabase
+        .from('invoice_line_service')
+        
+    }
+
+    // Handle success message toast when invoice has been deleted
+    const handleDeleteToast = (invoice_number) => {
+        toast({
+            position: 'top',
+            title: `Invoice #${invoice_number} deleted! 🚀`,
+            description: "We've deleted invoice for you.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
+    // Edtiable buttons to confirm changes made in this editable changes
+    function EditableControls() {
+        const {
+            isEditing,
+            getSubmitButtonProps,
+            getCancelButtonProps,
+            getEditButtonProps
+        } = useEditableControls();
+
+        return isEditing ? (
+            <ButtonGroup justifyContent="center" size="sm" w="full" spacing={2} mt={2}>
+            <IconButton icon={<FiCheck />} {...getSubmitButtonProps()} />
+            <IconButton
+                icon={<FiX boxSize={3} />}
+                {...getCancelButtonProps()}
+            />
+            </ButtonGroup>
+        ) : null;
+    }
+
+    // Handle the editable fields to update the invoice database
+    const handleEditableFields = async(invoice_number) => {
+        const { data, error } = await supabase
+        .from('invoice')
+        .update({
+
+        })
+        .eq('invoice_number', invoice_number)
+    }
+
+    // Handle custom editable controls for line items
+
+    // Upcoming functions & changes
+    // Function to handle the updating of invoice status but might be done using forms
+    // Modal to delete invoice just like in the invoices page
+    // Drawer to update invoices such as the invoices page
     
     return (
         <Container maxW={'1400px'} pt={'2rem'} pb={'4rem'}>
@@ -149,8 +183,17 @@ const InvoiceDetails = (props) => {
                     {/* <Text my={'auto'} fontSize={'xl'} fontWeight={'bold'}>INV #{id}</Text> */}
                 </Flex>
                 <Flex px={'1rem'} gap={4} ml={{base: 'auto', lg: '0'}}>
-                    <Tooltip hasArrow label="Edit"><IconButton icon={editSwitchIsOn === true ? <FiX/> :  <FiEdit/> } onClick={() => setEditSwitchIsOn(!editSwitchIsOn)}/></Tooltip>
-                    <Tooltip hasArrow label="More"><Button colorScheme={'gray'}><FiMoreHorizontal/></Button></Tooltip>
+                    <Menu>
+                        <MenuButton as={Button}>
+                            <FiMoreHorizontal/>
+                        </MenuButton>
+                        <MenuList>
+                            <MenuItem icon={<FiEdit/>}>Edit Invoice</MenuItem>
+                            <MenuItem icon={<MdOutlinePayments/>}>Edit Payments</MenuItem>
+                            <MenuItem icon={<AiOutlineBars/>}>Edit Line Items</MenuItem>
+                        </MenuList>
+                    </Menu>
+                    {/* <Tooltip hasArrow label="More"><Button colorScheme={'gray'}><FiMoreHorizontal/></Button></Tooltip> */}
                     <Tooltip hasArrow label="Share"><Button colorScheme={'gray'}><FiShare2/></Button></Tooltip>
                     <Tooltip hasArrow label="Send invoice"><Button colorScheme={'blue'} gap={2}><FiSend/>Send invoice</Button></Tooltip>
                 </Flex>
@@ -255,24 +298,21 @@ const InvoiceDetails = (props) => {
                                     <Text fontWeight={'bold'} fontSize={'xl'}>Amount Due</Text>
                                     <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'}>${formatMoneyValue(invoice?.amount_due)}</Text>
                                 </Flex>
-                                <Flex w={'full'}>
-                                    <Button w={'full'}>Add Payment</Button>
-                                </Flex>
                             </Box>
                         </CardBody>
                     </Card>
                 </Flex>
                 {/* Right Section */}
                 <Flex w={{base:'full', lg:'40%'}} direction={'column'} gap={4}>
-                    <Card rounded={'xl'} >
+                    <Card rounded={'xl'}>
                         <CardBody>
-                            <Flex px={'8px'}>
+                            <Flex px={'8px'} gap={2}>
                                 {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(invoice?.amount_due)}</Text> */}
                                 {/* Menu Button to update status of invoice */}
                                 <Menu>
                                     {({ isOpen }) => (
                                         <>
-                                            <MenuButton isLoading={loadingInvoiceStatusIsOn} isActive={isOpen} as={Button} rightIcon={isOpen ? <BsChevronDown size='10px'/> : <BsChevronUp size='10px'/>}>
+                                            <MenuButton w='full' isLoading={loadingInvoiceStatusIsOn} isActive={isOpen} as={Button} rightIcon={isOpen ? <BsChevronDown size='10px'/> : <BsChevronUp size='10px'/>}>
                                                 {invoice?.invoice_status.name === 'Draft' ? <><Flex gap='2'><Box my='auto'><FiFolder/></Box>{invoice?.invoice_status.name}</Flex></> : invoice?.invoice_status.name === 'Pending' ? <><Flex gap='2'><Box my='auto'><MdPendingActions/></Box>{invoice?.invoice_status.name}</Flex></> : invoice?.invoice_status.name === 'Paid' ? <><Flex gap='2'><Box my='auto'><AiOutlineCheckCircle/></Box>{invoice?.invoice_status.name}</Flex></> : invoice?.invoice_status.name === 'Overdue' ? <><Flex gap='2'><Box my='auto'><BiCalendarExclamation/></Box>{invoice?.invoice_status.name}</Flex></> : <></> }
                                             </MenuButton> 
                                             <MenuList>
@@ -284,13 +324,15 @@ const InvoiceDetails = (props) => {
                                         </>
                                     )}
                                 </Menu>
+                                <Button w={'full'}>Add Payment</Button>
+                                <Tooltip hasArrow label="Edit"><IconButton icon={editSwitchIsOn === true ? <FiX/> :  <FiEdit/> } onClick={() => setEditSwitchIsOn(!editSwitchIsOn)}/></Tooltip>
                             </Flex>
                         </CardBody>
                     </Card>
                     <Card w={'full'} rounded={'xl'}>
                         <CardBody overflowY={'auto'}>
                             {/* Invoice Extra Details */}
-                            <Box px={'2rem'} py={'1rem'}>
+                            <Box px={'1rem'} py={'8px'}>
                                 <Flex alignItems={'center'} gap={3} mb={'1rem'}>
                                     <FiAlignLeft size={'25px'} color='gray'/>
                                     <Text fontSize={'2xl'} fontWeight={'semibold'} color={secondaryTextColor}>Details</Text>
@@ -302,9 +344,8 @@ const InvoiceDetails = (props) => {
                                 </Flex>
                                 <Flex mb={'1rem'} gap='2'>
                                     <Box my='auto'><FiBriefcase/></Box>
-                                    <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor}>Service</Text>
-                                    {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <Text mr={'1rem'}>{invoice?.service_type.name}</Text> }
-                                    {/* <Text mr={'1rem'}>{invoice?.service_type.name}</Text> */}
+                                    <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor} my='auto'>Service</Text>
+                                    {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <Text mr={'1rem'}>{invoice?.service_type.name}</Text>  }
                                 </Flex>
                                 <Flex mb={'1rem'} gap='2'>
                                     <Box my='auto'><FiCalendar/></Box>
@@ -338,8 +379,9 @@ const InvoiceDetails = (props) => {
                                         <Text fontWeight={'semibold'} textColor={secondaryTextColor}>Note</Text>
                                     </Flex>
                                     {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'}/> : <>
-                                        <Box bg={paymentCardBgColor} p='4' rounded='xl'>
-                                            {!invoice?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>}
+                                        <Box bg={paymentCardBgColor} p='2' rounded='xl'>
+                                            <Textarea border='none' h={'100px'} isReadOnly value={!invoice?.note ? '❌ No note for this invoice...' : invoice?.note}/>
+                                            {/* {!invoice?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
                                         </Box>
                                     </>}
                                 </Box>
@@ -357,55 +399,53 @@ const InvoiceDetails = (props) => {
                             </Box>
                         </CardBody>
                     </Card>
+                    {/* Payments Card Section */}
+                    <Card rounded={'xl'}>
+                        <CardBody>
+                            {/* Invoice Payment History */}
+                            <Box px={'2rem'} py={'1rem'}>
+                                <Flex alignItems={'center'} gap={3} mb={'1rem'}>
+                                    <FiClock size={'25px'} color='gray'/>
+                                    <Text fontSize={'2xl'} fontWeight={'semibold'} color={secondaryTextColor}>Payments</Text>
+                                </Flex>
+                                </Box>
+                                <Flex direction={'column'} w={'full'} mx={'auto'} px='2rem'>
+                                    {/* Timeline Component */}
+                                    {!invoicePayments ? <Skeleton height={'200px'} w={'full'} bg={paymentCardBgColor} rounded={'xl'}/> : <>
+                                        {invoicePayments.length === 0 ? <Box bg={paymentCardBgColor} p='4' rounded='xl'><Text>❌ No Payment information...</Text></Box> : <>
+                                            {invoicePayments?.map((item, index) => (
+                                                <Flex key={index} w={'full'}>
+                                                    <Flex direction={'column'} maxH={'300px'} gap={2}>
+                                                        {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
+                                                        <Divider orientation='vertical' mx={'auto'} bg={"gray.400"} variant={'dashed'}/>
+                                                        <Box bg={'green.300'} rounded={'full'} p={1} >
+                                                            <FiCheck color='white' size={'12px'} />
+                                                        </Box>
+                                                        <Divider orientation='vertical' mx={'auto'} bg={"gray.400"} variant={'dashed'}/>
+                                                    </Flex>
+                                                    <Flex direction={{base: 'column', md: 'row', lg: 'row'}} gap={4} px={4} py={6} bg={paymentCardBgColor} mx={4} my={6} rounded={'xl'} border={'1px'} borderColor={paymentBorderColor} w={'full'}>
+                                                        <Box>
+                                                            <Text fontSize={'sm'}>Payment Date</Text>
+                                                            <Text fontSize={'sm'} fontWeight={'bold'}>{item.date_received}</Text>
+                                                        </Box>
+                                                        <Box>
+                                                            <Text fontSize={'sm'}>Payment Method</Text>
+                                                            <Text fontSize={'sm'} fontWeight={'bold'}>{item.payment_method}</Text>
+                                                        </Box>
+                                                        <Box>
+                                                            <Text fontSize={'sm'}>Amount</Text>
+                                                            <Text fontSize={'sm'} fontWeight={'bold'}>${formatMoneyValue(item.amount)}</Text>
+                                                        </Box>
+                                                    </Flex>
+                                            </Flex>
+                                            ))}         
+                                        </>}
+                                    </>}
+                                </Flex>
+                        </CardBody>
+                    </Card>
                 </Flex>
             </Flex>
-            {/* Payments Card Section */}
-            <Box px={'1rem'} flexDir={{base: 'column', lg: 'row'}} mt={'1rem'}>
-                <Card rounded={'xl'}>
-                    <CardBody>
-                        {/* Invoice Payment History */}
-                        <Box px={'2rem'} py={'1rem'}>
-                            <Flex alignItems={'center'} gap={3} mb={'1rem'}>
-                                <FiClock size={'25px'} color='gray'/>
-                                <Text fontSize={'2xl'} fontWeight={'semibold'} color={secondaryTextColor}>Payments</Text>
-                            </Flex>
-                            <Flex direction={'column'} w={'full'} mx={'auto'}>
-                                {/* Timeline Component */}
-                                {!invoicePayments ? <Skeleton height={'200px'} w={'full'} bg={paymentCardBgColor} rounded={'xl'}/> : <>
-                                    {invoicePayments.length === 0 ? <Box bg={paymentCardBgColor} p='4' rounded='xl'><Text>❌ No Payment information...</Text></Box> : <>
-                                        {invoicePayments?.map((item, index) => (
-                                            <Flex key={index} w={'full'}>
-                                                <Flex direction={'column'} maxH={'300px'} gap={2}>
-                                                    {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
-                                                    <Divider orientation='vertical' mx={'auto'} bg={"gray.400"} variant={'dashed'}/>
-                                                    <Box bg={'green.300'} rounded={'full'} p={1} >
-                                                        <FiCheck color='white' size={'12px'} />
-                                                    </Box>
-                                                    <Divider orientation='vertical' mx={'auto'} bg={"gray.400"} variant={'dashed'}/>
-                                                </Flex>
-                                                <Flex direction={{base: 'column', md: 'row', lg: 'row'}} gap={4} px={4} py={6} bg={paymentCardBgColor} mx={4} my={6} rounded={'xl'} border={'1px'} borderColor={paymentBorderColor} w={'full'}>
-                                                    <Box>
-                                                        <Text fontSize={'sm'}>Payment Date</Text>
-                                                        <Text fontSize={'sm'} fontWeight={'bold'}>{item.date_received}</Text>
-                                                    </Box>
-                                                    <Box>
-                                                        <Text fontSize={'sm'}>Payment Method</Text>
-                                                        <Text fontSize={'sm'} fontWeight={'bold'}>{item.payment_method}</Text>
-                                                    </Box>
-                                                    <Box>
-                                                        <Text fontSize={'sm'}>Amount</Text>
-                                                        <Text fontSize={'sm'} fontWeight={'bold'}>${formatMoneyValue(item.amount)}</Text>
-                                                    </Box>
-                                                </Flex>
-                                        </Flex>
-                                        ))}         
-                                    </>}
-                                </>}
-                            </Flex>
-                            </Box>
-                    </CardBody>
-                </Card>
-            </Box>
         </Container>
     )
 }

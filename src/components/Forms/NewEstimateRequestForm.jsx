@@ -60,6 +60,7 @@ const NewEstimateRequestForm = (props) => {
 
         if(error){
             console.log(error)
+            handleToastMessage('error', 'top', '0', 'Error Creating New QR', `Error: ${error.message}`)
         }
         setSelectedQuoteDate(''); setSelectedService(''); setSelectedQuoteStatus(''); setQrCity(''); setQrClientEmail(''); setQrClientFirstName(''); setQrClientLastname(''); setQrDate(''); setQrPostalCode(''); setQrState(''); setQrStreetAddress(''); setSelectedState(''); SetInputValue(''); setSelectedCustomerType('');
         updateQRData();
@@ -107,6 +108,18 @@ const NewEstimateRequestForm = (props) => {
         //We'll set the input value using our setInputValue
         SetInputValue(formattedPhoneNumber);
 
+    }
+
+    // Handles the toast to give feedback to the user
+    const handleToastMessage = (status, position, invoice_numer, title, description) => {
+        toast({
+            position: position,
+            title: title,
+            description: description,
+            status: status,
+            duration: 5000,
+            isClosable: true,
+        })
     }
 
 

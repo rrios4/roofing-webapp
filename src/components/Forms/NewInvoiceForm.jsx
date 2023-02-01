@@ -167,6 +167,7 @@ const NewInvoiceForm = (props) => {
         const { data: serviceTypes, error} = await supabase
         .from('services')
         .select('id, name')
+        .order('id', { ascending: true })
 
         if(error){
             console.log(error);
@@ -252,10 +253,10 @@ const NewInvoiceForm = (props) => {
             <Text fontSize={'25px'} fontWeight={'bold'}>Create<Text as='span' ml={'8px'} color={'blue.500'}>Invoice</Text></Text>
             <Flex gap={8} direction={{base: 'column', lg: 'row'}}>
                 {/* Invoice Details */}
-                <Box w={billToSwitchIsOn === true ? {base: 'full',lg:'50%'} : {base: 'full', lg: '70%'}} >
+                <Box w={billToSwitchIsOn === true ? {base: 'full',lg:'50%'} : {base: 'full', lg: 'full'}} >
                     <FormControl isRequired>
                         <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'1rem'} mb={'1rem'}>General Info</Text>
-                        <Box w={'70%'}>
+                        <Box w={'full'} px='1rem'>
                             <FormLabel mt='1rem'>Select Customer</FormLabel>
                                 <AsyncSelect 
                                     onChange={handleSelectedCustomer} 
@@ -273,10 +274,9 @@ const NewInvoiceForm = (props) => {
                                             neutral0: colorMode === 'dark' ? '#1A202C' : 'white',
                                             neutral90: 'white',
                                         },
-
                                 })}/>
                         </Box>
-                        <Flex gap={4} mt={'2rem'}>
+                        <Flex gap={4} mt={'2rem'} px='1rem'>
                             <Box >
                                 <FormLabel >Invoice #</FormLabel>
                                 <Input placeholder={!data ? 'Loading...' : Math.max(...data?.map(item => item.invoice_number)) + 1} maxW={'150px'} type={'number'} value={invoiceNumberInput} onChange={(e) => setInvoiceNumberInput(e.target.value)}/>
@@ -288,7 +288,7 @@ const NewInvoiceForm = (props) => {
                                 </Select> 
                             </Box>
                         </Flex>
-                        <Flex gap={4} mt={'1rem'}>
+                        <Flex gap={4} mt={'1rem'} px={'1rem'}>
                             <Box w={'50%'}>
                                 <FormLabel>Date</FormLabel>
                                 <Input type='date' value={invoiceDateInput} onChange={({target}) => setInvoiceDateInput(target.value)} id='invDate' placeholder='Select Invoice Date'/>
@@ -300,10 +300,12 @@ const NewInvoiceForm = (props) => {
                                 </FormControl>
                             </Box>
                         </Flex>
-                        <FormLabel mt='1rem'>Select Service</FormLabel>
-                        <Select value={selectedServiceType} placeholder='Select Service' onChange={(e) => setSelectedServiceType(e.target.value)}>
-                            <ServiceTypeOptions data={serviceTypesOptions}/>
-                        </Select>
+                        <Box px='1rem'>
+                            <FormLabel mt='1rem'>Select Service</FormLabel>
+                            <Select value={selectedServiceType} placeholder='Select Service' onChange={(e) => setSelectedServiceType(e.target.value)}>
+                                <ServiceTypeOptions data={serviceTypesOptions}/>
+                            </Select>
+                        </Box>
                     </FormControl>
                 </Box>
                 {/* Bill To Input Fields */}
@@ -346,19 +348,21 @@ const NewInvoiceForm = (props) => {
                         <Tbody>
                             {Array.from({ length: numOfLineItemFields}, (_,i) => (
                                 <Tr key={i}>
-                                    <Td><Input minW={'300px'} variant={'outline'} placeholder={`Item ${i+1}`} name='description' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/></Td>
-                                    <Td>{fixedRateSwitchIsOn === true ? <Input type={'number'} disabled minW={'50px'} variant={'outline'} placeholder='1' name='qty' /> : <Input type={'number'} minW={'50px'} variant={'flushed'} placeholder='30' name='sq_ft' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/>}</Td>
-                                    <Td>{fixedRateSwitchIsOn === true ? <Input disabled minW={'80px'} variant={'outline'} placeholder={'Fixed'} value={'Fixed'} name='rate' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/> : <Input minW={'80px'} variant={'outline'} name='rate' placeholder='320' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/>}</Td>
-                                    {/* <Td><Input type={'number'} minW={'100px'} variant={'flushed'} placeholder='$1,000' name='amount' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/></Td> */}
-                                    <Td>
-                                        <NumberInput precision={2} step={0.2} minW={'150px'}>
-                                            <NumberInputField name='amount' placeholder='0.00' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/>
-                                            {/* <NumberInputStepper >
-                                                <NumberIncrementStepper/>
-                                                <NumberDecrementStepper/>
-                                            </NumberInputStepper> */}
-                                        </NumberInput>
-                                    </Td>
+                                    <FormControl isRequired>
+                                        <Td><Input minW={'300px'} variant={'outline'} placeholder={`Item ${i+1}`} name='description' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/></Td>
+                                        <Td>{fixedRateSwitchIsOn === true ? <Input type={'number'} disabled minW={'50px'} variant={'outline'} placeholder='1' name='qty' /> : <Input type={'number'} minW={'50px'} variant={'flushed'} placeholder='30' name='sq_ft' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/>}</Td>
+                                        <Td>{fixedRateSwitchIsOn === true ? <Input disabled minW={'80px'} variant={'outline'} placeholder={'Fixed'} value={'Fixed'} name='rate' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/> : <Input minW={'80px'} variant={'outline'} name='rate' placeholder='320' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/>}</Td>
+                                        {/* <Td><Input type={'number'} minW={'100px'} variant={'flushed'} placeholder='$1,000' name='amount' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/></Td> */}
+                                        <Td>
+                                            <NumberInput precision={2} step={0.2} minW={'150px'}>
+                                                <NumberInputField name='amount' placeholder='0.00' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/>
+                                                {/* <NumberInputStepper >
+                                                    <NumberIncrementStepper/>
+                                                    <NumberDecrementStepper/>
+                                                </NumberInputStepper> */}
+                                            </NumberInput>
+                                        </Td>
+                                    </FormControl>
                                 </Tr>
                             ))}
                         </Tbody>
@@ -413,7 +417,7 @@ const NewInvoiceForm = (props) => {
             </> : <></>}    
             {/* Custom Setting Switches */}
             <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Custom Settings</Text>
-            <Flex gap={6} flexWrap={'wrap'}>
+            <Flex gap={6} flexWrap={'wrap'} px='1rem'>
                 <Flex align={'center'} py={'1rem'}>
                     <Switch isChecked={billToSwitchIsOn} onChange={() => setBillToSwitchIsOn(!billToSwitchIsOn)}/>
                     <Text ml={'1rem'}>Bill To</Text>

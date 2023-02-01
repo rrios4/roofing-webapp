@@ -6,6 +6,7 @@ import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
 import { MdKeyboardArrowLeft, MdPersonAddAlt1, MdEdit, MdDelete, MdSearch, MdAddBox, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
+import formatDate from '../../utils/formatDate';
 import {
     FiInbox
   } from "react-icons/fi";
@@ -176,6 +177,7 @@ const EstimateRequests = () => {
         // console.log(selectedEstimateRequestObject.streetAddress)
     }
 
+    // Handles the submition of new edited information to the database
     const handleEditSubmit = async (e) => {
         e.preventDefault();
         const { error } = await supabase
@@ -200,12 +202,25 @@ const EstimateRequests = () => {
             
         if(error) {
             console.log(error)
+            handleToastMessage('error', 'top', selectedEstimateRequestObject.id, 'Error Updating Quote Request', `Error: ${error}`)
         }
         onEditClose();
         setSelectedEstimateRequestObject({ id: '', est_request_status_id: '', requested_date: '', service_type_id: '', streetAddress: '', city: '', state: '', zipcode: '', firstName: '', lastName: '', email: '' });
         await getQuoteRequests();
         handleEditChangeToast(selectedEstimateRequestObject.id)
         // console.log(selectedEstimateRequestObject)
+    }
+
+    // Handles the toast to give feedback to the user
+    const handleToastMessage = (status, position, invoice_numer, title, description) => {
+        toast({
+            position: position,
+            title: title,
+            description: description,
+            status: status,
+            duration: 5000,
+            isClosable: true,
+        })
     }
 
     //Handles to determine if email alredy exist in DB
@@ -302,7 +317,7 @@ const EstimateRequests = () => {
                                             <Td textAlign={'center'}><Text fontWeight={'bold'} fontSize={'md'}>{formatNumber(request.id)}</Text></Td>
                                             <Td textAlign={'center'}>{request.est_request_status_id === 1 ? <><Text textColor={'white'} bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></> : '' || request.est_request_status_id === 2 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Scheduled</Text></> : '' || request.est_request_status_id === 5 ? <><Text textColor={'white'} bg={'red.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Closed</Text></> : '' || request.est_request_status_id === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Pending</Text></> : ''}</Td>
                                             <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
-                                            <Td><Text>{handleSQLFormatDate(request.requested_date)}</Text></Td>
+                                            <Td><Text>{formatDate(request.requested_date)}</Text></Td>
                                             <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'purple.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td>
                                             <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
                                             <Td><Text>{request.email}</Text></Td>
