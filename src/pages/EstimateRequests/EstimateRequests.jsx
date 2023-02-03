@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Select, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border, Icon, Skeleton } from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border, Icon, Skeleton, Badge } from '@chakra-ui/react';
 import { Card, EditEstimateRequestForm, DeleteAlertDialog, NewEstimateRequestForm, NewCustomerForm } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
@@ -42,7 +42,7 @@ const EstimateRequests = () => {
     const getQuoteRequests = async () => {
         const { data: requests, error } = await supabase
             .from('quote_request')
-            .select('*')
+            .select('*, estimate_request_status:est_request_status_id(*)')
             .order('est_request_status_id', { ascending: true })
             .order('created_at', { ascending: false })
 
@@ -50,7 +50,7 @@ const EstimateRequests = () => {
             console.log(error)
         }
         setEstimateRequests(requests);
-        // console.log(requests);
+        console.log(requests);
     }
 
     // Search for customer quote request
@@ -315,7 +315,7 @@ const EstimateRequests = () => {
                                     {estimateRequests?.map((request, index) => (
                                         <Tr key={request.id}>
                                             <Td textAlign={'center'}><Text fontWeight={'bold'} fontSize={'md'}>{formatNumber(request.id)}</Text></Td>
-                                            <Td textAlign={'center'}>{request.est_request_status_id === 1 ? <><Text textColor={'white'} bg={'green.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>New</Text></> : '' || request.est_request_status_id === 2 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Scheduled</Text></> : '' || request.est_request_status_id === 5 ? <><Text textColor={'white'} bg={'red.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Closed</Text></> : '' || request.est_request_status_id === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Pending</Text></> : ''}</Td>
+                                            <Td textAlign={'center'}><Badge w={'80px'} variant={'subtle'} mx={'auto'} colorScheme={request.estimate_request_status.name === 'New' ? 'green' : '' || request.estimate_request_status.name === 'Planned' ? 'blue' : '' || request.estimate_request_status.name === 'Pending' ? 'yellow' : '' || request.estimate_request_status.name === 'Closed' ? 'red' : 'gray'} p='1' rounded={'xl'} align='center'>{request.estimate_request_status.name}</Badge></Td>
                                             <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
                                             <Td><Text>{formatDate(request.requested_date)}</Text></Td>
                                             <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'purple.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td>
