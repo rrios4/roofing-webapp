@@ -1,6 +1,6 @@
 import React from 'react';
 import { DrawerIndex } from '../';
-import { Text, Flex, FormLabel, Select, Input, FormControl, Button, useColorModeValue, Textarea, Box } from '@chakra-ui/react';
+import { Text, Flex, FormLabel, Select, Input, FormControl, Button, useColorModeValue, Textarea, Box, DrawerFooter } from '@chakra-ui/react';
 import formatNumber from '../../utils/formatNumber';
 
 const EditInvoiceForm = (props) => {
@@ -13,8 +13,8 @@ const EditInvoiceForm = (props) => {
             <Text fontSize={'25px'} fontWeight={'bold'}>Edit<Text as='span' ml={'8px'} color={'blue.500'}>INV</Text>-{invoice?.invoice_number}</Text>
             <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'} fontSize={'lg'}>General Info</Text>
         <form method='PATCH' onSubmit={handleEditSubmit}>
-            <Flex flexDir={'row'} mb={'1rem'}>
-                <Flex flexDirection={'column'} mr={'1rem'}>
+            <Flex mb={'1rem'} gap={8}>
+                <Box w={'50%'}>
                     <FormLabel>Status</FormLabel>
                     <Select name='invoice_status_id' value={invoice?.invoice_status_id} onChange={handleEditOnChange}>
                         <option value={1}>Paid</option>
@@ -22,19 +22,21 @@ const EditInvoiceForm = (props) => {
                         <option value={3}>Overdue</option>
                         <option value={4}>Draft</option>
                     </Select>
-                </Flex>
-                <Flex flexDirection={'column'}>
+                </Box>
+                <Box w={'50%'}>
                     <FormLabel>Invoice Date</FormLabel>
                     <Input name='invoice_date' type='date' value={invoice?.invoice_date} onChange={handleEditOnChange}/>
-                </Flex>
+                </Box>
             </Flex>
-            <Flex flexDirection={'column'} mb={'1rem'}>
-                <FormLabel>Issue Date</FormLabel>
-                <Input name='issue_date' type='date' value={invoice?.issue_date} onChange={handleEditOnChange}/>
-            </Flex>
-            <Flex flexDirection={'column'} mb={'1rem'}>
-                <FormLabel>Due Date</FormLabel>
-                <Input name='due_date' type='date' value={invoice?.due_date} onChange={handleEditOnChange}/>
+            <Flex gap={8}>
+                <Box w={'50%'} mb={'1rem'}>
+                    <FormLabel>Issue Date</FormLabel>
+                    <Input name='issue_date' type='date' value={invoice?.issue_date} onChange={handleEditOnChange}/>
+                </Box>
+                <Box w={'50%'} mb={'1rem'}>
+                    <FormLabel>Due Date</FormLabel>
+                    <Input name='due_date' type='date' value={invoice?.due_date} onChange={handleEditOnChange}/>
+                </Box>
             </Flex>
             <FormLabel>Service Type</FormLabel>
             <Select name='service_type_id' value={invoice?.service_type_id} onChange={handleEditOnChange}>
@@ -88,7 +90,7 @@ const EditInvoiceForm = (props) => {
                     <Input/>
                 </Flex>
             </Flex> */}
-            <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} fontSize={'lg'}>Extra Information</Text>
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} fontSize={'lg'}>Additional Information</Text>
             <Flex gap={4} w='full' mt={'1rem'}>
                 <Box w={'50%'}>
                     <FormLabel>Note</FormLabel>
@@ -103,10 +105,10 @@ const EditInvoiceForm = (props) => {
             <Textarea name='cust_note' value={invoice?.cust_note} onChange={handleEditOnChange} placeholder='Here you enter customer message you want the customer to see...'/>
 
             {/* Controls for Drawer */}
-            <Flex pt={'2rem'} justifyContent={'flex-end'}>
-                <Button mx={'1rem'} onClick={onClose}>Cancel</Button>
-                <Button colorScheme={'blue'} type='submit'>Save Changes</Button>
-            </Flex>
+            <DrawerFooter justifyContent={'space-between'} px={0} mt={8} borderTopWidth='1px'>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button colorScheme={'blue'} type='submit'>Save Changes</Button>
+            </DrawerFooter>
         </form>
     </DrawerIndex>
   )

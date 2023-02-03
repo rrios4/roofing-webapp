@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DrawerIndex, ServiceTypeOptions, InvoiceStatusOptions } from '..';
 import supabase from '../../utils/supabaseClient';
 import AsyncSelect from 'react-select/async';
-import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea, Box, Switch, TableContainer, Table, Thead, Tr, Th, Tbody, Td, NumberInput, NumberIncrementStepper, NumberInputField, NumberDecrementStepper, NumberInputStepper } from '@chakra-ui/react';
+import { Text, FormControl, FormLabel, Select, Input, InputGroup, Button, useColorModeValue, useColorMode, Flex, Textarea, Box, Switch, TableContainer, Table, Thead, Tr, Th, Tbody, Td, NumberInput, NumberIncrementStepper, NumberInputField, NumberDecrementStepper, NumberInputStepper, DrawerFooter } from '@chakra-ui/react';
 import formatMoneyValue from '../../utils/formatMoneyValue';
 
 const NewInvoiceForm = (props) => {
@@ -256,7 +256,7 @@ const NewInvoiceForm = (props) => {
                 <Box>
                     <FormControl isRequired>
                         <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'1rem'} mb={'1rem'}>General Info</Text>
-                        <Box w={'full'} p={'1rem'} bg={useColorModeValue('gray.100', 'gray.600')} border={'1px'} borderColor={useColorModeValue('gray.200', 'gray.700')} rounded={'xl'}>
+                        <Box w={'full'} p={'1rem'} bg={useColorModeValue('gray.100', 'gray.600')} border={'1px'} borderColor={useColorModeValue('gray.200', 'gray.600')} rounded={'xl'}>
                             <FormLabel>Select Customer</FormLabel>
                                 <AsyncSelect 
                                     onChange={handleSelectedCustomer} 
@@ -430,11 +430,11 @@ const NewInvoiceForm = (props) => {
                     <Switch size={'sm'} isChecked={customerNoteSwitchIsOn} onChange={() => setCustomerNoteSwitchIsOn(!customerNoteSwitchIsOn)}/>
                     <Text ml={'8px'}>Customer Note</Text>
                 </Flex>
-            </Flex>           
-            <Flex pt={'2rem'} justifyContent={'flex-end'} gap={4}>
-                <Button colorScheme='blue' type='submit' onClick={onNewClose}>Create</Button>
-                <Button onClick={handleCancelButton} colorScheme='gray'>Cancel</Button>
-            </Flex>
+            </Flex>   
+            <DrawerFooter justifyContent={'space-between'} px={0} mt={8} borderTopWidth='1px'>
+                <Button onClick={handleCancelButton} colorScheme='gray'>Cancel</Button>   
+                <Button colorScheme='blue' type='submit' onClick={onNewClose}>Create Invoice</Button>
+            </DrawerFooter>        
         </form>
     </DrawerIndex>
   )
