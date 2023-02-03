@@ -9,7 +9,7 @@ const index = (props) => {
       <DrawerOverlay/>
       <DrawerContent>
       <DrawerCloseButton/>
-        <DrawerBody flexDir={'column'} px={'3rem'} pt={'2rem'} pb={'3rem'}>
+        <DrawerBody flexDir={'column'} px={'2rem'} pt={'2rem'} pb={'2rem'}>
             {children}
         </DrawerBody>
       </DrawerContent>
