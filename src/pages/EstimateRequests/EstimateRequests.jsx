@@ -102,54 +102,6 @@ const EstimateRequests = () => {
         })
     }
 
-    //Function that shows a toast once the user confirmed that the data has been deleted
-    const handleDeleteToast = (requestId) => {
-        toast({
-            position: 'top-right',
-            title: `Quote Request #${requestId} deleted!`,
-            description: "We've deleted quote request for you 🚀",
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-        })
-    }
-
-    //Function that shows a toast once the user confirmed that the data has been updated
-    const handleEditChangeToast = (requestId) => {
-        toast({
-            position: 'top-right',
-            title: `QR# ${requestId} updated!`,
-            description: "We've updated quote request for you 🎉",
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-        })
-    }
-
-    //Function that shows a toast when the user click to save qr as a customer
-    const handleEmailValidationToastError = (requestId) => {
-        toast({
-            position: 'top-right',
-            title: `Customer already exist!`,
-            description: `${requestId[0].email} email already exist! 👮‍♂️`,
-            status: 'error',
-            duration: 5000,
-            isClosable: true
-        })
-    }
-
-    //Function that shows a toast when the user click to save qr as a customer
-    const handleEmailValidationToastSuccess = (requestId) => {
-        toast({
-            position: 'top-right',
-            title: `New customer has been saved!`,
-            description: `Customer with ${requestId} email has been saved! 🚀`,
-            status: 'success',
-            duration: 5000,
-            isClosable: true
-        })
-    }
-
     //Formats SQL date from DB to present in GUI table
     const handleSQLFormatDate = (date) => {
         let parsedDate = new Date(Date.parse(date));
@@ -211,18 +163,6 @@ const EstimateRequests = () => {
         // console.log(selectedEstimateRequestObject)
     }
 
-    // Handles the toast to give feedback to the user
-    const handleToastMessage = (status, position, invoice_numer, title, description) => {
-        toast({
-            position: position,
-            title: title,
-            description: description,
-            status: status,
-            duration: 5000,
-            isClosable: true,
-        })
-    }
-
     //Handles to determine if email alredy exist in DB
     const handleEmailValidation = async (request) => {
         const { data: resEmail, error } = await supabase
@@ -262,11 +202,83 @@ const EstimateRequests = () => {
         }
     }
 
+    // Handles the toast to give feedback to the user
+    const handleToastMessage = (status, position, invoice_numer, title, description) => {
+        toast({
+            position: position,
+            title: title,
+            description: description,
+            status: status,
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
+    //Function that shows a toast once the user confirmed that the data has been updated
+    const handleEditChangeToast = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `QR# ${requestId} updated!`,
+            description: "We've updated quote request for you 🎉",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
+    //Function that shows a toast when the user click to save qr as a customer
+    const handleEmailValidationToastError = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `Customer already exist!`,
+            description: `${requestId[0].email} email already exist! 👮‍♂️`,
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+        })
+    }
+
+    //Function that shows a toast when the user click to save qr as a customer
+    const handleEmailValidationToastSuccess = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `New customer has been saved!`,
+            description: `Customer with ${requestId} email has been saved! 🚀`,
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+        })
+    }
+
+    //Function that shows a toast once the user confirmed that the data has been deleted
+    const handleDeleteToast = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `Quote Request #${requestId} deleted!`,
+            description: "We've deleted quote request for you 🚀",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
     return (
         <>
             <NewEstimateRequestForm isOpen={isNewOpen} onClose={onNewClose} initialRef={initialRef} updateQRData={getQuoteRequests} toast={handleNewToast} />
             <EditEstimateRequestForm initialRef={initialRef} handleSubmit={handleEditSubmit} isOpen={isEditOpen} handleEditCancel={handleEditCancel} objectData={selectedEstimateRequestObject} handleEditOnChange={handleEditChange} />
-            <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} toast={handleDeleteToast} updateParentState={getQuoteRequests} itemId={selectedEstimateRequestId} itemNumber={selectedEstimateRequestId} tableName={'quote_request'} header={`Delete QR # ${selectedEstimateRequestId}`} body={`Are you sure? You can't undo this action afterwards.`} />
+            <DeleteAlertDialog 
+                isOpen={isDeleteOpen} 
+                onClose={onDeleteClose} 
+                toast={handleToastMessage} 
+                updateParentState={getQuoteRequests} 
+                itemId={selectedEstimateRequestId} 
+                itemNumber={selectedEstimateRequestId} 
+                tableName={'quote_request'} 
+                tableFieldName={'id'} 
+                header={`❌ Delete QR # ${selectedEstimateRequestId}`} 
+                body={`Are you sure? You can't undo this action afterwards.`} 
+            />
+
             <VStack my={'2rem'} w='100%' mx={'auto'} px={{base: '1rem', lg: '2rem'}}>
                 {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>

@@ -4,7 +4,7 @@ import Select from "react-select";
 import supabase from '../../utils/supabaseClient';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { CustomerDetailsCard, EditCustomerForm } from '../../components'
+import { CustomerDetailsCard, EditCustomerForm, DeleteAlertDialog } from '../../components'
 import { MdKeyboardArrowLeft, MdLocationOn, MdEmail, MdPhone, MdOutlineDateRange } from 'react-icons/md';
 import {
     FiUsers,
@@ -114,7 +114,9 @@ const CustomerDetails = (props) => {
             console.log(error)
             handleCustomerErrorDeleteToast()
         }
-        handleCustomerSuccessDeleteToast()
+        if(data){
+            handleCustomerSuccessDeleteToast()
+        }
 
         navigate("/customers")
     }
@@ -189,6 +191,18 @@ const CustomerDetails = (props) => {
         })
     }
 
+    //Function that shows a toast once the user confirmed that the data has been deleted
+    const handleDeleteToast = (requestId) => {
+        toast({
+            position: 'top-right',
+            title: `Quote Request #${requestId} deleted!`,
+            description: "We've deleted quote request for you 🚀",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+        })
+    }
+
 
     return (
         <Container maxWidth={'1400px'}>
@@ -247,7 +261,14 @@ const CustomerDetails = (props) => {
                 </VStack>
 
                 {/* Edit Form Modal */}
-                <EditCustomerForm isOpen={isEditOpen} onClose={handleCustomerEditCancel} customer={selectedCustomerObject} updateParentState={getAllCustomer} toast={handleCustomerEditToast} handleEditSubmit={handleEditSubmit} handleEditOnChange={handleCustomerEditChange} />
+                <EditCustomerForm 
+                isOpen={isEditOpen} 
+                onClose={handleCustomerEditCancel} 
+                customer={selectedCustomerObject} 
+                updateParentState={getAllCustomer} 
+                toast={handleCustomerEditToast} 
+                handleEditSubmit={handleEditSubmit} 
+                handleEditOnChange={handleCustomerEditChange} />
 
                 {/* Modal to prompt the user that they will be deleting a user */}
                 <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
@@ -256,8 +277,8 @@ const CustomerDetails = (props) => {
                         <ModalHeader textAlign={'center'}>Delete Customer</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
-                            <Text fontWeight={'bold'} mb={'1rem'}>Are you sure you want to delete customer ID: {id}? </Text>
-                            <Text>Once you confirm there will be no way to restore the information. 😢</Text>
+                            <Text fontWeight={'bold'} mb={'1rem'}>Are you sure you want to delete: <Text as="span" textColor={useColorModeValue('blue.400', 'blue.500')}>{customer.first_name} {customer.last_name}</Text>? </Text>
+                            <Text>Once you confirm there will be no way to restore the customer's information. 😢</Text>
                         </ModalBody>
                         <ModalFooter>
                             <Button colorScheme={'red'} onClick={handleModalDeleteOnClick}>Delete</Button>
@@ -265,6 +286,19 @@ const CustomerDetails = (props) => {
                         </ModalFooter>
                     </ModalContent>
                 </Modal>
+                
+                {/* Tried to implement delete dialog from the component but ended up not working because this depends on the navigate back to the customers page and the component is more meant to be used to update the paretn state of the page */}
+                {/* <DeleteAlertDialog
+                isOpen={isDeleteOpen}
+                onClose={onDeleteClose}
+                updateParentState={getAllCustomer}
+                toast={handleDeleteToast}
+                header={`Delete ${customer?.first_name} ${customer?.last_name}❓`}
+                body={`Are you sure? You can't undo this action afterwards.`}
+                tableName={'customer'}
+                tableFieldName={'id'}
+                itemNumber={id}
+                /> */}
             </Flex>
         </Container>
     )

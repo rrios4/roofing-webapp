@@ -11,26 +11,37 @@ import {
 } from '@chakra-ui/react';
 
 const DeleteAlertDialog = (props) => {
-    const {header, body, isOpen, onClose, leastDestructiveRef, itemId, itemNumber, tableName, toast, errorToast, updateParentState} = props
+    const {header, body, isOpen, onClose, leastDestructiveRef, itemId, itemNumber, tableName, tableFieldName, toast, errorToast, updateParentState} = props
 
+    // Logic that deletes item based on the tableName, itemNumber, fieldName props
     const deleteItem = async() => {
+        // We delete associated items first to a main table first
+        if(tableName === 'invoice') {
+            await deletePaymentsByInvoiceNumber()
+            await deleteInvoiceLineItems()
+        }
+
         const { data, error } = await supabase
         .from(tableName)
         .delete()
-        .eq('invoice_number', itemNumber)
+        .eq(tableFieldName, itemNumber)
 
         if(error){
             console.log(error)
-            // errorToast(itemNumber, error)
-
+            // Make a toast for displaying error message to the user
+            toast('error', 'top-right', '0', `Error deleting ${tableName} #${itemNumber} occured!`, `Error: ${error.message}`)
         }
-        await deletePaymentsByInvoiceNumber()
-        await deleteInvoiceLineItems()
+
+        // Success toast feedback is called when data is return from supabase client SDK
+        if(data){
+            toast('success', 'top-right', '0', `Item ${tableName} #${itemNumber} deleted!`, `We've deleted ${tableName} for you 🚀`)
+        }
+
         await updateParentState()
         onClose()
-        toast(itemNumber)
     }
 
+    // Handles the action to all delete payments assiated with the invoice number
     const deletePaymentsByInvoiceNumber = async() => {
         const { data, error } = await supabase
         .from('payment')
@@ -42,6 +53,7 @@ const DeleteAlertDialog = (props) => {
         }
     }
 
+    // Handles the action to delete all invoice line services associated with the invoice number
     const deleteInvoiceLineItems = async() => {
         const { data, error } = await supabase
         .from('invoice_line_service')

@@ -181,7 +181,19 @@ function Invoices() {
         {/* Drawer Component Forms */}
         <NewInvoiceForm isNewOpen={isNewOpen} onNewClose={onNewClose} onNewOpen={onNewOpen} updateParentData={getAllInvoices} toast={toast} data={invoices} nextInvoiceNumberValue={nextInvoiceNumber}/>
         <EditInvoiceForm initialRef={initialRef} isOpen={isEditOpen} onClose={onEditClose} invoice={selectedEditInvoice} handleEditOnChange={handleEditChange} handleEditSubmit={handleEditSubmit}/>
-        <DeleteAlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose} onOpen={onDeleteOpen} toast={handleDeleteToast} updateParentState={getAllInvoices} header={`Delete Invoice #${selectedInvoiceNumber}`} body={`Are you sure? You can't undo this action afterwards.`} tableName={'invoice'} itemId={selectedInvoiceId} itemNumber={selectedInvoiceNumber} /> 
+        <DeleteAlertDialog 
+            isOpen={isDeleteOpen} 
+            onClose={onDeleteClose} 
+            onOpen={onDeleteOpen} 
+            toast={handleToastMessage} 
+            updateParentState={getAllInvoices} 
+            header={`❌ Delete Invoice #${selectedInvoiceNumber}`} 
+            body={`Are you sure? You can't undo this action afterwards. This will delete associated payments and line-items that depend on this invoice.`} 
+            tableName={'invoice'} 
+            tableFieldName={'invoice_number'}
+            itemId={selectedInvoiceId} 
+            itemNumber={selectedInvoiceNumber}
+        /> 
 
         {/* Main Invoice Page Code */}
         <VStack my={'2rem'} w='100%' mx={'auto'} px={{base: '1rem', lg: '2rem'}}>
