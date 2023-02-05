@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast, Container, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Card, CardBody } from '@chakra-ui/react';
+import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast, Container, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Card, CardBody, Avatar, Badge, Divider, IconButton } from '@chakra-ui/react';
 import Select from "react-select";
 import supabase from '../../utils/supabaseClient';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
@@ -11,8 +11,12 @@ import {
     FiInbox,
     FiGrid,
     FiFileText,
+    FiArrowRight,
 } from 'react-icons/fi'
 import { TbRuler } from "react-icons/tb";
+import formatDate from '../../utils/formatDate';
+import formatMoneyValue from '../../utils/formatMoneyValue';
+import formatNumber from '../../utils/formatNumber';
 
 const CustomerDetails = (props) => {
     const navigate = useNavigate();
@@ -24,13 +28,16 @@ const CustomerDetails = (props) => {
     const bg = useColorModeValue('white', 'gray.800');
     const borderColor = useColorModeValue('gray.200', 'gray.700');
     const buttonColorScheme = useColorModeValue('blue', 'gray');
+    const hoverEffectBgColor = useColorModeValue('gray.50', 'gray.800')
 
     // const {id} = props.match.params;
     const { id } = useParams();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = React.useRef();
-    //GET data from API
-    const [customer, getCustomer] = useState('');
+
+    // React State to store array of objects from GET request API
+    const [customer, getCustomer] = useState();
+    const [customerInvoicesById, setCustomerInvoicesById] = useState();
 
     // Customer Registered Date
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
@@ -47,19 +54,34 @@ const CustomerDetails = (props) => {
         //     history.push('/login');
         // }
         getAllCustomer();
+        getAllInvoicesByCustomerId();
     }, []);
 
     const getAllCustomer = async () => {
         let { data: customerById, error } = await supabase
             .from('customer')
-            .select('*')
+            .select('*, customer_type:customer_type_id(*)')
             .eq('id', `${id}`)
 
         if (error) {
             console.log(error)
         }
         getCustomer(customerById[0])
+        // console.log(customerById)
 
+    }
+
+    const getAllInvoicesByCustomerId = async() => {
+        let { data , error } = await supabase
+        .from('invoice')
+        .select('*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)')
+        .eq('customer_id', `${id}`)
+
+        if(error) {
+            console.log(error)
+        }
+        // console.log(data)
+        setCustomerInvoicesById(data)
     }
 
     // Toast that shows up when there is a success when editing and request was sent succefully
@@ -205,9 +227,9 @@ const CustomerDetails = (props) => {
 
 
     return (
-        <Container maxWidth={'1400px'}>
-            <Flex direction='column' pb='2rem' pt='2rem'>
-                <VStack spacing={4}>
+        <Container maxWidth={'1400px'} h={'full'}>
+            <Flex direction='column' pb='2rem' pt='2rem' h={'full'}>
+                <VStack spacing={4} h={'full'}>
                     {/* Back Button */}
                     <Box display={'flex'} justifyContent='start' w='full'>
                         <Link to={'/customers'}>
@@ -216,10 +238,10 @@ const CustomerDetails = (props) => {
                     </Box>
                     {/* Customer Details Card Info  Component */}
                     <CustomerDetailsCard bg={bg} borderColor={borderColor} onOpen={() => handleCustomerEdit(customer)} deleteCustomer={onDeleteOpen} customer={customer} customerDate={customerDate} />
-                    {/* Customer Estimates Card */}
-                    <Card width={'full'} rounded={'xl'}>
-                        <CardBody>
-                            <Accordion allowToggle>
+                    <Flex w={'full'} h={'full'} gap={4} direction={{base: 'column', lg: 'row'}}>
+                        {/* Customer Invoices Card */}
+                        <Box w={'full'}>
+                            <Accordion allowToggle rounded={'xl'} p={2} shadow={'md'} bg={useColorModeValue('white', 'gray.700')}>
                                 <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
                                     <h2>
                                         <AccordionButton rounded={'md'}>
@@ -231,16 +253,26 @@ const CustomerDetails = (props) => {
                                         </AccordionButton>
                                     </h2>
                                     <AccordionPanel pb={4} >
-
+                                        {customerInvoicesById?.map((item, index) => (
+                                            <>
+                                                <Flex justify={'space-evenly'} my={'1rem'} py={'1rem'} w={'full'} _hover={{bg: hoverEffectBgColor}} rounded={'xl'}>
+                                                    <Text w={'5%'} my={'auto'} fontWeight={'semibold'}>{formatNumber(item.invoice_number)}</Text> 
+                                                    <Badge w={'15%'} textAlign={'center'} my={'auto'} p={2} rounded={'xl'} colorScheme={item.invoice_status.name === 'Paid' ? 'green' : item.invoice_status.name === 'Pending' ? 'yellow' : item.invoice_status.name === 'Overdue' ? 'red' : 'gray'}>{item.invoice_status.name}</Badge>
+                                                    <Text w={'15%'} my={'auto'}>{formatDate(item.invoice_date)}</Text>
+                                                    <Text w={'15%'} my={'auto'}>${formatMoneyValue(item.total)}</Text>
+                                                    <Text w={'15%'} my={'auto'}>${formatMoneyValue(item.amount_due)}</Text>
+                                                    <IconButton icon={<FiArrowRight/>}/>
+                                                </Flex>
+                                            </>
+                                        ))}
                                     </AccordionPanel>
                                 </AccordionItem>
                             </Accordion>
-                        </CardBody>
-                    </Card>
-                    {/* Customer Invoices Card */}
-                    <Card w={'full'} rounded={'xl'}>
-                        <CardBody rounded={'xl'}>
-                            <Accordion allowToggle>
+                        </Box>
+
+                        {/* Customer Quotes Card */}
+                        <Box w={'full'}>
+                            <Accordion allowToggle rounded={'xl'} p={2} shadow={'md'} bg={useColorModeValue('white', 'gray.700')}>
                                 <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
                                     <h2>
                                         <AccordionButton rounded={'md'}>
@@ -255,9 +287,10 @@ const CustomerDetails = (props) => {
 
                                     </AccordionPanel>
                                 </AccordionItem>
-                            </Accordion>
-                        </CardBody>
-                    </Card>
+                            </Accordion>                            
+                        </Box>
+
+                    </Flex>
                 </VStack>
 
                 {/* Edit Form Modal */}
@@ -277,7 +310,7 @@ const CustomerDetails = (props) => {
                         <ModalHeader textAlign={'center'}>Delete Customer</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
-                            <Text fontWeight={'bold'} mb={'1rem'}>Are you sure you want to delete: <Text as="span" textColor={useColorModeValue('blue.400', 'blue.500')}>{customer.first_name} {customer.last_name}</Text>? </Text>
+                            <Text fontWeight={'bold'} mb={'1rem'}>Are you sure you want to delete: <Text as="span" textColor={useColorModeValue('blue.400', 'blue.500')}>{customer?.first_name} {customer?.last_name}</Text>? </Text>
                             <Text>Once you confirm there will be no way to restore the customer's information. 😢</Text>
                         </ModalBody>
                         <ModalFooter>
