@@ -9,8 +9,8 @@ const CustomerDetailsCard = (props) => {
   return (
     <>
     {/* Customer Card Info */}
-    <Flex w={'full'} justify={'center'}>
-        <Card  w={{base:'full', md: '60%', lg: '60%'}} rounded={'xl'} py={'1rem'}>
+    <Flex w={{base: 'full',lg:'60%'}} justify={'center'}>
+        <Card  w='full' rounded={'xl'} py={'1rem'}>
             <CardBody>
                 <Flex direction={'column'}>
                     <Avatar size={'2xl'} mx={'auto'} mb={'1rem'} src='https://i.pinimg.com/originals/0b/3d/f1/0b3df19a63dfe264cfd984f6864a77b3.jpg'/>

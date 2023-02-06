@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast, Container, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Card, CardBody, Avatar, Badge, Divider, IconButton } from '@chakra-ui/react';
+import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast, Container, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Card, CardBody, Avatar, Badge, Divider, IconButton, Table, TableContainer, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
 import Select from "react-select";
 import supabase from '../../utils/supabaseClient';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
@@ -236,61 +236,86 @@ const CustomerDetails = (props) => {
                             <Button variant={'outline'} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
                         </Link>
                     </Box>
-                    {/* Customer Details Card Info  Component */}
-                    <CustomerDetailsCard bg={bg} borderColor={borderColor} onOpen={() => handleCustomerEdit(customer)} deleteCustomer={onDeleteOpen} customer={customer} customerDate={customerDate} />
-                    <Flex w={'full'} h={'full'} gap={4} direction={{base: 'column', lg: 'row'}}>
-                        {/* Customer Invoices Card */}
-                        <Box w={'full'}>
-                            <Accordion allowToggle rounded={'xl'} p={2} shadow={'md'} bg={useColorModeValue('white', 'gray.700')}>
-                                <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
-                                    <h2>
-                                        <AccordionButton rounded={'md'}>
-                                            <FiFileText size={'20px'} />
-                                            <Box as='span' flex='1' textAlign='left' fontWeight={'bold'} fontSize={'md'} ml={'4'}>
-                                                Customer's Invoices
-                                            </Box>
-                                            <AccordionIcon />
-                                        </AccordionButton>
-                                    </h2>
-                                    <AccordionPanel pb={4} >
-                                        {customerInvoicesById?.map((item, index) => (
-                                            <>
-                                                <Flex justify={'space-evenly'} my={'1rem'} py={'1rem'} w={'full'} _hover={{bg: hoverEffectBgColor}} rounded={'xl'}>
-                                                    <Text w={'5%'} my={'auto'} fontWeight={'semibold'}>{formatNumber(item.invoice_number)}</Text> 
-                                                    <Badge w={'15%'} textAlign={'center'} my={'auto'} p={2} rounded={'xl'} colorScheme={item.invoice_status.name === 'Paid' ? 'green' : item.invoice_status.name === 'Pending' ? 'yellow' : item.invoice_status.name === 'Overdue' ? 'red' : 'gray'}>{item.invoice_status.name}</Badge>
-                                                    <Text w={'15%'} my={'auto'}>{formatDate(item.invoice_date)}</Text>
-                                                    <Text w={'15%'} my={'auto'}>${formatMoneyValue(item.total)}</Text>
-                                                    <Text w={'15%'} my={'auto'}>${formatMoneyValue(item.amount_due)}</Text>
-                                                    <IconButton icon={<FiArrowRight/>}/>
-                                                </Flex>
-                                            </>
-                                        ))}
-                                    </AccordionPanel>
-                                </AccordionItem>
-                            </Accordion>
-                        </Box>
+                    <Flex w={'full'} direction={{base: 'column', lg: 'row'}} gap={'6'}>
+                        {/* Customer Details Card Info  Component */}
+                        <CustomerDetailsCard bg={bg} borderColor={borderColor} onOpen={() => handleCustomerEdit(customer)} deleteCustomer={onDeleteOpen} customer={customer} customerDate={customerDate} /> 
+                        <Flex w={'full'} h={'full'} gap={4} direction={{base: 'column', lg: 'column'}}>
+                            {/* Customer Invoices Card */}
+                            <Box w={'full'}>
+                                <Accordion allowToggle rounded={'xl'} p={2} shadow={'md'} bg={useColorModeValue('white', 'gray.700')} defaultIndex={[0]} allowMultiple>
+                                    <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
+                                        <h2>
+                                            <AccordionButton rounded={'md'}>
+                                                <FiFileText size={'20px'} />
+                                                <Box as='span' flex='1' textAlign='left' fontWeight={'bold'} fontSize={'md'} ml={'4'}>
+                                                    Customer's Invoices
+                                                </Box>
+                                                <AccordionIcon />
+                                            </AccordionButton>
+                                        </h2>
+                                        <AccordionPanel pb={4}>
+                                            {!customerInvoicesById ? <>
+                                                <Flex w={'full'} justify={'center'}>❌ No Invoices for this customer!</Flex>
+                                            </> : <>
+                                                <TableContainer>
+                                                    <Table>
+                                                        <Thead>
+                                                            <Tr>
+                                                                <Th>INV#</Th>
+                                                                <Th>Status</Th>
+                                                                <Th>Date</Th>
+                                                                <Th>Due Date</Th>
+                                                                <Th>Total</Th>
+                                                                <Th>Actions</Th>
+                                                            </Tr>
+                                                        </Thead>
+                                                        <Tbody>
+                                                            {customerInvoicesById?.map((item, index) => (
+                                                                <>
+                                                                    <Tr>
+                                                                        <Td><Text fontWeight={'semibold'}>{formatNumber(item.invoice_number)}</Text> </Td>
+                                                                        <Td><Badge w={'80%'} textAlign={'center'} my={'auto'} p={2} rounded={'xl'} colorScheme={item.invoice_status.name === 'Paid' ? 'green' : item.invoice_status.name === 'Pending' ? 'yellow' : item.invoice_status.name === 'Overdue' ? 'red' : 'gray'}>{item.invoice_status.name}</Badge></Td>
+                                                                        <Td><Text>{formatDate(item.invoice_date)}</Text></Td>
+                                                                        <Td><Text>{formatDate(item.due_date)}</Text></Td>
+                                                                        <Td><Text>${formatMoneyValue(item.total)}</Text></Td>
+                                                                        <Td><Link to={`/editinvoice/${item.invoice_number}`}><IconButton icon={<FiArrowRight/>}/></Link></Td>
+                                                                    </Tr>
+                                                                </>
+                                                            ))}
+                                                        </Tbody>
+                                                    </Table>
+                                                </TableContainer>
+                                            </>}
 
-                        {/* Customer Quotes Card */}
-                        <Box w={'full'}>
-                            <Accordion allowToggle rounded={'xl'} p={2} shadow={'md'} bg={useColorModeValue('white', 'gray.700')}>
-                                <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
-                                    <h2>
-                                        <AccordionButton rounded={'md'}>
-                                            <TbRuler size={'20px'} />
-                                            <Box as='span' flex='1' textAlign='left' fontWeight={'bold'} fontSize={'md'} ml={'4'}>
-                                                Customer's Quotes
-                                            </Box>
-                                            <AccordionIcon />
-                                        </AccordionButton>
-                                    </h2>
-                                    <AccordionPanel pb={4} >
+                                        </AccordionPanel>
+                                    </AccordionItem>
+                                </Accordion>
+                            </Box>
 
-                                    </AccordionPanel>
-                                </AccordionItem>
-                            </Accordion>                            
-                        </Box>
+                            {/* Customer Quotes Card */}
+                            <Box w={'full'}>
+                                <Accordion allowToggle rounded={'xl'} p={2} shadow={'md'} bg={useColorModeValue('white', 'gray.700')}>
+                                    <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
+                                        <h2>
+                                            <AccordionButton rounded={'md'}>
+                                                <TbRuler size={'20px'} />
+                                                <Box as='span' flex='1' textAlign='left' fontWeight={'bold'} fontSize={'md'} ml={'4'}>
+                                                    Customer's Quotes
+                                                </Box>
+                                                <AccordionIcon />
+                                            </AccordionButton>
+                                        </h2>
+                                        <AccordionPanel pb={4} >
 
+                                        </AccordionPanel>
+                                    </AccordionItem>
+                                </Accordion>                            
+                            </Box>
+
+                        </Flex>    
                     </Flex>
+
+
                 </VStack>
 
                 {/* Edit Form Modal */}

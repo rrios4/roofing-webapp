@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Select, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border, Icon, Skeleton, Badge } from '@chakra-ui/react';
+import { Select, IconButton, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border, Icon, Skeleton, Badge } from '@chakra-ui/react';
 import { Card, EditEstimateRequestForm, DeleteAlertDialog, NewEstimateRequestForm, NewCustomerForm } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
@@ -310,33 +310,33 @@ const EstimateRequests = () => {
                                 <TableCaption>Total of {estimateRequests?.length} requests in our system ✌️</TableCaption>
                                 <Thead>
                                     <Tr>
-                                        <Th textAlign={'center'}>QR #</Th>
+                                        <Th>QR #</Th>
                                         <Th textAlign={'center'}>Status</Th>
-                                        <Th textAlign={'center'}>Service</Th>
+                                        <Th>Service</Th>
                                         <Th>Desired Date</Th>
-                                        <Th>Customer Type</Th>
+                                        <Th>Type</Th>
                                         <Th>Name</Th>
                                         <Th>Email</Th>
                                         <Th>Phone Number</Th>
-                                        <Th textAlign={'center'}>Address</Th>
-                                        <Th textAlign={'center'}>Entry Date</Th>
+                                        <Th>Address</Th>
+                                        <Th>Entry Date</Th>
                                         <Th textAlign={'center'}>Actions</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
                                     {estimateRequests?.map((request, index) => (
                                         <Tr key={request.id}>
-                                            <Td textAlign={'center'}><Text fontWeight={'bold'} fontSize={'md'}>{formatNumber(request.id)}</Text></Td>
+                                            <Td><Text fontWeight={'bold'} fontSize={'md'}>{formatNumber(request.id)}</Text></Td>
                                             <Td textAlign={'center'}><Badge w={'80px'} variant={'subtle'} mx={'auto'} colorScheme={request.estimate_request_status.name === 'New' ? 'green' : '' || request.estimate_request_status.name === 'Planned' ? 'blue' : '' || request.estimate_request_status.name === 'Pending' ? 'yellow' : '' || request.estimate_request_status.name === 'Closed' ? 'red' : 'gray'} p='1' rounded={'xl'} align='center'>{request.estimate_request_status.name}</Badge></Td>
-                                            <Td textAlign={'center'}><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
+                                            <Td><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
                                             <Td><Text>{formatDate(request.requested_date)}</Text></Td>
                                             <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'purple.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td>
                                             <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
                                             <Td><Text>{request.email}</Text></Td>
-                                            <Td><Text>{request.phone_number ? request.phone_number : 'Not Available ❌'}</Text></Td>
+                                            <Td><Text>{request.phone_number ? request.phone_number : '❌ Unavailable'}</Text></Td>
                                             <Td><Text cursor={'pointer'} _hover={{ textColor: "blue" }} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
                                             <Td><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>
-                                            <Td textAlign={'center'}><Tooltip label='Edit'><Button mr={'1rem'} onClick={() => { handleEdit(request) }}><MdEdit /></Button></Tooltip><Tooltip label='Delete'><Button mr={'1rem'} onClick={() => { handleDeleteAlert(request.id) }}><MdDelete /></Button></Tooltip><Tooltip label='Save as Customer'><Button onClick={() => handleEmailValidation(request)}><MdAddBox /></Button></Tooltip></Td>
+                                            <Td textAlign={'center'}><Flex gap='2'><Tooltip label='Edit'><IconButton icon={<MdEdit />} onClick={() => { handleEdit(request) }}/></Tooltip><Tooltip label='Delete'><IconButton icon={<MdDelete/>} onClick={() => { handleDeleteAlert(request.id) }}/></Tooltip><Tooltip label='Save as Customer'><IconButton icon={<MdAddBox />} onClick={() => handleEmailValidation(request)}/></Tooltip></Flex></Td>
                                         </Tr>
                                     ))}
                                 </Tbody>

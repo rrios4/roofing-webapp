@@ -4,7 +4,7 @@ import { Flex } from '@chakra-ui/react';
 import { useColorModeValue } from "@chakra-ui/react";
 
 const Layout = (props) => {
-  const bg = useColorModeValue('gray.50', 'gray.800')
+  const bg = useColorModeValue('gray.100', 'gray.800')
   return (
     <>
       <header>

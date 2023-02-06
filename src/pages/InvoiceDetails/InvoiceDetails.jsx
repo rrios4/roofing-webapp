@@ -179,7 +179,7 @@ const InvoiceDetails = (props) => {
             {/* Header */}
             <Flex justify={'space-between'} mb={'1rem'} flexDir={{base: 'row', lg: 'row'}}>
                 <Flex px={'1rem'} gap={4} mb={{base: '0rem', lg: '0'}}>
-                    <Button borderColor={'gray.300'} colorScheme={'gray'}><FiArrowLeft/></Button>
+                    <Link to={`/invoices`}><Button borderColor={'gray.300'} colorScheme={'gray'}><FiArrowLeft/></Button></Link>
                     {/* <Text my={'auto'} fontSize={'xl'} fontWeight={'bold'}>INV #{id}</Text> */}
                 </Flex>
                 <Flex px={'1rem'} gap={4} ml={{base: 'auto', lg: '0'}}>
@@ -366,10 +366,12 @@ const InvoiceDetails = (props) => {
                                     <Text w={'36%'} fontWeight={'semibold'} textColor={secondaryTextColor} my={'auto'}>Customer</Text>
                                     {!invoice ? <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'}/> : <>
                                         <Flex>
-                                            <Button variant={'ghost'}>
-                                                <Avatar size={'xs'}/>
-                                                <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>{invoice?.customer.first_name} {invoice?.customer.last_name}</Text>
-                                            </Button>
+                                            <Link to={`/editcustomer/${invoice?.customer.id}`}>
+                                                <Button variant={'ghost'}>
+                                                    <Avatar size={'xs'}/>
+                                                    <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>{invoice?.customer.first_name} {invoice?.customer.last_name}</Text>
+                                                </Button>
+                                            </Link>
                                         </Flex>  
                                     </>}
                                 </Flex>
