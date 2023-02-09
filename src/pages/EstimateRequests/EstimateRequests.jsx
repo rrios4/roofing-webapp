@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Select, IconButton, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border, Icon, Skeleton, Badge } from '@chakra-ui/react';
+import { Select, IconButton, Flex, Box, Text, Button, useToast, Input, InputGroup, InputLeftAddon, FormHelperText, TableContainer, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Tooltip, useColorModeValue, border, Icon, Skeleton, Badge, Avatar } from '@chakra-ui/react';
 import { Card, EditEstimateRequestForm, DeleteAlertDialog, NewEstimateRequestForm, NewCustomerForm } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import formatNumber from '../../utils/formatNumber';
@@ -42,7 +42,7 @@ const EstimateRequests = () => {
     const getQuoteRequests = async () => {
         const { data: requests, error } = await supabase
             .from('quote_request')
-            .select('*, estimate_request_status:est_request_status_id(*)')
+            .select('*, estimate_request_status:est_request_status_id(*), customer_type:customer_typeID(*)')
             .order('est_request_status_id', { ascending: true })
             .order('created_at', { ascending: false })
 
@@ -291,17 +291,19 @@ const EstimateRequests = () => {
                             <Icon as={FiInbox} boxSize={'7'}/>
                             <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Quote Requests</Text>
                         </Flex>
-                        <Box display='flex' pr='1rem' mr={'1rem'} justifyContent={'end'} >
+                        <Flex pr='1rem' mr={'1rem'} justifyContent={'end'}  gap={10}>
                             <form method='GET' onSubmit={searchEstimateRequest}>
                                 <FormControl display={'flex'}>
                                     <Input value={searchEstimateRequestsInput} onChange={({ target }) => setSearchEstimateRequestsInput(target.value)} placeholder='Search for Request' colorScheme='blue' border='2px' />
-                                    <Tooltip label='Search'><Button ml={'1rem'} type='submit'><MdSearch size={'25px'} /></Button></Tooltip>
+                                    <Tooltip label='Search'><IconButton ml={'1rem'} type='submit' icon={<MdSearch/>}/></Tooltip>
                                 </FormControl>
                             </form>
-                            <Tooltip label='Filter'><Button colorScheme={'gray'} ml='2rem'><MdFilterAlt size={'20px'} /></Button></Tooltip>
-                            <Tooltip label='Sort'><Button colorScheme={'gray'} ml='1rem'><MdFilterList size={'20px'} /></Button></Tooltip>
-                            <Tooltip label='Create New Request'><Button colorScheme='blue' variant='solid' onClick={onNewOpen} ml='1rem'><MdPostAdd size={'20px'} /></Button></Tooltip>
-                        </Box>
+                            <Flex gap={4}>
+                                <Tooltip label='Filter'><IconButton colorScheme={'gray'} icon={<MdFilterAlt/>}/></Tooltip>
+                                <Tooltip label='Sort'><IconButton colorScheme={'gray'} icon={<MdFilterList/>}/></Tooltip>
+                                <Tooltip label='Create New Request'><IconButton colorScheme='blue' variant='solid' onClick={onNewOpen} icon={<MdPostAdd/>}/></Tooltip>
+                            </Flex>
+                        </Flex>
 
                     </HStack>
                     <TableContainer overflow={'auto'}>
@@ -315,8 +317,9 @@ const EstimateRequests = () => {
                                         <Th>Service</Th>
                                         <Th>Desired Date</Th>
                                         <Th>Type</Th>
-                                        <Th>Name</Th>
-                                        <Th>Email</Th>
+                                        <Th>Lead</Th>
+                                        {/* <Th>Name</Th> */}
+                                        {/* <Th>Email</Th> */}
                                         <Th>Phone Number</Th>
                                         <Th>Address</Th>
                                         <Th>Entry Date</Th>
@@ -330,9 +333,11 @@ const EstimateRequests = () => {
                                             <Td textAlign={'center'}><Badge w={'80px'} variant={'subtle'} mx={'auto'} colorScheme={request.estimate_request_status.name === 'New' ? 'green' : '' || request.estimate_request_status.name === 'Planned' ? 'blue' : '' || request.estimate_request_status.name === 'Pending' ? 'yellow' : '' || request.estimate_request_status.name === 'Closed' ? 'red' : 'gray'} p='1' rounded={'xl'} align='center'>{request.estimate_request_status.name}</Badge></Td>
                                             <Td><Text>{request.service_type_id === 1 ? 'Roof Replacement' : ''}{request.service_type_id === 2 ? 'Roof Leak Repair' : ''}{request.service_type_id === 3 ? 'Roof Maintenance' : ''}</Text></Td>
                                             <Td><Text>{formatDate(request.requested_date)}</Text></Td>
-                                            <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'purple.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td>
-                                            <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td>
-                                            <Td><Text>{request.email}</Text></Td>
+                                            <Td textAlign={'center'}><Badge w={'full'} variant={'subtle'} mx={'auto'} colorScheme={request.customer_type.name === 'Commercial' ? 'green' : '' || request.customer_type.name === 'Residential' ? 'blue' : '' || request.customer_type.name === 'Other' ? 'yellow' : '' || request.customer_type.name === 'Rejected' ? 'red' : 'gray'} p='1' rounded={'xl'} align='center'>{request.customer_type.name}</Badge></Td>
+                                            <Td>{request.firstName && request.lastName ? <><Flex><Button variant={'ghost'} colorScheme={'facebook'}><Avatar size={'xs'} mr={'8px'} my={'auto'} /><Flex flexDir={'column'}><Flex fontWeight={'bold'} fontSize={'xs'}><Text marginRight={'4px'}>{request.firstName}</Text><Text>{request.lastName}</Text></Flex><Flex mt={'4px'} fontWeight={'light'} fontSize={'xs'}>{request.email}</Flex></Flex></Button></Flex></> : <>{request.company_name}</>}</Td>
+                                            {/* <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'purple.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td> */}
+                                            {/* <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td> */}
+                                            {/* <Td><Text>{request.email}</Text></Td> */}
                                             <Td><Text>{request.phone_number ? request.phone_number : '❌ Unavailable'}</Text></Td>
                                             <Td><Text cursor={'pointer'} _hover={{ textColor: "blue" }} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`)}>{request.streetAddress} {request.city}, {request.state} {request.zipcode}</Text></Td>
                                             <Td><Text>{new Date(request.created_at).toLocaleString()}</Text></Td>

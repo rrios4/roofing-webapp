@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Customer, Card, StateOptions, CustomerTypeOptions, NewCustomerForm } from '../../components';
-import { Select, Flex, Box, Text, Button, Input, useBreakpointValue, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Icon, Stack, Skeleton } from '@chakra-ui/react';
+import { Select, Flex, Box, Text, Button, Input, useBreakpointValue, InputGroup, InputLeftAddon, useColorModeValue, TableContainer, FormHelperText, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalHeader, FormControl, FormLabel, ModalFooter, VStack, Table, TableCaption, Thead, Tr, Th, Tbody, Td, HStack, Spinner, Icon, Stack, Skeleton, IconButton } from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient'
 import stateJSONData from '../../data/state_titlecase.json'
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
@@ -97,11 +97,11 @@ export default function Customers() {
                                 <FormControl>
                                     <Flex flexDir={'row'}>
                                         <Input value={searchCustomer} onChange={({ target }) => setSearchCustomer(target.value)} placeholder='Search for Customer' colorScheme='blue' border='2px' />
-                                        <Tooltip label='Search'><Button ml={'1rem'} type='submit'><MdSearch size={'25px'} /></Button></Tooltip>
+                                        <Tooltip label='Search'><IconButton ml={'1rem'} type='submit' icon={<MdSearch/>}/></Tooltip>
                                     </Flex>
                                 </FormControl>
                             </form>
-                            <Tooltip label={'Create New Customer'}><Button colorScheme='blue' variant='solid' onClick={onOpen} ml='2rem'><IoMdPersonAdd size={'20px'} /></Button></Tooltip>
+                            <Tooltip label={'Create New Customer'}><IconButton colorScheme='blue' variant='solid' onClick={onOpen} ml='2rem' icon={<IoMdPersonAdd/>}/></Tooltip>
                         </Box>
 
                     </Stack>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Td, Tr, Text, Box, Flex, Button, Spinner, Tooltip, Avatar, Badge } from '@chakra-ui/react';
+import { Td, Tr, Text, Box, Flex, Button, Spinner, Tooltip, Avatar, Badge, IconButton } from '@chakra-ui/react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ const Customer = (props) => {
           {isWideVersion && <Td><Flex fontWeight={'light'}>{!customer.phone_number ? <><Text>❌ Unavailable</Text></> : customer.phone_number}</Flex></Td>}
           {isWideVersion && <Td><Text _hover={{ textColor: "blue" }} cursor={'pointer'} onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`)}>{customer.street_address} {customer.city}, {customer.state} {customer.zipcode}</Text></Td>}
           {isWideVersion && <Td>{new Date(customer.created_at).toLocaleDateString('en-us', options)}</Td>}
-          <Td textAlign={'center'}><Link to={`/editcustomer/${customer.id}`}><Tooltip label='Go to Customer Details '><Button ml={'1rem'} colorScheme={'gray'} variant='solid'><MdKeyboardArrowRight size={'20px'} /></Button></Tooltip></Link></Td>
+          <Td textAlign={'center'}><Link to={`/editcustomer/${customer.id}`}><Tooltip label='Go to Customer Details '><IconButton ml={'1rem'} colorScheme={'gray'} variant='solid' icon={<MdKeyboardArrowRight/>}/></Tooltip></Link></Td>
         </Tr>
       ))}
     </>

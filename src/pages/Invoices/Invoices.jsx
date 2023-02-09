@@ -210,55 +210,57 @@ function Invoices() {
                 <Card width='full' bg={bg} borderColor={borderColor}>
                     {/* Header Page info & Actions */}
                     <HStack mt={'1rem'} mb={'2rem'}>
-                    <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
+                        <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
                             <Icon as={FiFileText} boxSize={'7'}/>
                             <Text fontSize={'3xl'} fontWeight='semibold' mx='14px'>Invoices</Text>
                         </Flex>
-                        <Flex pr='1rem' mr={'1rem'} justifyContent={'end'}  gap={4}>
+                        <Flex pr='1rem' mr={'1rem'} justifyContent={'end'}  gap={10}>
                             <form method='GET' onSubmit={searchInvoice}>
                                 <FormControl display={'flex'}>
                                     <Input value={searchInvoiceInput} onChange={({target}) => setSearchInvoiceInput(target.value)} placeholder='Search for Invoice' colorScheme='blue' border='2px'/>
-                                    <Tooltip label='Search'><Button mx={'1rem'} type='submit'><MdSearch size={'25px'}/></Button></Tooltip>
+                                    <Tooltip label='Search'><IconButton mx={'1rem'} type='submit' icon={<MdSearch/>}/></Tooltip>
                                 </FormControl>
                             </form>
                             {/* Filter Popover */}
-                            <Popover>
-                                <PopoverTrigger>
-                                    <IconButton icon={<FiFilter/>} colorScheme={'gray'}/>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                    <PopoverArrow/>
-                                    <PopoverCloseButton/>
-                                    <PopoverHeader fontWeight={'bold'}>Filter Invoices</PopoverHeader>
-                                    <PopoverBody>
-                                        <Flex direction={'column'} gap={2} py={'1rem'}>
-                                            {/* Switch 1 */}
-                                            <Flex gap={2}>
-                                                <Switch isChecked={filterSwitchStatus1IsOn} onChange={() => handleSwitchesStatusFilter(true, false, false, false)}/>
-                                                <Text my={'auto'} textAlign={'center'}>By Status of <Text as={'span'} fontWeight={'semibold'}>Draft</Text></Text>
+                            <Flex gap={4}>
+                                <Popover>
+                                    <PopoverTrigger>
+                                        <IconButton icon={<FiFilter/>} colorScheme={'gray'}/>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <PopoverArrow/>
+                                        <PopoverCloseButton/>
+                                        <PopoverHeader fontWeight={'bold'}>Filter Invoices</PopoverHeader>
+                                        <PopoverBody>
+                                            <Flex direction={'column'} gap={2} py={'1rem'}>
+                                                {/* Switch 1 */}
+                                                <Flex gap={2}>
+                                                    <Switch isChecked={filterSwitchStatus1IsOn} onChange={() => handleSwitchesStatusFilter(true, false, false, false)}/>
+                                                    <Text my={'auto'} textAlign={'center'}>By Status of <Text as={'span'} fontWeight={'semibold'}>Draft</Text></Text>
+                                                </Flex>
+                                                {/* Switch 2 */}
+                                                <Flex gap={2}>
+                                                    <Switch isChecked={filterSwitchStatus2IsOn} onChange={() => handleSwitchesStatusFilter(false, true, false, false)}/>
+                                                    <Text my={'auto'} textAlign={'center'}>By Status of <Text as={'span'} color={'yellow.400'} fontWeight={'semibold'}>Pending</Text></Text>
+                                                </Flex>
+                                                {/* Switch 3 */}
+                                                <Flex gap={2}>
+                                                    <Switch isChecked={filterSwitchStatus3IsOn} onChange={() => handleSwitchesStatusFilter(false, false, true, false)}/>
+                                                    <Text my={'auto'} textAlign={'center'}>By Status of <Text as={'span'} color={'green.400'} fontWeight={'semibold'}>Paid</Text></Text>
+                                                </Flex>
+                                                {/* Switch 4 */}
+                                                <Flex gap={2}>
+                                                    <Switch isChecked={filterSwitchStatus4IsOn} onChange={() => handleSwitchesStatusFilter(false, false, false, true)}/>
+                                                    <Text my={'auto'} textAlign={'center'}>By Status of <Text as={'span'} color={'red.400'} fontWeight={'semibold'}>Overdue</Text></Text>
+                                                </Flex>
                                             </Flex>
-                                            {/* Switch 2 */}
-                                            <Flex gap={2}>
-                                                <Switch isChecked={filterSwitchStatus2IsOn} onChange={() => handleSwitchesStatusFilter(false, true, false, false)}/>
-                                                <Text my={'auto'} textAlign={'center'}>By Status of <Text as={'span'} color={'yellow.400'} fontWeight={'semibold'}>Pending</Text></Text>
-                                            </Flex>
-                                            {/* Switch 3 */}
-                                            <Flex gap={2}>
-                                                <Switch isChecked={filterSwitchStatus3IsOn} onChange={() => handleSwitchesStatusFilter(false, false, true, false)}/>
-                                                <Text my={'auto'} textAlign={'center'}>By Status of <Text as={'span'} color={'green.400'} fontWeight={'semibold'}>Paid</Text></Text>
-                                            </Flex>
-                                            {/* Switch 4 */}
-                                            <Flex gap={2}>
-                                                <Switch isChecked={filterSwitchStatus4IsOn} onChange={() => handleSwitchesStatusFilter(false, false, false, true)}/>
-                                                <Text my={'auto'} textAlign={'center'}>By Status of <Text as={'span'} color={'red.400'} fontWeight={'semibold'}>Overdue</Text></Text>
-                                            </Flex>
-                                        </Flex>
-                                    </PopoverBody>
-                                </PopoverContent>
-                            </Popover>
-                            <Tooltip label='Sort'><IconButton icon={<MdFilterList/>}/></Tooltip>
-                            <Tooltip label={draftInvoiceButtonSwitchIsOn === true ? 'Close View of Drafts' : 'Click to view all Draft Invoices'}><IconButton icon={draftInvoiceButtonSwitchIsOn === true ? <FiX/> : <FiFolder/>} onClick={handleDraftInvoiceView}/></Tooltip>
-                            <Tooltip label='Create New Invoice'><IconButton px={'1rem'} icon={<MdPostAdd/>} onClick={onNewOpen} colorScheme={'blue'}/></Tooltip>
+                                        </PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
+                                <Tooltip label='Sort'><IconButton icon={<MdFilterList/>}/></Tooltip>
+                                <Tooltip label={draftInvoiceButtonSwitchIsOn === true ? 'Close View of Drafts' : 'Click to view all Draft Invoices'}><IconButton icon={draftInvoiceButtonSwitchIsOn === true ? <FiX/> : <FiFolder/>} onClick={handleDraftInvoiceView}/></Tooltip>
+                                <Tooltip label='Create New Invoice'><IconButton icon={<MdPostAdd/>} onClick={onNewOpen} colorScheme={'blue'}/></Tooltip>
+                            </Flex>
                         </Flex>
                     </HStack>
                     <TableContainer>
