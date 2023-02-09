@@ -5,8 +5,8 @@ const QuoteRequestStatusOptions = (props) => {
     if(data?.length > 0){
         return(
             <>
-                {data?.map((quoteRequestStatus) => (
-                    <option key={quoteRequestStatus.id} value={quoteRequestStatus.id}>{quoteRequestStatus.name}</option>
+                {data?.map((quoteRequestStatus, index) => (
+                    <option key={index} value={quoteRequestStatus.id}>{quoteRequestStatus.name}</option>
                 ))}
             </>
         )

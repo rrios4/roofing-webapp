@@ -94,7 +94,7 @@ const NewEstimateForm = (props) => {
                         </Flex>
                     </Flex>
                     <FormLabel mt='1rem'>Zipcode</FormLabel>
-                    <Input type='number' value={quoteToZipcodeInput} onChange={(e) => setQuoteToZipcodeInput(e.target.value)} type={'text'}/>
+                    <Input value={quoteToZipcodeInput} onChange={(e) => setQuoteToZipcodeInput(e.target.value)} type={'text'}/>
                 </FormControl>
                 {/* <FormControl isRequired>
                     <FormLabel pt='1rem'>Job Type</FormLabel>

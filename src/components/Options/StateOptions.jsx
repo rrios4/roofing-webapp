@@ -5,10 +5,8 @@ const StateOptions = ({states}) => {
     if(states.length > 0){
         return(
             <>
-                {states.map((state, index) => (
-                    <>
-                        <option key={index} value={state.abbreviation}>{state.name}, {state.abbreviation}</option>
-                    </>
+                {states?.map((state, index) => (
+                    <option key={index} value={state.abbreviation}>{state.name}, {state.abbreviation}</option>
                 ))}
             </>
         )

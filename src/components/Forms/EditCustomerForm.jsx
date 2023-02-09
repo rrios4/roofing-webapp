@@ -113,7 +113,6 @@ const EditCustomerForm = (props) => {
                         <Input name='zipcode' type={'text'} defaultValue={customer?.zipcode} onChange={handleEditOnChange}/>
                     </Flex>
                 </Flex>
-
             </FormControl>
             <Flex pt={'2rem'} justifyContent={'flex-end'}>
                 <Button colorScheme='blue' mr={'1rem'} type='submit' >Update</Button>

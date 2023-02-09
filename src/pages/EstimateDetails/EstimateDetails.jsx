@@ -21,7 +21,7 @@ const EstimateDetails = (props) => {
 
     // Define variables
     const {id} = useParams();
-    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
+    // const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();
     let navigate = useNavigate();

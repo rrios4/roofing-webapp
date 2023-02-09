@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast, Container, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Card, CardBody, Avatar, Badge, Divider, IconButton, Table, TableContainer, Thead, Tr, Th, Td, Tbody } from '@chakra-ui/react';
+import { Grid, Box, Flex, Modal, useColorModeValue, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, Button, FormHelperText, Text, useDisclosure, Stack, VStack, HStack, Image, StackDivider, Spinner, useToast, Container, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Card, CardBody, Avatar, Badge, Divider, IconButton, Table, TableContainer, Thead, Tr, Th, Td, Tbody, Skeleton } from '@chakra-ui/react';
 import Select from "react-select";
 import supabase from '../../utils/supabaseClient';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
@@ -242,7 +242,7 @@ const CustomerDetails = (props) => {
                         <Flex w={'full'} h={'full'} gap={4} direction={{base: 'column', lg: 'column'}}>
                             {/* Customer Invoices Card */}
                             <Box w={'full'}>
-                                <Accordion allowToggle rounded={'xl'} p={2} shadow={'md'} bg={useColorModeValue('white', 'gray.700')} defaultIndex={[0]} allowMultiple>
+                                <Accordion rounded={'xl'} p={2} shadow={'md'} bg={useColorModeValue('white', 'gray.700')} defaultIndex={[0]} allowMultiple>
                                     <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
                                         <h2>
                                             <AccordionButton rounded={'md'}>
@@ -255,7 +255,7 @@ const CustomerDetails = (props) => {
                                         </h2>
                                         <AccordionPanel pb={4}>
                                             {!customerInvoicesById ? <>
-                                                <Flex w={'full'} justify={'center'}>❌ No Invoices for this customer!</Flex>
+                                                <Skeleton h={'20px'} w={'full'}/>
                                             </> : <>
                                                 <TableContainer>
                                                     <Table>
@@ -271,16 +271,14 @@ const CustomerDetails = (props) => {
                                                         </Thead>
                                                         <Tbody>
                                                             {customerInvoicesById?.map((item, index) => (
-                                                                <>
-                                                                    <Tr>
-                                                                        <Td><Text fontWeight={'semibold'}>{formatNumber(item.invoice_number)}</Text> </Td>
-                                                                        <Td><Badge w={'80%'} textAlign={'center'} my={'auto'} p={2} rounded={'xl'} colorScheme={item.invoice_status.name === 'Paid' ? 'green' : item.invoice_status.name === 'Pending' ? 'yellow' : item.invoice_status.name === 'Overdue' ? 'red' : 'gray'}>{item.invoice_status.name}</Badge></Td>
-                                                                        <Td><Text>{formatDate(item.invoice_date)}</Text></Td>
-                                                                        <Td><Text>{formatDate(item.due_date)}</Text></Td>
-                                                                        <Td><Text>${formatMoneyValue(item.total)}</Text></Td>
-                                                                        <Td><Link to={`/editinvoice/${item.invoice_number}`}><IconButton icon={<FiArrowRight/>}/></Link></Td>
-                                                                    </Tr>
-                                                                </>
+                                                                <Tr key={index}>
+                                                                    <Td><Text fontWeight={'semibold'}>{formatNumber(item.invoice_number)}</Text></Td>
+                                                                    <Td><Badge w={'80%'} textAlign={'center'} my={'auto'} p={2} rounded={'xl'} colorScheme={item.invoice_status.name === 'Paid' ? 'green' : item.invoice_status.name === 'Pending' ? 'yellow' : item.invoice_status.name === 'Overdue' ? 'red' : 'gray'}>{item.invoice_status.name}</Badge></Td>
+                                                                    <Td><Text>{formatDate(item.invoice_date)}</Text></Td>
+                                                                    <Td><Text>{formatDate(item.due_date)}</Text></Td>
+                                                                    <Td><Text>${formatMoneyValue(item.total)}</Text></Td>
+                                                                    <Td><Link to={`/editinvoice/${item.invoice_number}`}><IconButton icon={<FiArrowRight/>}/></Link></Td>
+                                                                </Tr>
                                                             ))}
                                                         </Tbody>
                                                     </Table>

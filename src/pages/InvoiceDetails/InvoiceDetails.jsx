@@ -3,7 +3,7 @@ import {Select, Badge, Textarea, Grid, Box, Flex, Modal, ModalOverlay, ModalCont
 // import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
-import { FiArrowLeft, FiBriefcase, FiCalendar, FiMoreHorizontal, FiLin, FiUser, FiShare2, FiUploadCloud, FiPaperclip, FiSend, FiClock, FiAlignLeft, FiCircle, FiCheck, FiX, FiEdit, FiFolder } from 'react-icons/fi'
+import { FiArrowLeft, FiBriefcase, FiCalendar, FiMoreHorizontal, FiUser, FiShare2, FiUploadCloud, FiPaperclip, FiSend, FiClock, FiAlignLeft, FiCircle, FiCheck, FiX, FiEdit, FiFolder } from 'react-icons/fi'
 import { MdOutlinePayments, MdPendingActions } from 'react-icons/md'
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs'
 import { AiOutlineDown, AiOutlineCheckCircle, AiOutlineBars } from 'react-icons/ai'
@@ -41,7 +41,7 @@ const InvoiceDetails = (props) => {
 
     // Define variables
     const {id} = useParams();
-    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
+    // const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
     let navigate = useNavigate();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const initialRef = React.useRef();

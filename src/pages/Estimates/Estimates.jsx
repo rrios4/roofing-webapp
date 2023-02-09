@@ -18,7 +18,7 @@ function Estimates() {
     const toast = useToast()
 
     // let navigate = useNavigate();
-    const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
+    // const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
 
     //Style for Card component
     const bg = useColorModeValue('white', 'gray.700');
