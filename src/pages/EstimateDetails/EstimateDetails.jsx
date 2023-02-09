@@ -28,25 +28,26 @@ const EstimateDetails = (props) => {
 
     //React functions
     useEffect(() => {
-        getInvoiceById();
+        // getInvoiceById();
     }, []);
 
     // functions created by me to get what I need of data
-    const getInvoiceById = async () => {
-        await axios.get(`${url}/estimates/${id}`)
-        .then((response) => {
-            const invoiceById = response.data;
-            const cu = response.data.cu;
-            const ets = response.data.ets;
-            const jtype = response.data.jtype;
-            //add our data to state
-            setInvoice(invoiceById);
-            setCustomer(cu);
-            setCuStatus(ets);
-            console.log(invoiceById);
-        })
-        .catch(error => console.error(`Error: ${error}`));
-    }   
+    // OLD code that needs to be reviewed that functionality has been replaced
+    // const getInvoiceById = async () => {
+    //     await axios.get(`${url}/estimates/${id}`)
+    //     .then((response) => {
+    //         const invoiceById = response.data;
+    //         const cu = response.data.cu;
+    //         const ets = response.data.ets;
+    //         const jtype = response.data.jtype;
+    //         //add our data to state
+    //         setInvoice(invoiceById);
+    //         setCustomer(cu);
+    //         setCuStatus(ets);
+    //         console.log(invoiceById);
+    //     })
+    //     .catch(error => console.error(`Error: ${error}`));
+    // }   
 
     const statusBadge = () => {
         if(cuStatus.status_name === 'Pending'){
@@ -64,95 +65,100 @@ const EstimateDetails = (props) => {
         }
     }
 
-    const deleteEstimate = async () => {
-        // console.log('Button will perform a delete to the database.');
-        await swal({
-            title: 'Are you sure?',
-            text: 'Once deleted, you will not be able to recover estimate info!',
-            icon: 'warning',
-            buttons: true,
-            dangerMode: true
-        })
-        .then((willDelete) => {
-            if(willDelete) {
-                axios.delete(`${url}/estimates/${id}`)
-                .then(response => {
-                    navigate("/estimates")
-                })
-                swal("Poof! Your estimate has been deleted!", {
-                    icon: "success",
-                });
-            } else {
-                swal("Your estimate data was not deleted!");
-                navigate(`/editestimate/${id}`)
-            }
-        }) 
+    // OLD Code 
+    // const deleteEstimate = async () => {
+    //     // console.log('Button will perform a delete to the database.');
+    //     await swal({
+    //         title: 'Are you sure?',
+    //         text: 'Once deleted, you will not be able to recover estimate info!',
+    //         icon: 'warning',
+    //         buttons: true,
+    //         dangerMode: true
+    //     })
+    //     .then((willDelete) => {
+    //         if(willDelete) {
+    //             axios.delete(`${url}/estimates/${id}`)
+    //             .then(response => {
+    //                 navigate("/estimates")
+    //             })
+    //             swal("Poof! Your estimate has been deleted!", {
+    //                 icon: "success",
+    //             });
+    //         } else {
+    //             swal("Your estimate data was not deleted!");
+    //             navigate(`/editestimate/${id}`)
+    //         }
+    //     }) 
                 
-    }
+    // }
 
-    const markEstimateApproved = async() => {
-        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
-            etStatusId : '2'
-        })
-        .then((response) => {
-            getInvoiceById();
-            console.log(response);
-        })
-    };
+    // OLD Code 
+    // const markEstimateApproved = async() => {
+    //     await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
+    //         etStatusId : '2'
+    //     })
+    //     .then((response) => {
+    //         getInvoiceById();
+    //         console.log(response);
+    //     })
+    // };
 
-    const markEstimatePending = async() => {
-        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
-            etStatusId: '1'
-        })
-        .then((response) => {
-            getInvoiceById();
-            console.log(response);
-        })
-        .catch(error => console.error(`Error: ${error}`));
-    };
+    // OLD Code 
+    // const markEstimatePending = async() => {
+    //     await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
+    //         etStatusId: '1'
+    //     })
+    //     .then((response) => {
+    //         getInvoiceById();
+    //         console.log(response);
+    //     })
+    //     .catch(error => console.error(`Error: ${error}`));
+    // };
 
-    const markEstimateExpired = async() => {
-        await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
-            etStatusId: '3'
-        })
-        .then((response) => {
-            getInvoiceById();
-            console.log(response);
-        })
-        .catch(error => console.error(`Error: ${error}`));
-    };
+    // OLD Code 
+    // const markEstimateExpired = async() => {
+    //     await axios.put(`http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`, {
+    //         etStatusId: '3'
+    //     })
+    //     .then((response) => {
+    //         getInvoiceById();
+    //         console.log(response);
+    //     })
+    //     .catch(error => console.error(`Error: ${error}`));
+    // };
 
-    const handleSubmit = async(event) => {
-        event.preventDefault();
-        const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`
-        const json = {
-            estimate_date: estDate,
-            exp_date: expDate,
-            sqft_measurement: sqMeasurement,
-            service_name: serviceName,
-            quote_price: `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(quotePrice)}`,
-        }
-        await axios.put(url2, json)
-        .then((response) => {
-            console.log('I was submitted', response);
-        })
-        .catch((err) => {
-            console.error(err);
-        })
-        // setJobTypeOption('');
-        // setSelectInvoiceStatus('');
-        setServiceName('');
-        setEstDate('');
-        setExpDate('');
-        setQuotePrice('');
-        // setInvoiceDate('');
-        // setDueDate('');
-        // setAmountDue('');
-        getInvoiceById();
-        onClose();
-        console.log('Submit Function works!')
-        //history.go(0);
-    };
+    // OLD Code 
+    // const handleSubmit = async(event) => {
+    //     event.preventDefault();
+    //     const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/estimates/${id}`
+    //     const json = {
+    //         estimate_date: estDate,
+    //         exp_date: expDate,
+    //         sqft_measurement: sqMeasurement,
+    //         service_name: serviceName,
+    //         quote_price: `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(quotePrice)}`,
+    //     }
+    //     await axios.put(url2, json)
+    //     .then((response) => {
+    //         console.log('I was submitted', response);
+    //     })
+    //     .catch((err) => {
+    //         console.error(err);
+    //     })
+    //     // setJobTypeOption('');
+    //     // setSelectInvoiceStatus('');
+    //     setServiceName('');
+    //     setEstDate('');
+    //     setExpDate('');
+    //     setQuotePrice('');
+    //     // setInvoiceDate('');
+    //     // setDueDate('');
+    //     // setAmountDue('');
+    //     getInvoiceById();
+    //     onClose();
+    //     console.log('Submit Function works!')
+    //     //history.go(0);
+    // };
 
     const convertToInvoice = async() => {
         await swal({
@@ -194,7 +200,7 @@ const EstimateDetails = (props) => {
                         <ModalHeader textAlign='center'>Edit Estimate</ModalHeader>
                         <Text color='red' textAlign='center'>Fill all fields please!</Text>
                         <ModalCloseButton />
-                        <form method='PUT' onSubmit={handleSubmit}>
+                        <form method='PUT' onSubmit={''}>
                         <ModalBody>
                                 <FormControl isRequired>
                                     <FormLabel pt='1rem'>Estimate Date</FormLabel>
@@ -220,7 +226,7 @@ const EstimateDetails = (props) => {
                                 </FormControl>
                         </ModalBody>
                         <ModalFooter>
-                            <Button colorScheme='blue' mr={3} type='submit' onClick={handleSubmit} >Save</Button>
+                            <Button colorScheme='blue' mr={3} type='submit' onClick={''} >Save</Button>
                             <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
                         </ModalFooter>
                         </form>
@@ -247,13 +253,13 @@ const EstimateDetails = (props) => {
                             </Box>
                             <Box display='flex' pr='1rem'>
                                 <Box pr='1rem' >
-                                    <Button colorScheme='yellow' onClick={markEstimatePending}>Mark Pending</Button>
+                                    <Button colorScheme='yellow' onClick={''}>Mark Pending</Button>
                                 </Box>
                                 <Box pr='1rem'>
-                                    <Button colorScheme='green' onClick={markEstimateApproved}>Approved</Button>
+                                    <Button colorScheme='green' onClick={'markEstimateApproved'}>Approved</Button>
                                 </Box>
                                 <Box pr='1rem' >
-                                    <Button colorScheme='red' onClick={markEstimateExpired}>Mark Expired</Button>
+                                    <Button colorScheme='red' onClick={'markEstimateExpired'}>Mark Expired</Button>
                                 </Box>
                             </Box>
                         </Box>
@@ -268,7 +274,7 @@ const EstimateDetails = (props) => {
                                     <Button colorScheme='blue' onClick={onOpen}>Edit</Button>
                                 </Box>
                                 <Box pl='1rem'>
-                                    <Button colorScheme='red' onClick={deleteEstimate}>Delete</Button>
+                                    <Button colorScheme='red' onClick={'deleteEstimate'}>Delete</Button>
                                 </Box>
                             </Box>
                             <Box display='flex' p='2rem' bg='gray.600' rounded='xl'>
