@@ -48,7 +48,7 @@ const CustomerDetailsCard = (props) => {
                                 <FiMapPin/>     
                             </Box>
                             <Text w={'100px'} fontWeight={'semibold'} textColor={useColorModeValue('gray.500', 'gray.400')} fontSize={'md'}>Address</Text>
-                            <Text>{customer?.street_address} {customer?.city}, {customer?.state}</Text>
+                            <Text>{customer?.street_address} {customer?.city}, {customer?.state} {customer?.zipcode}</Text>
                         </Flex>
                         <Flex gap={4} mb={'2'}>
                             <Box my={'auto'}>

@@ -19,16 +19,14 @@
     "react-hook-form": "7.33.1",
     "react-icons": "4.4.0",
     "react-router-dom": "6.3.0",
-    "react-scripts": "5.0.1",
     "react-select": "5.4.0",
     "sweetalert": "2.1.2",
+    "vite-plugin-env-compatible": "^1.1.1",
     "web-vitals": "2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "vite build"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +47,8 @@
     ]
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.6.0"
+    "@faker-js/faker": "^7.6.0",
+    "@vitejs/plugin-react": "^2.0.1",
+    "vite": "^3.0.7"
   }
 }
