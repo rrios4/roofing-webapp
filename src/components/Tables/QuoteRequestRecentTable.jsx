@@ -19,6 +19,7 @@ import {
   Skeleton
 } from '@chakra-ui/react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import formatNumber from '../../utils/formatNumber';
 
 const QuoteRequestRecentTable = (props) => {
   const { data } = props;
@@ -30,7 +31,7 @@ const QuoteRequestRecentTable = (props) => {
             <TableCaption>Recent Quote Requests Updated 👋</TableCaption>
             <Thead>
               <Tr>
-                <Th>QR#</Th>
+                <Th textAlign={'center'}>QR#</Th>
                 <Th>Status</Th>
                 <Th>Service</Th>
                 <Th>Name</Th>
@@ -40,66 +41,33 @@ const QuoteRequestRecentTable = (props) => {
             <Tbody>
               {data?.map((item, index) => (
                 <Tr key={item.id}>
-                  <Td fontWeight={'bold'}>{item.id}</Td>
-                  <Td>
-                    {item.est_request_status_id === 1 ? (
-                      <>
-                        <Text
-                          textColor={'white'}
-                          bg={'green.500'}
-                          py={'6px'}
-                          rounded={'xl'}
-                          align="center"
-                          w={'80px'}>
-                          New
-                        </Text>
-                      </>
-                    ) : '' || item.est_request_status_id === 2 ? (
-                      <>
-                        <Text
-                          textColor={'white'}
-                          bg={'blue.500'}
-                          py={'6px'}
-                          rounded={'xl'}
-                          align="center"
-                          w={'80px'}>
-                          Scheduled
-                        </Text>
-                      </>
-                    ) : '' || item.est_request_status_id === 5 ? (
-                      <>
-                        <Text
-                          textColor={'white'}
-                          bg={'red.500'}
-                          py={'6px'}
-                          rounded={'xl'}
-                          align="center"
-                          w={'80px'}>
-                          Closed
-                        </Text>
-                      </>
-                    ) : '' || item.est_request_status_id === 3 ? (
-                      <>
-                        <Text
-                          textColor={'white'}
-                          bg={'yellow.500'}
-                          py={'6px'}
-                          rounded={'xl'}
-                          align="center"
-                          w={'80px'}>
-                          Pending
-                        </Text>
-                      </>
-                    ) : (
-                      ''
-                    )}
+                  <Td fontWeight={'bold'} textAlign={'center'}>
+                    {formatNumber(item.id)}
                   </Td>
                   <Td>
-                    <Text>
-                      {item.service_type_id === 1 ? 'Roof Replacement' : ''}
-                      {item.service_type_id === 2 ? 'Roof Leak Repair' : ''}
-                      {item.service_type_id === 3 ? 'Roof Maintenance' : ''}
-                    </Text>
+                    <Badge
+                      w={'80px'}
+                      variant={'subtle'}
+                      mx={'auto'}
+                      colorScheme={
+                        item.estimate_request_status.name === 'New'
+                          ? 'green'
+                          : '' || item.estimate_request_status.name === 'Planned'
+                          ? 'blue'
+                          : '' || item.estimate_request_status.name === 'Pending'
+                          ? 'yellow'
+                          : '' || item.estimate_request_status.name === 'Closed'
+                          ? 'red'
+                          : 'gray'
+                      }
+                      p="1"
+                      rounded={'xl'}
+                      align="center">
+                      {item.estimate_request_status.name}
+                    </Badge>
+                  </Td>
+                  <Td>
+                    <Text>{item.services.name}</Text>
                   </Td>
                   <Td>
                     <Flex>

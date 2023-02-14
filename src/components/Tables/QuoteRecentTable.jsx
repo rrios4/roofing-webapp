@@ -12,22 +12,26 @@ import {
   Text,
   Flex,
   Button,
-  Skeleton
+  Skeleton,
+  Badge
 } from '@chakra-ui/react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import formatNumber from '../../utils/formatNumber';
 
 const QuoteRecentTable = (props) => {
   const { data } = props;
   return (
     <>
       <TableContainer overflow={'auto'}>
-        {data ? (
+        {!data ? (
+          <Skeleton height={'200px'} rounded={'md'} />
+        ) : (
           <>
             <Table variant="simple" size={'sm'}>
               <TableCaption>Recently updated quotes 👋</TableCaption>
               <Thead>
                 <Tr>
-                  <Th>Q#</Th>
+                  <Th textAlign={'center'}>Quote #</Th>
                   <Th>Status</Th>
                   <Th>Service</Th>
                   <Th>Customer</Th>
@@ -36,28 +40,32 @@ const QuoteRecentTable = (props) => {
                 </Tr>
               </Thead>
               <Tbody>
-                {data.map((item, index) => (
+                {data?.map((item, index) => (
                   <Tr key={item.id}>
-                    <Td fontWeight={'bold'}>{item.estimate_number}</Td>
-                    <Td>
-                      {item.estimate_status.name === 'Sent' ? (
-                        <>
-                          <Text
-                            color={'white'}
-                            mx={'auto'}
-                            bg={'yellow.500'}
-                            p="1"
-                            rounded={'xl'}
-                            align="center"
-                            w={'80px'}>
-                            Sent
-                          </Text>
-                        </>
-                      ) : (
-                        'false'
-                      )}
+                    <Td fontWeight={'bold'} textAlign={'center'}>{formatNumber(item.quote_number)}</Td>
+                    <Td textAlign={'center'}>
+                      <Badge
+                        w={'80px'}
+                        variant={'subtle'}
+                        mx={'auto'}
+                        colorScheme={
+                          item.quote_status.name === 'Accepted'
+                            ? 'green'
+                            : '' || item.quote_status.name === 'Paid'
+                            ? 'green'
+                            : '' || item.quote_status.name === 'Pending'
+                            ? 'yellow'
+                            : '' || item.quote_status.name === 'Rejected'
+                            ? 'red'
+                            : 'gray'
+                        }
+                        p="1"
+                        rounded={'xl'}
+                        align="center">
+                        {item.quote_status.name}
+                      </Badge>
                     </Td>
-                    <Td>{item.service_type.name}</Td>
+                    <Td>{item.services.name}</Td>
                     <Td>
                       <Flex>
                         <Text>{item.customer.first_name}</Text>
@@ -77,8 +85,6 @@ const QuoteRecentTable = (props) => {
               </Tbody>
             </Table>
           </>
-        ) : (
-          <Skeleton height={'200px'} rounded={'md'} />
         )}
       </TableContainer>
     </>

@@ -200,7 +200,7 @@ const Dashboard = ({ children }) => {
   const getRecentQR = async () => {
     const { data, error } = await supabase
       .from('quote_request')
-      .select('id, est_request_status_id, service_type_id, firstName, lastName')
+      .select('*, estimate_request_status:est_request_status_id(*), services:service_type_id(*)')
       .order('updated_at', { ascending: false })
       .limit(4);
 
@@ -213,10 +213,8 @@ const Dashboard = ({ children }) => {
   // Handles getting the recent Quotes from DB
   const getRecentQuotes = async () => {
     const { data, error } = await supabase
-      .from('estimate')
-      .select(
-        '*, customer:customer_id(*), estimate_status:est_status_id(*), service_type:service_type_id(*)'
-      )
+      .from('quote')
+      .select('*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*)')
       .order('updated_at', { ascending: false })
       .limit(4);
 
@@ -490,7 +488,7 @@ const Dashboard = ({ children }) => {
               </Text>
             </Flex>
             {/* Tabs */}
-            <Tabs variant={'soft-rounded'}>
+            <Tabs variant={'line'}>
               <TabList>
                 <Tab>Quote Requests</Tab>
                 <Tab>Quotes</Tab>
@@ -498,19 +496,19 @@ const Dashboard = ({ children }) => {
                 <Tab>Customers</Tab>
               </TabList>
               <TabPanels>
-                <TabPanel>
+                <TabPanel px={2} pt={5}>
                   {/* Recent Quotes Request Updated Table */}
                   <QuoteRequestRecentTable data={quoteRequestsRecentData} />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel px={2} pt={5}>
                   {/* Recent Quote Updated Table */}
                   <QuoteRecentTable data={quotesRecentData} />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel px={2} pt={5}>
                   {/* Recent Invoice Updated Table */}
                   <InvoiceRecentTable data={invoiceRecentData} />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel px={2} pt={5}>
                   {/* Recent Customer Updated Table */}
                   <CustomerRecentTable data={customerRecentData} />
                 </TabPanel>

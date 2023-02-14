@@ -12,9 +12,11 @@ import {
   Text,
   Flex,
   Button,
-  Skeleton
+  Skeleton,
+  Badge
 } from '@chakra-ui/react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import formatNumber from '../../utils/formatNumber';
 
 const InvoiceRecentTable = (props) => {
   const { data } = props;
@@ -28,7 +30,7 @@ const InvoiceRecentTable = (props) => {
               <TableCaption>Recently updated invoices 👋</TableCaption>
               <Thead>
                 <Tr>
-                  <Th>INV#</Th>
+                  <Th>Invoice#</Th>
                   <Th>Status</Th>
                   <Th>Service</Th>
                   <Th>Customer</Th>
@@ -39,59 +41,26 @@ const InvoiceRecentTable = (props) => {
               <Tbody>
                 {data?.map((item, index) => (
                   <Tr key={item.id}>
-                    <Td fontWeight={'bold'}>{item.invoice_number}</Td>
-                    <Td>
-                      {item.invoice_status.name === 'Sent' ? (
-                        <>
-                          <Text
-                            color={'white'}
-                            mx={'auto'}
-                            bg={'yellow.500'}
-                            p="1"
-                            rounded={'xl'}
-                            align="center"
-                            w={'80px'}>
-                            Sent
-                          </Text>
-                        </>
-                      ) : item.invoice_status.name === 'New' ? (
-                        <>
-                          <Text
-                            color={'white'}
-                            mx={'auto'}
-                            bg={'green.500'}
-                            p={'1'}
-                            rounded={'xl'}
-                            align={'center'}
-                            w={'80px'}>
-                            New
-                          </Text>
-                        </>
-                      ) : item.invoice_status.name === 'Paid' ? (
-                        <Text
-                          color={'white'}
-                          mx={'auto'}
-                          bg={'blue.500'}
-                          p={'1'}
-                          rounded={'xl'}
-                          align={'center'}
-                          w={'80px'}>
-                          Paid
-                        </Text>
-                      ) : item.invoice_status.name === 'Paid' ? (
-                        <Text
-                          color={'white'}
-                          mx={'auto'}
-                          bg={'red.500'}
-                          p={'1'}
-                          rounded={'xl'}
-                          align={'center'}
-                          w={'80px'}>
-                          Outstanding
-                        </Text>
-                      ) : (
-                        'false'
-                      )}
+                    <Td fontWeight={'bold'} textAlign={'center'}>{formatNumber(item.invoice_number)}</Td>
+                    <Td textAlign={'center'}>
+                      <Badge
+                        w={'80px'}
+                        variant={'subtle'}
+                        mx={'auto'}
+                        colorScheme={
+                          item.invoice_status.name === 'Paid'
+                            ? 'green'
+                            : '' || item.invoice_status.name === 'Pending'
+                            ? 'yellow'
+                            : '' || item.invoice_status.name === 'Overdue'
+                            ? 'red' || item.invoice_status.name === 'Draft'
+                            : 'gray'
+                        }
+                        p="1"
+                        rounded={'xl'}
+                        align="center">
+                        {item.invoice_status.name}
+                      </Badge>
                     </Td>
                     <Td>{item.service_type.name}</Td>
                     <Td>
