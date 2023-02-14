@@ -16,21 +16,22 @@ import {
   Badge
 } from '@chakra-ui/react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import formatNumber from '../../utils/formatNumber';
+import formatNumber from '../../../utils/formatNumber';
 
-const InvoiceRecentTable = (props) => {
+const QuoteRecentTable = (props) => {
   const { data } = props;
-
   return (
     <>
       <TableContainer overflow={'auto'}>
-        {data ? (
+        {!data ? (
+          <Skeleton height={'200px'} rounded={'md'} />
+        ) : (
           <>
             <Table variant="simple" size={'sm'}>
-              <TableCaption>Recently updated invoices 👋</TableCaption>
+              <TableCaption>Recently updated quotes 👋</TableCaption>
               <Thead>
                 <Tr>
-                  <Th>Invoice#</Th>
+                  <Th textAlign={'center'}>Quote #</Th>
                   <Th>Status</Th>
                   <Th>Service</Th>
                   <Th>Customer</Th>
@@ -41,28 +42,30 @@ const InvoiceRecentTable = (props) => {
               <Tbody>
                 {data?.map((item, index) => (
                   <Tr key={item.id}>
-                    <Td fontWeight={'bold'} textAlign={'center'}>{formatNumber(item.invoice_number)}</Td>
+                    <Td fontWeight={'bold'} textAlign={'center'}>{formatNumber(item.quote_number)}</Td>
                     <Td textAlign={'center'}>
                       <Badge
                         w={'80px'}
                         variant={'subtle'}
                         mx={'auto'}
                         colorScheme={
-                          item.invoice_status.name === 'Paid'
+                          item.quote_status.name === 'Accepted'
                             ? 'green'
-                            : '' || item.invoice_status.name === 'Pending'
+                            : '' || item.quote_status.name === 'Paid'
+                            ? 'green'
+                            : '' || item.quote_status.name === 'Pending'
                             ? 'yellow'
-                            : '' || item.invoice_status.name === 'Overdue'
-                            ? 'red' || item.invoice_status.name === 'Draft'
+                            : '' || item.quote_status.name === 'Rejected'
+                            ? 'red'
                             : 'gray'
                         }
                         p="1"
                         rounded={'xl'}
                         align="center">
-                        {item.invoice_status.name}
+                        {item.quote_status.name}
                       </Badge>
                     </Td>
-                    <Td>{item.service_type.name}</Td>
+                    <Td>{item.services.name}</Td>
                     <Td>
                       <Flex>
                         <Text>{item.customer.first_name}</Text>
@@ -71,7 +74,7 @@ const InvoiceRecentTable = (props) => {
                     </Td>
                     <Td fontWeight={'bold'}>${item.total}</Td>
                     <Td>
-                      <Link to={`/editinvoice/${item.id}`}>
+                      <Link to={'/estimates'}>
                         <Button colorScheme={'gray'} variant={'solid'}>
                           <MdKeyboardArrowRight size={'20px'} />
                         </Button>
@@ -82,12 +85,10 @@ const InvoiceRecentTable = (props) => {
               </Tbody>
             </Table>
           </>
-        ) : (
-          <Skeleton height={'200px'} rounded={'md'} />
         )}
       </TableContainer>
     </>
   );
 };
 
-export default InvoiceRecentTable;
+export default QuoteRecentTable;

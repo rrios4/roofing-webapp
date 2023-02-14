@@ -19,7 +19,7 @@ import {
   Skeleton
 } from '@chakra-ui/react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import formatNumber from '../../utils/formatNumber';
+import formatNumber from '../../../utils/formatNumber';
 
 const QuoteRequestRecentTable = (props) => {
   const { data } = props;

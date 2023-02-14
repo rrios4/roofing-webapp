@@ -18,7 +18,7 @@ import {
   IconButton,
   Skeleton
 } from '@chakra-ui/react';
-import formatNumber from '../../utils/formatNumber';
+import formatNumber from '../../../utils/formatNumber';
 import { MdEdit, MdDelete, MdKeyboardArrowRight } from 'react-icons/md';
 
 const QuoteTable = (props) => {

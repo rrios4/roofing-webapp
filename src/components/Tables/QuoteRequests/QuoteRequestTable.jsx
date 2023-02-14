@@ -1,6 +1,6 @@
 import React from 'react';
-import formatDate from '../../utils/formatDate';
-import formatNumber from '../../utils/formatNumber';
+import formatDate from '../../../utils/formatDate';
+import formatNumber from '../../../utils/formatNumber';
 import {
   TableContainer,
   Table,
