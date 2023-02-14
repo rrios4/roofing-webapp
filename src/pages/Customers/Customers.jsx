@@ -8,51 +8,28 @@ import {
   CustomerTable
 } from '../../components';
 import {
-  Select,
   Flex,
   Box,
   Text,
   Button,
   Input,
   useBreakpointValue,
-  InputGroup,
-  InputLeftAddon,
   useColorModeValue,
-  TableContainer,
-  FormHelperText,
   Tooltip,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
-  ModalHeader,
   FormControl,
-  FormLabel,
-  ModalFooter,
   VStack,
-  Table,
-  TableCaption,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  HStack,
-  Spinner,
   Icon,
   Stack,
-  Skeleton,
-  IconButton
+  IconButton,
+  useToast
 } from '@chakra-ui/react';
-import supabase from '../../utils/supabaseClient';
 import stateJSONData from '../../data/state_titlecase.json';
-import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import { IoMdPersonAdd } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowLeft, MdSearch } from 'react-icons/md';
 import { FiUsers } from 'react-icons/fi';
+import { formatPhoneNumber, supabase } from '../../utils';
 
 export default function Customers() {
   //For opening drawer components
@@ -81,6 +58,21 @@ export default function Customers() {
     // }
     getAllCustomers();
   }, []);
+
+  //Define toast from chakra ui
+  const toast = useToast();
+
+  // Handles the toast to give feedback to the user
+  const handleToastMessage = (status, position, invoice_numer, title, description) => {
+    toast({
+      position: position,
+      title: title,
+      description: description,
+      status: status,
+      duration: 5000,
+      isClosable: true
+    });
+  };
 
   // Gets a list of all customers stored in supabase DB
   const getAllCustomers = async () => {
@@ -126,6 +118,7 @@ export default function Customers() {
         onClose={onClose}
         initialRef={initialRef}
         updateCustomerData={getAllCustomers}
+        toast={handleToastMessage}
       />
       <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
         <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
