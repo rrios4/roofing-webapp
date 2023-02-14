@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Customer,
-  Card,
   StateOptions,
   CustomerTypeOptions,
   NewCustomerForm,
@@ -22,7 +21,10 @@ import {
   Icon,
   Stack,
   IconButton,
-  useToast
+  useToast,
+  Skeleton,
+  Card,
+  CardBody
 } from '@chakra-ui/react';
 import stateJSONData from '../../data/state_titlecase.json';
 import { IoMdPersonAdd } from 'react-icons/io';
@@ -30,8 +32,12 @@ import { Link } from 'react-router-dom';
 import { MdKeyboardArrowLeft, MdSearch } from 'react-icons/md';
 import { FiUsers } from 'react-icons/fi';
 import { formatPhoneNumber, supabase } from '../../utils';
+import { useCustomers } from '../../hooks/useCustomers';
 
 export default function Customers() {
+  // React Hook to use Customers with useState
+  const { customers, setCustomers, fetchCustomers, customersLoadingStateIsOn } = useCustomers();
+
   //For opening drawer components
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef();
@@ -43,7 +49,7 @@ export default function Customers() {
   const buttonColorScheme = useColorModeValue('blue', 'gray');
 
   //GET data from API
-  const [customers, setCustomers] = useState(null);
+  // const [customers, setCustomers] = useState(null);
   const [searchCustomer, setSearchCustomer] = useState('');
 
   const isWideVersion = useBreakpointValue({
@@ -56,7 +62,6 @@ export default function Customers() {
     // if (!localStorage.getItem('supabase.auth.token')) {
     //     history.push('/login');
     // }
-    getAllCustomers();
   }, []);
 
   //Define toast from chakra ui
@@ -72,17 +77,6 @@ export default function Customers() {
       duration: 5000,
       isClosable: true
     });
-  };
-
-  // Gets a list of all customers stored in supabase DB
-  const getAllCustomers = async () => {
-    let { data: customers, error } = await supabase.from('customer').select('*');
-
-    if (error) {
-      console.log(error);
-    }
-
-    setCustomers(customers);
   };
 
   // Search for customer based on first name, last name, or email address
@@ -117,11 +111,11 @@ export default function Customers() {
         isOpen={isOpen}
         onClose={onClose}
         initialRef={initialRef}
-        updateCustomerData={getAllCustomers}
+        updateCustomerData={fetchCustomers}
         toast={handleToastMessage}
       />
       <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
-        <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
+        {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
           <Link to={'/'}>
             <Button
               colorScheme={buttonColorScheme}
@@ -131,51 +125,61 @@ export default function Customers() {
               Back
             </Button>
           </Link>
-        </Box>
+        </Box> */}
         {/* Card Element for display main data for page */}
-        <Card width="full" bg={bg} borderColor={borderColor}>
-          <Stack direction={{ base: 'column', lg: 'row' }} mt={'1rem'} mb={'2rem'} spacing="auto">
-            <Flex alignItems={'center'} ml="24px">
-              <Icon as={FiUsers} boxSize={'7'} />
-              <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
-                Customers
-              </Text>
-            </Flex>
-            <Box
-              display="flex"
-              pr="1rem"
-              pt={{ base: '1rem', lg: '0rem' }}
-              justifyContent={{ base: 'center', lg: 'normal' }}>
-              <form method="GET" onSubmit={getAllCustomersByName}>
-                <FormControl>
-                  <Flex flexDir={'row'}>
-                    <Input
-                      value={searchCustomer}
-                      onChange={({ target }) => setSearchCustomer(target.value)}
-                      placeholder="Search for Customer"
-                      colorScheme="blue"
-                      border="2px"
-                    />
-                    <Tooltip label="Search">
-                      <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
-                    </Tooltip>
-                  </Flex>
-                </FormControl>
-              </form>
-              <Tooltip label={'Create New Customer'}>
-                <IconButton
-                  colorScheme="blue"
-                  variant="solid"
-                  onClick={onOpen}
-                  ml="2rem"
-                  icon={<IoMdPersonAdd />}
-                />
-              </Tooltip>
-            </Box>
-          </Stack>
-          {/* Customer Table Component */}
-          {/* Renders a table with all customers stored from database */}
-          <CustomerTable data={customers} isWideVersion={isWideVersion} />
+        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'md'}>
+          <CardBody>
+            <Stack direction={{ base: 'column', lg: 'row' }} mt={'1rem'} mb={'2rem'} spacing="auto">
+              <Flex alignItems={'center'} ml="24px">
+                <Icon as={FiUsers} boxSize={'7'} />
+                <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
+                  Customers
+                </Text>
+              </Flex>
+              <Box
+                display="flex"
+                pr="1rem"
+                pt={{ base: '1rem', lg: '0rem' }}
+                justifyContent={{ base: 'center', lg: 'normal' }}>
+                <form method="GET" onSubmit={getAllCustomersByName}>
+                  <FormControl>
+                    <Flex flexDir={'row'}>
+                      <Input
+                        value={searchCustomer}
+                        onChange={({ target }) => setSearchCustomer(target.value)}
+                        placeholder="Search for Customer"
+                        colorScheme="blue"
+                        border="2px"
+                      />
+                      <Tooltip label="Search">
+                        <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
+                      </Tooltip>
+                    </Flex>
+                  </FormControl>
+                </form>
+                <Tooltip label={'Create New Customer'}>
+                  <IconButton
+                    colorScheme="blue"
+                    variant="solid"
+                    onClick={onOpen}
+                    ml="2rem"
+                    icon={<IoMdPersonAdd />}
+                  />
+                </Tooltip>
+              </Box>
+            </Stack>
+            {/* Customer Table Component */}
+            {/* Renders a table with all customers stored from database */}
+            {customersLoadingStateIsOn === true ? (
+              <Box w={'full'} h={'200px'}>
+                <Skeleton w={'full'} h={'200px'} rounded={'xl'} />
+              </Box>
+            ) : (
+              <>
+                <CustomerTable data={customers} isWideVersion={isWideVersion} />
+              </>
+            )}
+          </CardBody>
         </Card>
       </VStack>
     </>

@@ -15,7 +15,10 @@ import {
   useDisclosure,
   VStack,
   IconButton,
-  Icon
+  Icon,
+  Card,
+  CardBody,
+  Skeleton
 } from '@chakra-ui/react';
 import AsyncSelect from 'react-select/async';
 import supabase from '../../utils/supabaseClient';
@@ -27,7 +30,6 @@ import {
   MdFilterAlt
 } from 'react-icons/md';
 import {
-  Card,
   CustomerOptions,
   Estimate,
   NewEstimateForm,
@@ -35,8 +37,12 @@ import {
   QuoteTable
 } from '../../components';
 import { TbRuler } from 'react-icons/tb';
+import { useQuotes } from '../../hooks/useQuotes';
 
 function Estimates() {
+  // Hooks used to manage quote data
+  const { quotes, setQuotes, fetchQuotes, quotesLoadingStateIsOn } = useQuotes();
+
   //Defining variables
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
@@ -57,7 +63,7 @@ function Estimates() {
   const [selectedEstimateId, setSelectedEstimateId] = useState('');
   const [selectedEstimateNumber, setSelectedEstimateNumber] = useState('');
 
-  const [quotes, setQuotes] = useState(null);
+  // const [quotes, setQuotes] = useState(null);
   const [customers, setCustomers] = useState('');
   const [searchCustomer, setSearchCustomer] = useState('');
   const [searchEstimateInput, setSearchEstimateInput] = useState('');
@@ -74,7 +80,7 @@ function Estimates() {
 
   //React Render Hook
   useEffect(() => {
-    getAllQuotes();
+    // getAllQuotes();
     // getCustomers();
   }, []);
 
@@ -130,7 +136,7 @@ function Estimates() {
       });
     console.log('Submit Function works!');
     //history.go(0);
-    getAllQuotes();
+    fetchQuotes();
     setEtDate('');
     setExpDate('');
     setQuotedPrice('');
@@ -196,62 +202,6 @@ function Estimates() {
 
   return (
     <>
-      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
-        <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
-          <Link to={'/'}>
-            <Button
-              colorScheme={buttonColorScheme}
-              ml={'1rem'}
-              mb="1rem"
-              leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>
-              Back
-            </Button>
-          </Link>
-        </Box>
-        <Card width="full" bg={bg} borderColor={borderColor}>
-          <HStack mt={'1rem'} mb={'2rem'}>
-            <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
-              <Icon as={TbRuler} boxSize={'7'} />
-              <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
-                Quotes
-              </Text>
-            </Flex>
-            <Flex pr="1rem" mr={'1rem'} justifyContent={'end'} gap={10}>
-              <form method="GET" onSubmit={searchEstimate}>
-                <FormControl display={'flex'}>
-                  <Input
-                    value={searchEstimateInput}
-                    onChange={({ target }) => setSearchEstimateInput(target.value)}
-                    placeholder="Search for Request"
-                    colorScheme="blue"
-                    border="2px"
-                  />
-                  <Tooltip label="Search">
-                    <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
-                  </Tooltip>
-                </FormControl>
-              </form>
-              <Flex gap={4}>
-                <Tooltip label="Filter">
-                  <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
-                </Tooltip>
-                <Tooltip label="Sort">
-                  <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
-                </Tooltip>
-                <Tooltip label="Create New Estimate">
-                  <IconButton
-                    colorScheme="blue"
-                    variant="solid"
-                    onClick={onNewOpen}
-                    icon={<MdPostAdd />}
-                  />
-                </Tooltip>
-              </Flex>
-            </Flex>
-          </HStack>
-          <QuoteTable data={quotes} handleDelete={handleDelete} />
-        </Card>
-      </VStack>
       <NewEstimateForm initialRef={initialRef} isOpen={isNewOpen} onClose={onNewClose} />
       <DeleteAlertDialog
         isOpen={isDeleteOpen}
@@ -264,6 +214,73 @@ function Estimates() {
         header={`Delete Estimate #${selectedEstimateNumber}`}
         body={`Are you sure? You can't undo this action afterwards.`}
       />
+      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
+        {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
+          <Link to={'/'}>
+            <Button
+              colorScheme={buttonColorScheme}
+              ml={'1rem'}
+              mb="1rem"
+              leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>
+              Back
+            </Button>
+          </Link>
+        </Box> */}
+        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'md'}>
+          <CardBody>
+            <HStack mt={'1rem'} mb={'2rem'}>
+              <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
+                <Icon as={TbRuler} boxSize={'7'} />
+                <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
+                  Quotes
+                </Text>
+              </Flex>
+              <Flex pr="1rem" mr={'1rem'} justifyContent={'end'} gap={10}>
+                <form method="GET" onSubmit={searchEstimate}>
+                  <FormControl display={'flex'}>
+                    <Input
+                      value={searchEstimateInput}
+                      onChange={({ target }) => setSearchEstimateInput(target.value)}
+                      placeholder="Search for Request"
+                      colorScheme="blue"
+                      border="2px"
+                    />
+                    <Tooltip label="Search">
+                      <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
+                    </Tooltip>
+                  </FormControl>
+                </form>
+                <Flex gap={4}>
+                  <Tooltip label="Filter">
+                    <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
+                  </Tooltip>
+                  <Tooltip label="Sort">
+                    <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
+                  </Tooltip>
+                  <Tooltip label="Create New Estimate">
+                    <IconButton
+                      colorScheme="blue"
+                      variant="solid"
+                      onClick={onNewOpen}
+                      icon={<MdPostAdd />}
+                    />
+                  </Tooltip>
+                </Flex>
+              </Flex>
+            </HStack>
+            {/* Table for all all quotes from DB */}
+            {quotesLoadingStateIsOn === true ? (
+              <Box w={'full'} h={'200px'}>
+                <Skeleton h={'200px'} rounded={'xl'} />
+              </Box>
+            ) : (
+              <>
+                <QuoteTable data={quotes} handleDelete={handleDelete} />
+              </>
+            )}
+          </CardBody>
+        </Card>
+      </VStack>
     </>
   );
 }

@@ -12,10 +12,13 @@ import {
   HStack,
   Tooltip,
   useColorModeValue,
-  Icon
+  Icon,
+  Card,
+  CardBody,
+  Skeleton,
+  Box
 } from '@chakra-ui/react';
 import {
-  Card,
   EditEstimateRequestForm,
   DeleteAlertDialog,
   NewEstimateRequestForm,
@@ -25,18 +28,29 @@ import {
 import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 import { FiInbox } from 'react-icons/fi';
+import { useQuoteRequests } from '../../hooks/useQuoteRequests';
 
 const EstimateRequests = () => {
+  // React Hook for managing state of quotes request
+  const { quoteRequests, setQuoteRequests, fetchQuoteRequests, quoteRequestLoadingStateIsOn } =
+    useQuoteRequests();
+
+  //Chakra UI styling parameters
+  const bg = useColorModeValue('white', 'gray.700');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const buttonColorScheme = useColorModeValue('blue', 'gray');
+
   // Chakra UI Modal
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
   const initialRef = React.useRef();
+
   //Define toast from chakra ui
   const toast = useToast();
 
   // React Use State to store data from API requests
-  const [estimateRequests, setEstimateRequests] = useState(null);
+  // const [quoteRequests, setQuoteRequests] = useState(null);
   const [searchEstimateRequestsInput, setSearchEstimateRequestsInput] = useState('');
   const [selectedEstimateRequestObject, setSelectedEstimateRequestObject] = useState({
     id: '',
@@ -58,31 +72,7 @@ const EstimateRequests = () => {
 
   const [inputValue, SetInputValue] = useState('');
 
-  //Chakra UI styling parameters
-  const bg = useColorModeValue('white', 'gray.700');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const buttonColorScheme = useColorModeValue('blue', 'gray');
-
-  useEffect(() => {
-    getQuoteRequests();
-  }, []);
-
-  // Get all quote requests
-  const getQuoteRequests = async () => {
-    const { data: requests, error } = await supabase
-      .from('quote_request')
-      .select(
-        '*, estimate_request_status:est_request_status_id(*), customer_type:customer_typeID(*)'
-      )
-      .order('est_request_status_id', { ascending: true })
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.log(error);
-    }
-    setEstimateRequests(requests);
-    console.log(requests);
-  };
+  useEffect(() => {}, []);
 
   // Search for customer quote request
   const searchEstimateRequest = async (event) => {
@@ -97,8 +87,8 @@ const EstimateRequests = () => {
       //     console.log(error)
       // }
       // searchEstimateRequestsInput(requests)
-      // setEstimateRequests(requests)
-      getQuoteRequests();
+      // setQuoteRequests(requests)
+      fetchQuoteRequests();
     } else {
       let { data: qrSearchResult, error } = await supabase
         .from('quote_request')
@@ -112,7 +102,7 @@ const EstimateRequests = () => {
       }
       console.log(qrSearchResult);
       // setCustomers(customersSearchResult);
-      setEstimateRequests(qrSearchResult);
+      setQuoteRequests(qrSearchResult);
     }
   };
 
@@ -238,7 +228,7 @@ const EstimateRequests = () => {
       lastName: '',
       email: ''
     });
-    await getQuoteRequests();
+    await fetchQuoteRequests();
     handleEditChangeToast(selectedEstimateRequestObject.id);
     // console.log(selectedEstimateRequestObject)
   };
@@ -348,7 +338,7 @@ const EstimateRequests = () => {
         isOpen={isNewOpen}
         onClose={onNewClose}
         initialRef={initialRef}
-        updateQRData={getQuoteRequests}
+        updateQRData={fetchQuoteRequests}
         toast={handleNewToast}
       />
       <EditEstimateRequestForm
@@ -363,7 +353,7 @@ const EstimateRequests = () => {
         isOpen={isDeleteOpen}
         onClose={onDeleteClose}
         toast={handleToastMessage}
-        updateParentState={getQuoteRequests}
+        updateParentState={fetchQuoteRequests}
         itemId={selectedEstimateRequestId}
         itemNumber={selectedEstimateRequestId}
         tableName={'quote_request'}
@@ -378,56 +368,66 @@ const EstimateRequests = () => {
                         <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
                     </Link>
                 </Box> */}
-        <Card width="full" bg={bg} borderColor={borderColor}>
-          {/* Card Header with Search, Button, and etc... */}
-          <HStack mt={'1rem'} mb={'2rem'}>
-            <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
-              <Icon as={FiInbox} boxSize={'7'} />
-              <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
-                Quote Requests
-              </Text>
-            </Flex>
-            <Flex pr="1rem" mr={'1rem'} justifyContent={'end'} gap={10}>
-              <form method="GET" onSubmit={searchEstimateRequest}>
-                <FormControl display={'flex'}>
-                  <Input
-                    value={searchEstimateRequestsInput}
-                    onChange={({ target }) => setSearchEstimateRequestsInput(target.value)}
-                    placeholder="Search for Request"
-                    colorScheme="blue"
-                    border="2px"
-                  />
-                  <Tooltip label="Search">
-                    <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
-                  </Tooltip>
-                </FormControl>
-              </form>
-              <Flex gap={4}>
-                <Tooltip label="Filter">
-                  <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
-                </Tooltip>
-                <Tooltip label="Sort">
-                  <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
-                </Tooltip>
-                <Tooltip label="Create New Request">
-                  <IconButton
-                    colorScheme="blue"
-                    variant="solid"
-                    onClick={onNewOpen}
-                    icon={<MdPostAdd />}
-                  />
-                </Tooltip>
+        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'md'}>
+          <CardBody>
+            {/* Card Header with Search, Button, and etc... */}
+            <HStack mt={'1rem'} mb={'2rem'}>
+              <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
+                <Icon as={FiInbox} boxSize={'7'} />
+                <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
+                  Quote Requests
+                </Text>
               </Flex>
-            </Flex>
-          </HStack>
-          {/* Main Body for content */}
-          {/* Quote Request Table to display all requests from company website */}
-          <QuoteRequestTable
-            data={estimateRequests}
-            emailValidation={handleEmailValidation}
-            handleEdit={handleEdit}
-            handleDeleteAlert={handleDeleteAlert}
-          />
+              <Flex pr="1rem" mr={'1rem'} justifyContent={'end'} gap={10}>
+                <form method="GET" onSubmit={searchEstimateRequest}>
+                  <FormControl display={'flex'}>
+                    <Input
+                      value={searchEstimateRequestsInput}
+                      onChange={({ target }) => setSearchEstimateRequestsInput(target.value)}
+                      placeholder="Search for Request"
+                      colorScheme="blue"
+                      border="2px"
+                    />
+                    <Tooltip label="Search">
+                      <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
+                    </Tooltip>
+                  </FormControl>
+                </form>
+                <Flex gap={4}>
+                  <Tooltip label="Filter">
+                    <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
+                  </Tooltip>
+                  <Tooltip label="Sort">
+                    <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
+                  </Tooltip>
+                  <Tooltip label="Create New Request">
+                    <IconButton
+                      colorScheme="blue"
+                      variant="solid"
+                      onClick={onNewOpen}
+                      icon={<MdPostAdd />}
+                    />
+                  </Tooltip>
+                </Flex>
+              </Flex>
+            </HStack>
+            {/* Main Body for content */}
+            {/* Quote Request Table to display all requests from company website */}
+            {quoteRequestLoadingStateIsOn === true ? (
+              <Box w={'full'} height={'200px'}>
+                <Skeleton height={'200px'} rounded={'xl'} />
+              </Box>
+            ) : (
+              <>
+                <QuoteRequestTable
+                  data={quoteRequests}
+                  emailValidation={handleEmailValidation}
+                  handleEdit={handleEdit}
+                  handleDeleteAlert={handleDeleteAlert}
+                />
+              </>
+            )}
+          </CardBody>
         </Card>
       </VStack>
     </>

@@ -15,11 +15,13 @@ import {
   Tooltip,
   HStack,
   Icon,
-  IconButton
+  IconButton,
+  Card,
+  CardBody,
+  Skeleton
 } from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient';
 import {
-  Card,
   CustomerOptions,
   EditInvoiceForm,
   NewInvoiceForm,
@@ -30,12 +32,18 @@ import {
 } from '../../components';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
+import { useInvoices } from '../../Hooks/useInvoices';
 
 function Invoices() {
-  //Defining variables
+  // Hooks
+  const { invoices, fetchInvoices, setInvoices, invoicesLoadingStateIsOn } = useInvoices();
+
+  // Use Disclosured used for opening drawers where forms are at
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+
+  // Ref for to focus cursor or field for elements
   const initialRef = React.useRef();
   let navigate = useNavigate();
   const toast = useToast();
@@ -46,7 +54,7 @@ function Invoices() {
   const buttonColorScheme = useColorModeValue('gray', 'gray');
 
   //React States to manage data
-  const [invoices, getInvoices] = useState();
+  // const [invoices, getInvoices] = useState();
   const [nextInvoiceNumber, setNextInvoiceNumber] = useState('');
   const [searchInvoiceInput, setSearchInvoiceInput] = useState('');
   const [selectedEditInvoice, setSelectedEditInvoice] = useState({
@@ -74,31 +82,31 @@ function Invoices() {
 
   // Invoice React State Array filtered
   const filteredInvoiceDraftArray = () =>
-    getInvoices((invoices) => invoices.filter((invoice) => invoice.invoice_status_id === 4));
+    setInvoices((invoices) => invoices.filter((invoice) => invoice.invoice_status_id === 4));
 
   // Functions to program events or actions
   useEffect(() => {
-    getAllInvoices();
+    // getAllInvoices();
     // getCustomers();
   }, []);
 
   //   Handles getting a list of all invoices from DB
-  const getAllInvoices = async () => {
-    const { data: allInvoices, error } = await supabase
-      .from('invoice')
-      .select(
-        '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)'
-      )
-      // .neq('invoice_status_id', 4)
-      .order('invoice_status_id', { ascending: false })
-      .order('updated_at', { ascending: false });
+  // const getAllInvoices = async () => {
+  //   const { data: allInvoices, error } = await supabase
+  //     .from('invoice')
+  //     .select(
+  //       '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)'
+  //     )
+  //     // .neq('invoice_status_id', 4)
+  //     .order('invoice_status_id', { ascending: false })
+  //     .order('updated_at', { ascending: false });
 
-    if (error) {
-      console.log(error);
-    }
-    getInvoices(allInvoices);
-    console.log(allInvoices);
-  };
+  //   if (error) {
+  //     console.log(error);
+  //   }
+  //   // getInvoices(allInvoices);
+  //   console.log(allInvoices);
+  // };
 
   // Function to handle the search through all invoices
   const searchInvoice = async () => {};
@@ -156,7 +164,7 @@ function Invoices() {
     }
 
     if (data) {
-      await getAllInvoices();
+      await fetchInvoices();
       handleToastMessage(
         'success',
         'top',
@@ -205,7 +213,7 @@ function Invoices() {
     if (newSwitchValue === true) {
       filteredInvoiceDraftArray();
     } else {
-      getAllInvoices();
+      fetchInvoices();
     }
     console.log(invoices);
   };
@@ -252,7 +260,7 @@ function Invoices() {
         isNewOpen={isNewOpen}
         onNewClose={onNewClose}
         onNewOpen={onNewOpen}
-        updateParentData={getAllInvoices}
+        updateParentData={fetchInvoices}
         toast={toast}
         data={invoices}
         nextInvoiceNumberValue={nextInvoiceNumber}
@@ -270,7 +278,7 @@ function Invoices() {
         onClose={onDeleteClose}
         onOpen={onDeleteOpen}
         toast={handleToastMessage}
-        updateParentState={getAllInvoices}
+        updateParentState={fetchInvoices}
         header={`❌ Delete Invoice #${selectedInvoiceNumber}`}
         body={`Are you sure? You can't undo this action afterwards. This will delete associated payments and line-items that depend on this invoice.`}
         tableName={'invoice'}
@@ -286,7 +294,7 @@ function Invoices() {
                 <AlertTitle mt={4} mb={1} fontSize='lg'>Invoice Submitted!</AlertTitle>
                 <AlertDescription maxWidth='sm'>New invoice saved to the server. Fire on! 👋</AlertDescription>
             </Alert> */}
-        <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
+        {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
           <Link to={'/'}>
             <Button
               colorScheme={'gray'}
@@ -296,70 +304,80 @@ function Invoices() {
               Back
             </Button>
           </Link>
-        </Box>
-        <Card width="full" bg={bg} borderColor={borderColor}>
-          {/* Header Page info & Actions */}
-          <HStack mt={'1rem'} mb={'2rem'}>
-            <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
-              <Icon as={FiFileText} boxSize={'7'} />
-              <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
-                Invoices
-              </Text>
-            </Flex>
-            <Flex pr="1rem" mr={'1rem'} justifyContent={'end'} gap={10}>
-              {/* Search Input for Invoices */}
-              <form method="GET" onSubmit={searchInvoice}>
-                <FormControl display={'flex'}>
-                  <Input
-                    value={searchInvoiceInput}
-                    onChange={({ target }) => setSearchInvoiceInput(target.value)}
-                    placeholder="Search for Invoice"
-                    colorScheme="blue"
-                    border="2px"
-                  />
-                  <Tooltip label="Search">
-                    <IconButton mx={'1rem'} type="submit" icon={<MdSearch />} />
-                  </Tooltip>
-                </FormControl>
-              </form>
-              <Flex gap={4}>
-                {/* Popover component to filter invoices by status */}
-                <InvoiceFilterSwitchPopover
-                  handleSwitches={handleSwitchesStatusFilter}
-                  switchOne={filterSwitchStatus1IsOn}
-                  switchTwo={filterSwitchStatus2IsOn}
-                  switchThree={filterSwitchStatus3IsOn}
-                  switchFour={filterSwitchStatus4IsOn}
-                />
-                {/* Sort Button */}
-                <Tooltip label="Sort">
-                  <IconButton icon={<MdFilterList />} />
-                </Tooltip>
-                {/* Draft View Button */}
-                <Tooltip
-                  label={
-                    draftInvoiceButtonSwitchIsOn === true
-                      ? 'Close View of Drafts'
-                      : 'Click to view all Draft Invoices'
-                  }>
-                  <IconButton
-                    icon={draftInvoiceButtonSwitchIsOn === true ? <FiX /> : <FiFolder />}
-                    onClick={handleDraftInvoiceView}
-                  />
-                </Tooltip>
-                {/* Create New Invoice Button */}
-                <Tooltip label="Create New Invoice">
-                  <IconButton icon={<MdPostAdd />} onClick={onNewOpen} colorScheme={'blue'} />
-                </Tooltip>
+        </Box> */}
+        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'md'}>
+          <CardBody>
+            {/* Header Page info & Actions */}
+            <HStack mt={'1rem'} mb={'2rem'}>
+              <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
+                <Icon as={FiFileText} boxSize={'7'} />
+                <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
+                  Invoices
+                </Text>
               </Flex>
-            </Flex>
-          </HStack>
-          {/* Table Component for Invoices Data */}
-          <InvoiceTable
-            data={invoices}
-            editModal={handleEditModal}
-            deleteAlert={handleDeleteAlert}
-          />
+              <Flex pr="1rem" mr={'1rem'} justifyContent={'end'} gap={10}>
+                {/* Search Input for Invoices */}
+                <form method="GET" onSubmit={searchInvoice}>
+                  <FormControl display={'flex'}>
+                    <Input
+                      value={searchInvoiceInput}
+                      onChange={({ target }) => setSearchInvoiceInput(target.value)}
+                      placeholder="Search for Invoice"
+                      colorScheme="blue"
+                      border="2px"
+                    />
+                    <Tooltip label="Search">
+                      <IconButton mx={'1rem'} type="submit" icon={<MdSearch />} />
+                    </Tooltip>
+                  </FormControl>
+                </form>
+                <Flex gap={4}>
+                  {/* Popover component to filter invoices by status */}
+                  <InvoiceFilterSwitchPopover
+                    handleSwitches={handleSwitchesStatusFilter}
+                    switchOne={filterSwitchStatus1IsOn}
+                    switchTwo={filterSwitchStatus2IsOn}
+                    switchThree={filterSwitchStatus3IsOn}
+                    switchFour={filterSwitchStatus4IsOn}
+                  />
+                  {/* Sort Button */}
+                  <Tooltip label="Sort">
+                    <IconButton icon={<MdFilterList />} />
+                  </Tooltip>
+                  {/* Draft View Button */}
+                  <Tooltip
+                    label={
+                      draftInvoiceButtonSwitchIsOn === true
+                        ? 'Close View of Drafts'
+                        : 'Click to view all Draft Invoices'
+                    }>
+                    <IconButton
+                      icon={draftInvoiceButtonSwitchIsOn === true ? <FiX /> : <FiFolder />}
+                      onClick={handleDraftInvoiceView}
+                    />
+                  </Tooltip>
+                  {/* Create New Invoice Button */}
+                  <Tooltip label="Create New Invoice">
+                    <IconButton icon={<MdPostAdd />} onClick={onNewOpen} colorScheme={'blue'} />
+                  </Tooltip>
+                </Flex>
+              </Flex>
+            </HStack>
+            {/* Table Component for Invoices Data */}
+            {invoicesLoadingStateIsOn === true ? (
+              <Box w={'full'} h={'200px'}>
+                <Skeleton w={'full'} h={'200px'} rounded={'xl'} />
+              </Box>
+            ) : (
+              <>
+                <InvoiceTable
+                  data={invoices}
+                  editModal={handleEditModal}
+                  deleteAlert={handleDeleteAlert}
+                />
+              </>
+            )}
+          </CardBody>
         </Card>
       </VStack>
     </>
