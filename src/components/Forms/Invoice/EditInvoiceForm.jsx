@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawerIndex } from '../';
+import { DrawerIndex } from '../../../components';
 import {
   Text,
   Flex,
@@ -13,7 +13,6 @@ import {
   Box,
   DrawerFooter
 } from '@chakra-ui/react';
-import formatNumber from '../../utils/formatNumber';
 
 const EditInvoiceForm = (props) => {
   const {

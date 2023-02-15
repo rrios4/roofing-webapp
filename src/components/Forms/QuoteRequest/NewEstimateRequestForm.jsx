@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex } from '..';
+import { DrawerIndex } from '../../../components';
 import {
   Text,
   FormControl,
@@ -8,17 +8,13 @@ import {
   Input,
   InputGroup,
   Button,
-  useColorModeValue,
-  useColorMode,
   Flex,
-  Textarea,
   DrawerFooter,
   InputLeftAddon
 } from '@chakra-ui/react';
-import supabase from '../../utils/supabaseClient';
-import formatPhoneNumber from '../../utils/formatPhoneNumber';
-import { QuoteRequestStatusOptions, ServiceTypeOptions, StateOptions } from '../';
-import stateJSONData from '../../data/state_titlecase.json';
+import { formatPhoneNumber, supabase } from '../../../utils';
+import { QuoteRequestStatusOptions, ServiceTypeOptions, StateOptions } from '../../../components';
+import stateJSONData from '../../../data/state_titlecase.json';
 
 const NewEstimateRequestForm = (props) => {
   const { isOpen, onOpen, onClose, initialRef, updateQRData, toast } = props;

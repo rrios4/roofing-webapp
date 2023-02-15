@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex } from '..';
+import { DrawerIndex } from '../../../components';
 import {
   Flex,
-  DrawerFooter,
   FormControl,
   FormLabel,
-  Select,
   Button,
-  Box,
   Input,
   FormHelperText,
   Text
 } from '@chakra-ui/react';
-import formatPhoneNumber from '../../utils/formatPhoneNumber';
-import supabase from '../../utils/supabaseClient';
+import { formatPhoneNumber, supabase } from '../../../utils';
 
 const EditCustomerForm = (props) => {
   const {
@@ -27,6 +23,7 @@ const EditCustomerForm = (props) => {
     handleEditOnChange,
     handleEditSubmit
   } = props;
+
   // States that pick up the values from the input fields of the form
   const [name, setCustomerName] = useState('');
   const [firstName, setfirstName] = useState('');

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex, CustomerTypeOptions, StateOptions } from '..';
-import formatPhoneNumber from '../../utils/formatPhoneNumber';
-import supabase from '../../utils/supabaseClient';
-import stateJSONData from '../../data/state_titlecase.json';
+import { DrawerIndex, CustomerTypeOptions, StateOptions } from '../../../components';
+import { formatPhoneNumber, supabase } from '../../../utils';
+import stateJSONData from '../../../data/state_titlecase.json';
 import {
   Select,
   Input,
