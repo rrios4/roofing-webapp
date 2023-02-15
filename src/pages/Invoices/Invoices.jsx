@@ -154,24 +154,42 @@ function Invoices() {
 
     if (error) {
       // console.log(error)
-      handleToastMessage(
-        'error',
-        'top',
-        selectedEditInvoice.invoice_number,
-        `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
-        `Error: ${error.message}`
-      );
+      // handleToastMessage(
+      //   'error',
+      //   'top',
+      //   selectedEditInvoice.invoice_number,
+      //   `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
+      //   `Error: ${error.message}`
+      // );
+      // Toast to give feedback when error happens updating invoice
+      toast({
+        position: 'top',
+        title: `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
+        description: `Error: ${error.message}`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
     }
 
     if (data) {
       await fetchInvoices();
-      handleToastMessage(
-        'success',
-        'top',
-        selectedEditInvoice.invoice_number,
-        `Successfully Updated Invoice`,
-        `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`
-      );
+      // handleToastMessage(
+      //   'success',
+      //   'top',
+      //   selectedEditInvoice.invoice_number,
+      //   `Successfully Updated Invoice`,
+      //   `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`
+      // );
+      // Toast to give feedback when success happens updating invoice
+      toast({
+        position: 'top',
+        title: `Successfully Updated Invoice!`,
+        description: `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
     }
     onEditClose();
     setSelectedEditInvoice({
@@ -185,24 +203,6 @@ function Invoices() {
       sqft_measurement: '',
       note: '',
       cust_note: ''
-    });
-  };
-
-  const handleDeleteAlert = (invoiceId, invoice_number) => {
-    setSelectedInvoiceId(invoiceId);
-    setSelectedInvoiceNumber(invoice_number);
-    onDeleteOpen();
-  };
-
-  // Handle success message toast when invoice has been deleted
-  const handleDeleteToast = (invoice_number) => {
-    toast({
-      position: 'top',
-      title: `Invoice #${invoice_number} deleted! 🚀`,
-      description: "We've deleted invoice for you.",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
     });
   };
 
@@ -246,8 +246,27 @@ function Invoices() {
     });
   };
 
+  // Handles the opening of the alert
+  const handleDeleteAlert = (invoiceId, invoice_number) => {
+    setSelectedInvoiceId(invoiceId);
+    setSelectedInvoiceNumber(invoice_number);
+    onDeleteOpen();
+  };
+
   // Handle when the user click on the create button in invoices page to open drawer and load data
   const handleDrawerOpenAction = async () => {};
+
+  // Handle success message toast when invoice has been deleted
+  const handleDeleteToast = (invoice_number) => {
+    toast({
+      position: 'top',
+      title: `Invoice #${invoice_number} deleted! 🚀`,
+      description: "We've deleted invoice for you.",
+      status: 'success',
+      duration: 5000,
+      isClosable: true
+    });
+  };
 
   // Handle edit data
 
@@ -264,6 +283,7 @@ function Invoices() {
         toast={toast}
         data={invoices}
         nextInvoiceNumberValue={nextInvoiceNumber}
+        loadingState={invoicesLoadingStateIsOn}
       />
       <EditInvoiceForm
         initialRef={initialRef}
@@ -272,19 +292,20 @@ function Invoices() {
         invoice={selectedEditInvoice}
         handleEditOnChange={handleEditChange}
         handleEditSubmit={handleEditSubmit}
+        loadingState={invoicesLoadingStateIsOn}
       />
       <DeleteAlertDialog
         isOpen={isDeleteOpen}
         onClose={onDeleteClose}
         onOpen={onDeleteOpen}
-        toast={handleToastMessage}
+        toast={toast}
         updateParentState={fetchInvoices}
-        header={`❌ Delete Invoice #${selectedInvoiceNumber}`}
-        body={`Are you sure? You can't undo this action afterwards. This will delete associated payments and line-items that depend on this invoice.`}
+        body={`You can't undo this action afterwards.\n This will delete associated payments and line-items that depend on this invoice. 🚨`}
         tableName={'invoice'}
         tableFieldName={'invoice_number'}
         itemId={selectedInvoiceId}
         itemNumber={selectedInvoiceNumber}
+        loadingState={invoicesLoadingStateIsOn}
       />
 
       {/* Main Invoice Page Code */}

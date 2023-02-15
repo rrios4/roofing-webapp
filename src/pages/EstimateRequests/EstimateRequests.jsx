@@ -34,6 +34,8 @@ const EstimateRequests = () => {
   // React Hook for managing state of quotes request
   const { quoteRequests, setQuoteRequests, fetchQuoteRequests, quoteRequestLoadingStateIsOn } =
     useQuoteRequests();
+  // Chakra UI Reacr hook for toasts
+  const toast = useToast();
 
   //Chakra UI styling parameters
   const bg = useColorModeValue('white', 'gray.700');
@@ -45,9 +47,6 @@ const EstimateRequests = () => {
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
   const initialRef = React.useRef();
-
-  //Define toast from chakra ui
-  const toast = useToast();
 
   // React Use State to store data from API requests
   // const [quoteRequests, setQuoteRequests] = useState(null);
@@ -79,20 +78,13 @@ const EstimateRequests = () => {
     event.preventDefault();
 
     if (searchEstimateRequestsInput === '') {
-      // let { data: requests, error } = await supabase
-      //     .from('quote_request')
-      //     .select('*')
-
-      // if (error) {
-      //     console.log(error)
-      // }
-      // searchEstimateRequestsInput(requests)
-      // setQuoteRequests(requests)
       fetchQuoteRequests();
     } else {
       let { data: qrSearchResult, error } = await supabase
         .from('quote_request')
-        .select('*')
+        .select(
+          '*, services:service_type_id(*), customer_type:customer_typeID(*), estimate_request_status:est_request_status_id(*)'
+        )
         .or(
           `firstName.ilike.%${searchEstimateRequestsInput}%,lastName.ilike.%${searchEstimateRequestsInput}%,email.ilike.%${searchEstimateRequestsInput}%,phone_number.ilike.%${searchEstimateRequestsInput}%`
         );
@@ -100,29 +92,9 @@ const EstimateRequests = () => {
       if (error) {
         console.log(error);
       }
-      console.log(qrSearchResult);
-      // setCustomers(customersSearchResult);
+      // console.log(qrSearchResult);
       setQuoteRequests(qrSearchResult);
     }
-  };
-
-  //Handles alert box to user when they click to delete data
-  const handleDeleteAlert = (estimateRequestId, estimateRequestNumber) => {
-    setSelectedEstimateRequestId(estimateRequestId);
-    // setSelectedEstimateRequestNumber(estimateRequestNumber);
-    onDeleteOpen();
-  };
-
-  //Function that shows a toast once the user creates a new qr
-  const handleNewToast = (requestId) => {
-    toast({
-      position: 'top-right',
-      title: `Quote Request created!`,
-      description: "We've created a new quote request for you 🚀",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    });
   };
 
   //Formats SQL date from DB to present in GUI table
@@ -156,7 +128,6 @@ const EstimateRequests = () => {
 
   //Handles the cancel button in the modal form for editing QR
   const handleEditCancel = () => {
-    onEditClose();
     setSelectedEstimateRequestObject({
       id: '',
       est_request_status_id: '',
@@ -170,6 +141,7 @@ const EstimateRequests = () => {
       lastName: '',
       email: ''
     });
+    onEditClose();
   };
 
   //Handles changes made to the fields made by the user and updates the React State
@@ -206,13 +178,15 @@ const EstimateRequests = () => {
 
     if (error) {
       console.log(error);
-      handleToastMessage(
-        'error',
-        'top',
-        selectedEstimateRequestObject.id,
-        'Error Updating Quote Request',
-        `Error: ${error}`
-      );
+      // Toast to give feedback when error occurs
+      toast({
+        position: 'top',
+        title: 'Error Occured Updating Request',
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
     onEditClose();
     setSelectedEstimateRequestObject({
@@ -229,11 +203,19 @@ const EstimateRequests = () => {
       email: ''
     });
     await fetchQuoteRequests();
-    handleEditChangeToast(selectedEstimateRequestObject.id);
+    // Toast to give feedback when success occurs
+    toast({
+      position: 'top',
+      title: `QR# ${selectedEstimateRequestObject.id} updated!`,
+      description: "We've updated quote request for you 🎉",
+      status: 'success',
+      duration: 5000,
+      isClosable: true
+    });
     // console.log(selectedEstimateRequestObject)
   };
 
-  //Handles to determine if email alredy exist in DB
+  // Handles to determine if email alredy exist in DB to then save data as a new customer
   const handleEmailValidation = async (request) => {
     const { data: resEmail, error } = await supabase
       .from('customer')
@@ -265,71 +247,34 @@ const EstimateRequests = () => {
         console.log(error);
       }
 
-      handleEmailValidationToastSuccess(request.email);
+      // handleEmailValidationToastSuccess(request.email);
+      toast({
+        position: 'top',
+        title: `New customer has been saved!`,
+        description: `Customer with ${request.email} email has been saved! 🚀`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
     } else {
       // console.log('Email is available in DB.')
-      handleEmailValidationToastError(resEmail);
+      // handleEmailValidationToastError(resEmail);
+      toast({
+        position: 'top',
+        title: `Customer already exist!`,
+        description: `${resEmail[0].email} email already exist! 👮‍♂️`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
   };
 
-  // Handles the toast to give feedback to the user
-  const handleToastMessage = (status, position, invoice_numer, title, description) => {
-    toast({
-      position: position,
-      title: title,
-      description: description,
-      status: status,
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
-  //Function that shows a toast once the user confirmed that the data has been updated
-  const handleEditChangeToast = (requestId) => {
-    toast({
-      position: 'top-right',
-      title: `QR# ${requestId} updated!`,
-      description: "We've updated quote request for you 🎉",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
-  //Function that shows a toast when the user click to save qr as a customer
-  const handleEmailValidationToastError = (requestId) => {
-    toast({
-      position: 'top-right',
-      title: `Customer already exist!`,
-      description: `${requestId[0].email} email already exist! 👮‍♂️`,
-      status: 'error',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
-  //Function that shows a toast when the user click to save qr as a customer
-  const handleEmailValidationToastSuccess = (requestId) => {
-    toast({
-      position: 'top-right',
-      title: `New customer has been saved!`,
-      description: `Customer with ${requestId} email has been saved! 🚀`,
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
-  //Function that shows a toast once the user confirmed that the data has been deleted
-  const handleDeleteToast = (requestId) => {
-    toast({
-      position: 'top-right',
-      title: `Quote Request #${requestId} deleted!`,
-      description: "We've deleted quote request for you 🚀",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    });
+  // Handles alert box to user when they click to delete data
+  const handleDeleteAlert = (estimateRequestId, estimateRequestNumber) => {
+    setSelectedEstimateRequestId(estimateRequestId);
+    // setSelectedEstimateRequestNumber(estimateRequestNumber);
+    onDeleteOpen();
   };
 
   return (
@@ -339,7 +284,7 @@ const EstimateRequests = () => {
         onClose={onNewClose}
         initialRef={initialRef}
         updateQRData={fetchQuoteRequests}
-        toast={handleNewToast}
+        toast={toast}
       />
       <EditEstimateRequestForm
         initialRef={initialRef}
@@ -352,14 +297,14 @@ const EstimateRequests = () => {
       <DeleteAlertDialog
         isOpen={isDeleteOpen}
         onClose={onDeleteClose}
-        toast={handleToastMessage}
+        toast={toast}
         updateParentState={fetchQuoteRequests}
         itemId={selectedEstimateRequestId}
         itemNumber={selectedEstimateRequestId}
         tableName={'quote_request'}
         tableFieldName={'id'}
-        header={`❌ Delete QR # ${selectedEstimateRequestId}`}
-        body={`Are you sure? You can't undo this action afterwards.`}
+        body={`Once you confirm there will be no way to restore the information. 😢`}
+        loadingState={quoteRequestLoadingStateIsOn}
       />
 
       <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>

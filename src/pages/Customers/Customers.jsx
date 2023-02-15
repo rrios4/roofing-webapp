@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Customer,
-  StateOptions,
-  CustomerTypeOptions,
-  NewCustomerForm,
-  CustomerTable
-} from '../../components';
+import { NewCustomerForm, CustomerTable } from '../../components';
 import {
   Flex,
   Box,
   Text,
-  Button,
   Input,
   useBreakpointValue,
   useColorModeValue,
@@ -26,17 +19,17 @@ import {
   Card,
   CardBody
 } from '@chakra-ui/react';
-import stateJSONData from '../../data/state_titlecase.json';
 import { IoMdPersonAdd } from 'react-icons/io';
-import { Link } from 'react-router-dom';
-import { MdKeyboardArrowLeft, MdSearch } from 'react-icons/md';
+import { MdSearch } from 'react-icons/md';
 import { FiUsers } from 'react-icons/fi';
-import { formatPhoneNumber, supabase } from '../../utils';
+import { supabase } from '../../utils';
 import { useCustomers } from '../../hooks/useCustomers';
 
 export default function Customers() {
-  // React Hook to use Customers with useState
+  // Custom React Hook to use Customers with useState
   const { customers, setCustomers, fetchCustomers, customersLoadingStateIsOn } = useCustomers();
+  // Chakra UI Hook toast
+  const toast = useToast();
 
   //For opening drawer components
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,30 +57,11 @@ export default function Customers() {
     // }
   }, []);
 
-  //Define toast from chakra ui
-  const toast = useToast();
-
-  // Handles the toast to give feedback to the user
-  const handleToastMessage = (status, position, invoice_numer, title, description) => {
-    toast({
-      position: position,
-      title: title,
-      description: description,
-      status: status,
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
   // Search for customer based on first name, last name, or email address
   const getAllCustomersByName = async (event) => {
     event.preventDefault();
     if (searchCustomer === '') {
-      let { data: customers, error } = await supabase.from('customer').select('*');
-      if (error) {
-        console.log(error);
-      }
-      setCustomers(customers);
+      await fetchCustomers();
     } else {
       let { data: customersSearchResult, error } = await supabase
         .from('customer')
@@ -112,7 +86,8 @@ export default function Customers() {
         onClose={onClose}
         initialRef={initialRef}
         updateCustomerData={fetchCustomers}
-        toast={handleToastMessage}
+        toast={toast}
+        loadingState={customersLoadingStateIsOn}
       />
       <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
@@ -152,7 +127,12 @@ export default function Customers() {
                         border="2px"
                       />
                       <Tooltip label="Search">
-                        <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
+                        <IconButton
+                          ml={'1rem'}
+                          type="submit"
+                          icon={<MdSearch />}
+                          isLoading={customersLoadingStateIsOn}
+                        />
                       </Tooltip>
                     </Flex>
                   </FormControl>

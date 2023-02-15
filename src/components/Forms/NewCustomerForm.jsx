@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 
 const NewCustomerForm = (props) => {
-  const { isOpen, onClose, initialRef, updateCustomerData, toast } = props;
+  const { isOpen, onClose, initialRef, updateCustomerData, toast, loadingState } = props;
 
   // useStates that pick up the values from the input fields of the form
   const [firstName, setfirstName] = useState('');
@@ -60,21 +60,31 @@ const NewCustomerForm = (props) => {
 
     if (error) {
       console.log(error);
-      toast('error', 'top', '', 'Error creating customer', `Error: ${error.message}`);
+      // Toast feedback when error occurs when creating new customer
+      toast({
+        position: 'top',
+        title: `Error Occured Creating Customer`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
     if (data) {
-      toast(
-        'success',
-        'top',
-        '',
-        'New Customer Created',
-        `${firstName} ${lastName} has been created succesfully 🎉`
-      );
+      // Toast feedback success when creating new customer
+      toast({
+        position: 'top',
+        title: `New Customer Created`,
+        description: `${firstName} ${lastName} has been created succesfully 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
     }
     // console.log(data);
     console.log('Submit Function works!');
     //history.go(0);
-    updateCustomerData();
+    await updateCustomerData();
     setfirstName('');
     setlastName('');
     setAddress('');
@@ -217,7 +227,7 @@ const NewCustomerForm = (props) => {
           <Button onClick={onClose} mr={'1rem'}>
             Cancel
           </Button>
-          <Button colorScheme={'blue'} type="submit">
+          <Button colorScheme={'blue'} type="submit" isLoading={loadingState}>
             Create
           </Button>
         </Flex>

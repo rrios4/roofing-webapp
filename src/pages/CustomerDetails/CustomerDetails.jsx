@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Grid,
   Box,
   Flex,
   Modal,
@@ -11,18 +10,10 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  FormControl,
-  FormLabel,
-  Input,
   Button,
-  FormHelperText,
   Text,
   useDisclosure,
-  Stack,
   VStack,
-  HStack,
-  Image,
-  StackDivider,
   Spinner,
   useToast,
   Container,
@@ -31,11 +22,7 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-  Card,
-  CardBody,
-  Avatar,
   Badge,
-  Divider,
   IconButton,
   Table,
   TableContainer,
@@ -51,14 +38,8 @@ import supabase from '../../utils/supabaseClient';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CustomerDetailsCard, EditCustomerForm, DeleteAlertDialog } from '../../components';
-import {
-  MdKeyboardArrowLeft,
-  MdLocationOn,
-  MdEmail,
-  MdPhone,
-  MdOutlineDateRange
-} from 'react-icons/md';
-import { FiUsers, FiInbox, FiGrid, FiFileText, FiArrowRight } from 'react-icons/fi';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { FiFileText, FiArrowRight } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import formatDate from '../../utils/formatDate';
 import formatMoneyValue from '../../utils/formatMoneyValue';
@@ -148,57 +129,32 @@ const CustomerDetails = (props) => {
     setCustomerInvoicesById(data);
   };
 
-  // Toast that shows up when there is a success when editing and request was sent succefully
-  const handleCustomerEditToast = () => {
-    toast({
-      position: 'top-right',
-      title: `Customer updated!`,
-      description: "We've updated customer for you 🎉.",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
-  // Toast to show up when there is success when sending the request to deleting customer
-  const handleCustomerSuccessDeleteToast = () => {
-    toast({
-      position: 'top-right',
-      title: `Customer deleted!`,
-      description: "We've deleted customer for you 🎉.",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
-  // Toast that shows up when there is an error when sending the request to deleting customer
-  const handleCustomerErrorDeleteToast = (error) => {
-    toast({
-      position: 'top-right',
-      title: 'Error Occured!',
-      description: `Message: ${error}`,
-      status: 'error',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
   // Function that does action to delete customer by id from DB
   const handleModalDeleteOnClick = async () => {
     let { data, error } = await supabase.from('customer').delete().eq('id', `${id}`);
 
     if (error) {
       console.log(error);
+      // handleCustomerErrorDeleteToast();
+      toast({
+        position: 'top',
+        title: 'Error Occured!',
+        description: `Message: ${error}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
-    console.log(data);
-    // history.push("/customers")
-    if (error) {
-      console.log(error);
-      handleCustomerErrorDeleteToast();
-    }
+
     if (data) {
-      handleCustomerSuccessDeleteToast();
+      toast({
+        position: 'top',
+        title: `Customer deleted!`,
+        description: `We've deleted customer with email ${customer.email} for you 🎉.`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
     }
 
     navigate('/customers');
@@ -263,11 +219,32 @@ const CustomerDetails = (props) => {
 
     if (error) {
       console.log(error);
-      handleCustomerErrorUpdateToast();
+      // handleCustomerErrorUpdateToast();
+      toast({
+        position: 'top-right',
+        title: 'Error Occured!',
+        description: `Message: ${error}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
+
+    if (data) {
+      toast({
+        position: 'top',
+        title: `Customer updated!`,
+        description: "We've updated customer for you 🎉.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+
     await getAllCustomer();
     onEditClose();
-    handleCustomerSuccessUpdateToast();
+    // handleCustomerSuccessUpdateToast();
+
     setSelectedCustomerObject({
       id: '',
       customer_type_id: '',
@@ -279,42 +256,6 @@ const CustomerDetails = (props) => {
       zipcode: '',
       phone_number: '',
       email: ''
-    });
-  };
-
-  // Toast to show up when there is success when sending the request to deleting customer
-  const handleCustomerSuccessUpdateToast = () => {
-    toast({
-      position: 'top-right',
-      title: `Customer updated!`,
-      description: "We've updated customer for you 🎉.",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
-  // Toast that shows up when there is an error when sending the request to update customer
-  const handleCustomerErrorUpdateToast = (error) => {
-    toast({
-      position: 'top-right',
-      title: 'Error Occured!',
-      description: `Message: ${error}`,
-      status: 'error',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
-  //Function that shows a toast once the user confirmed that the data has been deleted
-  const handleDeleteToast = (requestId) => {
-    toast({
-      position: 'top-right',
-      title: `Quote Request #${requestId} deleted!`,
-      description: "We've deleted quote request for you 🚀",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
     });
   };
 
@@ -480,7 +421,7 @@ const CustomerDetails = (props) => {
           onClose={handleCustomerEditCancel}
           customer={selectedCustomerObject}
           updateParentState={getAllCustomer}
-          toast={handleCustomerEditToast}
+          toast={toast}
           handleEditSubmit={handleEditSubmit}
           handleEditOnChange={handleCustomerEditChange}
         />
