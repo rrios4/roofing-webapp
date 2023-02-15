@@ -102,47 +102,46 @@ export default function Customers() {
           </Link>
         </Box> */}
         {/* Card Element for display main data for page */}
-        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'md'}>
+        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
           <CardBody>
-            <Stack direction={{ base: 'column', lg: 'row' }} mt={'1rem'} mb={'2rem'} spacing="auto">
-              <Flex alignItems={'center'} ml="24px">
-                <Icon as={FiUsers} boxSize={'7'} />
-                <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
-                  Customers
-                </Text>
-              </Flex>
-              <Box
-                display="flex"
-                pr="1rem"
-                pt={{ base: '1rem', lg: '0rem' }}
-                justifyContent={{ base: 'center', lg: 'normal' }}>
-                <form method="GET" onSubmit={getAllCustomersByName}>
-                  <FormControl>
-                    <Flex flexDir={'row'}>
-                      <Input
-                        value={searchCustomer}
-                        onChange={({ target }) => setSearchCustomer(target.value)}
-                        placeholder="Search for Customer"
-                        colorScheme="blue"
-                        border="2px"
-                      />
-                      <Tooltip label="Search">
-                        <IconButton
-                          ml={'1rem'}
-                          type="submit"
-                          icon={<MdSearch />}
-                          isLoading={customersLoadingStateIsOn}
+            <Stack direction={{ base: 'column', lg: 'row' }} mb={'24px'} mx={'1rem'} spacing="auto">
+              <Flex alignItems={'center'} gap={8}>
+                <Flex>
+                  <Icon as={FiUsers} boxSize={'6'} my={'auto'} />
+                  <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
+                    Customers
+                  </Text>
+                </Flex>
+                <Flex>
+                  <form method="GET" onSubmit={getAllCustomersByName}>
+                    <FormControl>
+                      <Flex flexDir={'row'}>
+                        <Input
+                          value={searchCustomer}
+                          onChange={({ target }) => setSearchCustomer(target.value)}
+                          placeholder="Search for Customer"
+                          colorScheme="blue"
+                          size={'md'}
                         />
-                      </Tooltip>
-                    </Flex>
-                  </FormControl>
-                </form>
+                        <Tooltip label="Search">
+                          <IconButton
+                            ml={'1rem'}
+                            type="submit"
+                            icon={<MdSearch />}
+                            isLoading={customersLoadingStateIsOn}
+                          />
+                        </Tooltip>
+                      </Flex>
+                    </FormControl>
+                  </form>
+                </Flex>
+              </Flex>
+              <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
                 <Tooltip label={'Create New Customer'}>
                   <IconButton
                     colorScheme="blue"
                     variant="solid"
                     onClick={onOpen}
-                    ml="2rem"
                     icon={<IoMdPersonAdd />}
                   />
                 </Tooltip>

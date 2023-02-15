@@ -226,30 +226,34 @@ function Estimates() {
             </Button>
           </Link>
         </Box> */}
-        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'md'}>
+        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
           <CardBody>
-            <HStack mt={'1rem'} mb={'2rem'}>
-              <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
-                <Icon as={TbRuler} boxSize={'7'} />
-                <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
-                  Quotes
-                </Text>
+            <HStack mb={'24px'} mx={'1rem'}>
+              <Flex display={'flex'} mr={'auto'} alignItems={'center'} gap={8}>
+                <Flex>
+                  <Icon as={TbRuler} boxSize={'6'} my={'auto'} />
+                  <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
+                    Quotes
+                  </Text>
+                </Flex>
+                <Flex>
+                  <form method="GET" onSubmit={searchEstimate}>
+                    <FormControl display={'flex'}>
+                      <Input
+                        value={searchEstimateInput}
+                        onChange={({ target }) => setSearchEstimateInput(target.value)}
+                        placeholder="Search for Quotes"
+                        colorScheme="blue"
+                        size={'md'}
+                      />
+                      <Tooltip label="Search">
+                        <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
+                      </Tooltip>
+                    </FormControl>
+                  </form>
+                </Flex>
               </Flex>
-              <Flex pr="1rem" mr={'1rem'} justifyContent={'end'} gap={10}>
-                <form method="GET" onSubmit={searchEstimate}>
-                  <FormControl display={'flex'}>
-                    <Input
-                      value={searchEstimateInput}
-                      onChange={({ target }) => setSearchEstimateInput(target.value)}
-                      placeholder="Search for Request"
-                      colorScheme="blue"
-                      border="2px"
-                    />
-                    <Tooltip label="Search">
-                      <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
-                    </Tooltip>
-                  </FormControl>
-                </form>
+              <Flex justifyContent={'end'} gap={10}>
                 <Flex gap={4}>
                   <Tooltip label="Filter">
                     <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />

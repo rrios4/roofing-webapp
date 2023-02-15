@@ -326,32 +326,36 @@ function Invoices() {
             </Button>
           </Link>
         </Box> */}
-        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'md'}>
+        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
           <CardBody>
             {/* Header Page info & Actions */}
-            <HStack mt={'1rem'} mb={'2rem'}>
-              <Flex display={'flex'} mr={'auto'} alignItems={'center'} ml={'24px'}>
-                <Icon as={FiFileText} boxSize={'7'} />
-                <Text fontSize={'3xl'} fontWeight="semibold" mx="14px">
-                  Invoices
-                </Text>
+            <HStack mb={'24px'} mx={'1rem'}>
+              <Flex display={'flex'} mr={'auto'} alignItems={'center'} gap={8}>
+                <Flex>
+                  <Icon as={FiFileText} boxSize={'6'} my={'auto'} />
+                  <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
+                    Invoices
+                  </Text>
+                </Flex>
+                <Flex>
+                  {/* Search Input for Invoices */}
+                  <form method="GET" onSubmit={searchInvoice}>
+                    <FormControl display={'flex'}>
+                      <Input
+                        value={searchInvoiceInput}
+                        onChange={({ target }) => setSearchInvoiceInput(target.value)}
+                        placeholder="Search for Invoice"
+                        colorScheme="blue"
+                        size={'md'}
+                      />
+                      <Tooltip label="Search">
+                        <IconButton mx={'1rem'} type="submit" icon={<MdSearch />} />
+                      </Tooltip>
+                    </FormControl>
+                  </form>
+                </Flex>
               </Flex>
-              <Flex pr="1rem" mr={'1rem'} justifyContent={'end'} gap={10}>
-                {/* Search Input for Invoices */}
-                <form method="GET" onSubmit={searchInvoice}>
-                  <FormControl display={'flex'}>
-                    <Input
-                      value={searchInvoiceInput}
-                      onChange={({ target }) => setSearchInvoiceInput(target.value)}
-                      placeholder="Search for Invoice"
-                      colorScheme="blue"
-                      border="2px"
-                    />
-                    <Tooltip label="Search">
-                      <IconButton mx={'1rem'} type="submit" icon={<MdSearch />} />
-                    </Tooltip>
-                  </FormControl>
-                </form>
+              <Flex mr={'1rem'} justifyContent={'end'} gap={10}>
                 <Flex gap={4}>
                   {/* Popover component to filter invoices by status */}
                   <InvoiceFilterSwitchPopover
