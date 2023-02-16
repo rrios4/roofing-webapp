@@ -9,8 +9,9 @@ import {
   FormLabel,
   useColorModeValue
 } from '@chakra-ui/react';
-import { DrawerIndex, ServiceTypeOptions } from '../../../components';
+import { DrawerIndex, MultiPurposeOptions } from '../../../components';
 import { useServices } from '../../../hooks/useServices';
+import { useQRStatuses } from '../../../hooks/useQRStatuses';
 
 const EditEstimateRequestForm = (props) => {
   const {
@@ -25,6 +26,7 @@ const EditEstimateRequestForm = (props) => {
 
   // React hooks
   const { services } = useServices();
+  const { qrStatuses } = useQRStatuses();
 
   const bg = useColorModeValue('white', 'gray.800');
   // Chakra UI Modal
@@ -56,10 +58,7 @@ const EditEstimateRequestForm = (props) => {
               name="est_request_status_id"
               value={objectData.est_request_status_id}
               onChange={handleEditOnChange}>
-              <option value={1}>New</option>
-              <option value={2}>Scheduled</option>
-              <option value={3}>Pending</option>
-              <option value={5}>Closed</option>
+              <MultiPurposeOptions data={qrStatuses} />
             </Select>
           </Flex>
           <Flex flexDirection={'column'}>
@@ -85,12 +84,12 @@ const EditEstimateRequestForm = (props) => {
             </Select>
           </Flex>
           <Flex flexDirection={'column'}>
-            <FormLabel>Service Type</FormLabel>
+            <FormLabel>Select Service</FormLabel>
             <Select
               name="service_type_id"
               value={objectData.service_type_id}
               onChange={handleEditOnChange}>
-              <ServiceTypeOptions data={services} />
+              <MultiPurposeOptions data={services} />
             </Select>
           </Flex>
         </Flex>

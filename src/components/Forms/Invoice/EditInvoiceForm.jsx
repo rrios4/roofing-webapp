@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawerIndex, ServiceTypeOptions } from '../../../components';
+import { DrawerIndex, MultiPurposeOptions, ServiceTypeOptions } from '../../../components';
 import {
   Text,
   Flex,
@@ -89,12 +89,12 @@ const EditInvoiceForm = (props) => {
             />
           </Box>
         </Flex>
-        <FormLabel>Service Type</FormLabel>
+        <FormLabel>Select Service</FormLabel>
         <Select
           name="service_type_id"
           value={invoice?.service_type_id}
           onChange={handleEditOnChange}>
-          <ServiceTypeOptions data={services} />
+          <MultiPurposeOptions data={services} />
         </Select>
         {/* <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Bill From</Text>
             <FormControl>

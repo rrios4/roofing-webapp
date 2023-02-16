@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex } from '../../../components';
+import { DrawerIndex, MultiPurposeOptions } from '../../../components';
 import {
   Text,
   FormControl,
@@ -16,15 +16,16 @@ import { formatPhoneNumber, supabase } from '../../../utils';
 import { QuoteRequestStatusOptions, ServiceTypeOptions, StateOptions } from '../../../components';
 import stateJSONData from '../../../data/state_titlecase.json';
 import { useServices } from '../../../hooks/useServices';
+import { useQRStatuses } from '../../../hooks/useQRStatuses';
 
 const NewEstimateRequestForm = (props) => {
   const { isOpen, onOpen, onClose, initialRef, updateQRData, toast } = props;
 
   // React hooks
   const { services } = useServices();
+  const { qrStatuses } = useQRStatuses();
 
   //React useStates for capturing data from input fields
-  const [quoteStatuses, setQuoteStatuses] = useState('');
   const [selectedQuoteStatus, setSelectedQuoteStatus] = useState('');
   const [selectedService, setSelectedService] = useState('');
   const [selectedCustomerType, setSelectedCustomerType] = useState('');
@@ -44,7 +45,6 @@ const NewEstimateRequestForm = (props) => {
   const [inputValue, SetInputValue] = useState('');
 
   useEffect(() => {
-    getAllQuoteStatuses();
     setStates(stateJSONData);
   }, []);
 
@@ -101,30 +101,19 @@ const NewEstimateRequestForm = (props) => {
     setQrClientEmail('');
     setQrClientFirstName('');
     setQrClientLastname('');
-    // setQrDate('');
     setQrPostalCode('');
-    // setQrState('');
     setQrStreetAddress('');
     setSelectedState('');
     SetInputValue('');
     setSelectedCustomerType('');
+    // setQrState('');
+    // setQrDate('');
 
     // Updates the parent data
     updateQRData();
 
     // Closes drawer
     onClose();
-  };
-
-  //Get list of all quote statuses
-  const getAllQuoteStatuses = async () => {
-    let { data: quoteStatuses, error } = await supabase.from('estimate_request_status').select('*');
-
-    if (error) {
-      console.log(error);
-    }
-    setQuoteStatuses(quoteStatuses);
-    // console.log(quoteStatuses)
   };
 
   //Clear values when cancel button is presses
@@ -136,13 +125,13 @@ const NewEstimateRequestForm = (props) => {
     setQrClientEmail('');
     setQrClientFirstName('');
     setQrClientLastname('');
-    setQrDate('');
     setQrPostalCode('');
-    setQrState('');
     setQrStreetAddress('');
     setSelectedState('');
     SetInputValue('');
     setSelectedCustomerType('');
+    // setQrDate('');
+    // setQrState('');
     onClose();
   };
 
@@ -176,7 +165,7 @@ const NewEstimateRequestForm = (props) => {
                 onChange={(e) => {
                   setSelectedQuoteStatus(e.target.value);
                 }}>
-                <QuoteRequestStatusOptions data={quoteStatuses} />
+                <MultiPurposeOptions data={qrStatuses} />
               </Select>
             </Flex>
             <Flex flexDir={'column'} ml={'1rem'}>
@@ -206,7 +195,7 @@ const NewEstimateRequestForm = (props) => {
             onChange={(e) => {
               setSelectedService(e.target.value);
             }}>
-            <ServiceTypeOptions data={services} />
+            <MultiPurposeOptions data={services} />
           </Select>
           {/* <Input type={'text'}/> */}
           <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
@@ -235,7 +224,7 @@ const NewEstimateRequestForm = (props) => {
                   setSelectedState(e.target.value);
                 }}
                 placeholder={'Select State'}>
-                <StateOptions states={states} />
+                <MultiPurposeOptions data={states} />
               </Select>
             </Flex>
             <Flex flexDir={'column'} ml={'1rem'}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DrawerIndex, CustomerOptions, ServiceTypeOptions } from '../../../components';
+import { DrawerIndex, CustomerOptions, ServiceTypeOptions, MultiPurposeOptions } from '../../../components';
 import { supabase } from '../../../utils';
 import AsyncSelect from 'react-select/async';
 import {
@@ -204,7 +204,7 @@ const NewEstimateForm = (props) => {
             value={selectedServiceInput}
             placeholder="Select a Service"
             onChange={(e) => setSelectedServiceInput(e.target.value)}>
-            <ServiceTypeOptions data={services} />
+            <MultiPurposeOptions data={services} />
           </Select>
         </FormControl>
         <FormControl isRequired>
