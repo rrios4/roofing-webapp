@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex, MultiPurposeOptions } from '../../../components';
+import { DrawerIndex, MultiPurposeOptions, StateOptions } from '../../../components';
 import {
   Text,
   FormControl,
@@ -13,7 +13,6 @@ import {
   InputLeftAddon
 } from '@chakra-ui/react';
 import { formatPhoneNumber, supabase } from '../../../utils';
-import { QuoteRequestStatusOptions, ServiceTypeOptions, StateOptions } from '../../../components';
 import stateJSONData from '../../../data/state_titlecase.json';
 import { useServices } from '../../../hooks/useServices';
 import { useQRStatuses } from '../../../hooks/useQRStatuses';
@@ -224,7 +223,7 @@ const NewEstimateRequestForm = (props) => {
                   setSelectedState(e.target.value);
                 }}
                 placeholder={'Select State'}>
-                <MultiPurposeOptions data={states} />
+                <StateOptions states={states} />
               </Select>
             </Flex>
             <Flex flexDir={'column'} ml={'1rem'}>
