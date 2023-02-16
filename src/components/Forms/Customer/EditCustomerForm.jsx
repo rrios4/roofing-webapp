@@ -10,6 +10,7 @@ import {
   Text
 } from '@chakra-ui/react';
 import { formatPhoneNumber, supabase } from '../../../utils';
+import { useCustomerTypes } from '../../../hooks/useCustomerTypes';
 
 const EditCustomerForm = (props) => {
   const {
@@ -23,6 +24,9 @@ const EditCustomerForm = (props) => {
     handleEditOnChange,
     handleEditSubmit
   } = props;
+
+  // React Hooks
+  const { customerTypes } = useCustomerTypes();
 
   // States that pick up the values from the input fields of the form
   const [name, setCustomerName] = useState('');

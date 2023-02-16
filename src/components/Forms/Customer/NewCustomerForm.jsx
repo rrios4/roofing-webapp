@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex, CustomerTypeOptions, StateOptions } from '../../../components';
+import { DrawerIndex, StateOptions, MultiPurposeOptions } from '../../../components';
 import { formatPhoneNumber, supabase } from '../../../utils';
 import stateJSONData from '../../../data/state_titlecase.json';
 import {
@@ -13,9 +13,13 @@ import {
   Button,
   Text
 } from '@chakra-ui/react';
+import { useCustomerTypes } from '../../../hooks/useCustomerTypes';
 
 const NewCustomerForm = (props) => {
   const { isOpen, onClose, initialRef, updateCustomerData, toast, loadingState } = props;
+
+  // React Hooks
+  const { customerTypes } = useCustomerTypes();
 
   // useStates that pick up the values from the input fields of the form
   const [firstName, setfirstName] = useState('');
@@ -24,7 +28,7 @@ const NewCustomerForm = (props) => {
   const [city, setCity] = useState('');
   const [zipcode, setZipcode] = useState('');
   const [email, setEmail] = useState('');
-  const [customerTypes, setcustomerTypes] = useState('');
+  // const [customerTypes, setcustomerTypes] = useState('');
   const [selectedCustomerType, setselectedCustomerType] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [states, setstates] = useState('');
@@ -36,7 +40,6 @@ const NewCustomerForm = (props) => {
     // if (!localStorage.getItem('supabase.auth.token')) {
     //     history.push('/login');
     // }
-    getAllCustomerTypes();
     setstates(stateJSONData);
   }, []);
 
@@ -96,16 +99,7 @@ const NewCustomerForm = (props) => {
     onClose();
   };
 
-  // Gets a list of all customer types stored in supabase DB
-  const getAllCustomerTypes = async () => {
-    let { data: customerTypes, error } = await supabase.from('customer_type').select('*');
-
-    if (error) {
-      console.log(error);
-    }
-    setcustomerTypes(customerTypes);
-  };
-
+  // Handles the phone number input formating
   const handlePhoneInput = (e) => {
     //This is where we'll call our future formatPhoneNumber function
     const formattedPhoneNumber = formatPhoneNumber(e.target.value);
@@ -133,7 +127,7 @@ const NewCustomerForm = (props) => {
             onChange={(e) => {
               setselectedCustomerType(e.target.value);
             }}>
-            <CustomerTypeOptions customerTypes={customerTypes} />
+            <MultiPurposeOptions data={customerTypes} />
           </Select>
         </FormControl>
         <Flex>

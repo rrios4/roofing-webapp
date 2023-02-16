@@ -16,6 +16,7 @@ import { formatPhoneNumber, supabase } from '../../../utils';
 import stateJSONData from '../../../data/state_titlecase.json';
 import { useServices } from '../../../hooks/useServices';
 import { useQRStatuses } from '../../../hooks/useQRStatuses';
+import { useCustomerTypes } from '../../../hooks/useCustomerTypes';
 
 const NewEstimateRequestForm = (props) => {
   const { isOpen, onOpen, onClose, initialRef, updateQRData, toast } = props;
@@ -23,6 +24,7 @@ const NewEstimateRequestForm = (props) => {
   // React hooks
   const { services } = useServices();
   const { qrStatuses } = useQRStatuses();
+  const { customerTypes } = useCustomerTypes();
 
   //React useStates for capturing data from input fields
   const [selectedQuoteStatus, setSelectedQuoteStatus] = useState('');
@@ -183,9 +185,7 @@ const NewEstimateRequestForm = (props) => {
             onChange={(e) => {
               setSelectedCustomerType(e.target.value);
             }}>
-            <option value={1}>Residential</option>
-            <option value={2}>Commercial</option>
-            <option value={3}>Other</option>
+            <MultiPurposeOptions data={customerTypes} />
           </Select>
           <FormLabel mt={'1rem'}>Service Type</FormLabel>
           <Select

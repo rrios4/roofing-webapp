@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DrawerIndex, CustomerOptions, ServiceTypeOptions, MultiPurposeOptions } from '../../../components';
+import { DrawerIndex, MultiPurposeOptions } from '../../../components';
 import { supabase } from '../../../utils';
 import AsyncSelect from 'react-select/async';
 import {
@@ -10,17 +10,18 @@ import {
   FormControl,
   FormLabel,
   Input,
-  InputGroup,
   Button,
   Text
 } from '@chakra-ui/react';
 import { useServices } from '../../../hooks/useServices';
+import { useQuoteStatuses } from '../../../hooks/useQuoteStatuses';
 
 const NewEstimateForm = (props) => {
   const { isOpen, onClose, initialRef, updateEstimateData } = props;
 
   // React hooks
   const { services } = useServices();
+  const { quoteStatuses } = useQuoteStatuses();
 
   // React styling hooks
   const { colorMode } = useColorMode();
@@ -168,9 +169,7 @@ const NewEstimateForm = (props) => {
                 placeholder="Select Status"
                 value={estStatus}
                 onChange={(e) => setEstStatus(e.target.value)}>
-                <option value="2">Approved</option>
-                <option value="1">Pending</option>
-                <option value="3">Expired</option>
+                <MultiPurposeOptions data={quoteStatuses} />
               </Select>
             </Flex>
             <Flex>
