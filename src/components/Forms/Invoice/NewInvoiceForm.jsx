@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex, ServiceTypeOptions, InvoiceStatusOptions } from '../../../components';
+import { DrawerIndex, MultiPurposeOptions } from '../../../components';
 import { supabase } from '../../../utils';
 import AsyncSelect from 'react-select/async';
 import {
@@ -8,7 +8,6 @@ import {
   FormLabel,
   Select,
   Input,
-  InputGroup,
   Button,
   useColorModeValue,
   useColorMode,
@@ -23,31 +22,18 @@ import {
   Th,
   Tbody,
   Td,
-  NumberInput,
-  NumberIncrementStepper,
-  NumberInputField,
-  NumberDecrementStepper,
-  NumberInputStepper,
   DrawerFooter
 } from '@chakra-ui/react';
 import formatMoneyValue from '../../../utils/formatMoneyValue';
 import { useServices } from '../../../hooks/useServices';
+import { useInvoiceStatuses } from '../../../hooks/useInvoiceStatuses';
 
 const NewInvoiceForm = (props) => {
-  const {
-    onNewClose,
-    isNewOpen,
-    onNewOpen,
-    initialRef,
-    data,
-    updateParentData,
-    nextInvoiceNumberValue,
-    toast,
-    loadingState
-  } = props;
+  const { onNewClose, isNewOpen, initialRef, data, updateParentData, toast, loadingState } = props;
 
   // React data hooks
   const { services } = useServices();
+  const { invoiceStatuses } = useInvoiceStatuses();
 
   // React styling hooks
   const { colorMode } = useColorMode();
@@ -57,7 +43,6 @@ const NewInvoiceForm = (props) => {
   // Select & Options React States
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [serviceLineItems, setServiceLineItems] = useState();
-  const [invoiceStatusOptions, setInvoiceStatusOptions] = useState(null);
   const [selectedServiceType, setSelectedServiceType] = useState('');
   const [selectedInvoiceStatus, setSelectedInvoiceStatus] = useState('');
   const [nextInvoiceNumber, setNextInvoiceNumber] = useState('');
@@ -92,7 +77,6 @@ const NewInvoiceForm = (props) => {
   const [numOfLineItemFields, setNumOfLineItemFields] = useState(0);
 
   useEffect(() => {
-    getInvoiceStatusOptions();
     //   handleInvoiceNextNumber();
   }, []);
 
@@ -253,26 +237,13 @@ const NewInvoiceForm = (props) => {
       console.log(error);
     }
     callback(
-      customers.map((customer, index) => ({
+      customers.map((customer) => ({
         label: `${customer.first_name} ${customer.last_name}`,
         value: customer.id,
         email: customer.email
       }))
     );
     // console.log(customers)
-  };
-
-  // Function that gets all the invoice statuses from supabase DB
-  const getInvoiceStatusOptions = async () => {
-    // console.log(serviceTypesOptions)
-    const { data: invoiceStatuses, error } = await supabase
-      .from('invoice_status')
-      .select('id, name');
-
-    if (error) {
-      console.log(error);
-    }
-    setInvoiceStatusOptions(invoiceStatuses);
   };
 
   // Delete Line Item Field
@@ -445,7 +416,7 @@ const NewInvoiceForm = (props) => {
                     value={selectedInvoiceStatus}
                     placeholder="Select Status"
                     onChange={(e) => setSelectedInvoiceStatus(e.target.value)}>
-                    <InvoiceStatusOptions data={invoiceStatusOptions} />
+                    <MultiPurposeOptions data={invoiceStatuses} />
                   </Select>
                 </Box>
               </Flex>
@@ -479,7 +450,7 @@ const NewInvoiceForm = (props) => {
                   value={selectedServiceType}
                   placeholder="Select Service"
                   onChange={(e) => setSelectedServiceType(e.target.value)}>
-                  <ServiceTypeOptions data={services} />
+                  <MultiPurposeOptions data={services} />
                 </Select>
               </Box>
             </FormControl>

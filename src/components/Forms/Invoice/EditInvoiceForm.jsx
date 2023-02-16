@@ -14,6 +14,7 @@ import {
   DrawerFooter
 } from '@chakra-ui/react';
 import { useServices } from '../../../hooks/useServices';
+import { useInvoiceStatuses } from '../../../hooks/useInvoiceStatuses';
 
 const EditInvoiceForm = (props) => {
   const {
@@ -29,6 +30,7 @@ const EditInvoiceForm = (props) => {
 
   // React data hooks
   const { services } = useServices();
+  const { invoiceStatuses } = useInvoiceStatuses();
 
   // React styling hooks
   const bg = useColorModeValue('white', 'gray.800');
@@ -53,10 +55,7 @@ const EditInvoiceForm = (props) => {
               name="invoice_status_id"
               value={invoice?.invoice_status_id}
               onChange={handleEditOnChange}>
-              <option value={1}>Paid</option>
-              <option value={2}>Pending</option>
-              <option value={3}>Overdue</option>
-              <option value={4}>Draft</option>
+              <MultiPurposeOptions data={invoiceStatuses} />
             </Select>
           </Box>
           <Box w={'50%'}>
