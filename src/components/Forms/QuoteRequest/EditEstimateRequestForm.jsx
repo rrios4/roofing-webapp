@@ -9,7 +9,8 @@ import {
   FormLabel,
   useColorModeValue
 } from '@chakra-ui/react';
-import { DrawerIndex } from '../../../components';
+import { DrawerIndex, ServiceTypeOptions } from '../../../components';
+import { useServices } from '../../../hooks/useServices';
 
 const EditEstimateRequestForm = (props) => {
   const {
@@ -21,6 +22,10 @@ const EditEstimateRequestForm = (props) => {
     handleEditOnChange,
     handleEditCancel
   } = props;
+
+  // React hooks
+  const { services } = useServices();
+
   const bg = useColorModeValue('white', 'gray.800');
   // Chakra UI Modal
   // const { isOpen, onOpen, onClose } = useDisclosure();
@@ -85,9 +90,7 @@ const EditEstimateRequestForm = (props) => {
               name="service_type_id"
               value={objectData.service_type_id}
               onChange={handleEditOnChange}>
-              <option value={1}>Roof Replacement</option>
-              <option value={3}>Roof Maintenance</option>
-              <option value={2}>Roof Repair</option>
+              <ServiceTypeOptions data={services} />
             </Select>
           </Flex>
         </Flex>

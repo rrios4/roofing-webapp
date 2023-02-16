@@ -31,9 +31,9 @@ import {
   DrawerFooter
 } from '@chakra-ui/react';
 import formatMoneyValue from '../../../utils/formatMoneyValue';
+import { useServices } from '../../../hooks/useServices';
 
 const NewInvoiceForm = (props) => {
-  const { colorMode } = useColorMode();
   const {
     onNewClose,
     isNewOpen,
@@ -46,14 +46,17 @@ const NewInvoiceForm = (props) => {
     loadingState
   } = props;
 
-  // Custom color configs for UX elements
+  // React data hooks
+  const { services } = useServices();
+
+  // React styling hooks
+  const { colorMode } = useColorMode();
   const bg = useColorModeValue('white', 'gray.800');
   const tableHeaderColor = useColorModeValue('blue.400', 'blue.600');
 
   // Select & Options React States
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [serviceLineItems, setServiceLineItems] = useState();
-  const [serviceTypesOptions, setServiceTypesOptions] = useState(null);
   const [invoiceStatusOptions, setInvoiceStatusOptions] = useState(null);
   const [selectedServiceType, setSelectedServiceType] = useState('');
   const [selectedInvoiceStatus, setSelectedInvoiceStatus] = useState('');
@@ -71,11 +74,11 @@ const NewInvoiceForm = (props) => {
   const [billToStateInput, setBillToStateInput] = useState('');
   const [billToZipcodeInput, setBillToZipcodeInput] = useState('');
   const [customerNoteMessage, setCustomerNoteMessage] = useState('');
-  const [lineItemDescriptionInput, setLineItemDescriptionInput] = useState('');
-  const [lineItemQty, setLineItemQty] = useState('');
-  const [lineItemRate, setLineItemRate] = useState('');
   const [invoiceTotalCalculatedValue, setInvoiceTotalCalculatedValue] = useState(0);
   const [invoiceSubTotalCalculatedvalue, setInvoiceSubTotalCalculatedvalue] = useState(0);
+  // const [lineItemDescriptionInput, setLineItemDescriptionInput] = useState('');
+  // const [lineItemQty, setLineItemQty] = useState('');
+  // const [lineItemRate, setLineItemRate] = useState('');
 
   // New States That I'm currently working with
   // Switch React States
@@ -89,7 +92,6 @@ const NewInvoiceForm = (props) => {
   const [numOfLineItemFields, setNumOfLineItemFields] = useState(0);
 
   useEffect(() => {
-    getServiceTypesOptionsData();
     getInvoiceStatusOptions();
     //   handleInvoiceNextNumber();
   }, []);
@@ -157,28 +159,6 @@ const NewInvoiceForm = (props) => {
         )
       );
 
-      // Setting input fields to empty
-      setInvoiceNumberInput('');
-      setSelectedCustomer('');
-      setSelectedServiceType('');
-      setSelectedInvoiceStatus('');
-      setInvoiceDateInput('');
-      setInvoiceDueDateInput('');
-      setSqftInput('');
-      setNoteInput('');
-      setBillToCityInput('');
-      setBillToStateInput('');
-      setBillToStreetAddressInput('');
-      setBillToZipcodeInput('');
-      setCustomerNoteMessage('');
-      setFixedRateSwitchIsOn(true);
-      setBillToSwitchIsOn(false);
-      setNoteSwitchIsOn(false);
-      setMeasurementNoteSwitchIsOn(false);
-      setCustomerNoteSwitchIsOn(false);
-
-      await updateParentData();
-
       // Toast Feedback when invoice was created sucessfully
       toast({
         position: 'top',
@@ -188,8 +168,30 @@ const NewInvoiceForm = (props) => {
         duration: 5000,
         isClosable: true
       });
-      onNewClose();
     }
+
+    // Setting input fields to empty
+    setInvoiceNumberInput('');
+    setSelectedCustomer('');
+    setSelectedServiceType('');
+    setSelectedInvoiceStatus('');
+    setInvoiceDateInput('');
+    setInvoiceDueDateInput('');
+    setSqftInput('');
+    setNoteInput('');
+    setBillToCityInput('');
+    setBillToStateInput('');
+    setBillToStreetAddressInput('');
+    setBillToZipcodeInput('');
+    setCustomerNoteMessage('');
+    setFixedRateSwitchIsOn(true);
+    setBillToSwitchIsOn(false);
+    setNoteSwitchIsOn(false);
+    setMeasurementNoteSwitchIsOn(false);
+    setCustomerNoteSwitchIsOn(false);
+
+    await updateParentData();
+    onNewClose();
   };
 
   const handleLineItemSubmit = async () => {
@@ -258,20 +260,6 @@ const NewInvoiceForm = (props) => {
       }))
     );
     // console.log(customers)
-  };
-
-  // Function that gets all service types from supabase DB
-  const getServiceTypesOptionsData = async () => {
-    const { data: serviceTypes, error } = await supabase
-      .from('services')
-      .select('id, name')
-      .order('id', { ascending: true });
-
-    if (error) {
-      console.log(error);
-    }
-    setServiceTypesOptions(serviceTypes);
-    // console.log(serviceTypes)
   };
 
   // Function that gets all the invoice statuses from supabase DB
@@ -491,7 +479,7 @@ const NewInvoiceForm = (props) => {
                   value={selectedServiceType}
                   placeholder="Select Service"
                   onChange={(e) => setSelectedServiceType(e.target.value)}>
-                  <ServiceTypeOptions data={serviceTypesOptions} />
+                  <ServiceTypeOptions data={services} />
                 </Select>
               </Box>
             </FormControl>

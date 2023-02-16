@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DrawerIndex, CustomerOptions } from '../../../components';
+import { DrawerIndex, CustomerOptions, ServiceTypeOptions } from '../../../components';
 import { supabase } from '../../../utils';
 import AsyncSelect from 'react-select/async';
 import {
@@ -14,9 +14,15 @@ import {
   Button,
   Text
 } from '@chakra-ui/react';
+import { useServices } from '../../../hooks/useServices';
 
 const NewEstimateForm = (props) => {
   const { isOpen, onClose, initialRef, updateEstimateData } = props;
+
+  // React hooks
+  const { services } = useServices();
+
+  // React styling hooks
   const { colorMode } = useColorMode();
 
   // States to manage data
@@ -27,8 +33,8 @@ const NewEstimateForm = (props) => {
   const [expDate, setExpDate] = useState('');
   const [quotePrice, setQuotedPrice] = useState('');
   const [estStatus, setEstStatus] = useState('');
-  const [serviceName, setServiceName] = useState('');
   const [measurement, setMeasurement] = useState('');
+  // const [serviceName, setServiceName] = useState('');
 
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [cuIdCaptured, setCuIdCaptured] = useState('');
@@ -38,6 +44,7 @@ const NewEstimateForm = (props) => {
   const [quoteToStateInput, setQuoteToStateInput] = useState('');
   const [quoteToZipcodeInput, setQuoteToZipcodeInput] = useState('');
   const [estimateNumberInput, setEstimateNumberInput] = useState('');
+  const [selectedServiceInput, setSelectedServiceInput] = useState('');
 
   const handleSubmit = async () => {};
 
@@ -51,7 +58,6 @@ const NewEstimateForm = (props) => {
 
   // Function that will load options for react-select component as the user types name
   const loadOptions = async (inputText, callback) => {
-    //Use supabase SDK to return a list of all customers to be used by react-select as options
     const { data: customers, error } = await supabase
       .from('customer')
       .select('first_name, last_name, customer_type_id, id, email')
@@ -193,18 +199,16 @@ const NewEstimateForm = (props) => {
           />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel pt="1rem">Service Name</FormLabel>
-          <InputGroup>
-            <Input
-              id="service"
-              placeholder="Service Name"
-              value={serviceName}
-              onChange={({ target }) => setServiceName(target.value)}
-            />
-          </InputGroup>
+          <FormLabel pt="1rem">Select Service</FormLabel>
+          <Select
+            value={selectedServiceInput}
+            placeholder="Select a Service"
+            onChange={(e) => setSelectedServiceInput(e.target.value)}>
+            <ServiceTypeOptions data={services} />
+          </Select>
         </FormControl>
         <FormControl isRequired>
-          <FormLabel pt="1rem">Estimate Total</FormLabel>
+          <FormLabel pt="1rem">Total</FormLabel>
           <Input
             value={quotePrice}
             onChange={({ target }) => setQuotedPrice(target.value)}

@@ -15,11 +15,15 @@ import {
 import { formatPhoneNumber, supabase } from '../../../utils';
 import { QuoteRequestStatusOptions, ServiceTypeOptions, StateOptions } from '../../../components';
 import stateJSONData from '../../../data/state_titlecase.json';
+import { useServices } from '../../../hooks/useServices';
 
 const NewEstimateRequestForm = (props) => {
   const { isOpen, onOpen, onClose, initialRef, updateQRData, toast } = props;
 
-  //React UseStates
+  // React hooks
+  const { services } = useServices();
+
+  //React useStates for capturing data from input fields
   const [quoteStatuses, setQuoteStatuses] = useState('');
   const [selectedQuoteStatus, setSelectedQuoteStatus] = useState('');
   const [selectedService, setSelectedService] = useState('');
@@ -27,21 +31,20 @@ const NewEstimateRequestForm = (props) => {
   const [selectedQuoteDate, setSelectedQuoteDate] = useState('');
   const [states, setStates] = useState(null);
   const [selectedState, setSelectedState] = useState('');
-  const [qrDate, setQrDate] = useState('');
-  const [qrServiceType, setQrServiceType] = useState('');
   const [qrStreetAddress, setQrStreetAddress] = useState('');
   const [qrCity, setQrCity] = useState('');
-  const [qrState, setQrState] = useState('');
   const [qrPostalCode, setQrPostalCode] = useState('');
   const [qrClientFirstName, setQrClientFirstName] = useState('');
   const [qrClientLastname, setQrClientLastname] = useState('');
   const [qrClientEmail, setQrClientEmail] = useState('');
+  // const [qrDate, setQrDate] = useState('');
+  // const [qrState, setQrState] = useState('');
 
+  // React useState for phone number input
   const [inputValue, SetInputValue] = useState('');
 
   useEffect(() => {
     getAllQuoteStatuses();
-    getAllServices();
     setStates(stateJSONData);
   }, []);
 
@@ -67,8 +70,6 @@ const NewEstimateRequestForm = (props) => {
     ]);
 
     if (error) {
-      // console.log(error);
-
       // Toast to give feedback when erorr occurs
       toast({
         position: 'top',
@@ -81,23 +82,6 @@ const NewEstimateRequestForm = (props) => {
     }
 
     if (data) {
-      setSelectedQuoteDate('');
-      setSelectedService('');
-      setSelectedQuoteStatus('');
-      setQrCity('');
-      setQrClientEmail('');
-      setQrClientFirstName('');
-      setQrClientLastname('');
-      setQrDate('');
-      setQrPostalCode('');
-      setQrState('');
-      setQrStreetAddress('');
-      setSelectedState('');
-      SetInputValue('');
-      setSelectedCustomerType('');
-      updateQRData();
-      onClose();
-
       // Toast to give feedback when success happens saving new QR
       toast({
         position: 'top',
@@ -108,6 +92,28 @@ const NewEstimateRequestForm = (props) => {
         isClosable: true
       });
     }
+
+    // Set useState back to empty values
+    setSelectedQuoteDate('');
+    setSelectedService('');
+    setSelectedQuoteStatus('');
+    setQrCity('');
+    setQrClientEmail('');
+    setQrClientFirstName('');
+    setQrClientLastname('');
+    // setQrDate('');
+    setQrPostalCode('');
+    // setQrState('');
+    setQrStreetAddress('');
+    setSelectedState('');
+    SetInputValue('');
+    setSelectedCustomerType('');
+
+    // Updates the parent data
+    updateQRData();
+
+    // Closes drawer
+    onClose();
   };
 
   //Get list of all quote statuses
@@ -119,16 +125,6 @@ const NewEstimateRequestForm = (props) => {
     }
     setQuoteStatuses(quoteStatuses);
     // console.log(quoteStatuses)
-  };
-
-  //Get a list of all services available
-  const getAllServices = async () => {
-    let { data: services, error } = await supabase.from('services').select('*');
-
-    if (error) {
-      console.log(error);
-    }
-    setQrServiceType(services);
   };
 
   //Clear values when cancel button is presses
@@ -210,7 +206,7 @@ const NewEstimateRequestForm = (props) => {
             onChange={(e) => {
               setSelectedService(e.target.value);
             }}>
-            <ServiceTypeOptions data={qrServiceType} />
+            <ServiceTypeOptions data={services} />
           </Select>
           {/* <Input type={'text'}/> */}
           <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawerIndex } from '../../../components';
+import { DrawerIndex, ServiceTypeOptions } from '../../../components';
 import {
   Text,
   Flex,
@@ -13,6 +13,7 @@ import {
   Box,
   DrawerFooter
 } from '@chakra-ui/react';
+import { useServices } from '../../../hooks/useServices';
 
 const EditInvoiceForm = (props) => {
   const {
@@ -25,8 +26,12 @@ const EditInvoiceForm = (props) => {
     handleEditSubmit,
     loadingState
   } = props;
+
+  // React data hooks
+  const { services } = useServices();
+
+  // React styling hooks
   const bg = useColorModeValue('white', 'gray.800');
-  // console.log(invoice)
 
   return (
     <DrawerIndex initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose} bg={bg} size="lg">
@@ -89,9 +94,7 @@ const EditInvoiceForm = (props) => {
           name="service_type_id"
           value={invoice?.service_type_id}
           onChange={handleEditOnChange}>
-          <option value={1}>Roof Installation</option>
-          <option value={2}>Roof Repair</option>
-          <option value={3}>Roof Maintenance</option>
+          <ServiceTypeOptions data={services} />
         </Select>
         {/* <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>Bill From</Text>
             <FormControl>
