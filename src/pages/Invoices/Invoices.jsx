@@ -28,7 +28,8 @@ import {
   Invoice,
   DeleteAlertDialog,
   InvoiceFilterSwitchPopover,
-  InvoiceTable
+  InvoiceTable,
+  ConnectedInvoiceDeleteAlertDialog
 } from '../../components';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
@@ -294,18 +295,16 @@ function Invoices() {
         handleEditSubmit={handleEditSubmit}
         loadingState={invoicesLoadingStateIsOn}
       />
-      <DeleteAlertDialog
+      <ConnectedInvoiceDeleteAlertDialog
         isOpen={isDeleteOpen}
         onClose={onDeleteClose}
         onOpen={onDeleteOpen}
         toast={toast}
         updateParentState={fetchInvoices}
-        body={`You can't undo this action afterwards.\n This will delete associated payments and line-items that depend on this invoice. 🚨`}
-        tableName={'invoice'}
-        tableFieldName={'invoice_number'}
-        itemId={selectedInvoiceId}
+        header={'Delete Invoice'}
+        entityDescription={`INVOICE # ${selectedInvoiceNumber}`}
+        body={`You can't undo this action afterwards. This will delete associated payments and line-items that depend on this invoice. 🚨`}
         itemNumber={selectedInvoiceNumber}
-        loadingState={invoicesLoadingStateIsOn}
       />
 
       {/* Main Invoice Page Code */}

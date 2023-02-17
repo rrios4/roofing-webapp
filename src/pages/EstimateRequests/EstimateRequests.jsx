@@ -23,7 +23,8 @@ import {
   DeleteAlertDialog,
   NewEstimateRequestForm,
   NewCustomerForm,
-  QuoteRequestTable
+  QuoteRequestTable,
+  ConnectedQRDeleteAlertDialog
 } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
@@ -294,7 +295,7 @@ const EstimateRequests = () => {
         objectData={selectedEstimateRequestObject}
         handleEditOnChange={handleEditChange}
       />
-      <DeleteAlertDialog
+      {/* <DeleteAlertDialog
         isOpen={isDeleteOpen}
         onClose={onDeleteClose}
         toast={toast}
@@ -305,6 +306,17 @@ const EstimateRequests = () => {
         tableFieldName={'id'}
         body={`Once you confirm there will be no way to restore the information. 😢`}
         loadingState={quoteRequestLoadingStateIsOn}
+      /> */}
+      <ConnectedQRDeleteAlertDialog
+        isOpen={isDeleteOpen}
+        onClose={onDeleteClose}
+        onOpen={onDeleteOpen}
+        toast={toast}
+        updateParentState={fetchQuoteRequests}
+        itemNumber={selectedEstimateRequestId}
+        header={'Delete Quote Request'}
+        entityDescription={`QR # ${selectedEstimateRequestId}`}
+        body={`Once you confirm there will be no way to restore the information. 🚨`}
       />
 
       <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
