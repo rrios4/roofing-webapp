@@ -30,9 +30,9 @@ const CustomerTable = (props) => {
           <Thead>
             <Tr>
               <Th>Customer</Th>
-              <Th>Type</Th>
               {isWideVersion && <Th>Phone Number</Th>}
               {isWideVersion && <Th>Address</Th>}
+              <Th>Type</Th>
               {isWideVersion && <Th>Registered Date</Th>}
               <Th textAlign={'center'}>Actions</Th>
             </Tr>
@@ -59,31 +59,6 @@ const CustomerTable = (props) => {
                   ) : (
                     <>{customer.company_name}</>
                   )}
-                </Td>
-                <Td>
-                  <Badge
-                    w="90%"
-                    textAlign="center"
-                    padding={'2'}
-                    rounded={'full'}
-                    variant={'subtle'}
-                    colorScheme={
-                      customer.customer_type_id === 1
-                        ? 'blue'
-                        : customer.customer_type_id === 2
-                        ? 'green'
-                        : customer.customer_type_id === 3
-                        ? 'yellow'
-                        : ''
-                    }>
-                    {customer.customer_type_id === 1
-                      ? 'Residential'
-                      : customer.customer_type_id === 2
-                      ? 'Commercial'
-                      : customer.customer_type_id === 3
-                      ? 'Other'
-                      : ''}
-                  </Badge>
                 </Td>
                 {isWideVersion && (
                   <Td>
@@ -112,6 +87,31 @@ const CustomerTable = (props) => {
                     </Text>
                   </Td>
                 )}
+                <Td>
+                  <Badge
+                    w="100px"
+                    textAlign="center"
+                    padding={'1'}
+                    rounded={'full'}
+                    variant={'subtle'}
+                    colorScheme={
+                      customer.customer_type_id === 1
+                        ? 'blue'
+                        : customer.customer_type_id === 2
+                        ? 'green'
+                        : customer.customer_type_id === 3
+                        ? 'yellow'
+                        : ''
+                    }>
+                    {customer.customer_type_id === 1
+                      ? 'Residential'
+                      : customer.customer_type_id === 2
+                      ? 'Commercial'
+                      : customer.customer_type_id === 3
+                      ? 'Other'
+                      : ''}
+                  </Badge>
+                </Td>
                 {isWideVersion && (
                   <Td>{new Date(customer.created_at).toLocaleDateString('en-us', options)}</Td>
                 )}

@@ -1,5 +1,4 @@
 import React from 'react';
-import supabase from '../../utils/supabaseClient';
 import {
   useColorModeValue,
   Modal,
@@ -14,20 +13,7 @@ import {
 } from '@chakra-ui/react';
 
 const DeleteAlertDialog = (props) => {
-  const {
-    body,
-    isOpen,
-    onClose,
-    itemNumber,
-    tableName,
-    tableFieldName,
-    header,
-    entityDescription,
-    toast,
-    updateParentState,
-    loadingState,
-    onSubmit
-  } = props;
+  const { body, isOpen, onClose, header, entityDescription, loadingState, onSubmit } = props;
 
   // Handles the onClick when button is pressed and executes obSubmit from prop
   const handleOnClick = (e) => {
@@ -48,8 +34,7 @@ const DeleteAlertDialog = (props) => {
           <Text fontWeight={'bold'} mb={'1rem'}>
             Are you sure you want to delete:{' '}
             <Text as="span" textColor={useColorModeValue('blue.400', 'blue.500')}>
-              {/* {tableName.toUpperCase()} #{itemNumber} */}
-              {entityDescription}
+              {entityDescription}{' '}
             </Text>
             ?{' '}
           </Text>

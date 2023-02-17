@@ -32,14 +32,14 @@ const QuoteRequestTable = (props) => {
             <Tr>
               <Th>QR #</Th>
               <Th textAlign={'center'}>Status</Th>
-              <Th>Service</Th>
+              <Th>Requestor</Th>
               <Th>Desired Date</Th>
+              <Th>Service</Th>
               <Th>Type</Th>
-              <Th>Lead</Th>
               {/* <Th>Name</Th> */}
               {/* <Th>Email</Th> */}
-              <Th>Phone Number</Th>
-              <Th>Address</Th>
+              {/* <Th>Phone Number</Th> */}
+              {/* <Th>Address</Th> */}
               <Th>Entry Date</Th>
               <Th textAlign={'center'}>Actions</Th>
             </Tr>
@@ -75,18 +75,56 @@ const QuoteRequestTable = (props) => {
                   </Badge>
                 </Td>
                 <Td>
+                  {request.firstName && request.lastName ? (
+                    <>
+                      <Flex>
+                        <Avatar size={'sm'} mr={'16px'} my={'auto'} />
+                        <Flex flexDir={'column'}>
+                          <Flex fontWeight={'bold'} fontSize={'xs'}>
+                            <Text marginRight={'4px'}>{request.firstName}</Text>
+                            <Text>{request.lastName}</Text>
+                          </Flex>
+                          <Flex mt={'4px'} fontWeight={'light'} fontSize={'xs'}>
+                            {request.email}
+                          </Flex>
+                          <Flex mt={'4px'} fontWeight={'light'} fontSize={'xs'}>
+                            <Text
+                              cursor={'pointer'}
+                              _hover={{ textColor: 'blue' }}
+                              onClick={() =>
+                                window.open(
+                                  `https://www.google.com/maps/search/?api=1&query=${request.streetAddress}+${request.city}+${request.state}+${request.zipcode}`
+                                )
+                              }>
+                              {request.streetAddress} {request.city}, {request.state}{' '}
+                              {request.zipcode}
+                            </Text>
+                          </Flex>
+                          <Flex mt={'4px'} fontWeight={'light'} fontSize={'xs'}>
+                            <Text>
+                              {request.phone_number ? request.phone_number : '❌ Unavailable'}
+                            </Text>
+                          </Flex>
+                        </Flex>
+                      </Flex>
+                    </>
+                  ) : (
+                    <>{request.company_name}</>
+                  )}
+                </Td>
+                <Td>
+                  <Text>{formatDate(request.requested_date)}</Text>
+                </Td>
+                <Td>
                   <Text>
                     {request.service_type_id === 1 ? 'Roof Replacement' : ''}
                     {request.service_type_id === 2 ? 'Roof Leak Repair' : ''}
                     {request.service_type_id === 3 ? 'Roof Maintenance' : ''}
                   </Text>
                 </Td>
-                <Td>
-                  <Text>{formatDate(request.requested_date)}</Text>
-                </Td>
                 <Td textAlign={'center'}>
                   <Badge
-                    w={'full'}
+                    w={'95px'}
                     variant={'subtle'}
                     mx={'auto'}
                     colorScheme={
@@ -102,39 +140,19 @@ const QuoteRequestTable = (props) => {
                     }
                     p="1"
                     rounded={'xl'}
-                    align="center">
+                    align="center"
+                    textAlign={'center'}>
                     {request.customer_type.name}
                   </Badge>
                 </Td>
-                <Td>
-                  {request.firstName && request.lastName ? (
-                    <>
-                      <Flex>
-                        <Button variant={'ghost'} colorScheme={'facebook'}>
-                          <Avatar size={'xs'} mr={'8px'} my={'auto'} />
-                          <Flex flexDir={'column'}>
-                            <Flex fontWeight={'bold'} fontSize={'xs'}>
-                              <Text marginRight={'4px'}>{request.firstName}</Text>
-                              <Text>{request.lastName}</Text>
-                            </Flex>
-                            <Flex mt={'4px'} fontWeight={'light'} fontSize={'xs'}>
-                              {request.email}
-                            </Flex>
-                          </Flex>
-                        </Button>
-                      </Flex>
-                    </>
-                  ) : (
-                    <>{request.company_name}</>
-                  )}
-                </Td>
+
                 {/* <Td>{request.customer_typeID === 1 ? <><Text textColor={'white'} bg={'blue.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Residential</Text></> : '' || request.customer_typeID === 2 ? <><Text textColor={'white'} bg={'purple.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Commercial</Text></> : '' || request.customer_typeID === 3 ? <><Text textColor={'white'} bg={'yellow.500'} py={'6px'} rounded={'xl'} align='center' w={'80px'}>Other</Text></> : ''}</Td> */}
                 {/* <Td><Text>{request.firstName}</Text><Text>{request.lastName}</Text></Td> */}
                 {/* <Td><Text>{request.email}</Text></Td> */}
-                <Td>
+                {/* <Td>
                   <Text>{request.phone_number ? request.phone_number : '❌ Unavailable'}</Text>
-                </Td>
-                <Td>
+                </Td> */}
+                {/* <Td>
                   <Text
                     cursor={'pointer'}
                     _hover={{ textColor: 'blue' }}
@@ -145,7 +163,7 @@ const QuoteRequestTable = (props) => {
                     }>
                     {request.streetAddress} {request.city}, {request.state} {request.zipcode}
                   </Text>
-                </Td>
+                </Td> */}
                 <Td>
                   <Text>{new Date(request.created_at).toLocaleString()}</Text>
                 </Td>
