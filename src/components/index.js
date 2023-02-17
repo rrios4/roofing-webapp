@@ -49,3 +49,4 @@ export { default as MultiPurposeOptions } from './Options/Options';
 export { default as ConnectedInvoiceDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedInvoiceDeleteAlertDialog';
 export { default as ConnectedQRDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedQRDeleteAlertDialog';
 export { default as ConnectedCustomerDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedCustomerDeleteAlertDialog';
+export { default as ConnectedQuoteDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedQuoteDeleteAlertDialog';
