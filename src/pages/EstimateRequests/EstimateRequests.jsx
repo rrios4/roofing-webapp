@@ -295,18 +295,6 @@ const EstimateRequests = () => {
         objectData={selectedEstimateRequestObject}
         handleEditOnChange={handleEditChange}
       />
-      {/* <DeleteAlertDialog
-        isOpen={isDeleteOpen}
-        onClose={onDeleteClose}
-        toast={toast}
-        updateParentState={fetchQuoteRequests}
-        itemId={selectedEstimateRequestId}
-        itemNumber={selectedEstimateRequestId}
-        tableName={'quote_request'}
-        tableFieldName={'id'}
-        body={`Once you confirm there will be no way to restore the information. 😢`}
-        loadingState={quoteRequestLoadingStateIsOn}
-      /> */}
       <ConnectedQRDeleteAlertDialog
         isOpen={isDeleteOpen}
         onClose={onDeleteClose}

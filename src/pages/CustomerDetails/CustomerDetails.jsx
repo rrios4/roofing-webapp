@@ -2,14 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Flex,
-  Modal,
   useColorModeValue,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Button,
   Text,
   useDisclosure,
@@ -21,46 +14,33 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  AccordionIcon,
-  Badge,
-  IconButton,
-  Table,
-  TableContainer,
-  Thead,
-  Tr,
-  Th,
-  Td,
-  Tbody,
-  Skeleton
+  AccordionIcon
 } from '@chakra-ui/react';
 import Select from 'react-select';
 import supabase from '../../utils/supabaseClient';
-import formatPhoneNumber from '../../utils/formatPhoneNumber';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { CustomerDetailsCard, EditCustomerForm, DeleteAlertDialog } from '../../components';
+import { Link, useParams } from 'react-router-dom';
+import {
+  CustomerDetailsCard,
+  EditCustomerForm,
+  ConnectedCustomerDeleteAlertDialog,
+  CustomerInvoicesTable
+} from '../../components';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
-import { FiFileText, FiArrowRight } from 'react-icons/fi';
+import { FiFileText } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
-import formatDate from '../../utils/formatDate';
-import formatMoneyValue from '../../utils/formatMoneyValue';
-import formatNumber from '../../utils/formatNumber';
 
 const CustomerDetails = (props) => {
-  const navigate = useNavigate();
-  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  // React Hooks
   const toast = useToast();
 
-  //Style for Card component
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+
   const bg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const buttonColorScheme = useColorModeValue('blue', 'gray');
-  const hoverEffectBgColor = useColorModeValue('gray.50', 'gray.800');
 
-  // const {id} = props.match.params;
   const { id } = useParams();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialRef = React.useRef();
+  // const {id} = props.match.params;
 
   // React State to store array of objects from GET request API
   const [customer, getCustomer] = useState();
@@ -127,37 +107,6 @@ const CustomerDetails = (props) => {
     }
     // console.log(data)
     setCustomerInvoicesById(data);
-  };
-
-  // Function that does action to delete customer by id from DB
-  const handleModalDeleteOnClick = async () => {
-    let { data, error } = await supabase.from('customer').delete().eq('id', `${id}`);
-
-    if (error) {
-      console.log(error);
-      // handleCustomerErrorDeleteToast();
-      toast({
-        position: 'top',
-        title: 'Error Occured!',
-        description: `Message: ${error}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      toast({
-        position: 'top',
-        title: `Customer deleted!`,
-        description: `We've deleted customer with email ${customer.email} for you 🎉.`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    navigate('/customers');
   };
 
   // Handles customer edit data
@@ -261,6 +210,30 @@ const CustomerDetails = (props) => {
 
   return (
     <Container maxWidth={'1400px'} h={'full'}>
+      {/* Edit Form Modal */}
+      <EditCustomerForm
+        isOpen={isEditOpen}
+        onClose={handleCustomerEditCancel}
+        customer={selectedCustomerObject}
+        updateParentState={getAllCustomer}
+        toast={toast}
+        handleEditSubmit={handleEditSubmit}
+        handleEditOnChange={handleCustomerEditChange}
+      />
+
+      {/* Modal to prompt the user that they will be deleting a user */}
+      <ConnectedCustomerDeleteAlertDialog
+        isOpen={isDeleteOpen}
+        onClose={onDeleteClose}
+        onOpen={onDeleteOpen}
+        toast={toast}
+        // updateParentState={getAllCustomer}
+        header={'Delete Customer'}
+        entityDescription={`${customer?.first_name} ${customer?.last_name} ${customer?.email}`}
+        body={`You can't undo this action afterwards. This will delete all information that pertained to the customer from quotes and invoices! 🚨`}
+        itemNumber={customer?.id}
+      />
+
       <Flex direction="column" pb="2rem" pt="2rem" h={'full'}>
         <VStack spacing={4} h={'full'}>
           {/* Back Button */}
@@ -312,72 +285,8 @@ const CustomerDetails = (props) => {
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4}>
-                      {!customerInvoicesById ? (
-                        <>
-                          <Skeleton h={'20px'} w={'full'} />
-                        </>
-                      ) : (
-                        <>
-                          <TableContainer>
-                            <Table>
-                              <Thead>
-                                <Tr>
-                                  <Th>INV#</Th>
-                                  <Th>Status</Th>
-                                  <Th>Date</Th>
-                                  <Th>Due Date</Th>
-                                  <Th>Total</Th>
-                                  <Th>Actions</Th>
-                                </Tr>
-                              </Thead>
-                              <Tbody>
-                                {customerInvoicesById?.map((item, index) => (
-                                  <Tr key={index}>
-                                    <Td>
-                                      <Text fontWeight={'semibold'}>
-                                        {formatNumber(item.invoice_number)}
-                                      </Text>
-                                    </Td>
-                                    <Td>
-                                      <Badge
-                                        w={'80%'}
-                                        textAlign={'center'}
-                                        my={'auto'}
-                                        p={2}
-                                        rounded={'xl'}
-                                        colorScheme={
-                                          item.invoice_status.name === 'Paid'
-                                            ? 'green'
-                                            : item.invoice_status.name === 'Pending'
-                                            ? 'yellow'
-                                            : item.invoice_status.name === 'Overdue'
-                                            ? 'red'
-                                            : 'gray'
-                                        }>
-                                        {item.invoice_status.name}
-                                      </Badge>
-                                    </Td>
-                                    <Td>
-                                      <Text>{formatDate(item.invoice_date)}</Text>
-                                    </Td>
-                                    <Td>
-                                      <Text>{formatDate(item.due_date)}</Text>
-                                    </Td>
-                                    <Td>
-                                      <Text>${formatMoneyValue(item.total)}</Text>
-                                    </Td>
-                                    <Td>
-                                      <Link to={`/editinvoice/${item.invoice_number}`}>
-                                        <IconButton icon={<FiArrowRight />} />
-                                      </Link>
-                                    </Td>
-                                  </Tr>
-                                ))}
-                              </Tbody>
-                            </Table>
-                          </TableContainer>
-                        </>
-                      )}
+                      {/* Table */}
+                      <CustomerInvoicesTable data={customerInvoicesById} />
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
@@ -414,59 +323,6 @@ const CustomerDetails = (props) => {
             </Flex>
           </Flex>
         </VStack>
-
-        {/* Edit Form Modal */}
-        <EditCustomerForm
-          isOpen={isEditOpen}
-          onClose={handleCustomerEditCancel}
-          customer={selectedCustomerObject}
-          updateParentState={getAllCustomer}
-          toast={toast}
-          handleEditSubmit={handleEditSubmit}
-          handleEditOnChange={handleCustomerEditChange}
-        />
-
-        {/* Modal to prompt the user that they will be deleting a user */}
-        <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader textAlign={'center'}>Delete Customer</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Text fontWeight={'bold'} mb={'1rem'}>
-                Are you sure you want to delete:{' '}
-                <Text as="span" textColor={useColorModeValue('blue.400', 'blue.500')}>
-                  {customer?.first_name} {customer?.last_name}
-                </Text>
-                ?{' '}
-              </Text>
-              <Text>
-                Once you confirm there will be no way to restore the customer's information. 😢
-              </Text>
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme={'red'} onClick={handleModalDeleteOnClick}>
-                Delete
-              </Button>
-              <Button variant={'solid'} ml={3} onClick={onDeleteClose}>
-                Close
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-
-        {/* Tried to implement delete dialog from the component but ended up not working because this depends on the navigate back to the customers page and the component is more meant to be used to update the paretn state of the page */}
-        {/* <DeleteAlertDialog
-                isOpen={isDeleteOpen}
-                onClose={onDeleteClose}
-                updateParentState={getAllCustomer}
-                toast={handleDeleteToast}
-                header={`Delete ${customer?.first_name} ${customer?.last_name}❓`}
-                body={`Are you sure? You can't undo this action afterwards.`}
-                tableName={'customer'}
-                tableFieldName={'id'}
-                itemNumber={id}
-                /> */}
       </Flex>
     </Container>
   );

@@ -37,6 +37,7 @@ export { default as QuoteRequestRecentTable } from './Tables/QuoteRequests/Quote
 export { default as QuoteRecentTable } from './Tables/Quotes/QuoteRecentTable';
 export { default as InvoiceRecentTable } from './Tables/Invoices/InvoiceRecentTable';
 export { default as CustomerRecentTable } from './Tables/Customers/CustomerRecentTable';
+export { default as CustomerInvoicesTable } from './Tables/Customers/CustomerInvoicesTable';
 export { default as NewQRStat } from './Stats/NewQRStat';
 export { default as OverdueInvoicesStat } from './Stats/OverdueInvoicesStat';
 export { default as PendingQuotesStat } from './Stats/PendingQuotesStat';
@@ -45,6 +46,6 @@ export { default as MonthlyRevenueStat } from './Stats/MonthlyRevenueStat';
 export { default as YearlyRevenueStat } from './Stats/YearlyRevenueStat';
 export { default as MonthlyRevenueLineGraph } from './Charts/MonthlyRevenueLineGraph';
 export { default as MultiPurposeOptions } from './Options/Options';
-// export { default as ConnectedCustomerDeleteAlertDialog } from './Alerts/ConnectedCustomerDeleteAlertDialog';
 export { default as ConnectedInvoiceDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedInvoiceDeleteAlertDialog';
 export { default as ConnectedQRDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedQRDeleteAlertDialog';
+export { default as ConnectedCustomerDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedCustomerDeleteAlertDialog';
