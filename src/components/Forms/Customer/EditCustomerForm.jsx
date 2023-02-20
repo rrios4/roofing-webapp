@@ -7,7 +7,14 @@ import {
   Button,
   Input,
   FormHelperText,
-  Text
+  Text,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter
 } from '@chakra-ui/react';
 import { formatPhoneNumber, supabase } from '../../../utils';
 import { useCustomerTypes } from '../../../hooks/useCustomerTypes';
@@ -138,101 +145,108 @@ const EditCustomerForm = (props) => {
   };
 
   return (
-    <DrawerIndex isOpen={isOpen} onOpen={onOpen} onClose={onClose} size="lg">
-      <Text fontSize={'25px'} fontWeight={'bold'}>
-        Edit
-        <Text as="span" ml={'8px'} color={'blue.500'}>
-          Customer
-        </Text>
-      </Text>
-      <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-        Contact
-      </Text>
+    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={'lg'}>
+      <DrawerOverlay />
       <form method="PATCH" onSubmit={handleEditSubmit}>
-        <FormControl>
-          <Flex mb={'1rem'}>
-            <Flex flexDir={'column'} mr={'1rem'}>
-              <FormLabel>First Name</FormLabel>
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Edit Customer</DrawerHeader>
+          <DrawerBody>
+            {/* <Text fontSize={'25px'} fontWeight={'bold'}>
+              Edit
+              <Text as="span" ml={'8px'} color={'blue.500'}>
+                Customer
+              </Text>
+            </Text> */}
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'0rem'} mb={'1rem'}>
+              Contact
+            </Text>
+            <FormControl>
+              <Flex mb={'1rem'}>
+                <Flex flexDir={'column'} mr={'1rem'}>
+                  <FormLabel>First Name</FormLabel>
+                  <Input
+                    name="first_name"
+                    type={'text'}
+                    value={customer.first_name}
+                    onChange={handleEditOnChange}
+                  />
+                </Flex>
+                <Flex flexDir={'column'}>
+                  <FormLabel>Last Name</FormLabel>
+                  <Input
+                    name="last_name"
+                    type={'text'}
+                    value={customer?.last_name}
+                    onChange={handleEditOnChange}
+                  />
+                </Flex>
+              </Flex>
+              <FormLabel mt={'1rem'}>Email</FormLabel>
               <Input
-                name="first_name"
-                type={'text'}
-                value={customer.first_name}
+                name="email"
+                type={'email'}
+                value={customer?.email}
                 onChange={handleEditOnChange}
               />
-            </Flex>
-            <Flex flexDir={'column'}>
-              <FormLabel>Last Name</FormLabel>
+              <FormLabel mt={'1rem'}>Phone Number</FormLabel>
               <Input
-                name="last_name"
-                type={'text'}
-                value={customer?.last_name}
+                name="phone_number"
+                type={'tel'}
+                value={customer?.phone_number}
                 onChange={handleEditOnChange}
               />
-            </Flex>
-          </Flex>
-          <FormLabel mt={'1rem'}>Email</FormLabel>
-          <Input
-            name="email"
-            type={'email'}
-            value={customer?.email}
-            onChange={handleEditOnChange}
-          />
-          <FormLabel mt={'1rem'}>Phone Number</FormLabel>
-          <Input
-            name="phone_number"
-            type={'tel'}
-            value={customer?.phone_number}
-            onChange={handleEditOnChange}
-          />
-          <FormHelperText>Current Phone Number: {customer.phone_number}</FormHelperText>
-          <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-            Address
-          </Text>
-          <FormLabel>Street Address</FormLabel>
-          <Input
-            name="street_address"
-            type={'text'}
-            defaultValue={customer?.street_address}
-            onChange={handleEditOnChange}
-          />
-          <Flex mt={'1rem'}>
-            <Flex flexDir={'column'} mr={'1rem'}>
-              <FormLabel>City</FormLabel>
+              <FormHelperText>Current Phone Number: {customer.phone_number}</FormHelperText>
+              <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+                Address
+              </Text>
+              <FormLabel>Street Address</FormLabel>
               <Input
-                name="city"
+                name="street_address"
                 type={'text'}
-                defaultValue={customer?.city}
+                defaultValue={customer?.street_address}
                 onChange={handleEditOnChange}
               />
-            </Flex>
-            <Flex flexDir={'column'} mr={'1rem'}>
-              <FormLabel>State</FormLabel>
-              <Input
-                name="state"
-                type={'text'}
-                defaultValue={customer?.state}
-                onChange={handleEditOnChange}
-              />
-            </Flex>
-            <Flex flexDir={'column'}>
-              <FormLabel>Postal Code</FormLabel>
-              <Input
-                name="zipcode"
-                type={'text'}
-                defaultValue={customer?.zipcode}
-                onChange={handleEditOnChange}
-              />
-            </Flex>
-          </Flex>
-        </FormControl>
-        <Flex pt={'2rem'} justifyContent={'flex-end'}>
-          <Button colorScheme="blue" mr={'1rem'} type="submit">
-            Update
-          </Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </Flex>
+              <Flex mt={'1rem'}>
+                <Flex flexDir={'column'} mr={'1rem'}>
+                  <FormLabel>City</FormLabel>
+                  <Input
+                    name="city"
+                    type={'text'}
+                    defaultValue={customer?.city}
+                    onChange={handleEditOnChange}
+                  />
+                </Flex>
+                <Flex flexDir={'column'} mr={'1rem'}>
+                  <FormLabel>State</FormLabel>
+                  <Input
+                    name="state"
+                    type={'text'}
+                    defaultValue={customer?.state}
+                    onChange={handleEditOnChange}
+                  />
+                </Flex>
+                <Flex flexDir={'column'}>
+                  <FormLabel>Postal Code</FormLabel>
+                  <Input
+                    name="zipcode"
+                    type={'text'}
+                    defaultValue={customer?.zipcode}
+                    onChange={handleEditOnChange}
+                  />
+                </Flex>
+              </Flex>
+            </FormControl>
+          </DrawerBody>
+          <DrawerFooter>
+            <Button colorScheme="blue" mr={'1rem'} type="submit">
+              Update Customer
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </DrawerFooter>
+        </DrawerContent>
       </form>
-    </DrawerIndex>
+    </Drawer>
   );
 };
 

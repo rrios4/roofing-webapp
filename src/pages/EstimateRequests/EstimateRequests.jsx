@@ -291,6 +291,7 @@ const EstimateRequests = () => {
         initialRef={initialRef}
         handleSubmit={handleEditSubmit}
         isOpen={isEditOpen}
+        onClose={onEditClose}
         handleEditCancel={handleEditCancel}
         objectData={selectedEstimateRequestObject}
         handleEditOnChange={handleEditChange}

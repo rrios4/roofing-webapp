@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex, MultiPurposeOptions } from '../../../components';
+import { MultiPurposeOptions } from '../../../components';
 import { supabase } from '../../../utils';
 import AsyncSelect from 'react-select/async';
 import {
@@ -22,14 +22,20 @@ import {
   Th,
   Tbody,
   Td,
-  DrawerFooter
+  DrawerFooter,
+  Drawer,
+  DrawerOverlay,
+  DrawerHeader,
+  DrawerBody,
+  DrawerContent,
+  DrawerCloseButton
 } from '@chakra-ui/react';
 import formatMoneyValue from '../../../utils/formatMoneyValue';
 import { useServices } from '../../../hooks/useServices';
 import { useInvoiceStatuses } from '../../../hooks/useInvoiceStatuses';
 
 const NewInvoiceForm = (props) => {
-  const { onNewClose, isNewOpen, initialRef, data, updateParentData, toast, loadingState } = props;
+  const { onNewClose, isNewOpen, initialRef, data, updateParentData, toast } = props;
 
   // React data hooks
   const { services } = useServices();
@@ -72,6 +78,7 @@ const NewInvoiceForm = (props) => {
   const [noteSwitchIsOn, setNoteSwitchIsOn] = useState(false);
   const [measurementNoteSwitchIsOn, setMeasurementNoteSwitchIsOn] = useState(false);
   const [customerNoteSwitchIsOn, setCustomerNoteSwitchIsOn] = useState(false);
+  const [loadingState, setLoadingState] = useState(false);
 
   // Line Item React State
   const [numOfLineItemFields, setNumOfLineItemFields] = useState(0);
@@ -82,6 +89,7 @@ const NewInvoiceForm = (props) => {
 
   // Function to handle the submit data from the form to supabase DB
   const handleSubmit = async (event) => {
+    setLoadingState(true);
     event.preventDefault();
     // POST request to supabase to save new invoice
     const { data, error } = await supabase.from('invoice').insert([
@@ -128,21 +136,6 @@ const NewInvoiceForm = (props) => {
     if (data) {
       await handleLineItemSubmit();
 
-      setLineItemList([]);
-      setNumOfLineItemFields(0);
-      setInvoiceTotalCalculatedValue(
-        lineItemList.reduce(
-          (total, currentItem) => (total = parseFloat(total) + parseFloat(currentItem.amount)),
-          0
-        )
-      );
-      setInvoiceSubTotalCalculatedvalue(
-        lineItemList.reduce(
-          (total, currentItem) => (total = parseFloat(total) + parseFloat(currentItem.amount)),
-          0
-        )
-      );
-
       // Toast Feedback when invoice was created sucessfully
       toast({
         position: 'top',
@@ -153,6 +146,12 @@ const NewInvoiceForm = (props) => {
         isClosable: true
       });
     }
+
+    // Set line items to 0 in total and number of lines
+    setLineItemList([]);
+    setNumOfLineItemFields(0);
+    setInvoiceTotalCalculatedValue(0);
+    setInvoiceSubTotalCalculatedvalue(0);
 
     // Setting input fields to empty
     setInvoiceNumberInput('');
@@ -173,6 +172,7 @@ const NewInvoiceForm = (props) => {
     setNoteSwitchIsOn(false);
     setMeasurementNoteSwitchIsOn(false);
     setCustomerNoteSwitchIsOn(false);
+    setLoadingState(false);
 
     await updateParentData();
     onNewClose();
@@ -349,389 +349,406 @@ const NewInvoiceForm = (props) => {
   // const total = lineItemList.reduce((total, currentItem) => total = parseInt(total) + parseInt(currentItem.amount), 0);
 
   return (
-    <DrawerIndex
-      initialFocusRef={initialRef}
-      isOpen={isNewOpen}
-      onClose={onNewClose}
-      bg={bg}
-      size="lg">
+    <Drawer placement="right" onClose={onNewClose} isOpen={isNewOpen} size={'lg'}>
+      <DrawerOverlay />
       <form method="POST" onSubmit={handleSubmit}>
-        <Text fontSize={'25px'} fontWeight={'bold'} mb={'1rem'}>
-          Create
-          <Text as="span" ml={'8px'} color={'blue.400'}>
-            Invoice
-          </Text>
-        </Text>
-        <Flex gap={8} direction={{ base: 'column', lg: 'column' }}>
-          {/* Invoice Details */}
-          <Box>
-            <FormControl isRequired>
-              <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'1rem'} mb={'1rem'}>
-                General Info
-              </Text>
-              <Box
-                w={'full'}
-                p={'1rem'}
-                bg={useColorModeValue('gray.100', 'gray.600')}
-                border={'1px'}
-                borderColor={useColorModeValue('gray.200', 'gray.600')}
-                rounded={'xl'}>
-                <FormLabel>Select Customer</FormLabel>
-                <AsyncSelect
-                  onChange={handleSelectedCustomer}
-                  loadOptions={loadOptions}
-                  // defaultOptions={}
-                  placeholder="Search for Customer"
-                  getOptionLabel={(option) => `${option.label},  ${option.email}`}
-                  theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 6,
-                    colors: {
-                      ...theme.colors,
-                      primary25: colorMode === 'dark' ? '#4A5568' : '#EDF2F7',
-                      primary: colorMode === 'dark' ? '#3182CE' : '#3182CE',
-                      neutral0: colorMode === 'dark' ? '#1A202C' : 'white',
-                      neutral90: 'white'
-                    }
-                  })}
-                />
-              </Box>
-              <Flex gap={4} mt={'2rem'}>
-                <Box w={'50%'}>
-                  <FormLabel>Invoice #</FormLabel>
-                  <Input
-                    placeholder={
-                      !data
-                        ? 'Loading...'
-                        : Math.max(...data?.map((item) => item.invoice_number)) + 1
-                    }
-                    type={'number'}
-                    value={invoiceNumberInput}
-                    onChange={(e) => setInvoiceNumberInput(e.target.value)}
-                  />
-                </Box>
-                <Box w={'50%'}>
-                  <FormLabel>Status</FormLabel>
-                  <Select
-                    value={selectedInvoiceStatus}
-                    placeholder="Select Status"
-                    onChange={(e) => setSelectedInvoiceStatus(e.target.value)}>
-                    <MultiPurposeOptions data={invoiceStatuses} />
-                  </Select>
-                </Box>
-              </Flex>
-              <Flex gap={4} mt={'1rem'}>
-                <Box w={'50%'}>
-                  <FormLabel>Date</FormLabel>
-                  <Input
-                    type="date"
-                    value={invoiceDateInput}
-                    onChange={({ target }) => setInvoiceDateInput(target.value)}
-                    id="invDate"
-                    placeholder="Select Invoice Date"
-                  />
-                </Box>
-                <Box w={'50%'}>
-                  <FormControl isRequired>
-                    <FormLabel>Due Date</FormLabel>
-                    <Input
-                      type="date"
-                      value={invoiceDueDateInput}
-                      onChange={({ target }) => setInvoiceDueDateInput(target.value)}
-                      id="dueDate"
-                      placeholder="Due date"
-                    />
-                  </FormControl>
-                </Box>
-              </Flex>
-              <Box>
-                <FormLabel mt="1rem">Select Service</FormLabel>
-                <Select
-                  value={selectedServiceType}
-                  placeholder="Select Service"
-                  onChange={(e) => setSelectedServiceType(e.target.value)}>
-                  <MultiPurposeOptions data={services} />
-                </Select>
-              </Box>
-            </FormControl>
-          </Box>
-          {/* Bill To Input Fields */}
-          {billToSwitchIsOn === true ? (
-            <>
-              <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'}>
-                Bill To
-              </Text>
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>New Invoice</DrawerHeader>
+          <DrawerBody>
+            {/* <Text fontSize={'25px'} fontWeight={'bold'} mb={'1rem'}>
+                  Create
+                  <Text as="span" ml={'8px'} color={'blue.400'}>
+                    Invoice
+                  </Text>
+                </Text> */}
+            <Flex gap={8} direction={{ base: 'column', lg: 'column' }}>
+              {/* Invoice Details */}
               <Box>
                 <FormControl isRequired>
-                  <FormLabel>Street Address</FormLabel>
-                  <Input
-                    value={billToStreetAddressInput}
-                    onChange={(e) => setBillToStreetAddressInput(e.target.value)}
-                    type={'text'}
-                  />
-                  <Flex flexDir={'row'} mb={'1rem'}>
-                    <Flex flexDirection={'column'}>
-                      <FormLabel pt="1rem">City</FormLabel>
+                  <Text
+                    fontSize={'lg'}
+                    fontWeight={'bold'}
+                    color={'blue.500'}
+                    mt={'0rem'}
+                    mb={'1rem'}>
+                    Select a Customer
+                  </Text>
+                  <Box
+                    w={'full'}
+                    bg={useColorModeValue('gray.100', 'gray.600')}
+                    border={'1px'}
+                    borderColor={useColorModeValue('gray.200', 'gray.600')}
+                    rounded={'xl'}>
+                    {/* <FormLabel>Select Customer</FormLabel> */}
+                    <AsyncSelect
+                      onChange={handleSelectedCustomer}
+                      loadOptions={loadOptions}
+                      // defaultOptions={}
+                      placeholder="Search for Customer"
+                      getOptionLabel={(option) => `${option.label},  ${option.email}`}
+                      theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 6,
+                        colors: {
+                          ...theme.colors,
+                          primary25: colorMode === 'dark' ? '#4A5568' : '#EDF2F7',
+                          primary: colorMode === 'dark' ? '#3182CE' : '#3182CE',
+                          neutral0: colorMode === 'dark' ? '#1A202C' : 'white',
+                          neutral90: 'white'
+                        }
+                      })}
+                    />
+                  </Box>
+                  <Text
+                    fontSize={'lg'}
+                    fontWeight={'bold'}
+                    color={'blue.500'}
+                    mt={'2rem'}
+                    mb={'0rem'}>
+                    General Info
+                  </Text>
+                  <Flex gap={4} mt={'1rem'}>
+                    <Box w={'50%'}>
+                      <FormLabel>Invoice #</FormLabel>
                       <Input
-                        value={billToCityInput}
-                        onChange={(e) => setBillToCityInput(e.target.value)}
-                        type={'text'}
-                      />
-                    </Flex>
-                    <Flex flexDirection={'column'} ml={'1rem'}>
-                      <FormLabel pt="1rem">State</FormLabel>
-                      <Input
-                        value={billToStateInput}
-                        onChange={(e) => setBillToStateInput(e.target.value)}
-                        type="text"
-                      />
-                    </Flex>
-                    <Flex flexDirection={'column'} ml={'1rem'}>
-                      <FormLabel mt="1rem">Zipcode</FormLabel>
-                      <Input
-                        value={billToZipcodeInput}
-                        onChange={(e) => setBillToZipcodeInput(e.target.value)}
-                        type={'text'}
-                      />
-                    </Flex>
-                  </Flex>
-                </FormControl>
-              </Box>
-            </>
-          ) : (
-            <></>
-          )}
-        </Flex>
-        {/* Service Item Input Table */}
-        <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-          Service Items
-        </Text>
-        <Box>
-          <TableContainer>
-            <Table variant={'unstyled'} size={'md'}>
-              <Thead>
-                <Tr>
-                  <Th p={2}>Description</Th>
-                  <Th p={2}>{fixedRateSwitchIsOn === true ? 'Qty' : 'Sqft'}</Th>
-                  <Th p={2}>Rate</Th>
-                  <Th p={2}>Amount</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {Array.from({ length: numOfLineItemFields }, (_, i) => (
-                  <Tr key={i}>
-                    <Td p={2}>
-                      <Input
-                        variant={'outline'}
-                        placeholder={`Item ${i + 1}`}
-                        name="description"
-                        minW={'300px'}
-                        onChange={(e) => handleOnChangeLineItemInput(e, i)}
-                      />
-                    </Td>
-                    <Td p={2}>
-                      {fixedRateSwitchIsOn === true ? (
-                        <Input
-                          type={'number'}
-                          disabled
-                          variant={'outline'}
-                          placeholder="1"
-                          name="qty"
-                          maxW={'50px'}
-                        />
-                      ) : (
-                        <Input
-                          type={'number'}
-                          minW={'10px'}
-                          variant={'flushed'}
-                          placeholder="30"
-                          name="sq_ft"
-                          onChange={(e) => handleOnChangeLineItemInput(e, i)}
-                        />
-                      )}
-                    </Td>
-                    <Td p={2}>
-                      {fixedRateSwitchIsOn === true ? (
-                        <Input
-                          disabled
-                          variant={'outline'}
-                          placeholder={'Fixed'}
-                          value={'Fixed'}
-                          name="rate"
-                          maxW={'100px'}
-                          onChange={(e) => handleOnChangeLineItemInput(e, i)}
-                        />
-                      ) : (
-                        <Input
-                          minW={'80px'}
-                          variant={'outline'}
-                          name="rate"
-                          placeholder="320"
-                          maxW={'100px'}
-                          onChange={(e) => handleOnChangeLineItemInput(e, i)}
-                        />
-                      )}
-                    </Td>
-                    {/* <Td><Input type={'number'} minW={'100px'} variant={'flushed'} placeholder='$1,000' name='amount' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/></Td> */}
-                    <Td p={2}>
-                      <Input
-                        name="amount"
-                        placeholder="0.00"
+                        placeholder={
+                          !data
+                            ? 'Loading...'
+                            : Math.max(...data?.map((item) => item.invoice_number)) + 1
+                        }
                         type={'number'}
-                        onChange={(e) => handleOnChangeLineItemInput(e, i)}
-                        maxW={'100px'}
+                        value={invoiceNumberInput}
+                        onChange={(e) => setInvoiceNumberInput(e.target.value)}
                       />
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Box>
-        {/* Add Line Item Button */}
-        <Flex justifyContent={'center'} gap={4}>
-          <Button w={'30%'} onClick={() => handleAddingLineItem()} my={'2rem'}>
-            Add Item
-          </Button>
-          {numOfLineItemFields <= 0 ? (
-            <></>
-          ) : (
-            <Button my={'2rem'} onClick={() => handleDeleteLineItemField()}>
-              Delete Row
-            </Button>
-          )}
-        </Flex>
-
-        {/* Total */}
-        {/* <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Total</Text> */}
-        <Flex justify={'space-between'} px={'8rem'} py={'1rem'}>
-          <Text>Subtotal</Text>
-          <Text>${formatMoneyValue(invoiceSubTotalCalculatedvalue)}</Text>
-        </Flex>
-        <Flex
-          justify={'space-between'}
-          mx={'2rem'}
-          px={'2rem'}
-          py={'1rem'}
-          bg={tableHeaderColor}
-          rounded={'xl'}
-          color={'white'}>
-          <Text fontSize={'2xl'} fontWeight={'bold'}>
-            Amount Due
-          </Text>
-          <Text fontSize={'2xl'} fontWeight={'bold'}>
-            ${formatMoneyValue(invoiceTotalCalculatedValue)}
-          </Text>
-        </Flex>
-
-        {/* Extra Section Information */}
-        {measurementNoteSwitchIsOn === true ||
-        noteSwitchIsOn === true ||
-        customerNoteSwitchIsOn === true ? (
-          <>
-            <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>
-              Extra
+                    </Box>
+                    <Box w={'50%'}>
+                      <FormLabel>Status</FormLabel>
+                      <Select
+                        value={selectedInvoiceStatus}
+                        placeholder="Select Status"
+                        onChange={(e) => setSelectedInvoiceStatus(e.target.value)}>
+                        <MultiPurposeOptions data={invoiceStatuses} />
+                      </Select>
+                    </Box>
+                  </Flex>
+                  <Flex gap={4} mt={'1rem'}>
+                    <Box w={'50%'}>
+                      <FormLabel>Date</FormLabel>
+                      <Input
+                        type="date"
+                        value={invoiceDateInput}
+                        onChange={({ target }) => setInvoiceDateInput(target.value)}
+                        id="invDate"
+                        placeholder="Select Invoice Date"
+                      />
+                    </Box>
+                    <Box w={'50%'}>
+                      <FormControl isRequired>
+                        <FormLabel>Due Date</FormLabel>
+                        <Input
+                          type="date"
+                          value={invoiceDueDateInput}
+                          onChange={({ target }) => setInvoiceDueDateInput(target.value)}
+                          id="dueDate"
+                          placeholder="Due date"
+                        />
+                      </FormControl>
+                    </Box>
+                  </Flex>
+                  <Box>
+                    <FormLabel mt="1rem">Select Service</FormLabel>
+                    <Select
+                      value={selectedServiceType}
+                      placeholder="Select Service"
+                      onChange={(e) => setSelectedServiceType(e.target.value)}>
+                      <MultiPurposeOptions data={services} />
+                    </Select>
+                  </Box>
+                </FormControl>
+              </Box>
+              {/* Bill To Input Fields */}
+              {billToSwitchIsOn === true ? (
+                <>
+                  <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'}>
+                    Bill To
+                  </Text>
+                  <Box>
+                    <FormControl isRequired>
+                      <FormLabel>Street Address</FormLabel>
+                      <Input
+                        value={billToStreetAddressInput}
+                        onChange={(e) => setBillToStreetAddressInput(e.target.value)}
+                        type={'text'}
+                      />
+                      <Flex flexDir={'row'} mb={'1rem'}>
+                        <Flex flexDirection={'column'}>
+                          <FormLabel pt="1rem">City</FormLabel>
+                          <Input
+                            value={billToCityInput}
+                            onChange={(e) => setBillToCityInput(e.target.value)}
+                            type={'text'}
+                          />
+                        </Flex>
+                        <Flex flexDirection={'column'} ml={'1rem'}>
+                          <FormLabel pt="1rem">State</FormLabel>
+                          <Input
+                            value={billToStateInput}
+                            onChange={(e) => setBillToStateInput(e.target.value)}
+                            type="text"
+                          />
+                        </Flex>
+                        <Flex flexDirection={'column'} ml={'1rem'}>
+                          <FormLabel mt="1rem">Zipcode</FormLabel>
+                          <Input
+                            value={billToZipcodeInput}
+                            onChange={(e) => setBillToZipcodeInput(e.target.value)}
+                            type={'text'}
+                          />
+                        </Flex>
+                      </Flex>
+                    </FormControl>
+                  </Box>
+                </>
+              ) : (
+                <></>
+              )}
+            </Flex>
+            {/* Service Item Input Table */}
+            <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+              Service Items
             </Text>
-          </>
-        ) : (
-          <></>
-        )}
-        <Flex direction={{ base: 'column', lg: 'row' }} w={'full'} gap={4}>
-          {customerNoteSwitchIsOn === true ? (
-            <>
-              <Box w={{ base: 'full', lg: '50%' }}>
+            <Box>
+              <TableContainer>
+                <Table variant={'unstyled'} size={'md'}>
+                  <Thead>
+                    <Tr>
+                      <Th p={2}>Description</Th>
+                      <Th p={2}>{fixedRateSwitchIsOn === true ? 'Qty' : 'Sqft'}</Th>
+                      <Th p={2}>Rate</Th>
+                      <Th p={2}>Amount</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {Array.from({ length: numOfLineItemFields }, (_, i) => (
+                      <Tr key={i}>
+                        <Td p={2}>
+                          <Input
+                            variant={'outline'}
+                            placeholder={`Item ${i + 1}`}
+                            name="description"
+                            minW={'300px'}
+                            onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                          />
+                        </Td>
+                        <Td p={2}>
+                          {fixedRateSwitchIsOn === true ? (
+                            <Input
+                              type={'number'}
+                              disabled
+                              variant={'outline'}
+                              placeholder="1"
+                              name="qty"
+                              maxW={'50px'}
+                            />
+                          ) : (
+                            <Input
+                              type={'number'}
+                              minW={'10px'}
+                              variant={'flushed'}
+                              placeholder="30"
+                              name="sq_ft"
+                              onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                            />
+                          )}
+                        </Td>
+                        <Td p={2}>
+                          {fixedRateSwitchIsOn === true ? (
+                            <Input
+                              disabled
+                              variant={'outline'}
+                              placeholder={'Fixed'}
+                              value={'Fixed'}
+                              name="rate"
+                              maxW={'100px'}
+                              onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                            />
+                          ) : (
+                            <Input
+                              minW={'80px'}
+                              variant={'outline'}
+                              name="rate"
+                              placeholder="320"
+                              maxW={'100px'}
+                              onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                            />
+                          )}
+                        </Td>
+                        {/* <Td><Input type={'number'} minW={'100px'} variant={'flushed'} placeholder='$1,000' name='amount' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/></Td> */}
+                        <Td p={2}>
+                          <Input
+                            name="amount"
+                            placeholder="0.00"
+                            type={'number'}
+                            onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                            maxW={'100px'}
+                          />
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Box>
+            {/* Add Line Item Button */}
+            <Flex justifyContent={'center'} gap={4}>
+              <Button w={'30%'} onClick={() => handleAddingLineItem()} my={'2rem'}>
+                Add Item
+              </Button>
+              {numOfLineItemFields <= 0 ? (
+                <></>
+              ) : (
+                <Button my={'2rem'} onClick={() => handleDeleteLineItemField()}>
+                  Delete Row
+                </Button>
+              )}
+            </Flex>
+
+            {/* Total */}
+            {/* <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Total</Text> */}
+            <Flex justify={'space-between'} px={'8rem'} py={'1rem'}>
+              <Text>Subtotal</Text>
+              <Text>${formatMoneyValue(invoiceSubTotalCalculatedvalue)}</Text>
+            </Flex>
+            <Flex
+              justify={'space-between'}
+              mx={'2rem'}
+              px={'2rem'}
+              py={'1rem'}
+              bg={tableHeaderColor}
+              rounded={'xl'}
+              color={'white'}>
+              <Text fontSize={'2xl'} fontWeight={'bold'}>
+                Total
+              </Text>
+              <Text fontSize={'2xl'} fontWeight={'bold'}>
+                ${formatMoneyValue(invoiceTotalCalculatedValue)}
+              </Text>
+            </Flex>
+
+            {/* Extra Section Information */}
+            {measurementNoteSwitchIsOn === true ||
+            noteSwitchIsOn === true ||
+            customerNoteSwitchIsOn === true ? (
+              <>
+                <Text
+                  fontSize={'lg'}
+                  fontWeight={'bold'}
+                  color={'blue.500'}
+                  mt={'2rem'}
+                  mb={'0rem'}>
+                  Extra
+                </Text>
+              </>
+            ) : (
+              <></>
+            )}
+            <Flex direction={{ base: 'column', lg: 'row' }} w={'full'} gap={4}>
+              {customerNoteSwitchIsOn === true ? (
+                <>
+                  <Box w={{ base: 'full', lg: '50%' }}>
+                    <FormControl>
+                      <FormLabel mt={'1rem'}>Message to Customer</FormLabel>
+                      <Textarea
+                        placeholder="Thank you for your business! 🚀"
+                        value={customerNoteMessage}
+                        onChange={(e) => setCustomerNoteMessage(e.target.value)}
+                      />
+                    </FormControl>
+                  </Box>
+                </>
+              ) : (
+                <></>
+              )}
+              {measurementNoteSwitchIsOn === true ? (
+                <>
+                  <Box w={{ base: 'full', lg: '50%' }}>
+                    <FormControl>
+                      <FormLabel mt={'1rem'}>Measurements</FormLabel>
+                      <Textarea value={sqftInput} onChange={(e) => setSqftInput(e.target.value)} />
+                    </FormControl>
+                  </Box>
+                </>
+              ) : (
+                <></>
+              )}
+            </Flex>
+            {noteSwitchIsOn === true ? (
+              <>
                 <FormControl>
-                  <FormLabel mt={'1rem'}>Message to Customer</FormLabel>
-                  <Textarea
-                    placeholder="Thank you for your business! 🚀"
-                    value={customerNoteMessage}
-                    onChange={(e) => setCustomerNoteMessage(e.target.value)}
-                  />
+                  <FormLabel mt="1rem"> Additional Note</FormLabel>
+                  <Textarea value={noteInput} onChange={(e) => setNoteInput(e.target.value)} />
                 </FormControl>
-              </Box>
-            </>
-          ) : (
-            <></>
-          )}
-          {measurementNoteSwitchIsOn === true ? (
-            <>
-              <Box w={{ base: 'full', lg: '50%' }}>
-                <FormControl>
-                  <FormLabel mt={'1rem'}>Measurements</FormLabel>
-                  <Textarea value={sqftInput} onChange={(e) => setSqftInput(e.target.value)} />
-                </FormControl>
-              </Box>
-            </>
-          ) : (
-            <></>
-          )}
-        </Flex>
-        {noteSwitchIsOn === true ? (
-          <>
-            <FormControl>
-              <FormLabel mt="1rem"> Additional Note</FormLabel>
-              <Textarea value={noteInput} onChange={(e) => setNoteInput(e.target.value)} />
-            </FormControl>
-          </>
-        ) : (
-          <></>
-        )}
-        {/* Custom Setting Switches */}
-        <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>
-          Custom Settings
-        </Text>
-        <Flex gap={4} flexWrap={'wrap'} py="1rem">
-          <Flex align={'center'}>
-            <Switch
-              size={'sm'}
-              isChecked={billToSwitchIsOn}
-              onChange={() => setBillToSwitchIsOn(!billToSwitchIsOn)}
-            />
-            <Text ml={'8px'}>Bill To</Text>
-          </Flex>
-          <Flex align={'center'}>
-            <Switch
-              size={'sm'}
-              isChecked={fixedRateSwitchIsOn}
-              onChange={() => setFixedRateSwitchIsOn(!fixedRateSwitchIsOn)}
-            />
-            <Text ml={'8px'}>Fixed Rate</Text>
-          </Flex>
-          <Flex align={'center'}>
-            <Switch
-              size={'sm'}
-              isChecked={noteSwitchIsOn}
-              onChange={() => setNoteSwitchIsOn(!noteSwitchIsOn)}
-            />
-            <Text ml={'8px'}>Note</Text>
-          </Flex>
-          <Flex align={'center'}>
-            <Switch
-              size={'sm'}
-              isChecked={measurementNoteSwitchIsOn}
-              onChange={() => setMeasurementNoteSwitchIsOn(!measurementNoteSwitchIsOn)}
-            />
-            <Text ml={'8px'}>Measurement</Text>
-          </Flex>
-          <Flex align={'center'}>
-            <Switch
-              size={'sm'}
-              isChecked={customerNoteSwitchIsOn}
-              onChange={() => setCustomerNoteSwitchIsOn(!customerNoteSwitchIsOn)}
-            />
-            <Text ml={'8px'}>Customer Note</Text>
-          </Flex>
-        </Flex>
-        <DrawerFooter justifyContent={'space-between'} px={0} mt={8} borderTopWidth="1px">
-          <Button onClick={handleCancelButton} colorScheme="gray">
-            Cancel
-          </Button>
-          <Button colorScheme="blue" type="submit" isLoading={loadingState}>
-            Create Invoice
-          </Button>
-        </DrawerFooter>
+              </>
+            ) : (
+              <></>
+            )}
+            {/* Custom Setting Switches */}
+            <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>
+              Custom Settings
+            </Text>
+            <Flex gap={4} flexWrap={'wrap'} py="1rem">
+              <Flex align={'center'}>
+                <Switch
+                  size={'sm'}
+                  isChecked={billToSwitchIsOn}
+                  onChange={() => setBillToSwitchIsOn(!billToSwitchIsOn)}
+                />
+                <Text ml={'8px'}>Bill To</Text>
+              </Flex>
+              <Flex align={'center'}>
+                <Switch
+                  size={'sm'}
+                  isChecked={fixedRateSwitchIsOn}
+                  onChange={() => setFixedRateSwitchIsOn(!fixedRateSwitchIsOn)}
+                />
+                <Text ml={'8px'}>Fixed Rate</Text>
+              </Flex>
+              <Flex align={'center'}>
+                <Switch
+                  size={'sm'}
+                  isChecked={noteSwitchIsOn}
+                  onChange={() => setNoteSwitchIsOn(!noteSwitchIsOn)}
+                />
+                <Text ml={'8px'}>Note</Text>
+              </Flex>
+              <Flex align={'center'}>
+                <Switch
+                  size={'sm'}
+                  isChecked={measurementNoteSwitchIsOn}
+                  onChange={() => setMeasurementNoteSwitchIsOn(!measurementNoteSwitchIsOn)}
+                />
+                <Text ml={'8px'}>Measurement</Text>
+              </Flex>
+              <Flex align={'center'}>
+                <Switch
+                  size={'sm'}
+                  isChecked={customerNoteSwitchIsOn}
+                  onChange={() => setCustomerNoteSwitchIsOn(!customerNoteSwitchIsOn)}
+                />
+                <Text ml={'8px'}>Customer Note</Text>
+              </Flex>
+            </Flex>
+          </DrawerBody>
+          <DrawerFooter gap={4}>
+            <Button colorScheme="blue" type="submit" isLoading={loadingState}>
+              Create Invoice
+            </Button>
+            <Button onClick={handleCancelButton}>Cancel</Button>
+          </DrawerFooter>
+        </DrawerContent>
       </form>
-    </DrawerIndex>
+    </Drawer>
   );
 };
 

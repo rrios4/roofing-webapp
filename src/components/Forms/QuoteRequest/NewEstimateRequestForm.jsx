@@ -10,7 +10,13 @@ import {
   Button,
   Flex,
   DrawerFooter,
-  InputLeftAddon
+  InputLeftAddon,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody
 } from '@chakra-ui/react';
 import { formatPhoneNumber, supabase } from '../../../utils';
 import stateJSONData from '../../../data/state_titlecase.json';
@@ -145,148 +151,155 @@ const NewEstimateRequestForm = (props) => {
   };
 
   return (
-    <DrawerIndex isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef} size="lg">
+    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={'lg'}>
+      <DrawerOverlay />
       <form method="POST" onSubmit={handleSubmit}>
-        <Text fontSize={'25px'} fontWeight={'bold'}>
-          Create
-          <Text as="span" ml={'8px'} color={'blue.500'}>
-            Quote Request
-          </Text>
-        </Text>
-        <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-          Request
-        </Text>
-        <FormControl isRequired>
-          <Flex>
-            <Flex flexDir={'column'}>
-              <FormLabel>Status</FormLabel>
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>New Quote Request</DrawerHeader>
+          <DrawerBody>
+            {/* <Text fontSize={'25px'} fontWeight={'bold'}>
+              Create
+              <Text as="span" ml={'8px'} color={'blue.500'}>
+                Quote Request
+              </Text>
+            </Text> */}
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'0rem'} mb={'1rem'}>
+              Request
+            </Text>
+            <FormControl isRequired>
+              <Flex>
+                <Flex flexDir={'column'}>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    placeholder="Select Status"
+                    value={selectedQuoteStatus}
+                    onChange={(e) => {
+                      setSelectedQuoteStatus(e.target.value);
+                    }}>
+                    <MultiPurposeOptions data={qrStatuses} />
+                  </Select>
+                </Flex>
+                <Flex flexDir={'column'} ml={'1rem'}>
+                  <FormLabel>Desired Date</FormLabel>
+                  <Input
+                    type={'date'}
+                    value={selectedQuoteDate}
+                    onChange={(e) => setSelectedQuoteDate(e.target.value)}
+                  />
+                </Flex>
+              </Flex>
+              <FormLabel mt={'1rem'}>Customer Type</FormLabel>
               <Select
-                placeholder="Select Status"
-                value={selectedQuoteStatus}
+                placeholder="Select Customer Type"
+                value={selectedCustomerType}
                 onChange={(e) => {
-                  setSelectedQuoteStatus(e.target.value);
+                  setSelectedCustomerType(e.target.value);
                 }}>
-                <MultiPurposeOptions data={qrStatuses} />
+                <MultiPurposeOptions data={customerTypes} />
               </Select>
-            </Flex>
-            <Flex flexDir={'column'} ml={'1rem'}>
-              <FormLabel>Desired Date</FormLabel>
-              <Input
-                type={'date'}
-                value={selectedQuoteDate}
-                onChange={(e) => setSelectedQuoteDate(e.target.value)}
-              />
-            </Flex>
-          </Flex>
-          <FormLabel mt={'1rem'}>Customer Type</FormLabel>
-          <Select
-            placeholder="Select Customer Type"
-            value={selectedCustomerType}
-            onChange={(e) => {
-              setSelectedCustomerType(e.target.value);
-            }}>
-            <MultiPurposeOptions data={customerTypes} />
-          </Select>
-          <FormLabel mt={'1rem'}>Service Type</FormLabel>
-          <Select
-            placeholder="Select Service"
-            value={selectedService}
-            onChange={(e) => {
-              setSelectedService(e.target.value);
-            }}>
-            <MultiPurposeOptions data={services} />
-          </Select>
-          {/* <Input type={'text'}/> */}
-          <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-            Address
-          </Text>
-          <FormLabel>Street Address</FormLabel>
-          <Input
-            value={qrStreetAddress}
-            onChange={({ target }) => setQrStreetAddress(target.value)}
-          />
-          <Flex mt={'1rem'}>
-            <Flex flexDir={'column'} mr={'1rem'}>
-              <FormLabel>City</FormLabel>
-              <Input
-                type={'text'}
-                value={qrCity}
-                onChange={({ target }) => setQrCity(target.value)}
-              />
-            </Flex>
-            <Flex flexDir={'column'}>
-              <FormLabel>State</FormLabel>
-              {/* <Input type={'text'} value={qrState} onChange={({target}) => setQrState(target.value)}/> */}
+              <FormLabel mt={'1rem'}>Service Type</FormLabel>
               <Select
-                value={selectedState}
+                placeholder="Select Service"
+                value={selectedService}
                 onChange={(e) => {
-                  setSelectedState(e.target.value);
-                }}
-                placeholder={'Select State'}>
-                <StateOptions states={states} />
+                  setSelectedService(e.target.value);
+                }}>
+                <MultiPurposeOptions data={services} />
               </Select>
-            </Flex>
-            <Flex flexDir={'column'} ml={'1rem'}>
-              <FormLabel>Zipcode</FormLabel>
+              {/* <Input type={'text'}/> */}
+              <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+                Address
+              </Text>
+              <FormLabel>Street Address</FormLabel>
               <Input
-                type={'text'}
-                value={qrPostalCode}
-                onChange={({ target }) => setQrPostalCode(target.value)}
+                value={qrStreetAddress}
+                onChange={({ target }) => setQrStreetAddress(target.value)}
               />
-            </Flex>
-          </Flex>
+              <Flex mt={'1rem'}>
+                <Flex flexDir={'column'} mr={'1rem'}>
+                  <FormLabel>City</FormLabel>
+                  <Input
+                    type={'text'}
+                    value={qrCity}
+                    onChange={({ target }) => setQrCity(target.value)}
+                  />
+                </Flex>
+                <Flex flexDir={'column'}>
+                  <FormLabel>State</FormLabel>
+                  {/* <Input type={'text'} value={qrState} onChange={({target}) => setQrState(target.value)}/> */}
+                  <Select
+                    value={selectedState}
+                    onChange={(e) => {
+                      setSelectedState(e.target.value);
+                    }}
+                    placeholder={'Select State'}>
+                    <StateOptions states={states} />
+                  </Select>
+                </Flex>
+                <Flex flexDir={'column'} ml={'1rem'}>
+                  <FormLabel>Zipcode</FormLabel>
+                  <Input
+                    type={'text'}
+                    value={qrPostalCode}
+                    onChange={({ target }) => setQrPostalCode(target.value)}
+                  />
+                </Flex>
+              </Flex>
 
-          <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-            Client
-          </Text>
-          <Flex mt={'1rem'}>
-            <Flex flexDir={'column'} mr={'1rem'}>
-              <FormLabel>First Name</FormLabel>
+              <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+                Client
+              </Text>
+              <Flex mt={'1rem'}>
+                <Flex flexDir={'column'} mr={'1rem'}>
+                  <FormLabel>First Name</FormLabel>
+                  <Input
+                    type={'text'}
+                    value={qrClientFirstName}
+                    onChange={({ target }) => setQrClientFirstName(target.value)}
+                  />
+                </Flex>
+                <Flex flexDir={'column'}>
+                  <FormLabel>Last Name</FormLabel>
+                  <Input
+                    type={'text'}
+                    value={qrClientLastname}
+                    onChange={({ target }) => setQrClientLastname(target.value)}
+                  />
+                </Flex>
+              </Flex>
+              <FormLabel mt={'1rem'}>Email</FormLabel>
               <Input
-                type={'text'}
-                value={qrClientFirstName}
-                onChange={({ target }) => setQrClientFirstName(target.value)}
+                type={'email'}
+                value={qrClientEmail}
+                onChange={({ target }) => setQrClientEmail(target.value)}
               />
-            </Flex>
-            <Flex flexDir={'column'}>
-              <FormLabel>Last Name</FormLabel>
-              <Input
-                type={'text'}
-                value={qrClientLastname}
-                onChange={({ target }) => setQrClientLastname(target.value)}
-              />
-            </Flex>
-          </Flex>
-          <FormLabel mt={'1rem'}>Email</FormLabel>
-          <Input
-            type={'email'}
-            value={qrClientEmail}
-            onChange={({ target }) => setQrClientEmail(target.value)}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel pt="1rem">Phone Number</FormLabel>
-          <InputGroup>
-            <InputLeftAddon children="+1" />
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="Phone number"
-              onChange={(e) => handlePhoneInput(e)}
-              value={inputValue}
-            />
-          </InputGroup>
-        </FormControl>
-        <DrawerFooter mt={'2rem'}>
-          <Button onClick={handleCancel} mr="1rem">
-            Cancel
-          </Button>
-          <Button type="submit" colorScheme={'blue'}>
-            Create
-          </Button>
-        </DrawerFooter>
+            </FormControl>
+            <FormControl>
+              <FormLabel pt="1rem">Phone Number</FormLabel>
+              <InputGroup>
+                <InputLeftAddon children="+1" />
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="Phone number"
+                  onChange={(e) => handlePhoneInput(e)}
+                  value={inputValue}
+                />
+              </InputGroup>
+            </FormControl>
+          </DrawerBody>
+          <DrawerFooter gap={4}>
+            <Button type="submit" colorScheme={'blue'}>
+              Create QR
+            </Button>
+            <Button onClick={handleCancel} mr="1rem">
+              Cancel
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
       </form>
-    </DrawerIndex>
+    </Drawer>
   );
 };
 

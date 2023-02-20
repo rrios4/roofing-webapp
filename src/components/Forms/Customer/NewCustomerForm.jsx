@@ -11,7 +11,14 @@ import {
   FormLabel,
   Flex,
   Button,
-  Text
+  Text,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter
 } from '@chakra-ui/react';
 import { useCustomerTypes } from '../../../hooks/useCustomerTypes';
 
@@ -108,124 +115,136 @@ const NewCustomerForm = (props) => {
   };
 
   return (
-    <DrawerIndex isOpen={isOpen} onClose={onClose} initialRef={initialRef} size="lg">
+    <Drawer
+      placement="right"
+      onClose={onClose}
+      isOpen={isOpen}
+      size={'lg'}
+      initialFocusRef={initialRef}>
+      <DrawerOverlay />
       <form method="POST" onSubmit={handleSubmit}>
-        <Text fontSize={'25px'} fontWeight={'bold'}>
-          Create
-          <Text as="span" ml={'8px'} color={'blue.500'}>
-            Customer
-          </Text>
-        </Text>
-        <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>
-          Description
-        </Text>
-        <FormControl isRequired>
-          <FormLabel pt="1rem">Customer Type</FormLabel>
-          <Select
-            value={selectedCustomerType}
-            placeholder="Select Customer Type"
-            onChange={(e) => {
-              setselectedCustomerType(e.target.value);
-            }}>
-            <MultiPurposeOptions data={customerTypes} />
-          </Select>
-        </FormControl>
-        <Flex>
-          <FormControl isRequired mr={'1rem'}>
-            <FormLabel pt="1rem">First Name</FormLabel>
-            <Input
-              value={firstName}
-              onChange={({ target }) => setfirstName(target.value)}
-              id="name"
-              ref={initialRef}
-              placeholder="First Name"
-            />
-          </FormControl>
-          <FormControl isRequired ml={'1rem'}>
-            <FormLabel pt="1rem">Last Name</FormLabel>
-            <Input
-              value={lastName}
-              onChange={({ target }) => setlastName(target.value)}
-              id="name"
-              ref={initialRef}
-              placeholder="Last Name"
-            />
-          </FormControl>
-        </Flex>
-        <FormControl isRequired>
-          <FormLabel pt="1rem">Email</FormLabel>
-          <Input
-            value={email}
-            onChange={({ target }) => setEmail(target.value)}
-            placeholder="Email Address"
-            type="email"
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel pt="1rem">Phone Number</FormLabel>
-          <InputGroup>
-            <InputLeftAddon children="+1" />
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="Phone number"
-              onChange={(e) => handlePhoneInput(e)}
-              value={inputValue}
-            />
-          </InputGroup>
-        </FormControl>
-        <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>
-          Location
-        </Text>
-        <FormControl isRequired>
-          <FormLabel pt="1rem">Street Address</FormLabel>
-          <Input
-            value={address}
-            onChange={({ target }) => setAddress(target.value)}
-            id="address"
-            placeholder="Street address"
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel pt="1rem">City</FormLabel>
-          <Input
-            value={city}
-            onChange={({ target }) => setCity(target.value)}
-            id="city"
-            placeholder="City"
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel pt="1rem">State</FormLabel>
-          {/* <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/> */}
-          <Select
-            value={selectedState}
-            placeholder="Select State"
-            onChange={(e) => {
-              setSelectedState(e.target.value);
-            }}>
-            <StateOptions states={states} />
-          </Select>
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel pt="1rem">Zipcode</FormLabel>
-          <Input
-            value={zipcode}
-            onChange={({ target }) => setZipcode(target.value)}
-            id="zipcode"
-            placeholder="Zipcode"
-          />
-        </FormControl>
-        <Flex pt={'2rem'} w="full" justifyContent={'flex-end'}>
-          <Button onClick={onClose} mr={'1rem'}>
-            Cancel
-          </Button>
-          <Button colorScheme={'blue'} type="submit" isLoading={loadingState}>
-            Create
-          </Button>
-        </Flex>
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>New Customer</DrawerHeader>
+          <DrawerBody>
+            {/* <Text fontSize={'25px'} fontWeight={'bold'}>
+              Create
+              <Text as="span" ml={'8px'} color={'blue.500'}>
+                Customer
+              </Text>
+            </Text> */}
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'0rem'} mb={'0rem'}>
+              Description
+            </Text>
+            <FormControl isRequired>
+              <FormLabel pt="1rem">Customer Type</FormLabel>
+              <Select
+                ref={initialRef}
+                value={selectedCustomerType}
+                placeholder="Select Customer Type"
+                onChange={(e) => {
+                  setselectedCustomerType(e.target.value);
+                }}>
+                <MultiPurposeOptions data={customerTypes} />
+              </Select>
+            </FormControl>
+            <Flex>
+              <FormControl isRequired mr={'1rem'}>
+                <FormLabel pt="1rem">First Name</FormLabel>
+                <Input
+                  value={firstName}
+                  onChange={({ target }) => setfirstName(target.value)}
+                  id="name"
+                  placeholder="First Name"
+                />
+              </FormControl>
+              <FormControl isRequired ml={'1rem'}>
+                <FormLabel pt="1rem">Last Name</FormLabel>
+                <Input
+                  value={lastName}
+                  onChange={({ target }) => setlastName(target.value)}
+                  id="name"
+                  placeholder="Last Name"
+                />
+              </FormControl>
+            </Flex>
+            <FormControl isRequired>
+              <FormLabel pt="1rem">Email</FormLabel>
+              <Input
+                value={email}
+                onChange={({ target }) => setEmail(target.value)}
+                placeholder="Email Address"
+                type="email"
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel pt="1rem">Phone Number</FormLabel>
+              <InputGroup>
+                <InputLeftAddon children="+1" />
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="Phone number"
+                  onChange={(e) => handlePhoneInput(e)}
+                  value={inputValue}
+                />
+              </InputGroup>
+            </FormControl>
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>
+              Location
+            </Text>
+            <FormControl isRequired>
+              <FormLabel pt="1rem">Street Address</FormLabel>
+              <Input
+                value={address}
+                onChange={({ target }) => setAddress(target.value)}
+                id="address"
+                placeholder="Street address"
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel pt="1rem">City</FormLabel>
+              <Input
+                value={city}
+                onChange={({ target }) => setCity(target.value)}
+                id="city"
+                placeholder="City"
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel pt="1rem">State</FormLabel>
+              {/* <Input value={state} onChange={({target}) => setState(target.value)} id='state' placeholder='State'/> */}
+              <Select
+                value={selectedState}
+                placeholder="Select State"
+                onChange={(e) => {
+                  setSelectedState(e.target.value);
+                }}>
+                <StateOptions states={states} />
+              </Select>
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel pt="1rem">Zipcode</FormLabel>
+              <Input
+                value={zipcode}
+                onChange={({ target }) => setZipcode(target.value)}
+                id="zipcode"
+                placeholder="Zipcode"
+              />
+            </FormControl>
+            <Flex pt={'2rem'} w="full" justifyContent={'flex-end'}></Flex>
+          </DrawerBody>
+          <DrawerFooter gap={4}>
+            <Button colorScheme={'blue'} type="submit" isLoading={loadingState}>
+              Create Customer
+            </Button>
+            <Button onClick={onClose} mr={'1rem'}>
+              Cancel
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
       </form>
-    </DrawerIndex>
+    </Drawer>
   );
 };
 
