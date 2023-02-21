@@ -20,9 +20,10 @@ import {
 } from '@chakra-ui/react';
 import formatNumber from '../../../utils/formatNumber';
 import { MdEdit, MdDelete, MdKeyboardArrowRight } from 'react-icons/md';
+import { formatDate } from '../../../utils';
 
 const QuoteTable = (props) => {
-  const { data, handleDelete } = props;
+  const { data, handleDelete, handleEditDrawer } = props;
   return (
     <>
       <TableContainer overflow={'auto'}>
@@ -58,8 +59,8 @@ const QuoteTable = (props) => {
                     variant={'subtle'}
                     mx={'auto'}
                     colorScheme={
-                      quote.quote_status.name === 'New'
-                        ? 'green'
+                      quote.quote_status.name === 'Draft'
+                        ? 'gray'
                         : '' || quote.quote_status.name === 'Accepted'
                         ? 'green'
                         : '' || quote.quote_status.name === 'Pending'
@@ -79,21 +80,13 @@ const QuoteTable = (props) => {
                   <Text>{quote.services.name}</Text>
                 </Td>
                 <Td>
-                  <Text>
-                    {quote.quote_date ? new Date(quote?.quote_date).toLocaleDateString() : ''}
-                  </Text>
+                  <Text>{quote.quote_date ? formatDate(quote?.quote_date) : ''}</Text>
                 </Td>
                 <Td textAlign={'center'}>
-                  <Text>
-                    {quote.issued_date ? new Date(quote.issued_date).toLocaleDateString() : ''}
-                  </Text>
+                  <Text>{quote.issue_date ? formatDate(quote?.issue_date) : ''}</Text>
                 </Td>
                 <Td>
-                  <Text>
-                    {quote?.expiration_date
-                      ? new Date(quote?.expiration_date).toLocaleDateString()
-                      : ''}
-                  </Text>
+                  <Text>{quote?.expiration_date ? formatDate(quote?.expiration_date) : ''}</Text>
                 </Td>
                 <Td>
                   {quote?.customer?.first_name && quote?.customer?.last_name ? (
@@ -134,9 +127,16 @@ const QuoteTable = (props) => {
                 </Td>
                 <Td>
                   <Flex gap={2}>
+                    {/* Edit Button */}
                     <Tooltip label="Edit">
-                      <IconButton icon={<MdEdit />} />
+                      <IconButton
+                        onClick={() => {
+                          handleEditDrawer(quote);
+                        }}
+                        icon={<MdEdit />}
+                      />
                     </Tooltip>
+                    {/* Delete Button */}
                     <Tooltip label="Delete">
                       <IconButton
                         onClick={() => {
@@ -145,6 +145,7 @@ const QuoteTable = (props) => {
                         icon={<MdDelete />}
                       />
                     </Tooltip>
+                    {/* Go to Customer Details Button */}
                     <Link to={`/editestimate/${quote.id}`}>
                       <Tooltip label="Go to Estimate Details ">
                         <IconButton

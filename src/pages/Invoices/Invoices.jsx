@@ -154,14 +154,6 @@ function Invoices() {
       .eq('invoice_number', selectedEditInvoice.invoice_number);
 
     if (error) {
-      // console.log(error)
-      // handleToastMessage(
-      //   'error',
-      //   'top',
-      //   selectedEditInvoice.invoice_number,
-      //   `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
-      //   `Error: ${error.message}`
-      // );
       // Toast to give feedback when error happens updating invoice
       toast({
         position: 'top',
@@ -175,13 +167,6 @@ function Invoices() {
 
     if (data) {
       await fetchInvoices();
-      // handleToastMessage(
-      //   'success',
-      //   'top',
-      //   selectedEditInvoice.invoice_number,
-      //   `Successfully Updated Invoice`,
-      //   `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`
-      // );
       // Toast to give feedback when success happens updating invoice
       toast({
         position: 'top',

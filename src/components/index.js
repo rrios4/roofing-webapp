@@ -50,3 +50,5 @@ export { default as ConnectedInvoiceDeleteAlertDialog } from './Alerts/Connected
 export { default as ConnectedQRDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedQRDeleteAlertDialog';
 export { default as ConnectedCustomerDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedCustomerDeleteAlertDialog';
 export { default as ConnectedQuoteDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedQuoteDeleteAlertDialog';
+export { default as CreateQuoteForm } from './Forms/Quote/CreateQuoteForm';
+export { default as EditQuoteForm } from './Forms/Quote/EditQuoteForm';
