@@ -83,10 +83,6 @@ const NewInvoiceForm = (props) => {
   // Line Item React State
   const [numOfLineItemFields, setNumOfLineItemFields] = useState(0);
 
-  useEffect(() => {
-    //   handleInvoiceNextNumber();
-  }, []);
-
   // Function to handle the submit data from the form to supabase DB
   const handleSubmit = async (event) => {
     setLoadingState(true);

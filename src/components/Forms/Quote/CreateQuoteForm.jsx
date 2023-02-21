@@ -18,13 +18,16 @@ import {
   DrawerCloseButton,
   DrawerHeader,
   DrawerBody,
-  DrawerFooter
+  DrawerFooter,
+  Box,
+  Switch,
+  useColorModeValue
 } from '@chakra-ui/react';
-import { useServices } from '../../../hooks/useServices';
-import { useQuoteStatuses } from '../../../hooks/useQuoteStatuses';
+import { FiMap, FiUser } from 'react-icons/fi';
+import { TbNote, TbRuler } from 'react-icons/tb';
 
 const CreateQuoteForm = (props) => {
-  const { isOpen, onClose, initialRef, updateEstimateData, services, quoteStatuses } = props;
+  const { isOpen, onClose, initialRef, updateParentState, services, quoteStatuses } = props;
 
   // React hooks
   //   const { services } = useServices();
@@ -37,34 +40,38 @@ const CreateQuoteForm = (props) => {
   // const [estimates, setEstimates] = useState(null);
   // const [customers, setCustomers] = useState('');
   // const [name, setCustomerName] = useState('');
-  const [etDate, setEtDate] = useState('');
-  const [expDate, setExpDate] = useState('');
-  const [quotePrice, setQuotedPrice] = useState('');
-  const [estStatus, setEstStatus] = useState('');
-  const [measurement, setMeasurement] = useState('');
-  // const [serviceName, setServiceName] = useState('');
 
-  const [selectedCustomer, setSelectedCustomer] = useState('');
+  // const [serviceName, setServiceName] = useState('');
   // const [cuIdCaptured, setCuIdCaptured] = useState('');
 
   // const [quoteToStreetAddressInput, setQuoteToStreetAddressInput] = useState('');
   // const [quoteToCityInput, setQuoteToCityInput] = useState('');
   // const [quoteToStateInput, setQuoteToStateInput] = useState('');
   // const [quoteToZipcodeInput, setQuoteToZipcodeInput] = useState('');
-  const [estimateNumberInput, setEstimateNumberInput] = useState('');
-  const [selectedServiceInput, setSelectedServiceInput] = useState('');
 
-  const handleSubmit = async () => {};
+  // React usestates to capture data from inputs from form
+  const [quoteNumberInput, setQuoteNumberInput] = useState('');
+  const [quoteStatusInput, setQuoteStatusInput] = useState('');
+  const [selectedCustomerInput, setSelectedCustomerInput] = useState('');
+  const [selectedQuoteServiceInput, setSelectedQuoteServiceInput] = useState('');
+  const [quoteDateInput, setQuoteDateInput] = useState('');
+  const [expirationDateInput, setExpirationDateInput] = useState('');
+  const [quoteTotalInput, setQuoteTotalInput] = useState('');
+  const [measurementNoteInput, setMeasurementNoteInput] = useState('');
+  const [noteInput, setNoteInput] = useState('');
+  const [customerMessageInput, setCustomerMessageInput] = useState('');
+  const [customStreetAddressInput, setCustomStreetAddressInput] = useState('');
+  const [customCityInput, setCustomCityInput] = useState('');
+  const [customStateInput, setCustomStateInput] = useState('');
+  const [customZipcodeInput, setCustomZipcodeInput] = useState('');
 
-  // Function that will handle the selected value from react-select component and stores it in a useState
-  const handleSelectedCustomer = (value) => {
-    setSelectedCustomer({
-      selectedCustomer: value || []
-    });
-    // console.log(selectedCustomer.selectedCustomer.value)
-  };
+  // React useStates to use boolean values such as switches
+  const [noteSwitchIsOn, setNoteSwitchIsOn] = useState(false);
+  const [measurementsNoteSwitchIsOn, setMeasurementsNoteSwitchIsOn] = useState(false);
+  const [customerMessageSwitchIsOn, setCustomerMessageSwitchIsOn] = useState(false);
+  const [customAddressSwitchIsOn, setCustomAddressSwitchIsOn] = useState(false);
 
-  // Function that will load options for react-select component as the user types name
+  ///////////////////// Functions that will load options for react-select component as the user types a value /////////////////////////
   const loadOptions = async (inputText, callback) => {
     const { data: customers, error } = await supabase
       .from('customer')
@@ -86,44 +93,157 @@ const CreateQuoteForm = (props) => {
     // console.log(customers)
   };
 
+  const handleSelectedCustomer = (value) => {
+    setSelectedCustomerInput({
+      selectedCustomer: value || []
+    });
+    // console.log(selectedCustomer.selectedCustomer.value);
+  };
+
+  ///////////////////// Functions that handle submit functionality for new data being inputed ////////////////////////////
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabase.from('quote').insert({
+      quote_number: quoteNumberInput,
+      customer_id: selectedCustomerInput.selectedCustomer.value,
+      status_id: quoteStatusInput,
+      service_id: selectedQuoteServiceInput,
+      quote_date: quoteDateInput,
+      expiration_date: expirationDateInput,
+      subtotal: quoteTotalInput,
+      total: quoteTotalInput,
+      note: noteInput ? noteInput : null,
+      measurement_note: measurementNoteInput ? measurementNoteInput : null,
+      cust_note: customerMessageInput
+        ? customerMessageInput
+        : "If you have any questions or concerns don't hesitate to reach us. 👋",
+      custom_street_address: customStreetAddressInput ? customStreetAddressInput : null,
+      custom_city: customCityInput ? customCityInput : null,
+      custom_state: customStateInput ? customStateInput : null,
+      custom_zipcode: customZipcodeInput ? customZipcodeInput : null
+    });
+
+    if (error) {
+      console.log(error);
+    }
+    if (data) {
+      await updateParentState();
+      onClose();
+      console.log('Data submitted successfully!');
+    }
+
+    setQuoteNumberInput('');
+    setQuoteStatusInput('');
+    setSelectedCustomerInput('');
+    setSelectedQuoteServiceInput('');
+    setQuoteDateInput('');
+    setExpirationDateInput('');
+    setQuoteTotalInput('');
+    setMeasurementNoteInput('');
+    setNoteInput('');
+    setCustomerMessageInput('');
+    setCustomStreetAddressInput('');
+    setCustomCityInput('');
+    setCustomStateInput('');
+    setCustomZipcodeInput('');
+
+    setNoteSwitchIsOn(false);
+    setMeasurementsNoteSwitchIsOn(false);
+    setCustomerMessageSwitchIsOn(false);
+    setCustomAddressSwitchIsOn(false);
+  };
+
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement="right" size={'lg'}>
       <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader shadow={'xs'}>New Quote</DrawerHeader>
-        <DrawerBody>
-          <form method="POST" onSubmit={handleSubmit}>
+      <form method="POST" onSubmit={handleSubmit}>
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader shadow={'xs'}>New Quote</DrawerHeader>
+          <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
               Create
               <Text as="span" ml={'8px'} color={'blue.500'}>
                 Quote
               </Text>
             </Text> */}
-            <Text fontWeight={'bold'} color={'blue.500'} mt={'0rem'} mb={'0rem'}>
-              Customer
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'8px'} mb={'1rem'}>
+              Select Customer
             </Text>
-            <FormControl isRequired>
-              <FormLabel pt="1rem">Select a Customer</FormLabel>
-              <AsyncSelect
-                onChange={handleSelectedCustomer}
-                loadOptions={loadOptions}
-                // defaultOptions={}
-                placeholder="Type Customer Name"
-                getOptionLabel={(option) => `${option.label},  ${option.email}`}
-                theme={(theme) => ({
-                  ...theme,
-                  borderRadius: 6,
-                  colors: {
-                    ...theme.colors,
-                    primary25: colorMode === 'dark' ? '#4A5568' : '#EDF2F7',
-                    primary: colorMode === 'dark' ? '#3182CE' : '#3182CE',
-                    neutral0: colorMode === 'dark' ? '#1A202C' : 'white',
-                    neutral90: 'white'
-                  }
-                })}
-              />
-              {/* <FormLabel mt="1rem">Street Address</FormLabel>
+            {/* <FormLabel pt="1rem">Select a Customer</FormLabel> */}
+            <AsyncSelect
+              ref={initialRef}
+              onChange={handleSelectedCustomer}
+              loadOptions={loadOptions}
+              isRequired
+              // defaultOptions={}
+              placeholder="Type Customer Name"
+              getOptionLabel={(option) => `${option.label},  ${option.email}`}
+              theme={(theme) => ({
+                ...theme,
+                borderRadius: 6,
+                colors: {
+                  ...theme.colors,
+                  primary25: colorMode === 'dark' ? '#4A5568' : '#EDF2F7',
+                  primary: '#3182CE',
+                  neutral0: colorMode === 'dark' ? '#2D3748' : 'white',
+                  neutral90: 'white'
+                }
+              })}
+            />
+            {customAddressSwitchIsOn === false ? (
+              <></>
+            ) : (
+              <>
+                <Text fontWeight={'bold'} color={'blue.500'} mt={'1rem'} mb={'1rem'}>
+                  Custom Address
+                </Text>
+                <Box mb={'1rem'}>
+                  <FormControl>
+                    <FormLabel>Street Address</FormLabel>
+                    <Input
+                      placeholder="Street Address"
+                      value={customStreetAddressInput}
+                      onChange={({ target }) => setCustomStreetAddressInput(target.value)}
+                    />
+                  </FormControl>
+                </Box>
+                <Flex gap={4}>
+                  <Box>
+                    <FormControl>
+                      <FormLabel>City</FormLabel>
+                      <Input
+                        placeholder="City"
+                        value={customCityInput}
+                        onChange={({ target }) => setCustomCityInput(target.value)}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl>
+                      <FormLabel>State</FormLabel>
+                      <Input
+                        placeholder="State"
+                        value={customStateInput}
+                        onChange={({ target }) => setCustomStateInput(target.value)}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl>
+                      <FormLabel>Zipcode</FormLabel>
+                      <Input
+                        placeholder="Zipcode"
+                        value={customZipcodeInput}
+                        onChange={({ target }) => setCustomZipcodeInput(target.value)}
+                      />
+                    </FormControl>
+                  </Box>
+                </Flex>
+              </>
+            )}
+
+            {/* <FormLabel mt="1rem">Street Address</FormLabel>
               <Input
                 value={quoteToStreetAddressInput}
                 onChange={(e) => setQuoteToStreetAddressInput(e.target.value)}
@@ -153,103 +273,279 @@ const CreateQuoteForm = (props) => {
                 onChange={(e) => setQuoteToZipcodeInput(e.target.value)}
                 type={'text'}
               /> */}
-            </FormControl>
-            {/* <FormControl isRequired>
-                    <FormLabel pt='1rem'>Job Type</FormLabel>
-                    <Select placeholder='Select Job Type'>
-                        <option value='Option 1'>New Roof Installation</option>
-                        <option value='Option 2'>Roof Repair</option>
-                        <option value='Option 3'>Construction</option>
-                    </Select>
-                    <Input value={address} onChange={({target}) => setAddress(target.value)} id='address' placeholder='Street address'/>
-                </FormControl> */}
-            <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'1rem'} mb={'1rem'}>
               Details
             </Text>
-            <FormControl isRequired>
-              <FormLabel>Quote Number</FormLabel>
-              <Input
-                type={'number'}
-                placeholder="Type Invoice Number"
-                value={estimateNumberInput}
-                onChange={(e) => setEstimateNumberInput(e.target.value)}
-              />
-              <Flex flexDir={'row'} mb={'1rem'}>
-                <Flex flexDirection={'column'} mr="1rem">
-                  <FormLabel pt="1rem">Status</FormLabel>
+            <Flex w={'full'} gap={4}>
+              <Box w={'50%'}>
+                <FormControl isRequired>
+                  <FormLabel>Quote Number</FormLabel>
+                  <Input
+                    type={'number'}
+                    placeholder="Type Quote Number"
+                    value={quoteNumberInput}
+                    onChange={(e) => setQuoteNumberInput(e.target.value)}
+                  />
+                </FormControl>
+              </Box>
+              <Box w={'50%'}>
+                <FormControl isRequired>
+                  <FormLabel>Status</FormLabel>
                   <Select
                     placeholder="Select Status"
-                    value={estStatus}
-                    onChange={(e) => setEstStatus(e.target.value)}>
+                    value={quoteStatusInput}
+                    onChange={(e) => setQuoteStatusInput(e.target.value)}>
                     <MultiPurposeOptions data={quoteStatuses} />
                   </Select>
-                </Flex>
-                <Flex>
-                  <FormControl isRequired>
-                    <FormLabel pt="1rem">Quote Date</FormLabel>
-                    <Input
-                      type="date"
-                      value={etDate}
-                      onChange={({ target }) => setEtDate(target.value)}
-                      id="state"
-                      placeholder="Invoice date"
-                    />
-                  </FormControl>
-                </Flex>
-              </Flex>
-              {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
-            </FormControl>
-            <FormControl isRequired>
-              <FormLabel pt="1rem">Expiration Date</FormLabel>
-              <Input
-                type="date"
-                value={expDate}
-                onChange={({ target }) => setExpDate(target.value)}
-                id="zipcode"
-                placeholder="Due date"
-              />
-            </FormControl>
+                </FormControl>
+              </Box>
+            </Flex>
+            <Flex w={'full'} gap={4}>
+              <Box w={'50%'}>
+                <FormControl isRequired>
+                  <FormLabel pt="1rem">Quote Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={quoteDateInput}
+                    onChange={({ target }) => setQuoteDateInput(target.value)}
+                    placeholder="Quote date"
+                  />
+                </FormControl>
+              </Box>
+              <Box w={'50%'}>
+                <FormControl isRequired>
+                  <FormLabel pt="1rem">Expiration Date</FormLabel>
+                  <Input
+                    type="date"
+                    value={expirationDateInput}
+                    onChange={({ target }) => setExpirationDateInput(target.value)}
+                    placeholder="Expiration Date"
+                  />
+                </FormControl>
+              </Box>
+            </Flex>
+            {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
             <FormControl isRequired>
               <FormLabel pt="1rem">Select Service</FormLabel>
               <Select
-                value={selectedServiceInput}
+                value={selectedQuoteServiceInput}
                 placeholder="Select a Service"
-                onChange={(e) => setSelectedServiceInput(e.target.value)}>
+                onChange={(e) => setSelectedQuoteServiceInput(e.target.value)}>
                 <MultiPurposeOptions data={services} />
               </Select>
             </FormControl>
             <FormControl isRequired>
               <FormLabel pt="1rem">Total</FormLabel>
               <Input
-                value={quotePrice}
-                onChange={({ target }) => setQuotedPrice(target.value)}
+                value={quoteTotalInput}
+                onChange={({ target }) => setQuoteTotalInput(target.value)}
                 placeholder="Quote price"
                 type="number"
               />
             </FormControl>
-            <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>
-              Extra
+            {customerMessageSwitchIsOn === false &&
+            noteSwitchIsOn === false &&
+            measurementsNoteSwitchIsOn === false ? (
+              <></>
+            ) : (
+              <>
+                <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+                  Additional Information
+                </Text>
+              </>
+            )}
+            <Flex w={'full'} gap={4}>
+              {noteSwitchIsOn === false ? (
+                <></>
+              ) : (
+                <>
+                  <Box w={'50%'}>
+                    <FormControl>
+                      <FormLabel>General Note</FormLabel>
+                      <Textarea
+                        height={'200px'}
+                        placeholder="Enter info regarding the customer on their wants, needs, or concenrs that they might have. Or for internal status updates. 👋"
+                        value={noteInput}
+                        onChange={({ target }) => setNoteInput(target.value)}></Textarea>
+                    </FormControl>
+                  </Box>
+                </>
+              )}
+              {measurementsNoteSwitchIsOn === false ? (
+                <></>
+              ) : (
+                <>
+                  <Box w={'50%'}>
+                    <FormControl>
+                      <FormLabel>Measurements Note</FormLabel>
+                      <Textarea
+                        height={'200px'}
+                        placeholder="Enter roof measurments or any metrics to remember for future reference. 📏"
+                        value={measurementNoteInput}
+                        onChange={({ target }) => setMeasurementNoteInput(target.value)}></Textarea>
+                    </FormControl>
+                  </Box>
+                </>
+              )}
+            </Flex>
+            {customerMessageSwitchIsOn === false ? (
+              <></>
+            ) : (
+              <>
+                <Flex w={'full'}>
+                  <FormControl>
+                    <FormLabel pt="1rem">Message to Customer</FormLabel>
+                    <Textarea
+                      value={customerMessageInput}
+                      placeholder="Enter message to customer to see when we send this quote to them 🎉"
+                      onChange={({ target }) => setCustomerMessageInput(target.value)}
+                    />
+                  </FormControl>
+                </Flex>
+              </>
+            )}
+
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+              Custom Fields
             </Text>
-            <FormControl>
-              <FormLabel pt="1rem">Measurement Note</FormLabel>
-              <Textarea
-                type="number"
-                placeholder="Enter any measurement regarding the location we are making the quote for the roof so we can refer to it again in a later time. 👋"
-                value={measurement}
-                onChange={({ target }) => setMeasurement(target.value)}></Textarea>
-            </FormControl>
-            <Flex pt={'2rem'} w="full" justifyContent={'flex-end'}></Flex>
-          </form>
-        </DrawerBody>
-        <DrawerFooter gap={4}>
-          <Button colorScheme="blue" type="submit" onClick={onClose}>
-            Create Quote
-          </Button>
-          <Button onClick={onClose} mr="1rem">
-            Cancel
-          </Button>
-        </DrawerFooter>
-      </DrawerContent>
+            <Flex w={'full'} gap={4}>
+              {/* Switch 1 */}
+              <Flex
+                justify={'center'}
+                direction={'column'}
+                w={'50%'}
+                border={'1px'}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                rounded={'xl'}>
+                <Flex w={'full'} justify={'space-between'}>
+                  <Flex ml={'1rem'} gap={4}>
+                    <Box my={'auto'}>
+                      <TbNote size={'20px'} />
+                    </Box>
+                    <Box>
+                      <Text fontSize={'sm'} fontWeight={'bold'}>
+                        General Note
+                      </Text>
+                      <Text fontSize={'xs'} fontWeight={'normal'}>
+                        To jot down general info
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Box mr={'1rem'} my={'auto'}>
+                    <Switch
+                      isChecked={noteSwitchIsOn}
+                      onChange={() => setNoteSwitchIsOn(!noteSwitchIsOn)}
+                    />
+                  </Box>
+                </Flex>
+              </Flex>
+              {/* Switch 2 */}
+              <Flex
+                justify={'center'}
+                direction={'column'}
+                w={'50%'}
+                h={'80px'}
+                border={'1px'}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                rounded={'xl'}>
+                <Flex w={'full'} justify={'space-between'}>
+                  <Flex ml={'1rem'} gap={4}>
+                    <Box my={'auto'}>
+                      <TbRuler size={'20px'} />
+                    </Box>
+                    <Box>
+                      <Text fontSize={'sm'} fontWeight={'bold'}>
+                        Measurements Note
+                      </Text>
+                      <Text fontSize={'xs'} fontWeight={'normal'}>
+                        To write roof measurements
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Box mr={'1rem'} my={'auto'}>
+                    <Switch
+                      isChecked={measurementsNoteSwitchIsOn}
+                      onChange={() => setMeasurementsNoteSwitchIsOn(!measurementsNoteSwitchIsOn)}
+                    />
+                  </Box>
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex w={'full'} gap={4} mt={'1rem'} mb={'8px'}>
+              {/* Switch 3 */}
+              <Flex
+                justify={'center'}
+                direction={'column'}
+                w={'50%'}
+                h={'80px'}
+                border={'1px'}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                rounded={'xl'}>
+                <Flex w={'full'} justify={'space-between'}>
+                  <Flex ml={'1rem'} gap={4}>
+                    <Box my={'auto'}>
+                      <FiMap size={'20px'} />
+                    </Box>
+                    <Box>
+                      <Text fontSize={'sm'} fontWeight={'bold'}>
+                        Custom Address
+                      </Text>
+                      <Text fontSize={'xs'} fontWeight={'normal'}>
+                        Manual input for address
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Box mr={'1rem'} my={'auto'}>
+                    <Switch
+                      isChecked={customAddressSwitchIsOn}
+                      onChange={() => setCustomAddressSwitchIsOn(!customAddressSwitchIsOn)}
+                    />
+                  </Box>
+                </Flex>
+              </Flex>
+              {/* Switch 4 */}
+              <Flex
+                justify={'center'}
+                direction={'column'}
+                w={'50%'}
+                h={'80px'}
+                border={'1px'}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                rounded={'xl'}>
+                <Flex w={'full'} justify={'space-between'}>
+                  <Flex ml={'1rem'} gap={4}>
+                    <Box my={'auto'}>
+                      <FiUser size={'20px'} />
+                    </Box>
+                    <Box>
+                      <Text fontSize={'sm'} fontWeight={'bold'}>
+                        Customer Message
+                      </Text>
+                      <Text fontSize={'xs'} fontWeight={'normal'}>
+                        Write message to customer
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Box mr={'1rem'} my={'auto'}>
+                    <Switch
+                      isChecked={customerMessageSwitchIsOn}
+                      onChange={() => setCustomerMessageSwitchIsOn(!customerMessageSwitchIsOn)}
+                    />
+                  </Box>
+                </Flex>
+              </Flex>
+            </Flex>
+          </DrawerBody>
+          <DrawerFooter gap={4}>
+            <Button colorScheme="blue" type="submit">
+              Create Quote
+            </Button>
+            <Button onClick={onClose} mr="1rem">
+              Cancel
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </form>
     </Drawer>
   );
 };
