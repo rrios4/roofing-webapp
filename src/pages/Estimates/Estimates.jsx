@@ -122,9 +122,9 @@ function Estimates() {
     if (error) {
       toast({
         position: 'top',
-        title: `Error Updating Invoice Number ${selectedEditQuote.quote_number}`,
+        title: `Error Updating Quote Number ${selectedEditQuote.quote_number}`,
         description: `Error: ${error.message}`,
-        status: 'success',
+        status: 'error',
         duration: 5000,
         isClosable: true
       });
@@ -134,7 +134,7 @@ function Estimates() {
       onEditClose();
       toast({
         position: 'top',
-        title: `Successfully Updated Quote-${selectedEditQuote.quote_number}!`,
+        title: `Successfully Updated Quote - ${selectedEditQuote.quote_number}!`,
         description: `We've updated quote information for you 🎉`,
         status: 'success',
         duration: 5000,
@@ -165,6 +165,7 @@ function Estimates() {
         services={services}
         quoteStatuses={quoteStatuses}
         updateParentState={fetchQuotes}
+        toast={toast}
       />
       <ConnectedQuoteDeleteAlertDialog
         isOpen={isDeleteOpen}

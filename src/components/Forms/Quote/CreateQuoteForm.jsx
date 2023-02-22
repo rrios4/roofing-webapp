@@ -27,7 +27,7 @@ import { FiMap, FiUser } from 'react-icons/fi';
 import { TbNote, TbRuler } from 'react-icons/tb';
 
 const CreateQuoteForm = (props) => {
-  const { isOpen, onClose, initialRef, updateParentState, services, quoteStatuses } = props;
+  const { isOpen, onClose, initialRef, updateParentState, services, quoteStatuses, toast } = props;
 
   // React hooks
   //   const { services } = useServices();
@@ -124,11 +124,26 @@ const CreateQuoteForm = (props) => {
     });
 
     if (error) {
-      console.log(error);
+      toast({
+        position: 'top',
+        title: `Error Creating Quote`,
+        description: `Error: ${error.message} 🚨`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
     if (data) {
       await updateParentState();
       onClose();
+      toast({
+        position: 'top',
+        title: `Successfully Created Quote!`,
+        description: `We've created a quote for customer number #${selectedCustomerInput.selectedCustomer.value} 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
       console.log('Data submitted successfully!');
     }
 
