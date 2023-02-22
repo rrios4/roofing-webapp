@@ -166,6 +166,7 @@ function Estimates() {
         quoteStatuses={quoteStatuses}
         updateParentState={fetchQuotes}
         toast={toast}
+        data={quotes}
       />
       <ConnectedQuoteDeleteAlertDialog
         isOpen={isDeleteOpen}

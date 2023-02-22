@@ -54,7 +54,6 @@ const NewInvoiceForm = (props) => {
   const [nextInvoiceNumber, setNextInvoiceNumber] = useState('');
 
   // Input React States
-  const [lineItemList, setLineItemList] = useState([]);
   const [invoiceNumberInput, setInvoiceNumberInput] = useState('');
   const [invoiceDateInput, setInvoiceDateInput] = useState('');
   const [invoiceDueDateInput, setInvoiceDueDateInput] = useState('');
@@ -81,6 +80,7 @@ const NewInvoiceForm = (props) => {
   const [loadingState, setLoadingState] = useState(false);
 
   // Line Item React State
+  const [lineItemList, setLineItemList] = useState([]);
   const [numOfLineItemFields, setNumOfLineItemFields] = useState(0);
 
   // Function to handle the submit data from the form to supabase DB
@@ -174,43 +174,6 @@ const NewInvoiceForm = (props) => {
     onNewClose();
   };
 
-  const handleLineItemSubmit = async () => {
-    lineItemList.map(async (item) => {
-      const { error } = await supabase.from('invoice_line_service').insert([
-        {
-          invoice_id: parseInt(invoiceNumberInput),
-          service_id: parseInt(selectedServiceType),
-          fixed_item: fixedRateSwitchIsOn,
-          description: item.description,
-          qty: fixedRateSwitchIsOn === true ? 1 : 1,
-          rate: fixedRateSwitchIsOn === true ? null : parseInt(item.rate),
-          amount: item.amount,
-          sq_ft: fixedRateSwitchIsOn === true ? null : parseInt(item.sq_ft)
-        }
-      ]);
-
-      if (error) {
-        // console.log(error);
-
-        // Toast Feedback when invoice line-item creation failed
-        toast({
-          position: 'top',
-          title: `Error occured creatin line-item`,
-          description: `Error: ${error.message}`,
-          status: 'error',
-          duration: 5000,
-          isClosable: true
-        });
-      }
-    });
-    // console.log({
-    //     invoice_id: parseInt(invoiceNumberInput),
-    //     service_id: selectedServiceType,
-    //     fixed_item: fixedRateSwitchIsOn,
-    //     item_list: lineItemList
-    // })
-  };
-
   // Function that will handle the selected value from react-select component and stores it in a useState
   const handleSelectedCustomer = (value) => {
     setSelectedCustomer({
@@ -242,6 +205,7 @@ const NewInvoiceForm = (props) => {
     // console.log(customers)
   };
 
+  //////////////////////////// Functions that handle line item logic ///////////////////////////////
   // Delete Line Item Field
   const handleDeleteLineItemField = (index) => {
     const list = lineItemList;
@@ -302,6 +266,7 @@ const NewInvoiceForm = (props) => {
     );
   };
 
+  ////////////// Fuction to handle when user press cancel ///////////////////////
   // Handle cancel button to clear all states such when the submit happens
   const handleCancelButton = () => {
     onNewClose();
@@ -338,6 +303,43 @@ const NewInvoiceForm = (props) => {
     setNoteSwitchIsOn(false);
     setMeasurementNoteSwitchIsOn(false);
     setCustomerNoteSwitchIsOn(false);
+  };
+
+  const handleLineItemSubmit = async () => {
+    lineItemList.map(async (item) => {
+      const { error } = await supabase.from('invoice_line_service').insert([
+        {
+          invoice_id: parseInt(invoiceNumberInput),
+          service_id: parseInt(selectedServiceType),
+          fixed_item: fixedRateSwitchIsOn,
+          description: item.description,
+          qty: fixedRateSwitchIsOn === true ? 1 : 1,
+          rate: fixedRateSwitchIsOn === true ? null : parseInt(item.rate),
+          amount: item.amount,
+          sq_ft: fixedRateSwitchIsOn === true ? null : parseInt(item.sq_ft)
+        }
+      ]);
+
+      if (error) {
+        // console.log(error);
+
+        // Toast Feedback when invoice line-item creation failed
+        toast({
+          position: 'top',
+          title: `Error occured creating line-item`,
+          description: `Error: ${error.message}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+      }
+    });
+    // console.log({
+    //     invoice_id: parseInt(invoiceNumberInput),
+    //     service_id: selectedServiceType,
+    //     fixed_item: fixedRateSwitchIsOn,
+    //     item_list: lineItemList
+    // })
   };
 
   // I want to use this for the future

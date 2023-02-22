@@ -330,9 +330,9 @@ const EstimateDetails = (props) => {
                   )}
                 </Flex>
                 <Flex>
-                  {/* <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
-                    Notes
-                  </Text> */}
+                  <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
+                    Note
+                  </Text>
                   {!quote ? (
                     <Skeleton
                       bg={paymentCardBgColor}

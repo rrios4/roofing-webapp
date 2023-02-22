@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DrawerIndex, MultiPurposeOptions } from '../../../components';
-import { supabase } from '../../../utils';
+import { formatMoneyValue, supabase } from '../../../utils';
 import AsyncSelect from 'react-select/async';
 import {
   useColorMode,
@@ -27,27 +27,11 @@ import { FiMap, FiUser } from 'react-icons/fi';
 import { TbNote, TbRuler } from 'react-icons/tb';
 
 const CreateQuoteForm = (props) => {
-  const { isOpen, onClose, initialRef, updateParentState, services, quoteStatuses, toast } = props;
-
-  // React hooks
-  //   const { services } = useServices();
-  //   const { quoteStatuses } = useQuoteStatuses();
+  const { isOpen, onClose, initialRef, updateParentState, services, quoteStatuses, toast, data } =
+    props;
 
   // React styling hooks
   const { colorMode } = useColorMode();
-
-  // States to manage data
-  // const [estimates, setEstimates] = useState(null);
-  // const [customers, setCustomers] = useState('');
-  // const [name, setCustomerName] = useState('');
-
-  // const [serviceName, setServiceName] = useState('');
-  // const [cuIdCaptured, setCuIdCaptured] = useState('');
-
-  // const [quoteToStreetAddressInput, setQuoteToStreetAddressInput] = useState('');
-  // const [quoteToCityInput, setQuoteToCityInput] = useState('');
-  // const [quoteToStateInput, setQuoteToStateInput] = useState('');
-  // const [quoteToZipcodeInput, setQuoteToZipcodeInput] = useState('');
 
   // React usestates to capture data from inputs from form
   const [quoteNumberInput, setQuoteNumberInput] = useState('');
@@ -70,6 +54,14 @@ const CreateQuoteForm = (props) => {
   const [measurementsNoteSwitchIsOn, setMeasurementsNoteSwitchIsOn] = useState(false);
   const [customerMessageSwitchIsOn, setCustomerMessageSwitchIsOn] = useState(false);
   const [customAddressSwitchIsOn, setCustomAddressSwitchIsOn] = useState(false);
+
+  //React useState to for line-item functionality
+  const [numberOfLineItems, setNumberOfLineItems] = useState(0);
+  const [lineItemObjectList, setLineItemObjectList] = useState([]);
+
+  // React useState for calculated values
+  const [calculatedQuoteTotal, setCalculatedQuoteTotal] = useState(0);
+  const [calculatedQuoteSubtotal, setCalculatedQuoteSubtotal] = useState(0);
 
   ///////////////////// Functions that will load options for react-select component as the user types a value /////////////////////////
   const loadOptions = async (inputText, callback) => {
@@ -110,8 +102,8 @@ const CreateQuoteForm = (props) => {
       service_id: selectedQuoteServiceInput,
       quote_date: quoteDateInput,
       expiration_date: expirationDateInput,
-      subtotal: quoteTotalInput,
-      total: quoteTotalInput,
+      subtotal: calculatedQuoteSubtotal,
+      total: calculatedQuoteTotal,
       note: noteInput ? noteInput : null,
       measurement_note: measurementNoteInput ? measurementNoteInput : null,
       cust_note: customerMessageInput
@@ -134,6 +126,7 @@ const CreateQuoteForm = (props) => {
       });
     }
     if (data) {
+      await handleQuoteLineItemsSubmit();
       await updateParentState();
       onClose();
       toast({
@@ -168,6 +161,85 @@ const CreateQuoteForm = (props) => {
     setCustomAddressSwitchIsOn(false);
   };
 
+  ////////////////// Functions that handle line-item functionality ///////////////////////
+  const handleAddingLineItem = () => {
+    setNumberOfLineItems(numberOfLineItems + 1);
+    setLineItemObjectList([
+      ...lineItemObjectList,
+      {
+        description: '',
+        qty: '',
+        rate: '',
+        amount: 0
+      }
+    ]);
+  };
+
+  const handleDeleteLineItemField = () => {
+    const list = lineItemObjectList;
+    // console.log(numberOfLineItems);
+    list.pop();
+    setLineItemObjectList(list);
+    setNumberOfLineItems(numberOfLineItems - 1);
+    // console.log(lineItemObjectList);
+    setCalculatedQuoteSubtotal(
+      lineItemObjectList.reduce(
+        (total, currentItem) => (total = parseFloat(total) + parseFloat(currentItem.amount)),
+        0
+      )
+    );
+    setCalculatedQuoteTotal(
+      lineItemObjectList.reduce(
+        (total, currentItem) => (total = parseFloat(total) + parseFloat(currentItem.amount)),
+        0
+      )
+    );
+  };
+
+  const handleOnChangeLineItemInput = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...lineItemObjectList];
+    list[index][name] = value;
+    setLineItemObjectList(list);
+    setCalculatedQuoteSubtotal(
+      lineItemObjectList.reduce(
+        (total, currentItem) => (total = parseFloat(total) + parseFloat(currentItem.amount)),
+        0
+      )
+    );
+    setCalculatedQuoteTotal(
+      lineItemObjectList.reduce(
+        (total, currentItem) => (total = parseFloat(total) + parseFloat(currentItem.amount)),
+        0
+      )
+    );
+  };
+
+  const handleQuoteLineItemsSubmit = async () => {
+    lineItemObjectList.map(async (item) => {
+      const { error } = await supabase.from('quote_line_item').insert([
+        {
+          quote_id: quoteNumberInput,
+          service_id: selectedQuoteServiceInput,
+          description: item.description,
+          qty: 1,
+          amount: item.amount,
+          fixed_item: true
+        }
+      ]);
+      if (error) {
+        toast({
+          position: 'top',
+          title: `Error occured creating line-item`,
+          description: `Error: ${error.message}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+      }
+    });
+  };
+
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement="right" size={'lg'}>
       <DrawerOverlay />
@@ -176,12 +248,7 @@ const CreateQuoteForm = (props) => {
           <DrawerCloseButton />
           <DrawerHeader shadow={'xs'}>New Quote</DrawerHeader>
           <DrawerBody>
-            {/* <Text fontSize={'25px'} fontWeight={'bold'}>
-              Create
-              <Text as="span" ml={'8px'} color={'blue.500'}>
-                Quote
-              </Text>
-            </Text> */}
+            {/* General Quote Information */}
             <Text fontWeight={'bold'} color={'blue.500'} mt={'8px'} mb={'1rem'}>
               Select Customer
             </Text>
@@ -257,37 +324,6 @@ const CreateQuoteForm = (props) => {
                 </Flex>
               </>
             )}
-
-            {/* <FormLabel mt="1rem">Street Address</FormLabel>
-              <Input
-                value={quoteToStreetAddressInput}
-                onChange={(e) => setQuoteToStreetAddressInput(e.target.value)}
-                type={'text'}
-              />
-              <Flex flexDir={'row'} mb={'1rem'}>
-                <Flex flexDirection={'column'}>
-                  <FormLabel pt="1rem">City</FormLabel>
-                  <Input
-                    value={quoteToCityInput}
-                    onChange={(e) => setQuoteToCityInput(e.target.value)}
-                    type={'text'}
-                  />
-                </Flex>
-                <Flex flexDirection={'column'} ml={'1rem'}>
-                  <FormLabel pt="1rem">State</FormLabel>
-                  <Input
-                    value={quoteToStateInput}
-                    onChange={(e) => setQuoteToStateInput(e.target.value)}
-                    type="text"
-                  />
-                </Flex>
-              </Flex>
-              <FormLabel mt="1rem">Zipcode</FormLabel>
-              <Input
-                value={quoteToZipcodeInput}
-                onChange={(e) => setQuoteToZipcodeInput(e.target.value)}
-                type={'text'}
-              /> */}
             <Text fontWeight={'bold'} color={'blue.500'} mt={'1rem'} mb={'1rem'}>
               Details
             </Text>
@@ -297,7 +333,11 @@ const CreateQuoteForm = (props) => {
                   <FormLabel>Quote Number</FormLabel>
                   <Input
                     type={'number'}
-                    placeholder="Type Quote Number"
+                    placeholder={
+                      !data
+                        ? 'Quote Number'
+                        : Math.max(...data?.map((item) => item.quote_number)) + 1
+                    }
                     value={quoteNumberInput}
                     onChange={(e) => setQuoteNumberInput(e.target.value)}
                   />
@@ -339,7 +379,6 @@ const CreateQuoteForm = (props) => {
                 </FormControl>
               </Box>
             </Flex>
-            {/* <Input value={city} onChange={({target}) => setCity(target.value)} id='city' placeholder='City'/> */}
             <FormControl isRequired>
               <FormLabel pt="1rem">Select Service</FormLabel>
               <Select
@@ -349,7 +388,7 @@ const CreateQuoteForm = (props) => {
                 <MultiPurposeOptions data={services} />
               </Select>
             </FormControl>
-            <FormControl isRequired>
+            {/* <FormControl isRequired>
               <FormLabel pt="1rem">Total</FormLabel>
               <Input
                 value={quoteTotalInput}
@@ -357,7 +396,98 @@ const CreateQuoteForm = (props) => {
                 placeholder="Quote price"
                 type="number"
               />
-            </FormControl>
+            </FormControl> */}
+            {/* Line Items Section */}
+            <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+              Line Items
+            </Text>
+            {Array.from({ length: numberOfLineItems }, (_, i) => (
+              <Flex gap={4} w={'full'} key={i} px={4} py={4} rounded={'xl'}>
+                <Box w={'55%'}>
+                  <FormControl isRequired>
+                    <Input
+                      px={2}
+                      name="description"
+                      placeholder="Enter item description"
+                      onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                    />
+                  </FormControl>
+                </Box>
+                <Box w={'10%'}>
+                  <FormControl isRequired>
+                    <Input
+                      disabled
+                      px={2}
+                      name="qty"
+                      value={1}
+                      placeholder="Qty"
+                      onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                    />
+                  </FormControl>
+                </Box>
+                <Box w={'15%'}>
+                  <FormControl isRequired>
+                    <Input
+                      disabled
+                      px={2}
+                      name="rate"
+                      value={'Fixed'}
+                      placeholder="Rate"
+                      onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                    />
+                  </FormControl>
+                </Box>
+                <Box w={'20%'}>
+                  <FormControl isRequired>
+                    <Input
+                      name="amount"
+                      type="number"
+                      px={2}
+                      placeholder="Amount"
+                      onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                    />
+                  </FormControl>
+                </Box>
+              </Flex>
+            ))}
+
+            <Flex w={'full'} mt={6} gap={4} justifyContent={'center'}>
+              <Button onClick={() => handleAddingLineItem()}>Add Line Item</Button>
+              {numberOfLineItems <= 0 ? (
+                <></>
+              ) : (
+                <>
+                  <Button onClick={() => handleDeleteLineItemField()}>Delete Row</Button>
+                </>
+              )}
+            </Flex>
+
+            <Flex justify={'space-between'} px={'8rem'} py={'2rem'}>
+              <Text>Subtotal</Text>
+              <Text>${formatMoneyValue(calculatedQuoteSubtotal)}</Text>
+            </Flex>
+            <Flex
+              justify={'space-between'}
+              mx={'2rem'}
+              px={'2rem'}
+              py={'3'}
+              bg={useColorModeValue('gray.200', 'gray.600')}
+              rounded={'xl'}
+              color={'white'}>
+              <Text
+                fontSize={'2xl'}
+                fontWeight={'bold'}
+                textColor={useColorModeValue('blackAlpha.700', 'whiteAlpha.800')}>
+                Total
+              </Text>
+              <Text
+                fontSize={'2xl'}
+                fontWeight={'bold'}
+                textColor={useColorModeValue('blackAlpha.700', 'whiteAlpha.800')}>
+                ${formatMoneyValue(calculatedQuoteTotal)}
+              </Text>
+            </Flex>
+            {/* Custom Fields Section */}
             {customerMessageSwitchIsOn === false &&
             noteSwitchIsOn === false &&
             measurementsNoteSwitchIsOn === false ? (
