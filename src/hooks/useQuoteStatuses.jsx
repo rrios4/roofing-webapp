@@ -18,7 +18,7 @@ export const useQuoteStatuses = () => {
 
   useEffect(() => {
     fetchQuoteStatuses();
-  });
+  }, []);
 
   return { quoteStatuses, setQuoteStatuses, fetchQuoteStatuses };
 };

@@ -24,10 +24,13 @@ import { MdSearch } from 'react-icons/md';
 import { FiUsers } from 'react-icons/fi';
 import { supabase } from '../../utils';
 import { useCustomers } from '../../hooks/useCustomers';
+import { useCustomerTypes } from '../../hooks/useCustomerTypes';
 
 export default function Customers() {
   // Custom React Hook to use Customers with useState
   const { customers, setCustomers, fetchCustomers, customersLoadingStateIsOn } = useCustomers();
+  const { customerTypes } = useCustomerTypes();
+
   // Chakra UI Hook toast
   const toast = useToast();
 
@@ -88,6 +91,7 @@ export default function Customers() {
         updateCustomerData={fetchCustomers}
         toast={toast}
         loadingState={customersLoadingStateIsOn}
+        customerTypes={customerTypes}
       />
       <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">

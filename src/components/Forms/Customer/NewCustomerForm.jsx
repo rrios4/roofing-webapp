@@ -20,13 +20,9 @@ import {
   DrawerBody,
   DrawerFooter
 } from '@chakra-ui/react';
-import { useCustomerTypes } from '../../../hooks/useCustomerTypes';
 
 const NewCustomerForm = (props) => {
-  const { isOpen, onClose, initialRef, updateCustomerData, toast, loadingState } = props;
-
-  // React Hooks
-  const { customerTypes } = useCustomerTypes();
+  const { isOpen, onClose, initialRef, updateCustomerData, toast, loadingState, customerTypes } = props;
 
   // useStates that pick up the values from the input fields of the form
   const [firstName, setfirstName] = useState('');

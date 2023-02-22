@@ -20,17 +20,19 @@ import {
 } from '@chakra-ui/react';
 import { formatPhoneNumber, supabase } from '../../../utils';
 import stateJSONData from '../../../data/state_titlecase.json';
-import { useServices } from '../../../hooks/useServices';
-import { useQRStatuses } from '../../../hooks/useQRStatuses';
-import { useCustomerTypes } from '../../../hooks/useCustomerTypes';
 
 const NewEstimateRequestForm = (props) => {
-  const { isOpen, onOpen, onClose, initialRef, updateQRData, toast } = props;
-
-  // React hooks
-  const { services } = useServices();
-  const { qrStatuses } = useQRStatuses();
-  const { customerTypes } = useCustomerTypes();
+  const {
+    isOpen,
+    onOpen,
+    onClose,
+    initialRef,
+    updateQRData,
+    toast,
+    services,
+    qrStatuses,
+    customerTypes
+  } = props;
 
   //React useStates for capturing data from input fields
   const [selectedQuoteStatus, setSelectedQuoteStatus] = useState('');

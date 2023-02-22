@@ -18,8 +18,6 @@ import {
   DrawerHeader,
   DrawerBody
 } from '@chakra-ui/react';
-import { useServices } from '../../../hooks/useServices';
-import { useInvoiceStatuses } from '../../../hooks/useInvoiceStatuses';
 
 const EditInvoiceForm = (props) => {
   const {
@@ -30,12 +28,10 @@ const EditInvoiceForm = (props) => {
     invoice,
     handleEditOnChange,
     handleEditSubmit,
-    loadingState
+    loadingState,
+    services,
+    invoiceStatuses
   } = props;
-
-  // React data hooks
-  const { services } = useServices();
-  const { invoiceStatuses } = useInvoiceStatuses();
 
   // React styling hooks
   const bg = useColorModeValue('white', 'gray.800');

@@ -18,7 +18,7 @@ export const useCustomerTypes = () => {
 
   useEffect(() => {
     fetchCustomerTypes();
-  });
+  }, []);
 
   return { customerTypes, setCustomerTypes, fetchCustomerTypes };
 };

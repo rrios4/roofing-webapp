@@ -18,7 +18,7 @@ export const useQRStatuses = () => {
 
   useEffect(() => {
     fetchQRStatuses();
-  });
+  }, []);
 
   return { qrStatuses, setQrStatuses, fetchQRStatuses };
 };

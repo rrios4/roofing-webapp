@@ -16,9 +16,7 @@ import {
   DrawerBody,
   DrawerFooter
 } from '@chakra-ui/react';
-import { DrawerIndex, MultiPurposeOptions } from '../../../components';
-import { useServices } from '../../../hooks/useServices';
-import { useQRStatuses } from '../../../hooks/useQRStatuses';
+import { MultiPurposeOptions } from '../../../components';
 
 const EditEstimateRequestForm = (props) => {
   const {
@@ -29,14 +27,11 @@ const EditEstimateRequestForm = (props) => {
     initialRef,
     handleSubmit,
     handleEditOnChange,
-    handleEditCancel
+    handleEditCancel,
+    services,
+    qrStatuses
   } = props;
 
-  // React hooks
-  const { services } = useServices();
-  const { qrStatuses } = useQRStatuses();
-
-  const bg = useColorModeValue('white', 'gray.800');
   // Chakra UI Modal
   // const { isOpen, onOpen, onClose } = useDisclosure();
   // const initialRef = React.useRef();

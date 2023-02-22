@@ -31,15 +31,18 @@ import {
   DrawerCloseButton
 } from '@chakra-ui/react';
 import formatMoneyValue from '../../../utils/formatMoneyValue';
-import { useServices } from '../../../hooks/useServices';
-import { useInvoiceStatuses } from '../../../hooks/useInvoiceStatuses';
 
 const NewInvoiceForm = (props) => {
-  const { onNewClose, isNewOpen, initialRef, data, updateParentData, toast } = props;
-
-  // React data hooks
-  const { services } = useServices();
-  const { invoiceStatuses } = useInvoiceStatuses();
+  const {
+    onNewClose,
+    isNewOpen,
+    initialRef,
+    data,
+    updateParentData,
+    toast,
+    services,
+    invoiceStatuses
+  } = props;
 
   // React styling hooks
   const { colorMode } = useColorMode();

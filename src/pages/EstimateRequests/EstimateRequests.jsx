@@ -30,11 +30,17 @@ import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 import { FiInbox } from 'react-icons/fi';
 import { useQuoteRequests } from '../../hooks/useQuoteRequests';
+import { useServices } from '../../hooks/useServices';
+import { useQRStatuses } from '../../hooks/useQRStatuses';
+import { useCustomerTypes } from '../../hooks/useCustomerTypes';
 
 const EstimateRequests = () => {
   // React Hook for managing state of quotes request
   const { quoteRequests, setQuoteRequests, fetchQuoteRequests, quoteRequestLoadingStateIsOn } =
     useQuoteRequests();
+  const { services } = useServices();
+  const { qrStatuses } = useQRStatuses();
+  const { customerTypes } = useCustomerTypes();
   // Chakra UI Reacr hook for toasts
   const toast = useToast();
 
@@ -286,6 +292,9 @@ const EstimateRequests = () => {
         initialRef={initialRef}
         updateQRData={fetchQuoteRequests}
         toast={toast}
+        services={services}
+        qrStatuses={qrStatuses}
+        customerTypes={customerTypes}
       />
       <EditEstimateRequestForm
         initialRef={initialRef}
@@ -295,6 +304,8 @@ const EstimateRequests = () => {
         handleEditCancel={handleEditCancel}
         objectData={selectedEstimateRequestObject}
         handleEditOnChange={handleEditChange}
+        services={services}
+        qrStatuses={qrStatuses}
       />
       <ConnectedQRDeleteAlertDialog
         isOpen={isDeleteOpen}

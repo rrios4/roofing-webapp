@@ -34,10 +34,14 @@ import {
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
 import { useInvoices } from '../../Hooks/useInvoices';
+import { useServices } from '../../hooks/useServices';
+import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
 
 function Invoices() {
   // Hooks
   const { invoices, fetchInvoices, setInvoices, invoicesLoadingStateIsOn } = useInvoices();
+  const { services } = useServices();
+  const { invoiceStatuses } = useInvoiceStatuses();
 
   // Use Disclosured used for opening drawers where forms are at
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
@@ -270,6 +274,8 @@ function Invoices() {
         data={invoices}
         nextInvoiceNumberValue={nextInvoiceNumber}
         loadingState={invoicesLoadingStateIsOn}
+        services={services}
+        invoiceStatuses={invoiceStatuses}
       />
       <EditInvoiceForm
         initialRef={initialRef}
@@ -279,6 +285,8 @@ function Invoices() {
         handleEditOnChange={handleEditChange}
         handleEditSubmit={handleEditSubmit}
         loadingState={invoicesLoadingStateIsOn}
+        services={services}
+        invoiceStatuses={invoiceStatuses}
       />
       <ConnectedInvoiceDeleteAlertDialog
         isOpen={isDeleteOpen}

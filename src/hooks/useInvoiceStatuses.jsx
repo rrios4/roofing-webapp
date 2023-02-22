@@ -18,7 +18,7 @@ export const useInvoiceStatuses = () => {
 
   useEffect(() => {
     fetchInvoiceStatuses();
-  });
+  }, []);
 
   return { invoiceStatuses, setInvoiceStatuses };
 };
