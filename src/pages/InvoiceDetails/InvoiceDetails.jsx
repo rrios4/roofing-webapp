@@ -80,6 +80,7 @@ import { HiStatusOnline } from 'react-icons/hi';
 import supabase from '../../utils/supabaseClient';
 import formatMoneyValue from '../../utils/formatMoneyValue';
 import formatNumber from '../../utils/formatNumber';
+import formatDate from '../../utils/formatDate';
 import { DeleteAlertDialog } from '../../components';
 import DeleteInvoiceLineServiceAlertDialog from '../../components/Alerts/DeleteInvoiceLineServiceAlertDialog';
 
@@ -508,8 +509,17 @@ const InvoiceDetails = () => {
                   )}
                 </TableContainer>
               </Box>
-              <Box px={'4rem'} pb="2rem">
-                <Flex mb={'2rem'} px={4} py={2}>
+
+              <Box px={'4rem'} pb="0rem">
+                <Flex mb={'0rem'} mx={8} py={2}>
+                  <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
+                    Subtotal
+                  </Text>
+                  <Text ml={'auto'} mr={'1rem'}>
+                    ${formatMoneyValue(invoice?.total)}
+                  </Text>
+                </Flex>
+                <Flex mb={'1rem'} mx={8} py={2}>
                   <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
                     Total
                   </Text>
@@ -517,7 +527,32 @@ const InvoiceDetails = () => {
                     ${formatMoneyValue(invoice?.total)}
                   </Text>
                 </Flex>
-                <Flex mb={'2rem'} bg={'blue.500'} color={'white'} px={4} py={4} rounded={'xl'}>
+                <Flex mb={'2'} mx={8} py={2}>
+                  <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
+                    Payments
+                  </Text>
+                </Flex>
+                <Flex w="full" px={12} mb={6} gap="4">
+                  <Flex direction="column" gap="4">
+                    {invoicePayments?.map((item, index) => (
+                      <>
+                        <Flex key={index} gap="6">
+                          <Box my="auto" w="5%">
+                            <Box h="10px" w="10px" bg="green.300" rounded="full"></Box>
+                          </Box>
+                          <Text w="30%" fontWeight={'semibold'} textColor={secondaryTextColor}>
+                            {formatDate(item.date_received)}
+                          </Text>
+                          <Text w="50%">{item.payment_method}</Text>
+                          <Text ml="2rem" w="35%">
+                            ${formatMoneyValue(item.amount)}
+                          </Text>
+                        </Flex>
+                      </>
+                    ))}
+                  </Flex>
+                </Flex>
+                <Flex my={'3rem'} bg={'blue.500'} color={'white'} px={4} py={4} rounded={'xl'}>
                   <Text fontWeight={'bold'} fontSize={'xl'}>
                     Amount Due
                   </Text>
@@ -830,90 +865,6 @@ const InvoiceDetails = () => {
                   )}
                 </Box>
               </Box>
-            </CardBody>
-          </Card>
-          {/* Payments Card Section */}
-          <Card rounded={'xl'}>
-            <CardBody>
-              {/* Invoice Payment History */}
-              <Box px={'2rem'} py={'1rem'}>
-                <Flex alignItems={'center'} gap={3} mb={'1rem'}>
-                  <FiClock size={'25px'} color="gray" />
-                  <Text fontSize={'2xl'} fontWeight={'semibold'} color={secondaryTextColor}>
-                    Payments
-                  </Text>
-                </Flex>
-              </Box>
-              <Flex direction={'column'} w={'full'} mx={'auto'} px="2rem">
-                {/* Timeline Component */}
-                {!invoicePayments ? (
-                  <Skeleton height={'200px'} w={'full'} bg={paymentCardBgColor} rounded={'xl'} />
-                ) : (
-                  <>
-                    {invoicePayments.length === 0 ? (
-                      <Box bg={paymentCardBgColor} p="4" rounded="xl">
-                        <Text>❌ No Payment information...</Text>
-                      </Box>
-                    ) : (
-                      <>
-                        {invoicePayments?.map((item, index) => (
-                          <Flex key={index} w={'full'}>
-                            <Flex direction={'column'} maxH={'300px'} gap={2}>
-                              {/* <Box rounded={'full'} bg={'green.500'} max-w={'10px'} max-h={'10px'}></Box> */}
-                              <Divider
-                                orientation="vertical"
-                                mx={'auto'}
-                                bg={'gray.400'}
-                                variant={'dashed'}
-                              />
-                              <Box bg={'green.300'} rounded={'full'} p={1}>
-                                <FiCheck color="white" size={'12px'} />
-                              </Box>
-                              <Divider
-                                orientation="vertical"
-                                mx={'auto'}
-                                bg={'gray.400'}
-                                variant={'dashed'}
-                              />
-                            </Flex>
-                            <Flex
-                              direction={{ base: 'column', md: 'row', lg: 'row' }}
-                              gap={4}
-                              px={4}
-                              py={6}
-                              bg={paymentCardBgColor}
-                              mx={4}
-                              my={6}
-                              rounded={'xl'}
-                              border={'1px'}
-                              borderColor={paymentBorderColor}
-                              w={'full'}>
-                              <Box>
-                                <Text fontSize={'sm'}>Payment Date</Text>
-                                <Text fontSize={'sm'} fontWeight={'bold'}>
-                                  {item.date_received}
-                                </Text>
-                              </Box>
-                              <Box>
-                                <Text fontSize={'sm'}>Payment Method</Text>
-                                <Text fontSize={'sm'} fontWeight={'bold'}>
-                                  {item.payment_method}
-                                </Text>
-                              </Box>
-                              <Box>
-                                <Text fontSize={'sm'}>Amount</Text>
-                                <Text fontSize={'sm'} fontWeight={'bold'}>
-                                  ${formatMoneyValue(item.amount)}
-                                </Text>
-                              </Box>
-                            </Flex>
-                          </Flex>
-                        ))}
-                      </>
-                    )}
-                  </>
-                )}
-              </Flex>
             </CardBody>
           </Card>
         </Flex>
