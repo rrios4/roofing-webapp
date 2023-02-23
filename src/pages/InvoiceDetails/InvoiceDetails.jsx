@@ -72,7 +72,7 @@ import {
   FiEdit,
   FiFolder
 } from 'react-icons/fi';
-import { MdOutlinePayments, MdPendingActions } from 'react-icons/md';
+import { MdOutlinePayments, MdPendingActions, MdPayment } from 'react-icons/md';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { AiOutlineDown, AiOutlineCheckCircle, AiOutlineBars } from 'react-icons/ai';
 import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
@@ -83,9 +83,15 @@ import formatNumber from '../../utils/formatNumber';
 import { DeleteAlertDialog } from '../../components';
 import DeleteInvoiceLineServiceAlertDialog from '../../components/Alerts/DeleteInvoiceLineServiceAlertDialog';
 
-const InvoiceDetails = (props) => {
-  // Chakra UI states
+const InvoiceDetails = () => {
+  // Chakra UI hooks
   const toast = useToast();
+  const {
+    isOpen: isAddPaymentOpen,
+    onOpen: onAddPaymentOpen,
+    onClose: onAddPaymentClose
+  } = useDisclosure();
+
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
   const bg = useColorModeValue('white', 'gray.800');
@@ -102,10 +108,16 @@ const InvoiceDetails = (props) => {
   // React state toggles
   const [editSwitchIsOn, setEditSwitchIsOn] = useState(false);
   const [loadingInvoiceStatusIsOn, setLoadingInvoiceStatusIsOn] = useState(false);
+  const [loadingState, setLoadingState] = useState(false);
 
   // React Input States
   const [invoiceServiceInputField, setInvoiceServiceInputField] = useState('');
   const [invoiceDateInputField, setInvoiceDateInputField] = useState('');
+
+  // React Add Payment Inputs States
+  const [dateReceivedPaymentInput, setDateReceivedPaymnetInput] = useState('');
+  const [paymentMethodPaymentInput, setPaymentMethodPaymentInput] = useState('');
+  const [amountPaymentInput, setAmountPaymentInput] = useState('');
 
   // Define variables
   const { id } = useParams();
@@ -223,6 +235,50 @@ const InvoiceDetails = (props) => {
       .from('invoice')
       .update({})
       .eq('invoice_number', invoice_number);
+  };
+
+  const handleAddPaymentSubmit = async (e) => {
+    setLoadingState(true);
+    e.preventDefault();
+
+    const { data, error } = await supabase.from('payment').insert({
+      invoice_id: invoice.invoice_number,
+      date_received: dateReceivedPaymentInput,
+      payment_method: paymentMethodPaymentInput,
+      amount: amountPaymentInput
+    });
+
+    if (error) {
+      toast({
+        position: 'top',
+        title: `Error Occured Adding Payment`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+
+    if (data) {
+      await getInvoiceDetailsById();
+      await getAllInvoicePayments();
+      toast({
+        position: 'top',
+        title: `Succesfully Added Payment`,
+        description: `We were able to add a payment for invoice number ${invoice.invoice_number} 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+
+    // Set values empty
+    setDateReceivedPaymnetInput('');
+    setPaymentMethodPaymentInput('');
+    setAmountPaymentInput('');
+
+    setLoadingState(false);
+    onAddPaymentClose();
   };
 
   // Handle custom editable controls for line items
@@ -596,7 +652,9 @@ const InvoiceDetails = (props) => {
                     </>
                   )}
                 </Menu>
-                <Button w={'full'}>Add Payment</Button>
+                <Button w={'full'} onClick={onAddPaymentOpen}>
+                  Add Payment
+                </Button>
                 <Tooltip hasArrow label="Edit">
                   <IconButton
                     icon={editSwitchIsOn === true ? <FiX /> : <FiEdit />}
@@ -860,6 +918,69 @@ const InvoiceDetails = (props) => {
           </Card>
         </Flex>
       </Flex>
+      <Modal
+        onClose={onAddPaymentClose}
+        isOpen={isAddPaymentOpen}
+        size={'xl'}
+        isCentered
+        motionPreset="scale">
+        <ModalOverlay />
+        <form method="POST" onSubmit={handleAddPaymentSubmit}>
+          <ModalContent>
+            <ModalHeader shadow={'xs'}>
+              <Flex gap={2}>
+                <Box my={'auto'}>
+                  <MdPayment size={'24px'} />
+                </Box>
+                <Text>Add Payment</Text>
+              </Flex>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Flex gap={4} my={'2rem'}>
+                <Box>
+                  <FormControl isRequired>
+                    <FormLabel>Date Received</FormLabel>
+                    <Input
+                      name={'date_received'}
+                      type={'date'}
+                      value={dateReceivedPaymentInput}
+                      onChange={(e) => setDateReceivedPaymnetInput(e.target.value)}
+                    />
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormControl isRequired>
+                    <FormLabel>Payment Method</FormLabel>
+                    <Input
+                      name={'payment_method'}
+                      value={paymentMethodPaymentInput}
+                      onChange={(e) => setPaymentMethodPaymentInput(e.target.value)}
+                    />
+                  </FormControl>
+                </Box>
+                <Box w={'20%'}>
+                  <FormControl isRequired>
+                    <FormLabel>Amount</FormLabel>
+                    <Input
+                      name={'amount'}
+                      type={'number'}
+                      value={amountPaymentInput}
+                      onChange={(e) => setAmountPaymentInput(e.target.value)}
+                    />
+                  </FormControl>
+                </Box>
+              </Flex>
+            </ModalBody>
+            <ModalFooter gap={4}>
+              <Button colorScheme={'blue'} type={'submit'} isLoading={loadingState}>
+                Add Payment
+              </Button>
+              <Button onClick={onAddPaymentClose}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </Modal>
     </Container>
   );
 };
