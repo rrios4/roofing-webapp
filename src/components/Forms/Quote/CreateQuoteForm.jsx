@@ -56,8 +56,15 @@ const CreateQuoteForm = (props) => {
   const [customAddressSwitchIsOn, setCustomAddressSwitchIsOn] = useState(false);
 
   //React useState to for line-item functionality
-  const [numberOfLineItems, setNumberOfLineItems] = useState(0);
-  const [lineItemObjectList, setLineItemObjectList] = useState([]);
+  const [numberOfLineItems, setNumberOfLineItems] = useState(1);
+  const [lineItemObjectList, setLineItemObjectList] = useState([
+    {
+      description: '',
+      qty: '',
+      rate: '',
+      amount: 0
+    }
+  ]);
 
   // React useState for calculated values
   const [calculatedQuoteTotal, setCalculatedQuoteTotal] = useState(0);
@@ -250,29 +257,31 @@ const CreateQuoteForm = (props) => {
           <DrawerBody>
             {/* General Quote Information */}
             <Text fontWeight={'bold'} color={'blue.500'} mt={'8px'} mb={'1rem'}>
-              Select Customer
+              Select a Customer
             </Text>
             {/* <FormLabel pt="1rem">Select a Customer</FormLabel> */}
-            <AsyncSelect
-              ref={initialRef}
-              onChange={handleSelectedCustomer}
-              loadOptions={loadOptions}
-              isRequired
-              // defaultOptions={}
-              placeholder="Type Customer Name"
-              getOptionLabel={(option) => `${option.label},  ${option.email}`}
-              theme={(theme) => ({
-                ...theme,
-                borderRadius: 6,
-                colors: {
-                  ...theme.colors,
-                  primary25: colorMode === 'dark' ? '#4A5568' : '#EDF2F7',
-                  primary: '#3182CE',
-                  neutral0: colorMode === 'dark' ? '#2D3748' : 'white',
-                  neutral90: 'white'
-                }
-              })}
-            />
+            <FormControl isRequired>
+              <AsyncSelect
+                ref={initialRef}
+                onChange={handleSelectedCustomer}
+                loadOptions={loadOptions}
+                isRequired
+                // defaultOptions={}
+                placeholder="Search for Customer"
+                getOptionLabel={(option) => `${option.label},  ${option.email}`}
+                theme={(theme) => ({
+                  ...theme,
+                  borderRadius: 6,
+                  colors: {
+                    ...theme.colors,
+                    primary25: colorMode === 'dark' ? '#4A5568' : '#EDF2F7',
+                    primary: '#3182CE',
+                    neutral0: colorMode === 'dark' ? '#2D3748' : 'white',
+                    neutral90: 'white'
+                  }
+                })}
+              />
+            </FormControl>
             {customAddressSwitchIsOn === false ? (
               <></>
             ) : (
@@ -330,7 +339,7 @@ const CreateQuoteForm = (props) => {
             <Flex w={'full'} gap={4}>
               <Box w={'50%'}>
                 <FormControl isRequired>
-                  <FormLabel>Quote Number</FormLabel>
+                  <FormLabel>Quote #</FormLabel>
                   <Input
                     type={'number'}
                     placeholder={
@@ -451,9 +460,11 @@ const CreateQuoteForm = (props) => {
               </Flex>
             ))}
 
-            <Flex w={'full'} mt={6} gap={4} justifyContent={'center'}>
-              <Button onClick={() => handleAddingLineItem()}>Add Line Item</Button>
-              {numberOfLineItems <= 0 ? (
+            <Flex w={'full'} mt={2} gap={4} justifyContent={'center'}>
+              <Button w={'30%'} onClick={() => handleAddingLineItem()}>
+                Add Line Item
+              </Button>
+              {numberOfLineItems <= 1 ? (
                 <></>
               ) : (
                 <>
@@ -471,19 +482,19 @@ const CreateQuoteForm = (props) => {
               mx={'2rem'}
               px={'2rem'}
               py={'3'}
-              bg={useColorModeValue('gray.200', 'gray.600')}
+              bg={useColorModeValue('blue.400', 'blue.500')}
               rounded={'xl'}
               color={'white'}>
               <Text
-                fontSize={'2xl'}
+                fontSize={'xl'}
                 fontWeight={'bold'}
-                textColor={useColorModeValue('blackAlpha.700', 'whiteAlpha.800')}>
+                textColor={useColorModeValue('white', 'whiteAlpha.800')}>
                 Total
               </Text>
               <Text
-                fontSize={'2xl'}
+                fontSize={'xl'}
                 fontWeight={'bold'}
-                textColor={useColorModeValue('blackAlpha.700', 'whiteAlpha.800')}>
+                textColor={useColorModeValue('white', 'whiteAlpha.800')}>
                 ${formatMoneyValue(calculatedQuoteTotal)}
               </Text>
             </Flex>
@@ -494,7 +505,7 @@ const CreateQuoteForm = (props) => {
               <></>
             ) : (
               <>
-                <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+                <Text fontWeight={'bold'} color={'blue.500'} mt={'4rem'} mb={'1rem'}>
                   Additional Information
                 </Text>
               </>
@@ -509,7 +520,7 @@ const CreateQuoteForm = (props) => {
                       <FormLabel>General Note</FormLabel>
                       <Textarea
                         height={'200px'}
-                        placeholder="Enter info regarding the customer on their wants, needs, or concenrs that they might have. Or for internal status updates. 👋"
+                        placeholder="Enter information regarding the customer on their wants, needs, or concenrs that they might have. Or for internal status updates. 👋"
                         value={noteInput}
                         onChange={({ target }) => setNoteInput(target.value)}></Textarea>
                     </FormControl>
@@ -551,7 +562,7 @@ const CreateQuoteForm = (props) => {
             )}
 
             <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-              Custom Fields
+              Optional Fields
             </Text>
             <Flex w={'full'} gap={4}>
               {/* Switch 1 */}

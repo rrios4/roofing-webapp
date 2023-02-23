@@ -31,6 +31,8 @@ import {
   DrawerCloseButton
 } from '@chakra-ui/react';
 import formatMoneyValue from '../../../utils/formatMoneyValue';
+import { TbNote, TbRuler } from 'react-icons/tb';
+import { FiMap, FiUser } from 'react-icons/fi';
 
 const NewInvoiceForm = (props) => {
   const {
@@ -83,8 +85,15 @@ const NewInvoiceForm = (props) => {
   const [loadingState, setLoadingState] = useState(false);
 
   // Line Item React State
-  const [lineItemList, setLineItemList] = useState([]);
-  const [numOfLineItemFields, setNumOfLineItemFields] = useState(0);
+  const [lineItemList, setLineItemList] = useState([
+    {
+      description: '',
+      qty: '',
+      rate: '',
+      amount: 0
+    }
+  ]);
+  const [numOfLineItemFields, setNumOfLineItemFields] = useState(1);
 
   // Function to handle the submit data from the form to supabase DB
   const handleSubmit = async (event) => {
@@ -238,10 +247,8 @@ const NewInvoiceForm = (props) => {
     setLineItemList([
       ...lineItemList,
       {
-        fixed_item: fixedRateSwitchIsOn === true ? true : false,
         description: '',
         qty: '',
-        sq_ft: '',
         rate: '',
         amount: 0
       }
@@ -355,7 +362,7 @@ const NewInvoiceForm = (props) => {
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>New Invoice</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>New Invoice</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'} mb={'1rem'}>
                   Create
@@ -366,22 +373,17 @@ const NewInvoiceForm = (props) => {
             <Flex gap={8} direction={{ base: 'column', lg: 'column' }}>
               {/* Invoice Details */}
               <Box>
-                <FormControl isRequired>
-                  <Text
-                    fontSize={'lg'}
-                    fontWeight={'bold'}
-                    color={'blue.500'}
-                    mt={'0rem'}
-                    mb={'1rem'}>
-                    Select a Customer
-                  </Text>
-                  <Box
-                    w={'full'}
-                    bg={useColorModeValue('gray.100', 'gray.600')}
-                    border={'1px'}
-                    borderColor={useColorModeValue('gray.200', 'gray.600')}
-                    rounded={'xl'}>
-                    {/* <FormLabel>Select Customer</FormLabel> */}
+                <Text fontSize={'md'} fontWeight={'bold'} color={'blue.500'} mt={'8px'} mb={'1rem'}>
+                  Select a Customer
+                </Text>
+                <Box
+                  w={'full'}
+                  bg={useColorModeValue('gray.100', 'gray.600')}
+                  border={'1px'}
+                  borderColor={useColorModeValue('gray.200', 'gray.600')}
+                  rounded={'xl'}>
+                  {/* <FormLabel>Select Customer</FormLabel> */}
+                  <FormControl isRequired>
                     <AsyncSelect
                       onChange={handleSelectedCustomer}
                       loadOptions={loadOptions}
@@ -400,82 +402,15 @@ const NewInvoiceForm = (props) => {
                         }
                       })}
                     />
-                  </Box>
-                  <Text
-                    fontSize={'lg'}
-                    fontWeight={'bold'}
-                    color={'blue.500'}
-                    mt={'2rem'}
-                    mb={'0rem'}>
-                    General Info
-                  </Text>
-                  <Flex gap={4} mt={'1rem'}>
-                    <Box w={'50%'}>
-                      <FormLabel>Invoice #</FormLabel>
-                      <Input
-                        placeholder={
-                          !data
-                            ? 'Loading...'
-                            : Math.max(...data?.map((item) => item.invoice_number)) + 1
-                        }
-                        type={'number'}
-                        value={invoiceNumberInput}
-                        onChange={(e) => setInvoiceNumberInput(e.target.value)}
-                      />
-                    </Box>
-                    <Box w={'50%'}>
-                      <FormLabel>Status</FormLabel>
-                      <Select
-                        value={selectedInvoiceStatus}
-                        placeholder="Select Status"
-                        onChange={(e) => setSelectedInvoiceStatus(e.target.value)}>
-                        <MultiPurposeOptions data={invoiceStatuses} />
-                      </Select>
-                    </Box>
-                  </Flex>
-                  <Flex gap={4} mt={'1rem'}>
-                    <Box w={'50%'}>
-                      <FormLabel>Date</FormLabel>
-                      <Input
-                        type="date"
-                        value={invoiceDateInput}
-                        onChange={({ target }) => setInvoiceDateInput(target.value)}
-                        id="invDate"
-                        placeholder="Select Invoice Date"
-                      />
-                    </Box>
-                    <Box w={'50%'}>
-                      <FormControl isRequired>
-                        <FormLabel>Due Date</FormLabel>
-                        <Input
-                          type="date"
-                          value={invoiceDueDateInput}
-                          onChange={({ target }) => setInvoiceDueDateInput(target.value)}
-                          id="dueDate"
-                          placeholder="Due date"
-                        />
-                      </FormControl>
-                    </Box>
-                  </Flex>
-                  <Box>
-                    <FormLabel mt="1rem">Select Service</FormLabel>
-                    <Select
-                      value={selectedServiceType}
-                      placeholder="Select Service"
-                      onChange={(e) => setSelectedServiceType(e.target.value)}>
-                      <MultiPurposeOptions data={services} />
-                    </Select>
-                  </Box>
-                </FormControl>
-              </Box>
-              {/* Bill To Input Fields */}
-              {billToSwitchIsOn === true ? (
-                <>
-                  <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'}>
-                    Bill To
-                  </Text>
-                  <Box>
-                    <FormControl isRequired>
+                  </FormControl>
+                </Box>
+                {/* Bill To Input Fields */}
+                {billToSwitchIsOn === true ? (
+                  <>
+                    <Text fontSize={'md'} fontWeight={'bold'} my={'1rem'} color={'blue.500'}>
+                      Custom Bill Address
+                    </Text>
+                    <Box>
                       <FormLabel>Street Address</FormLabel>
                       <Input
                         value={billToStreetAddressInput}
@@ -508,19 +443,84 @@ const NewInvoiceForm = (props) => {
                           />
                         </Flex>
                       </Flex>
+                    </Box>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <Text
+                  fontSize={'md'}
+                  fontWeight={'bold'}
+                  color={'blue.500'}
+                  mt={'1rem'}
+                  mb={'0rem'}>
+                  Details
+                </Text>
+                <Flex gap={4} mt={'1rem'}>
+                  <Box w={'50%'}>
+                    <FormLabel>Invoice #</FormLabel>
+                    <Input
+                      placeholder={
+                        !data
+                          ? 'Loading...'
+                          : Math.max(...data?.map((item) => item.invoice_number)) + 1
+                      }
+                      type={'number'}
+                      value={invoiceNumberInput}
+                      onChange={(e) => setInvoiceNumberInput(e.target.value)}
+                    />
+                  </Box>
+                  <Box w={'50%'}>
+                    <FormLabel>Status</FormLabel>
+                    <Select
+                      value={selectedInvoiceStatus}
+                      placeholder="Select Status"
+                      onChange={(e) => setSelectedInvoiceStatus(e.target.value)}>
+                      <MultiPurposeOptions data={invoiceStatuses} />
+                    </Select>
+                  </Box>
+                </Flex>
+                <Flex gap={4} mt={'1rem'}>
+                  <Box w={'50%'}>
+                    <FormLabel>Invoice Date</FormLabel>
+                    <Input
+                      type="date"
+                      value={invoiceDateInput}
+                      onChange={({ target }) => setInvoiceDateInput(target.value)}
+                      id="invDate"
+                      placeholder="Select Invoice Date"
+                    />
+                  </Box>
+                  <Box w={'50%'}>
+                    <FormControl isRequired>
+                      <FormLabel>Due Date</FormLabel>
+                      <Input
+                        type="date"
+                        value={invoiceDueDateInput}
+                        onChange={({ target }) => setInvoiceDueDateInput(target.value)}
+                        id="dueDate"
+                        placeholder="Due date"
+                      />
                     </FormControl>
                   </Box>
-                </>
-              ) : (
-                <></>
-              )}
+                </Flex>
+                <Box>
+                  <FormLabel mt="1rem">Select Service</FormLabel>
+                  <Select
+                    value={selectedServiceType}
+                    placeholder="Select Service"
+                    onChange={(e) => setSelectedServiceType(e.target.value)}>
+                    <MultiPurposeOptions data={services} />
+                  </Select>
+                </Box>
+              </Box>
             </Flex>
             {/* Service Item Input Table */}
-            <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-              Service Items
+            <Text fontSize={'md'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+              Line Items
             </Text>
             <Box>
-              <TableContainer>
+              {/* <TableContainer>
                 <Table variant={'unstyled'} size={'md'}>
                   <Thead>
                     <Tr>
@@ -585,7 +585,6 @@ const NewInvoiceForm = (props) => {
                             />
                           )}
                         </Td>
-                        {/* <Td><Input type={'number'} minW={'100px'} variant={'flushed'} placeholder='$1,000' name='amount' onChange={ (e) => handleOnChangeLineItemInput(e,i)}/></Td> */}
                         <Td p={2}>
                           <Input
                             name="amount"
@@ -599,17 +598,66 @@ const NewInvoiceForm = (props) => {
                     ))}
                   </Tbody>
                 </Table>
-              </TableContainer>
+              </TableContainer> */}
+              {Array.from({ length: numOfLineItemFields }, (_, i) => (
+                <Flex gap={4} w={'full'} key={i} px={4} py={4} rounded={'xl'}>
+                  <Box w={'55%'}>
+                    <FormControl isRequired>
+                      <Input
+                        px={2}
+                        name="description"
+                        placeholder="Enter item description"
+                        onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box w={'10%'}>
+                    <FormControl isRequired>
+                      <Input
+                        disabled
+                        px={2}
+                        name="qty"
+                        value={1}
+                        placeholder="Qty"
+                        onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box w={'15%'}>
+                    <FormControl isRequired>
+                      <Input
+                        disabled
+                        px={2}
+                        name="rate"
+                        value={'Fixed'}
+                        placeholder="Rate"
+                        onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box w={'20%'}>
+                    <FormControl isRequired>
+                      <Input
+                        name="amount"
+                        type="number"
+                        px={2}
+                        placeholder="Amount"
+                        onChange={(e) => handleOnChangeLineItemInput(e, i)}
+                      />
+                    </FormControl>
+                  </Box>
+                </Flex>
+              ))}
             </Box>
             {/* Add Line Item Button */}
             <Flex justifyContent={'center'} gap={4}>
-              <Button w={'30%'} onClick={() => handleAddingLineItem()} my={'2rem'}>
+              <Button w={'30%'} onClick={() => handleAddingLineItem()} my={'1rem'}>
                 Add Item
               </Button>
-              {numOfLineItemFields <= 0 ? (
+              {numOfLineItemFields <= 1 ? (
                 <></>
               ) : (
-                <Button my={'2rem'} onClick={() => handleDeleteLineItemField()}>
+                <Button my={'1rem'} onClick={() => handleDeleteLineItemField()}>
                   Delete Row
                 </Button>
               )}
@@ -617,7 +665,7 @@ const NewInvoiceForm = (props) => {
 
             {/* Total */}
             {/* <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>Total</Text> */}
-            <Flex justify={'space-between'} px={'8rem'} py={'1rem'}>
+            <Flex justify={'space-between'} px={'8rem'} py={'2rem'}>
               <Text>Subtotal</Text>
               <Text>${formatMoneyValue(invoiceSubTotalCalculatedvalue)}</Text>
             </Flex>
@@ -625,14 +673,14 @@ const NewInvoiceForm = (props) => {
               justify={'space-between'}
               mx={'2rem'}
               px={'2rem'}
-              py={'1rem'}
+              py={'3'}
               bg={tableHeaderColor}
               rounded={'xl'}
               color={'white'}>
-              <Text fontSize={'2xl'} fontWeight={'bold'}>
+              <Text fontSize={'xl'} fontWeight={'bold'}>
                 Total
               </Text>
-              <Text fontSize={'2xl'} fontWeight={'bold'}>
+              <Text fontSize={'xl'} fontWeight={'bold'}>
                 ${formatMoneyValue(invoiceTotalCalculatedValue)}
               </Text>
             </Flex>
@@ -643,27 +691,28 @@ const NewInvoiceForm = (props) => {
             customerNoteSwitchIsOn === true ? (
               <>
                 <Text
-                  fontSize={'lg'}
+                  fontSize={'md'}
                   fontWeight={'bold'}
                   color={'blue.500'}
-                  mt={'2rem'}
+                  mt={'4rem'}
                   mb={'0rem'}>
-                  Extra
+                  Additional Information
                 </Text>
               </>
             ) : (
               <></>
             )}
             <Flex direction={{ base: 'column', lg: 'row' }} w={'full'} gap={4}>
-              {customerNoteSwitchIsOn === true ? (
+              {noteSwitchIsOn === true ? (
                 <>
                   <Box w={{ base: 'full', lg: '50%' }}>
                     <FormControl>
-                      <FormLabel mt={'1rem'}>Message to Customer</FormLabel>
+                      <FormLabel mt="1rem">General Note</FormLabel>
                       <Textarea
-                        placeholder="Thank you for your business! 🚀"
-                        value={customerNoteMessage}
-                        onChange={(e) => setCustomerNoteMessage(e.target.value)}
+                        height={'200px'}
+                        value={noteInput}
+                        onChange={(e) => setNoteInput(e.target.value)}
+                        placeholder="Enter information regarding the customer on their wants, needs, or concenrs that they might have. Or for internal status updates. 👋"
                       />
                     </FormControl>
                   </Box>
@@ -675,8 +724,13 @@ const NewInvoiceForm = (props) => {
                 <>
                   <Box w={{ base: 'full', lg: '50%' }}>
                     <FormControl>
-                      <FormLabel mt={'1rem'}>Measurements</FormLabel>
-                      <Textarea value={sqftInput} onChange={(e) => setSqftInput(e.target.value)} />
+                      <FormLabel mt={'1rem'}>Measurements Note</FormLabel>
+                      <Textarea
+                        height={'200px'}
+                        value={sqftInput}
+                        onChange={(e) => setSqftInput(e.target.value)}
+                        placeholder="Enter roof measurments or any metrics to remember for future reference. 📏"
+                      />
                     </FormControl>
                   </Box>
                 </>
@@ -684,60 +738,151 @@ const NewInvoiceForm = (props) => {
                 <></>
               )}
             </Flex>
-            {noteSwitchIsOn === true ? (
+            {customerNoteSwitchIsOn === true ? (
               <>
-                <FormControl>
-                  <FormLabel mt="1rem"> Additional Note</FormLabel>
-                  <Textarea value={noteInput} onChange={(e) => setNoteInput(e.target.value)} />
-                </FormControl>
+                <Box>
+                  <FormControl>
+                    <FormLabel mt={'2rem'}>Message to Customer</FormLabel>
+                    <Textarea
+                      placeholder="Thank you for your business! 🚀"
+                      value={customerNoteMessage}
+                      onChange={(e) => setCustomerNoteMessage(e.target.value)}
+                    />
+                  </FormControl>
+                </Box>
               </>
             ) : (
               <></>
             )}
             {/* Custom Setting Switches */}
-            <Text fontSize={'lg'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'0rem'}>
-              Custom Settings
+            <Text fontSize={'md'} fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+              Optional Fields
             </Text>
-            <Flex gap={4} flexWrap={'wrap'} py="1rem">
-              <Flex align={'center'}>
-                <Switch
-                  size={'sm'}
-                  isChecked={billToSwitchIsOn}
-                  onChange={() => setBillToSwitchIsOn(!billToSwitchIsOn)}
-                />
-                <Text ml={'8px'}>Bill To</Text>
+            <Flex w={'full'} gap={4}>
+              {/* Switch 1 */}
+              <Flex
+                justify={'center'}
+                direction={'column'}
+                w={'50%'}
+                border={'1px'}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                rounded={'xl'}>
+                <Flex w={'full'} justify={'space-between'}>
+                  <Flex ml={'1rem'} gap={4}>
+                    <Box my={'auto'}>
+                      <TbNote size={'20px'} />
+                    </Box>
+                    <Box>
+                      <Text fontSize={'sm'} fontWeight={'bold'}>
+                        General Note
+                      </Text>
+                      <Text fontSize={'xs'} fontWeight={'normal'}>
+                        To jot down general info
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Box mr={'1rem'} my={'auto'}>
+                    <Switch
+                      isChecked={noteSwitchIsOn}
+                      onChange={() => setNoteSwitchIsOn(!noteSwitchIsOn)}
+                    />
+                  </Box>
+                </Flex>
               </Flex>
-              <Flex align={'center'}>
-                <Switch
-                  size={'sm'}
-                  isChecked={fixedRateSwitchIsOn}
-                  onChange={() => setFixedRateSwitchIsOn(!fixedRateSwitchIsOn)}
-                />
-                <Text ml={'8px'}>Fixed Rate</Text>
+              {/* Switch 2 */}
+              <Flex
+                justify={'center'}
+                direction={'column'}
+                w={'50%'}
+                h={'80px'}
+                border={'1px'}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                rounded={'xl'}>
+                <Flex w={'full'} justify={'space-between'}>
+                  <Flex ml={'1rem'} gap={4}>
+                    <Box my={'auto'}>
+                      <TbRuler size={'20px'} />
+                    </Box>
+                    <Box>
+                      <Text fontSize={'sm'} fontWeight={'bold'}>
+                        Measurements Note
+                      </Text>
+                      <Text fontSize={'xs'} fontWeight={'normal'}>
+                        To write roof measurements
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Box mr={'1rem'} my={'auto'}>
+                    <Switch
+                      isChecked={measurementNoteSwitchIsOn}
+                      onChange={() => setMeasurementNoteSwitchIsOn(!measurementNoteSwitchIsOn)}
+                    />
+                  </Box>
+                </Flex>
               </Flex>
-              <Flex align={'center'}>
-                <Switch
-                  size={'sm'}
-                  isChecked={noteSwitchIsOn}
-                  onChange={() => setNoteSwitchIsOn(!noteSwitchIsOn)}
-                />
-                <Text ml={'8px'}>Note</Text>
+            </Flex>
+            <Flex w={'full'} gap={4} mt={'1rem'} mb={'8px'}>
+              {/* Switch 3 */}
+              <Flex
+                justify={'center'}
+                direction={'column'}
+                w={'50%'}
+                h={'80px'}
+                border={'1px'}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                rounded={'xl'}>
+                <Flex w={'full'} justify={'space-between'}>
+                  <Flex ml={'1rem'} gap={4}>
+                    <Box my={'auto'}>
+                      <FiMap size={'20px'} />
+                    </Box>
+                    <Box>
+                      <Text fontSize={'sm'} fontWeight={'bold'}>
+                        Custom Address
+                      </Text>
+                      <Text fontSize={'xs'} fontWeight={'normal'}>
+                        Manual input for address
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Box mr={'1rem'} my={'auto'}>
+                    <Switch
+                      isChecked={billToSwitchIsOn}
+                      onChange={() => setBillToSwitchIsOn(!billToSwitchIsOn)}
+                    />
+                  </Box>
+                </Flex>
               </Flex>
-              <Flex align={'center'}>
-                <Switch
-                  size={'sm'}
-                  isChecked={measurementNoteSwitchIsOn}
-                  onChange={() => setMeasurementNoteSwitchIsOn(!measurementNoteSwitchIsOn)}
-                />
-                <Text ml={'8px'}>Measurement</Text>
-              </Flex>
-              <Flex align={'center'}>
-                <Switch
-                  size={'sm'}
-                  isChecked={customerNoteSwitchIsOn}
-                  onChange={() => setCustomerNoteSwitchIsOn(!customerNoteSwitchIsOn)}
-                />
-                <Text ml={'8px'}>Customer Note</Text>
+              {/* Switch 4 */}
+              <Flex
+                justify={'center'}
+                direction={'column'}
+                w={'50%'}
+                h={'80px'}
+                border={'1px'}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                rounded={'xl'}>
+                <Flex w={'full'} justify={'space-between'}>
+                  <Flex ml={'1rem'} gap={4}>
+                    <Box my={'auto'}>
+                      <FiUser size={'20px'} />
+                    </Box>
+                    <Box>
+                      <Text fontSize={'sm'} fontWeight={'bold'}>
+                        Customer Message
+                      </Text>
+                      <Text fontSize={'xs'} fontWeight={'normal'}>
+                        Write message to customer
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Box mr={'1rem'} my={'auto'}>
+                    <Switch
+                      isChecked={customerNoteSwitchIsOn}
+                      onChange={() => setCustomerNoteSwitchIsOn(!customerNoteSwitchIsOn)}
+                    />
+                  </Box>
+                </Flex>
               </Flex>
             </Flex>
           </DrawerBody>
