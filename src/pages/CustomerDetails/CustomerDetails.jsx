@@ -14,9 +14,19 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  AccordionIcon
+  AccordionIcon,
+  TableContainer,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  IconButton,
+  Badge,
+  Skeleton
 } from '@chakra-ui/react';
-import Select from 'react-select';
+
 import supabase from '../../utils/supabaseClient';
 import { Link, useParams } from 'react-router-dom';
 import {
@@ -26,12 +36,15 @@ import {
   CustomerInvoicesTable
 } from '../../components';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
-import { FiFileText } from 'react-icons/fi';
+import { FiArrowRight, FiFileText } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
+import { formatDate, formatMoneyValue, formatNumber } from '../../utils';
+import { useCustomerTypes } from '../../hooks/useCustomerTypes';
 
-const CustomerDetails = (props) => {
+const CustomerDetails = () => {
   // React Hooks
   const toast = useToast();
+  const { customerTypes } = useCustomerTypes();
 
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
@@ -45,16 +58,7 @@ const CustomerDetails = (props) => {
   // React State to store array of objects from GET request API
   const [customer, getCustomer] = useState();
   const [customerInvoicesById, setCustomerInvoicesById] = useState();
-
-  // Customer Registered Date
-  const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-  let customerDate = customer ? (
-    new Date(`${customer.created_at}`).toLocaleDateString('en-us', options)
-  ) : (
-    <>
-      <Spinner size={'xs'} />
-    </>
-  );
+  const [customerQuotesById, setCustomerQuotesById] = useState();
 
   // States that pick up the values from the input fields of the form
   const [selectedCustomerObject, setSelectedCustomerObject] = useState({
@@ -70,19 +74,18 @@ const CustomerDetails = (props) => {
     email: ''
   });
 
-  // const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
-
   useEffect(() => {
     // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
     // if (!localStorage.getItem('supabase.auth.token')) {
     //     history.push('/login');
     // }
     getAllCustomer();
+    getAllQuotesByCustomerId();
     getAllInvoicesByCustomerId();
   }, []);
 
   const getAllCustomer = async () => {
-    let { data: customerById, error } = await supabase
+    const { data: customerById, error } = await supabase
       .from('customer')
       .select('*, customer_type:customer_type_id(*)')
       .eq('id', `${id}`);
@@ -94,8 +97,20 @@ const CustomerDetails = (props) => {
     // console.log(customerById)
   };
 
+  const getAllQuotesByCustomerId = async () => {
+    const { data: quotes, error } = await supabase
+      .from('quote')
+      .select('*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*)')
+      .eq('customer_id', `${id}`);
+
+    if (error) {
+      console.log(error);
+    }
+    setCustomerQuotesById(quotes);
+  };
+
   const getAllInvoicesByCustomerId = async () => {
-    let { data, error } = await supabase
+    const { data, error } = await supabase
       .from('invoice')
       .select(
         '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)'
@@ -162,7 +177,8 @@ const CustomerDetails = (props) => {
         street_address: selectedCustomerObject.street_address,
         city: selectedCustomerObject.city,
         state: selectedCustomerObject.state,
-        zipcode: selectedCustomerObject.zipcode
+        zipcode: selectedCustomerObject.zipcode,
+        customer_type_id: selectedCustomerObject.customer_type_id
       })
       .match({ id: customer?.id });
 
@@ -170,7 +186,7 @@ const CustomerDetails = (props) => {
       console.log(error);
       // handleCustomerErrorUpdateToast();
       toast({
-        position: 'top-right',
+        position: 'top',
         title: 'Error Occured!',
         description: `Message: ${error}`,
         status: 'error',
@@ -183,7 +199,7 @@ const CustomerDetails = (props) => {
       toast({
         position: 'top',
         title: `Customer updated!`,
-        description: "We've updated customer for you 🎉.",
+        description: `We've updated customer with email ${selectedCustomerObject.email} data 🎉.`,
         status: 'success',
         duration: 5000,
         isClosable: true
@@ -208,6 +224,16 @@ const CustomerDetails = (props) => {
     });
   };
 
+  // Customer Registered Date
+  const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+  let customerDate = customer ? (
+    new Date(`${customer.created_at}`).toLocaleDateString('en-us', options)
+  ) : (
+    <>
+      <Spinner size={'xs'} />
+    </>
+  );
+
   return (
     <Container maxWidth={'1400px'} h={'full'}>
       {/* Edit Form Modal */}
@@ -219,6 +245,7 @@ const CustomerDetails = (props) => {
         toast={toast}
         handleEditSubmit={handleEditSubmit}
         handleEditOnChange={handleCustomerEditChange}
+        customerTypes={customerTypes}
       />
 
       {/* Modal to prompt the user that they will be deleting a user */}
@@ -279,7 +306,7 @@ const CustomerDetails = (props) => {
                           fontWeight={'bold'}
                           fontSize={'md'}
                           ml={'4'}>
-                          Customer's Invoices
+                          {"Customer's Invoices"}
                         </Box>
                         <AccordionIcon />
                       </AccordionButton>
@@ -295,11 +322,12 @@ const CustomerDetails = (props) => {
               {/* Customer Quotes Card */}
               <Box w={'full'}>
                 <Accordion
-                  allowToggle
                   rounded={'xl'}
                   p={2}
                   shadow={'md'}
-                  bg={useColorModeValue('white', 'gray.700')}>
+                  bg={useColorModeValue('white', 'gray.700')}
+                  defaultIndex={[0]}
+                  allowMultiple>
                   <AccordionItem borderTop={'0px'} borderBottom={'0px'}>
                     <h2>
                       <AccordionButton rounded={'md'}>
@@ -311,12 +339,67 @@ const CustomerDetails = (props) => {
                           fontWeight={'bold'}
                           fontSize={'md'}
                           ml={'4'}>
-                          Customer's Quotes
+                          <Text>{"Customer's Quotes"}</Text>
                         </Box>
                         <AccordionIcon />
                       </AccordionButton>
                     </h2>
-                    <AccordionPanel pb={4}></AccordionPanel>
+                    <AccordionPanel pb={4}>
+                      {!customerQuotesById ? (
+                        <Skeleton h={'20px'} w={'full'} />
+                      ) : (
+                        <>
+                          <TableContainer>
+                            <Table>
+                              <Thead>
+                                <Tr>
+                                  <Th>Quote#</Th>
+                                  <Th>Status</Th>
+                                  <Th>Date</Th>
+                                  <Th>Exp Date</Th>
+                                  <Th>Total</Th>
+                                  <Th>Action</Th>
+                                </Tr>
+                              </Thead>
+                              <Tbody>
+                                {customerQuotesById?.map((item, index) => (
+                                  <Tr key={index}>
+                                    <Td>{formatNumber(item.quote_number)}</Td>
+                                    <Td>
+                                      <Badge
+                                        w={'80px'}
+                                        textAlign={'center'}
+                                        my={'auto'}
+                                        p={2}
+                                        rounded={'xl'}
+                                        colorScheme={
+                                          item.quote_status.name === 'Accepted'
+                                            ? 'green'
+                                            : item.quote_status.name === 'Pending'
+                                            ? 'yellow'
+                                            : item.quote_status.name === 'Rejected'
+                                            ? 'red'
+                                            : 'gray'
+                                        }>
+                                        {item.quote_status.name}
+                                      </Badge>
+                                    </Td>
+                                    <Td>{formatDate(item.quote_date)}</Td>
+                                    <Td>{formatDate(item.expiration_date)}</Td>
+                                    <Td>{formatMoneyValue(item.total)}</Td>
+                                    <Td>
+                                      <Link to={`/editestimate/${item.quote_number}`}>
+                                        <IconButton icon={<FiArrowRight />} />
+                                      </Link>
+                                    </Td>
+                                  </Tr>
+                                ))}
+                              </Tbody>
+                            </Table>
+                          </TableContainer>
+                        </>
+                      )}
+                    </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
               </Box>

@@ -158,7 +158,7 @@ const NewEstimateRequestForm = (props) => {
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>New Quote Request</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>New Quote Request</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
               Create

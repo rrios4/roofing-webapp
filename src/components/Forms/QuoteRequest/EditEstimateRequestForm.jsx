@@ -42,7 +42,7 @@ const EditEstimateRequestForm = (props) => {
       <form onSubmit={handleSubmit} method="PATCH">
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Edit Quote Request-{objectData.id}</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>Edit Quote Request-{objectData.id}</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
             Edit

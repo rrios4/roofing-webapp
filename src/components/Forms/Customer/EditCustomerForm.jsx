@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex } from '../../../components';
+import { DrawerIndex, MultiPurposeOptions } from '../../../components';
 import {
   Flex,
   FormControl,
@@ -14,7 +14,8 @@ import {
   DrawerCloseButton,
   DrawerHeader,
   DrawerBody,
-  DrawerFooter
+  DrawerFooter,
+  Select
 } from '@chakra-ui/react';
 import { formatPhoneNumber, supabase } from '../../../utils';
 
@@ -28,7 +29,8 @@ const EditCustomerForm = (props) => {
     updateParentState,
     toast,
     handleEditOnChange,
-    handleEditSubmit
+    handleEditSubmit,
+    customerTypes
   } = props;
 
   // States that pick up the values from the input fields of the form
@@ -146,7 +148,7 @@ const EditCustomerForm = (props) => {
       <form method="PATCH" onSubmit={handleEditSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Edit Customer</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>Edit Customer</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
               Edit
@@ -194,7 +196,7 @@ const EditCustomerForm = (props) => {
               />
               <FormHelperText>Current Phone Number: {customer.phone_number}</FormHelperText>
               <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
-                Address
+                Location
               </Text>
               <FormLabel>Street Address</FormLabel>
               <Input
@@ -232,6 +234,15 @@ const EditCustomerForm = (props) => {
                   />
                 </Flex>
               </Flex>
+              <Text fontWeight={'bold'} color={'blue.500'} mt={'2rem'} mb={'1rem'}>
+                Customer Type
+              </Text>
+              <Select
+                name="customer_type_id"
+                onChange={handleEditOnChange}
+                value={customer?.customer_type_id}>
+                <MultiPurposeOptions data={customerTypes} />
+              </Select>
             </FormControl>
           </DrawerBody>
           <DrawerFooter>
