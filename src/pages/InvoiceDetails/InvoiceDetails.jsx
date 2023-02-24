@@ -70,7 +70,8 @@ import {
   FiCheck,
   FiX,
   FiEdit,
-  FiFolder
+  FiFolder,
+  FiPlus
 } from 'react-icons/fi';
 import { MdOutlinePayments, MdPendingActions, MdPayment } from 'react-icons/md';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
@@ -81,8 +82,10 @@ import supabase from '../../utils/supabaseClient';
 import formatMoneyValue from '../../utils/formatMoneyValue';
 import formatNumber from '../../utils/formatNumber';
 import formatDate from '../../utils/formatDate';
-import { DeleteAlertDialog } from '../../components';
+import { DeleteAlertDialog, EditInvoiceForm } from '../../components';
 import DeleteInvoiceLineServiceAlertDialog from '../../components/Alerts/DeleteInvoiceLineServiceAlertDialog';
+import { useServices } from '../../hooks/useServices';
+import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
 
 const InvoiceDetails = () => {
   // Chakra UI hooks
@@ -92,6 +95,20 @@ const InvoiceDetails = () => {
     onOpen: onAddPaymentOpen,
     onClose: onAddPaymentClose
   } = useDisclosure();
+  const {
+    isOpen: isAddLineItemOpen,
+    onOpen: onAddLineItemOpen,
+    onClose: onAddLineItemClose
+  } = useDisclosure();
+  const {
+    isOpen: isEditInvoiceOpen,
+    onOpen: onEditInvoiceOpen,
+    onClose: onEditInvoiceClose
+  } = useDisclosure();
+
+  // Custom React Hooks
+  const { services } = useServices();
+  const { invoiceStatuses } = useInvoiceStatuses();
 
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
@@ -105,11 +122,25 @@ const InvoiceDetails = () => {
   const [invoicePayments, setInvoicePayments] = useState();
   const [invoiceServiceLineItems, setInvoiceServiceLineItems] = useState();
   const [selectedInvoiceLineService, setSelectedInvoiceLineService] = useState('');
+  const [selectedEditInvoice, setSelectedEditInvoice] = useState({
+    id: '',
+    invoice_number: '',
+    service_type_id: '',
+    invoice_status_id: '',
+    invoice_date: '',
+    issue_date: '',
+    due_date: '',
+    sqft_measurement: '',
+    note: '',
+    cust_note: ''
+  });
 
   // React state toggles
   const [editSwitchIsOn, setEditSwitchIsOn] = useState(false);
   const [loadingInvoiceStatusIsOn, setLoadingInvoiceStatusIsOn] = useState(false);
   const [loadingState, setLoadingState] = useState(false);
+  const [invoiceLoadingState, setInvoiceLoadingState] = useState(false);
+  const [invoiceLineItemLoadingState, setInvoiceLineItemLoadingState] = useState(false);
 
   // React Input States
   const [invoiceServiceInputField, setInvoiceServiceInputField] = useState('');
@@ -119,6 +150,10 @@ const InvoiceDetails = () => {
   const [dateReceivedPaymentInput, setDateReceivedPaymnetInput] = useState('');
   const [paymentMethodPaymentInput, setPaymentMethodPaymentInput] = useState('');
   const [amountPaymentInput, setAmountPaymentInput] = useState('');
+
+  // React Add Line Item Input States
+  const [descriptionLineItemInput, setDescriptionLineItemInput] = useState('');
+  const [amountLineItemInput, setAmountLineItemInput] = useState('');
 
   // Define variables
   const { id } = useParams();
@@ -152,10 +187,7 @@ const InvoiceDetails = () => {
 
   // Get is a list of all payment associated to invoice number
   const getAllInvoicePayments = async () => {
-    const { data, error } = await supabase
-      .from('payment')
-      .select('amount, payment_method, date_received')
-      .eq('invoice_id', `${id}`);
+    const { data, error } = await supabase.from('payment').select('*').eq('invoice_id', `${id}`);
 
     if (error) {
       console.log(error);
@@ -200,11 +232,6 @@ const InvoiceDetails = () => {
     setLoadingInvoiceStatusIsOn(false);
   };
 
-  // Handle deleting a line item
-  const handleLineItemDelete = async ({ line_item_id }) => {
-    const { data, error } = await supabase.from('invoice_line_service');
-  };
-
   // Handle success message toast when invoice has been deleted
   const handleDeleteToast = (invoice_number) => {
     toast({
@@ -238,6 +265,7 @@ const InvoiceDetails = () => {
       .eq('invoice_number', invoice_number);
   };
 
+  //////////////////////////// Functions that handle payments functionality /////////////////////////////////////////
   const handleAddPaymentSubmit = async (e) => {
     setLoadingState(true);
     e.preventDefault();
@@ -282,6 +310,190 @@ const InvoiceDetails = () => {
     onAddPaymentClose();
   };
 
+  const handlePaymentDelete = async (item_id, date_received, amount) => {
+    setLoadingState(true);
+    console.log(item_id);
+    const { data, error } = await supabase.from('payment').delete().eq('id', item_id);
+
+    if (error) {
+      console.log(error);
+      toast({
+        position: 'top',
+        title: `Error Occured Deleting Payment`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    if (data) {
+      await getInvoiceDetailsById();
+      await getAllInvoicePayments();
+      console.log(data);
+      toast({
+        position: 'top',
+        title: `Succesfully Deleted Payment`,
+        description: `We were able to delete a payment that was posted for ${formatDate(
+          date_received
+        )} for a total of $${formatMoneyValue(amount)} 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    setLoadingState(false);
+  };
+
+  //////////////////////////// Functions that handle line-item functionality /////////////////////////////////////////
+  const handleLineItemDelete = async (item_id, description, amount) => {
+    setLoadingState(false);
+    const { data, error } = await supabase.from('invoice_line_service').delete().eq('id', item_id);
+
+    if (error) {
+      console.log(error);
+      toast({
+        position: 'top',
+        title: `Error Occured Deleting Line Item`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+
+    if (data) {
+      await getInvoiceDetailsById();
+      await getAllInvoiceServiceLineItems();
+      toast({
+        position: 'top',
+        title: `Succesfully Deleted Invoice Line Item`,
+        description: `We were able to delete a line item with description of "${description}" with an amount of "${formatMoneyValue(
+          amount
+        )}" successfully 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    setLoadingState(false);
+  };
+
+  const handleAddLineItemSubmit = async (e) => {
+    setInvoiceLineItemLoadingState(true);
+    e.preventDefault();
+
+    const { data, error } = await supabase.from('invoice_line_service').insert({
+      invoice_id: invoice.invoice_number,
+      service_id: invoice.service_type_id,
+      qty: '1',
+      fixed_item: 'true',
+      description: descriptionLineItemInput,
+      amount: amountLineItemInput
+    });
+
+    if (error) {
+      toast({
+        position: 'top',
+        title: `Error Occured Creating Line Item`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    if (data) {
+      await getInvoiceDetailsById();
+      await getAllInvoiceServiceLineItems();
+      setInvoiceLineItemLoadingState(false);
+      onAddLineItemClose();
+      toast({
+        position: 'top',
+        title: `Succesfully Added Line Item`,
+        description: `We were able to add a line-item for invoice number ${invoice.invoice_number} 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  };
+
+  //////////////////////////// Functions that handle invoice edit functionality /////////////////////////////////////////
+  const handleEditInvoiceOnChange = (e) => {
+    setSelectedEditInvoice({ ...selectedEditInvoice, [e.target.name]: e.target.value });
+  };
+
+  const handleEditInvoiceModal = (invoice) => {
+    setSelectedEditInvoice({
+      id: invoice.id,
+      invoice_number: invoice.invoice_number,
+      service_type_id: invoice.service_type_id,
+      invoice_status_id: invoice.invoice_status_id,
+      invoice_date: invoice.invoice_date,
+      issue_date: invoice.issue_date,
+      due_date: invoice.due_date,
+      sqft_measurement: invoice.sqft_measurement,
+      note: invoice.note,
+      cust_note: invoice.cust_note
+    });
+    onEditInvoiceOpen();
+  };
+
+  const handleEditInvoiceSubmit = async (e) => {
+    e.preventDefault();
+    setInvoiceLoadingState(true);
+    const { data, error } = await supabase
+      .from('invoice')
+      .update({
+        service_type_id: selectedEditInvoice.service_type_id,
+        invoice_status_id: selectedEditInvoice.invoice_status_id,
+        invoice_date: selectedEditInvoice.invoice_date,
+        issue_date: selectedEditInvoice.issue_date,
+        due_date: selectedEditInvoice.due_date,
+        sqft_measurement: selectedEditInvoice.sqft_measurement,
+        note: selectedEditInvoice.note,
+        cust_note: selectedEditInvoice.cust_note,
+        updated_at: new Date()
+      })
+      .eq('invoice_number', selectedEditInvoice.invoice_number);
+
+    if (error) {
+      toast({
+        position: 'top',
+        title: `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
+        description: `Error: ${error.message}`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+
+    if (data) {
+      await getInvoiceDetailsById();
+      setInvoiceLoadingState(false);
+      onEditInvoiceClose();
+      toast({
+        position: 'top',
+        title: `Successfully Updated Invoice!`,
+        description: `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    setSelectedEditInvoice({
+      id: '',
+      invoice_number: '',
+      service_type_id: '',
+      invoice_status_id: '',
+      invoice_date: '',
+      issue_date: '',
+      due_date: '',
+      sqft_measurement: '',
+      note: '',
+      cust_note: ''
+    });
+  };
+
   // Handle custom editable controls for line items
 
   // Upcoming functions & changes
@@ -290,10 +502,20 @@ const InvoiceDetails = () => {
   // Drawer to update invoices such as the invoices page
 
   return (
-    <Container maxW={'1400px'} pt={'2rem'} pb={'4rem'}>
+    <Container maxW={'1400px'} pt={'1rem'} pb={'4rem'}>
       <DeleteInvoiceLineServiceAlertDialog
         toast={handleDeleteToast}
         updateParentState={getInvoiceDetailsById}
+      />
+      <EditInvoiceForm
+        onClose={onEditInvoiceClose}
+        isOpen={isEditInvoiceOpen}
+        invoice={selectedEditInvoice}
+        handleEditOnChange={handleEditInvoiceOnChange}
+        handleEditSubmit={handleEditInvoiceSubmit}
+        services={services}
+        invoiceStatuses={invoiceStatuses}
+        loadingState={invoiceLoadingState}
       />
       {/* Header */}
       <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
@@ -311,7 +533,9 @@ const InvoiceDetails = () => {
               <FiMoreHorizontal />
             </MenuButton>
             <MenuList>
-              <MenuItem icon={<FiEdit />}>Edit Invoice</MenuItem>
+              <MenuItem icon={<FiEdit />} onClick={() => handleEditInvoiceModal(invoice)}>
+                Edit Invoice
+              </MenuItem>
               <MenuItem icon={<MdOutlinePayments />}>Edit Payments</MenuItem>
               <MenuItem icon={<AiOutlineBars />}>Edit Line Items</MenuItem>
             </MenuList>
@@ -330,7 +554,7 @@ const InvoiceDetails = () => {
           </Tooltip>
         </Flex>
       </Flex>
-      <Flex px={'1rem'} gap={6} flexDir={{ base: 'column', lg: 'row' }}>
+      <Flex px={'1rem'} gap={4} flexDir={{ base: 'column', lg: 'row' }}>
         {/* Left Section */}
         <Flex w={{ base: 'full', lg: '60%' }}>
           <Card w={'full'} rounded={'xl'}>
@@ -365,7 +589,7 @@ const InvoiceDetails = () => {
                     {formatNumber(invoice?.invoice_number)}
                   </Text>
                   <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'gray.500'}>
-                    Due {invoice?.due_date}
+                    Due {formatDate(invoice?.due_date)}
                   </Text>
                 </Box>
               </Flex>
@@ -496,7 +720,12 @@ const InvoiceDetails = () => {
                               <Td>${formatMoneyValue(item.amount)}</Td>
                               {editSwitchIsOn === true ? (
                                 <Td>
-                                  <IconButton icon={<FiX />} />
+                                  <IconButton
+                                    icon={<FiX />}
+                                    onClick={() =>
+                                      handleLineItemDelete(item.id, item.description, item.amount)
+                                    }
+                                  />
                                 </Td>
                               ) : (
                                 <></>
@@ -527,31 +756,6 @@ const InvoiceDetails = () => {
                     ${formatMoneyValue(invoice?.total)}
                   </Text>
                 </Flex>
-                <Flex mb={'2'} mx={8} py={2}>
-                  <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                    Payments
-                  </Text>
-                </Flex>
-                <Flex w="full" px={12} mb={6} gap="4">
-                  <Flex direction="column" gap="4">
-                    {invoicePayments?.map((item, index) => (
-                      <>
-                        <Flex key={index} gap="6">
-                          <Box my="auto" w="5%">
-                            <Box h="10px" w="10px" bg="green.300" rounded="full"></Box>
-                          </Box>
-                          <Text w="30%" fontWeight={'semibold'} textColor={secondaryTextColor}>
-                            {formatDate(item.date_received)}
-                          </Text>
-                          <Text w="50%">{item.payment_method}</Text>
-                          <Text ml="2rem" w="35%">
-                            ${formatMoneyValue(item.amount)}
-                          </Text>
-                        </Flex>
-                      </>
-                    ))}
-                  </Flex>
-                </Flex>
                 <Flex my={'3rem'} bg={'blue.500'} color={'white'} px={4} py={4} rounded={'xl'}>
                   <Text fontWeight={'bold'} fontSize={'xl'}>
                     Amount Due
@@ -565,17 +769,16 @@ const InvoiceDetails = () => {
           </Card>
         </Flex>
         {/* Right Section */}
-        <Flex w={{ base: 'full', lg: '40%' }} direction={'column'} gap={4}>
-          <Card rounded={'xl'}>
+        <Flex w={{ base: 'full', lg: '40%' }} direction={'column'} gap={3}>
+          <Card rounded={'xl'} size="md">
             <CardBody>
-              <Flex px={'8px'} gap={2}>
+              <Flex gap={2} justify={'center'}>
                 {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(invoice?.amount_due)}</Text> */}
                 {/* Menu Button to update status of invoice */}
                 <Menu>
                   {({ isOpen }) => (
                     <>
                       <MenuButton
-                        w="full"
                         isLoading={loadingInvoiceStatusIsOn}
                         isActive={isOpen}
                         as={Button}
@@ -584,7 +787,7 @@ const InvoiceDetails = () => {
                         }>
                         {invoice?.invoice_status.name === 'Draft' ? (
                           <>
-                            <Flex gap="2">
+                            <Flex gap="2" pr="4">
                               <Box my="auto">
                                 <FiFolder />
                               </Box>
@@ -687,8 +890,11 @@ const InvoiceDetails = () => {
                     </>
                   )}
                 </Menu>
-                <Button w={'full'} onClick={onAddPaymentOpen}>
-                  Add Payment
+                <Button leftIcon={<FiPlus />} onClick={onAddLineItemOpen}>
+                  Line Item
+                </Button>
+                <Button leftIcon={<FiPlus />} onClick={onAddPaymentOpen}>
+                  Payment
                 </Button>
                 <Tooltip hasArrow label="Edit">
                   <IconButton
@@ -699,13 +905,13 @@ const InvoiceDetails = () => {
               </Flex>
             </CardBody>
           </Card>
-          <Card w={'full'} rounded={'xl'}>
+          <Card w={'full'} rounded={'xl'} size="lg">
             <CardBody overflowY={'auto'}>
               {/* Invoice Extra Details */}
-              <Box px={'1rem'} py={'8px'}>
+              <Box>
                 <Flex alignItems={'center'} gap={3} mb={'1rem'}>
-                  <FiAlignLeft size={'25px'} color="gray" />
-                  <Text fontSize={'2xl'} fontWeight={'semibold'} color={secondaryTextColor}>
+                  <FiAlignLeft size={'20px'} color="gray" />
+                  <Text fontSize={'xl'} fontWeight={'semibold'} color={secondaryTextColor}>
                     Details
                   </Text>
                 </Flex>
@@ -769,7 +975,7 @@ const InvoiceDetails = () => {
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
                   ) : (
                     <>
-                      <Text mr={'1rem'}>{invoice?.invoice_date}</Text>
+                      <Text mr={'1rem'}>{formatDate(invoice?.invoice_date)}</Text>
                     </>
                   )}
                 </Flex>
@@ -784,7 +990,11 @@ const InvoiceDetails = () => {
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
                   ) : (
                     <>
-                      <Text mr={'1rem'}>{invoice?.issue_date}</Text>
+                      <Text mr={'1rem'}>
+                        {!invoice?.issue_date
+                          ? 'Not Issued yet... 🙅‍♂️'
+                          : formatDate(invoice?.issue_date)}
+                      </Text>
                     </>
                   )}
                 </Flex>
@@ -816,6 +1026,66 @@ const InvoiceDetails = () => {
                     </>
                   )}
                 </Flex>
+                <Box w="full">
+                  <Flex my={'1rem'} gap={2}>
+                    <Box my="auto">
+                      <MdPayment />
+                    </Box>
+                    <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
+                      Payments
+                    </Text>
+                  </Flex>
+                  <Flex w="full" px={6} mb={6} gap="4">
+                    <Flex direction="column" gap="2" w="full">
+                      {invoicePayments?.map((item, index) => (
+                        <>
+                          <Flex
+                            key={index}
+                            gap="6"
+                            bg={useColorModeValue('gray.100', 'gray.600')}
+                            py="2"
+                            px="6"
+                            rounded="xl"
+                            w="full">
+                            <Box w="5%" my="auto">
+                              <Box h="10px" w="10px" bg="green.300" rounded="full"></Box>
+                            </Box>
+                            <Flex gap="6">
+                              <Text
+                                w="60%"
+                                fontWeight={'semibold'}
+                                my="auto"
+                                textColor={secondaryTextColor}>
+                                {formatDate(item.date_received)}
+                              </Text>
+                              <Text w="full" my="auto" textAlign="center">
+                                {item.payment_method}
+                              </Text>
+                            </Flex>
+                            <Box ml="auto" my="auto">
+                              <Text ml="2rem">${formatMoneyValue(item.amount)}</Text>
+                            </Box>
+                            {editSwitchIsOn === true ? (
+                              <>
+                                <Box>
+                                  <IconButton
+                                    onClick={() =>
+                                      handlePaymentDelete(item.id, item.date_received, item.amount)
+                                    }
+                                    icon={<FiX size="15px" />}
+                                    isLoading={loadingState}
+                                  />
+                                </Box>
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                          </Flex>
+                        </>
+                      ))}
+                    </Flex>
+                  </Flex>
+                </Box>
                 <Box w="full" mb="2rem">
                   <Flex mb={'1rem'} gap={2}>
                     <Box my="auto">
@@ -829,14 +1099,17 @@ const InvoiceDetails = () => {
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} />
                   ) : (
                     <>
-                      <Box bg={paymentCardBgColor} p="2" rounded="xl">
-                        <Textarea
-                          border="none"
-                          h={'100px'}
-                          isReadOnly
-                          value={!invoice?.note ? '❌ No note for this invoice...' : invoice?.note}
-                        />
-                        {/* {!invoice?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
+                      <Box px={6}>
+                        <Box bg={paymentCardBgColor} p="2" rounded="xl">
+                          <Textarea
+                            border="none"
+                            isReadOnly
+                            value={
+                              !invoice?.note ? 'No note for this invoice... 🙅‍♂️' : invoice?.note
+                            }
+                          />
+                          {/* {!invoice?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
+                        </Box>
                       </Box>
                     </>
                   )}
@@ -854,12 +1127,14 @@ const InvoiceDetails = () => {
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} />
                   ) : (
                     <>
-                      <Box bg={paymentCardBgColor} p="4" rounded="xl">
-                        <Text>
-                          {!invoice?.sqft_measurement
-                            ? '❌ No measurement information...'
-                            : invoice?.sqft_measurement}
-                        </Text>
+                      <Box px="6">
+                        <Box bg={paymentCardBgColor} p="2" rounded="xl">
+                          <Textarea border="none" isReadOnly>
+                            {!invoice?.sqft_measurement
+                              ? 'No measurement information... 🙅‍♂️'
+                              : invoice?.sqft_measurement}
+                          </Textarea>
+                        </Box>
                       </Box>
                     </>
                   )}
@@ -869,6 +1144,7 @@ const InvoiceDetails = () => {
           </Card>
         </Flex>
       </Flex>
+      {/* Modal to add payments to invoice */}
       <Modal
         onClose={onAddPaymentClose}
         isOpen={isAddPaymentOpen}
@@ -928,6 +1204,57 @@ const InvoiceDetails = () => {
                 Add Payment
               </Button>
               <Button onClick={onAddPaymentClose}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </Modal>
+      {/* Modal to add line item to invoice */}
+      <Modal
+        onClose={onAddLineItemClose}
+        isOpen={isAddLineItemOpen}
+        size="xl"
+        isCentered
+        motionPreset="scale">
+        <ModalOverlay />
+        <form method="POST" onSubmit={handleAddLineItemSubmit}>
+          <ModalContent>
+            <ModalHeader>Add Line Item</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Flex gap="4">
+                <Box w="60%">
+                  <FormControl isRequired>
+                    <FormLabel>Description</FormLabel>
+                    <Input onChange={(e) => setDescriptionLineItemInput(e.target.value)} />
+                  </FormControl>
+                </Box>
+                <Box w="15%">
+                  <FormControl isRequired>
+                    <FormLabel>Qty</FormLabel>
+                    <Input value="1" disabled />
+                  </FormControl>
+                </Box>
+                <Box w="20%">
+                  <FormControl isRequired>
+                    <FormLabel>Rate</FormLabel>
+                    <Input value="Fixed" disabled />
+                  </FormControl>
+                </Box>
+                <Box w="25%">
+                  <FormControl isRequired>
+                    <FormLabel>Amount</FormLabel>
+                    <Input onChange={(e) => setAmountLineItemInput(e.target.value)} />
+                  </FormControl>
+                </Box>
+              </Flex>
+            </ModalBody>
+            <ModalFooter>
+              <Flex gap="4">
+                <Button colorScheme="blue" type="submit" isLoading={invoiceLineItemLoadingState}>
+                  Add Line Item
+                </Button>
+                <Button onClick={onAddLineItemClose}>Cancel</Button>
+              </Flex>
             </ModalFooter>
           </ModalContent>
         </form>
