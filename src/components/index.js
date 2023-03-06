@@ -52,3 +52,13 @@ export { default as ConnectedCustomerDeleteAlertDialog } from './Alerts/Connecte
 export { default as ConnectedQuoteDeleteAlertDialog } from './Alerts/ConnectedAlerts/ConnectedQuoteDeleteAlertDialog';
 export { default as CreateQuoteForm } from './Forms/Quote/CreateQuoteForm';
 export { default as EditQuoteForm } from './Forms/Quote/EditQuoteForm';
+export { default as InvoiceDocument } from './Reports/InvoiceDocument';
+export { default as InvoiceTableHeader } from './Reports/InvoiceDocComponents/InvoiceTableHeader';
+export { default as InvoiceTableRow } from './Reports/InvoiceDocComponents/InvoiceTableRow';
+export { default as InvoiceTableBlankSpace } from './Reports/InvoiceDocComponents/InvoiceTableBlankSpace';
+export { default as InvoiceTableFooter } from './Reports/InvoiceDocComponents/InvoiceTableFooter';
+export { default as InvoiceThankYouMsg } from './Reports/InvoiceDocComponents/InvoiceThankYouMsg';
+export { default as InvoiceTitle } from './Reports/InvoiceDocComponents/InvoiceTitle';
+export { default as InvoiceNo } from './Reports/InvoiceDocComponents/InvoiceNo';
+export { default as InvoiceBillTo } from './Reports/InvoiceDocComponents/InvoiceBillTo';
+export { default as InvoiceItemsTable } from './Reports/InvoiceDocComponents/InvoiceItemsTable';

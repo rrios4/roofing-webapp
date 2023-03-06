@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, Fragment } from 'react';
 import {
   Select,
   Badge,
@@ -53,7 +53,7 @@ import {
 } from '@chakra-ui/react';
 // import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import ReactPDF, { PDFViewer, usePDF } from '@react-pdf/renderer';
 import {
   FiArrowLeft,
   FiBriefcase,
@@ -71,18 +71,19 @@ import {
   FiX,
   FiEdit,
   FiFolder,
-  FiPlus
+  FiPlus,
+  FiShare
 } from 'react-icons/fi';
 import { MdOutlinePayments, MdPendingActions, MdPayment } from 'react-icons/md';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { AiOutlineDown, AiOutlineCheckCircle, AiOutlineBars } from 'react-icons/ai';
+import { AiOutlineCheckCircle, AiOutlineBars } from 'react-icons/ai';
 import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
 import { HiStatusOnline } from 'react-icons/hi';
 import supabase from '../../utils/supabaseClient';
 import formatMoneyValue from '../../utils/formatMoneyValue';
 import formatNumber from '../../utils/formatNumber';
 import formatDate from '../../utils/formatDate';
-import { DeleteAlertDialog, EditInvoiceForm } from '../../components';
+import { EditInvoiceForm, InvoiceDocument } from '../../components';
 import DeleteInvoiceLineServiceAlertDialog from '../../components/Alerts/DeleteInvoiceLineServiceAlertDialog';
 import { useServices } from '../../hooks/useServices';
 import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
@@ -105,10 +106,16 @@ const InvoiceDetails = () => {
     onOpen: onEditInvoiceOpen,
     onClose: onEditInvoiceClose
   } = useDisclosure();
+  const {
+    isOpen: isExportPDFOpen,
+    onOpen: onExportPDFOpen,
+    onClose: onExportPDFClose
+  } = useDisclosure();
 
   // Custom React Hooks
   const { services } = useServices();
   const { invoiceStatuses } = useInvoiceStatuses();
+  const [instance, updateInstance] = usePDF({ document: InvoiceDocument });
 
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
@@ -174,7 +181,7 @@ const InvoiceDetails = () => {
     const { data, error } = await supabase
       .from('invoice')
       .select(
-        '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)'
+        '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*), invoice_line_service(*), payment(*)'
       )
       .eq('invoice_number', `${id}`);
 
@@ -182,7 +189,7 @@ const InvoiceDetails = () => {
       console.log(error);
     }
     setInvoice(data[0]);
-    // console.log(invoice)
+    console.log(data[0]);
   };
 
   // Get is a list of all payment associated to invoice number
@@ -541,17 +548,21 @@ const InvoiceDetails = () => {
             </MenuList>
           </Menu>
           {/* <Tooltip hasArrow label="More"><Button colorScheme={'gray'}><FiMoreHorizontal/></Button></Tooltip> */}
-          <Tooltip hasArrow label="Share">
+          {/* <Tooltip hasArrow label="Share">
             <Button colorScheme={'gray'}>
               <FiShare2 />
             </Button>
-          </Tooltip>
-          <Tooltip hasArrow label="Send invoice">
+          </Tooltip> */}
+          {/* <Tooltip hasArrow label="Send invoice">
             <Button colorScheme={'blue'} gap={2}>
               <FiSend />
               Send invoice
             </Button>
-          </Tooltip>
+          </Tooltip> */}
+          <Button colorScheme={'blue'} onClick={onExportPDFOpen} gap={2}>
+            <FiShare />
+            Export as PDF
+          </Button>
         </Flex>
       </Flex>
       <Flex px={'1rem'} gap={4} flexDir={{ base: 'column', lg: 'row' }}>
@@ -694,7 +705,7 @@ const InvoiceDetails = () => {
               {/* Line Item Table */}
               <Box px={'2rem'} py={'2rem'}>
                 <TableContainer rounded={'xl'}>
-                  {!invoiceServiceLineItems ? (
+                  {!invoice ? (
                     <Skeleton bg={paymentCardBgColor} height={'100px'} w={'full'} rounded={'xl'} />
                   ) : (
                     <>
@@ -710,7 +721,7 @@ const InvoiceDetails = () => {
                         </Thead>
                         <Tbody>
                           {/* Table Row Data Component */}
-                          {invoiceServiceLineItems?.map((item, index) => (
+                          {invoice?.invoice_line_service?.map((item, index) => (
                             <Tr key={index}>
                               <Td whiteSpace="normal" height="auto" blockSize="auto">
                                 {item.description}
@@ -1037,7 +1048,7 @@ const InvoiceDetails = () => {
                   </Flex>
                   <Flex w="full" px={6} mb={6} gap="4">
                     <Flex direction="column" gap="2" w="full">
-                      {invoicePayments?.map((item, index) => (
+                      {invoice?.payment?.map((item, index) => (
                         <>
                           <Flex
                             key={index}
@@ -1258,6 +1269,38 @@ const InvoiceDetails = () => {
             </ModalFooter>
           </ModalContent>
         </form>
+      </Modal>
+      {/* Modal for Previewing PDF */}
+      <Modal
+        onClose={onExportPDFClose}
+        isOpen={isExportPDFOpen}
+        size={'xl'}
+        isCentered
+        motionPreset="scale">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Preview Invoice PDF</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Flex>
+              <Fragment>
+                <PDFViewer width="1000" height="800">
+                  <InvoiceDocument invoice={invoice} />
+                </PDFViewer>
+              </Fragment>
+            </Flex>
+          </ModalBody>
+          <ModalFooter>
+            <Flex gap="4">
+              {/* <Button colorScheme="blue">
+                <a href={instance.url} download="test.pdf">
+                  Download
+                </a>
+              </Button> */}
+              {/* <Button onClick={onExportPDFClose}>Cancel</Button> */}
+            </Flex>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </Container>
   );
