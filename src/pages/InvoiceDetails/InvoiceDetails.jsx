@@ -53,7 +53,7 @@ import {
 } from '@chakra-ui/react';
 // import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import ReactPDF, { PDFViewer, usePDF } from '@react-pdf/renderer';
+import { PDFViewer, usePDF, PDFDownloadLink } from '@react-pdf/renderer';
 import {
   FiArrowLeft,
   FiBriefcase,
@@ -72,7 +72,8 @@ import {
   FiEdit,
   FiFolder,
   FiPlus,
-  FiShare
+  FiShare,
+  FiFileText
 } from 'react-icons/fi';
 import { MdOutlinePayments, MdPendingActions, MdPayment } from 'react-icons/md';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
@@ -126,9 +127,6 @@ const InvoiceDetails = () => {
 
   // React Array Object States
   const [invoice, setInvoice] = useState();
-  const [invoicePayments, setInvoicePayments] = useState();
-  const [invoiceServiceLineItems, setInvoiceServiceLineItems] = useState();
-  const [selectedInvoiceLineService, setSelectedInvoiceLineService] = useState('');
   const [selectedEditInvoice, setSelectedEditInvoice] = useState({
     id: '',
     invoice_number: '',
@@ -172,8 +170,6 @@ const InvoiceDetails = () => {
   //React functions to load when component is rendering
   useEffect(() => {
     getInvoiceDetailsById();
-    getAllInvoicePayments();
-    getAllInvoiceServiceLineItems();
   }, []);
 
   // Function that call the supabase DB to get invoice info
@@ -190,32 +186,6 @@ const InvoiceDetails = () => {
     }
     setInvoice(data[0]);
     console.log(data[0]);
-  };
-
-  // Get is a list of all payment associated to invoice number
-  const getAllInvoicePayments = async () => {
-    const { data, error } = await supabase.from('payment').select('*').eq('invoice_id', `${id}`);
-
-    if (error) {
-      console.log(error);
-    }
-    setInvoicePayments(data);
-    console.log(data);
-  };
-
-  // Get a list of all service line items associated to invoice number
-  const getAllInvoiceServiceLineItems = async () => {
-    const { data, error } = await supabase
-      .from('invoice_line_service')
-      .select('*')
-      .eq('invoice_id', `${id}`);
-
-    if (error) {
-      console.log(error);
-    }
-
-    setInvoiceServiceLineItems(data);
-    console.log(data);
   };
 
   // Handle selection from menu item for invoice status
@@ -297,7 +267,6 @@ const InvoiceDetails = () => {
 
     if (data) {
       await getInvoiceDetailsById();
-      await getAllInvoicePayments();
       toast({
         position: 'top',
         title: `Succesfully Added Payment`,
@@ -335,7 +304,6 @@ const InvoiceDetails = () => {
     }
     if (data) {
       await getInvoiceDetailsById();
-      await getAllInvoicePayments();
       console.log(data);
       toast({
         position: 'top',
@@ -370,7 +338,6 @@ const InvoiceDetails = () => {
 
     if (data) {
       await getInvoiceDetailsById();
-      await getAllInvoiceServiceLineItems();
       toast({
         position: 'top',
         title: `Succesfully Deleted Invoice Line Item`,
@@ -410,7 +377,6 @@ const InvoiceDetails = () => {
     }
     if (data) {
       await getInvoiceDetailsById();
-      await getAllInvoiceServiceLineItems();
       setInvoiceLineItemLoadingState(false);
       onAddLineItemClose();
       toast({
@@ -507,6 +473,10 @@ const InvoiceDetails = () => {
   // Function to handle the updating of invoice status but might be done using forms
   // Modal to delete invoice just like in the invoices page
   // Drawer to update invoices such as the invoices page
+
+  const handleDownloadPDFButton = () => {
+    onExportPDFClose();
+  };
 
   return (
     <Container maxW={'1400px'} pt={'1rem'} pb={'4rem'}>
@@ -1279,7 +1249,14 @@ const InvoiceDetails = () => {
         motionPreset="scale">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Preview Invoice PDF</ModalHeader>
+          <ModalHeader>
+            <Flex gap="2">
+              <Box my="auto">
+                <FiFileText />
+              </Box>
+              <Text>Invoice Preview</Text>
+            </Flex>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex>
@@ -1292,12 +1269,21 @@ const InvoiceDetails = () => {
           </ModalBody>
           <ModalFooter>
             <Flex gap="4">
+              <Button colorScheme="blue" onClick={() => handleDownloadPDFButton()}>
+                <PDFDownloadLink
+                  document={<InvoiceDocument invoice={invoice} />}
+                  fileName={`INV-${invoice?.invoice_number}`}>
+                  {({ blob, url, loading, error }) =>
+                    loading ? 'Loading document...' : 'Download'
+                  }
+                </PDFDownloadLink>
+              </Button>
               {/* <Button colorScheme="blue">
                 <a href={instance.url} download="test.pdf">
                   Download
                 </a>
               </Button> */}
-              {/* <Button onClick={onExportPDFClose}>Cancel</Button> */}
+              <Button onClick={onExportPDFClose}>Cancel</Button>
             </Flex>
           </ModalFooter>
         </ModalContent>
