@@ -220,27 +220,6 @@ const InvoiceDetails = () => {
     });
   };
 
-  // Edtiable buttons to confirm changes made in this editable changes
-  function EditableControls() {
-    const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } =
-      useEditableControls();
-
-    return isEditing ? (
-      <ButtonGroup justifyContent="center" size="sm" w="full" spacing={2} mt={2}>
-        <IconButton icon={<FiCheck />} {...getSubmitButtonProps()} />
-        <IconButton icon={<FiX boxSize={3} />} {...getCancelButtonProps()} />
-      </ButtonGroup>
-    ) : null;
-  }
-
-  // Handle the editable fields to update the invoice database
-  const handleEditableFields = async (invoice_number) => {
-    const { data, error } = await supabase
-      .from('invoice')
-      .update({})
-      .eq('invoice_number', invoice_number);
-  };
-
   //////////////////////////// Functions that handle payments functionality /////////////////////////////////////////
   const handleAddPaymentSubmit = async (e) => {
     setLoadingState(true);
@@ -433,7 +412,7 @@ const InvoiceDetails = () => {
         position: 'top',
         title: `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
         description: `Error: ${error.message}`,
-        status: 'success',
+        status: 'error',
         duration: 5000,
         isClosable: true
       });

@@ -76,10 +76,17 @@ import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { HiStatusOnline } from 'react-icons/hi';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { EditQuoteForm } from '../../components/index.js';
+import { useServices } from '../../hooks/useServices.jsx';
+import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
 
 const EstimateDetails = (props) => {
   const { parentData } = props;
   const toast = useToast();
+
+  // Custom Hooks
+  const { services } = useServices();
+  const { quoteStatuses } = useQuoteStatuses();
 
   // Modal useDisclousures
   const {
@@ -87,9 +94,26 @@ const EstimateDetails = (props) => {
     onOpen: onAddLineItemOpen,
     onClose: onAddLineItemClose
   } = useDisclosure();
+  const {
+    isOpen: isEditQuoteOpen,
+    onOpen: onEditQuoteOpen,
+    onClose: onEditQuoteClose
+  } = useDisclosure();
 
   // React useState to store Objects
   const [quote, setQuote] = useState();
+  const [selectedEditQuote, setSelectedEditQuote] = useState({
+    id: '',
+    quote_number: '',
+    status_id: '',
+    service_id: '',
+    quote_date: '',
+    issue_date: '',
+    expiration_date: '',
+    note: '',
+    measurement_note: '',
+    cust_note: ''
+  });
 
   // React useState switches
   const [loadingQuoteStatusIsOn, setLoadingQuoteStatusIsOn] = useState(false);
@@ -222,12 +246,98 @@ const EstimateDetails = (props) => {
     }
   };
 
+  //////////////////////////// Functions that handle quote edit functionality /////////////////////////////////////////
+  const handleEditQuoteOnChange = (e) => {
+    setSelectedEditQuote({ ...selectedEditQuote, [e.target.name]: e.target.value });
+  };
+
+  const handleEditQuoteModal = (quote) => {
+    setSelectedEditQuote({
+      id: quote.id,
+      quote_number: quote.quote_number,
+      status_id: quote.status_id,
+      service_id: quote.service_id,
+      quote_date: quote.quote_date,
+      issue_date: quote.issue_date,
+      expiration_date: quote.expiration_date,
+      note: quote.note,
+      measurement_note: quote.measurement_note,
+      cust_note: quote.cust_note
+    });
+    onEditQuoteOpen();
+  };
+
+  const handleEditQuoteSubmit = async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabase
+      .from('quote')
+      .update({
+        status_id: selectedEditQuote.status_id,
+        service_id: selectedEditQuote.service_id,
+        quote_date: selectedEditQuote.quote_date,
+        issue_date: selectedEditQuote.issue_date,
+        expiration_date: selectedEditQuote.expiration_date,
+        note: selectedEditQuote.note,
+        measurement_note: selectedEditQuote.measurement_note,
+        cust_note: selectedEditQuote.cust_note,
+        updated_at: new Date()
+      })
+      .eq('quote_number', selectedEditQuote.quote_number);
+
+    if (error) {
+      toast({
+        position: 'top',
+        title: `Error Updating Quote Number ${selectedEditQuote.quote_number}`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+      onEditQuoteClose();
+    }
+
+    if (data) {
+      await getQuoteById();
+      onEditQuoteClose();
+      toast({
+        position: 'top',
+        title: `Successfully Updated Quote!`,
+        description: `We've updated INV# ${selectedEditQuote.quote_number} for you 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+
+    setSelectedEditQuote({
+      id: '',
+      quote_number: '',
+      status_id: '',
+      service_id: '',
+      quote_date: '',
+      issue_date: '',
+      expiration_date: '',
+      note: '',
+      measurement_note: '',
+      cust_note: ''
+    });
+  };
+
   // Convert Quote to Invoice
   // Handle adding new line item to quote
 
   return (
     <Container maxW={'1400px'} pt={'2rem'} pb={'4rem'}>
       {/* <DeleteInvoiceLineServiceAlertDialog toast={handleDeleteToast} updateParentState={getInvoiceDetailsById} /> */}
+      <EditQuoteForm
+        onClose={onEditQuoteClose}
+        isOpen={isEditQuoteOpen}
+        quote={selectedEditQuote}
+        services={services}
+        quoteStatuses={quoteStatuses}
+        handleEditOnChange={handleEditQuoteOnChange}
+        handleEditSubmit={handleEditQuoteSubmit}
+      />
 
       {/* Header */}
       <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
@@ -245,7 +355,9 @@ const EstimateDetails = (props) => {
               <FiMoreHorizontal />
             </MenuButton>
             <MenuList>
-              <MenuItem icon={<FiEdit />}>Edit Quote</MenuItem>
+              <MenuItem icon={<FiEdit />} onClick={() => handleEditQuoteModal(quote)}>
+                Edit Quote
+              </MenuItem>
               <MenuItem icon={<MdOutlinePayments />}>Edit Payments</MenuItem>
               <MenuItem icon={<AiOutlineBars />}>Edit Line Items</MenuItem>
             </MenuList>
@@ -769,11 +881,15 @@ const EstimateDetails = (props) => {
                   ) : (
                     <>
                       <Box bg={paymentCardBgColor} p="2" rounded="xl">
-                        <Textarea border="none" isReadOnly>
-                          {!quote?.measurement_note
-                            ? 'No measurement information... 🙅‍♂️'
-                            : quote?.measurement_note}
-                        </Textarea>
+                        <Textarea
+                          border="none"
+                          isReadOnly
+                          value={
+                            !quote?.measurement_note
+                              ? 'No measurement information... 🙅‍♂️'
+                              : quote?.measurement_note
+                          }
+                        />
                       </Box>
                     </>
                   )}
