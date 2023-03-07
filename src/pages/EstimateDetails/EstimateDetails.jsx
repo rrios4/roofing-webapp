@@ -45,18 +45,12 @@ import {
   Avatar,
   Textarea
 } from '@chakra-ui/react';
-import {
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  CheckIcon,
-  CloseIcon,
-  EditIcon
-} from '@chakra-ui/icons';
 //import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient.js';
 import formatNumber from '../../utils/formatNumber.js';
 import formatMoneyValue from '../../utils/formatMoneyValue.js';
+import formatDate from '../../utils/formatDate.js';
 import {
   FiArrowLeft,
   FiMoreHorizontal,
@@ -66,6 +60,8 @@ import {
   FiUploadCloud,
   FiPaperclip,
   FiClock,
+  FiRefreshCw,
+  FiShare,
   FiAlignLeft,
   FiCheck,
   FiX,
@@ -74,7 +70,7 @@ import {
   FiCalendar,
   FiUser
 } from 'react-icons/fi';
-import { MdOutlinePayments, MdPendingActions } from 'react-icons/md';
+import { MdOutlinePayments, MdPendingActions, MdTransform } from 'react-icons/md';
 import { AiOutlineBars } from 'react-icons/ai';
 import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
@@ -83,38 +79,37 @@ import { AiOutlineCheckCircle } from 'react-icons/ai';
 
 const EstimateDetails = (props) => {
   const { parentData } = props;
+  const toast = useToast();
+
+  // Modal useDisclousures
+  const {
+    isOpen: isAddLineItemOpen,
+    onOpen: onAddLineItemOpen,
+    onClose: onAddLineItemClose
+  } = useDisclosure();
 
   // React useState to store Objects
   const [quote, setQuote] = useState();
-  const [quoteServiceLineItem, setQuoteServiceLineItem] = useState();
 
   // React useState switches
   const [loadingQuoteStatusIsOn, setLoadingQuoteStatusIsOn] = useState(false);
   const [editSwitchIsOn, setEditSwitchIsOn] = useState(false);
+
+  // React state input variables
+  const [lineItemDescriptionInput, setLineItemDescriptionInput] = useState('');
+  const [lineItemAmountInput, setLineItemAmountInput] = useState('');
 
   // Chakra UI states
   // const toast = useToast()
 
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
-  // const bg = useColorModeValue('white', 'gray.800');
   const paymentCardBgColor = useColorModeValue('gray.100', 'gray.600');
   const paymentBorderColor = useColorModeValue('gray.200', 'gray.400');
   const secondaryTextColor = useColorModeValue('gray.600', 'gray.300');
 
-  // React States
-  const [customer, setCustomer] = useState('');
-  const [cuStatus, setCuStatus] = useState('');
-  const [jobType, setJobType] = useState('');
-  const [estDate, setEstDate] = useState('');
-  const [expDate, setExpDate] = useState('');
-  const [serviceName, setServiceName] = useState('');
-  const [quotePrice, setQuotePrice] = useState('');
-  const [sqMeasurement, setSqMeasurement] = useState('');
-
   // Define variables
   const { id } = useParams();
-  // const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef();
   let navigate = useNavigate();
@@ -122,14 +117,15 @@ const EstimateDetails = (props) => {
   // React functions
   useEffect(() => {
     getQuoteById();
-    getQuoteLineItems();
   }, []);
 
   // Handle the GET request for Qoute data from DB
   const getQuoteById = async () => {
     const { data, error } = await supabase
       .from('quote')
-      .select('*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*)')
+      .select(
+        '*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*), quote_line_item(*)'
+      )
       .eq('quote_number', id);
 
     if (error) {
@@ -137,17 +133,6 @@ const EstimateDetails = (props) => {
     }
     setQuote(data[0]);
     console.log(id);
-    console.log(data);
-  };
-
-  // Handle the GET request for Quote Line Items data from DB
-  const getQuoteLineItems = async () => {
-    const { data, error } = await supabase.from('quote_line_item').select('*').eq('quote_id', id);
-
-    if (error) {
-      console.log(error);
-    }
-    setQuoteServiceLineItem(data);
     console.log(data);
   };
 
@@ -169,6 +154,72 @@ const EstimateDetails = (props) => {
       await getQuoteById();
     }
     setLoadingQuoteStatusIsOn(false);
+  };
+
+  //////////////////////// Functions to handle line items //////////////////////////////
+  const handleLineItemDelete = async (item) => {
+    const { data, error } = await supabase.from('quote_line_item').delete().eq('id', item.id);
+
+    if (error) {
+      toast({
+        position: 'top',
+        title: `Error Occurend Deleting Line Item 🚨`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    if (data) {
+      await getQuoteById();
+      toast({
+        position: 'top',
+        title: `Succesfully Deleted Quote Line Item`,
+        description: `We were able to delete a line item with description of "${
+          item.description
+        }" with an amount of "${formatMoneyValue(item.amount)}" successfully 🎉`,
+        duration: 5000,
+        isClosable: true,
+        status: 'success'
+      });
+    }
+  };
+
+  const handleAddLineItemSubmit = async (e) => {
+    e.preventDefault();
+    setLoadingQuoteStatusIsOn(true);
+    const { data, error } = await supabase.from('quote_line_item').insert({
+      quote_id: quote.quote_number,
+      service_id: quote.service_id,
+      qty: 1,
+      amount: lineItemAmountInput,
+      description: lineItemDescriptionInput,
+      fixed_item: true
+    });
+
+    if (error) {
+      toast({
+        position: 'top',
+        title: `Error Occured Creating Line Item`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    if (data) {
+      await getQuoteById();
+      setLoadingQuoteStatusIsOn(false);
+      onAddLineItemClose();
+      toast({
+        position: 'top',
+        title: `Succesfully Added Line Item`,
+        description: `We were able to add a line-item for quote number ${quote.quote_number} 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
   };
 
   // Convert Quote to Invoice
@@ -194,23 +245,31 @@ const EstimateDetails = (props) => {
               <FiMoreHorizontal />
             </MenuButton>
             <MenuList>
-              <MenuItem icon={<FiEdit />}>Edit Invoice</MenuItem>
+              <MenuItem icon={<FiEdit />}>Edit Quote</MenuItem>
               <MenuItem icon={<MdOutlinePayments />}>Edit Payments</MenuItem>
               <MenuItem icon={<AiOutlineBars />}>Edit Line Items</MenuItem>
             </MenuList>
           </Menu>
+          <Tooltip hasArrow label="Convert Quote to Invoice">
+            <Button>
+              <MdTransform />
+            </Button>
+          </Tooltip>
           {/* <Tooltip hasArrow label="More"><Button colorScheme={'gray'}><FiMoreHorizontal/></Button></Tooltip> */}
-          <Tooltip hasArrow label="Share">
+          {/* <Tooltip hasArrow label="Share">
             <Button colorScheme={'gray'}>
               <FiShare2 />
             </Button>
-          </Tooltip>
-          <Tooltip hasArrow label="Send Quote">
+          </Tooltip> */}
+          {/* <Tooltip hasArrow label="Send Quote">
             <Button colorScheme={'blue'} gap={2}>
               <FiSend />
               Send Quote
             </Button>
-          </Tooltip>
+          </Tooltip> */}
+          <Button colorScheme="blue" gap="2">
+            <FiShare /> Export as PDF
+          </Button>
         </Flex>
       </Flex>
       <Flex px={'1rem'} gap={6} flexDir={{ base: 'column', lg: 'row' }}>
@@ -353,7 +412,7 @@ const EstimateDetails = (props) => {
               {/* Line Item Table */}
               <Box px={'2rem'} py={'2rem'}>
                 <TableContainer rounded={'xl'}>
-                  {!quoteServiceLineItem ? (
+                  {!quote ? (
                     <Skeleton bg={paymentCardBgColor} height={'100px'} w={'full'} rounded={'xl'} />
                   ) : (
                     <>
@@ -369,7 +428,7 @@ const EstimateDetails = (props) => {
                         </Thead>
                         <Tbody>
                           {/* Table Row Data Component */}
-                          {quoteServiceLineItem?.map((item, index) => (
+                          {quote?.quote_line_item?.map((item, index) => (
                             <Tr key={index}>
                               <Td whiteSpace="normal" height="auto" blockSize="auto">
                                 {item.description}
@@ -379,7 +438,10 @@ const EstimateDetails = (props) => {
                               <Td>${formatMoneyValue(item.amount)}</Td>
                               {editSwitchIsOn === true ? (
                                 <Td>
-                                  <IconButton icon={<FiX />} />
+                                  <IconButton
+                                    icon={<FiX />}
+                                    onClick={() => handleLineItemDelete(item)}
+                                  />
                                 </Td>
                               ) : (
                                 <></>
@@ -537,7 +599,9 @@ const EstimateDetails = (props) => {
                     </>
                   )}
                 </Menu>
-                <Button w={'full'}>Add Payment</Button>
+                <Button w={'full'} onClick={onAddLineItemOpen}>
+                  Add Line Item
+                </Button>
                 <Tooltip hasArrow label="Edit">
                   <IconButton
                     icon={editSwitchIsOn === true ? <FiX /> : <FiEdit />}
@@ -632,7 +696,9 @@ const EstimateDetails = (props) => {
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
                   ) : (
                     <>
-                      <Text mr={'1rem'}>{quote?.issue_date}</Text>
+                      <Text mr={'1rem'}>
+                        {!quote.issue_date ? 'Not issued yet... 🙅‍♂️' : formatDate(quote.issue_date)}
+                      </Text>
                     </>
                   )}
                 </Flex>
@@ -682,7 +748,7 @@ const EstimateDetails = (props) => {
                           border="none"
                           h={'100px'}
                           isReadOnly
-                          value={!quote?.note ? '❌ No note for this invoice...' : quote?.note}
+                          value={!quote?.note ? 'No note for this quote... 🙅‍♂️' : quote?.note}
                         />
                         {/* {!quote?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
                       </Box>
@@ -702,12 +768,12 @@ const EstimateDetails = (props) => {
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} />
                   ) : (
                     <>
-                      <Box bg={paymentCardBgColor} p="4" rounded="xl">
-                        <Text>
+                      <Box bg={paymentCardBgColor} p="2" rounded="xl">
+                        <Textarea border="none" isReadOnly>
                           {!quote?.measurement_note
-                            ? '❌ No measurement information...'
+                            ? 'No measurement information... 🙅‍♂️'
                             : quote?.measurement_note}
-                        </Text>
+                        </Textarea>
                       </Box>
                     </>
                   )}
@@ -717,195 +783,57 @@ const EstimateDetails = (props) => {
           </Card>
         </Flex>
       </Flex>
+      <Modal
+        onClose={onAddLineItemClose}
+        isOpen={isAddLineItemOpen}
+        size={'xl'}
+        isCentered
+        motionPreset="scale">
+        <ModalOverlay />
+        <form method={'POST'} onSubmit={handleAddLineItemSubmit}>
+          <ModalContent>
+            <ModalCloseButton />
+            <ModalHeader>Add Line Item</ModalHeader>
+            <ModalBody>
+              <Flex gap="4">
+                <Box w="60%">
+                  <FormControl isRequired>
+                    <FormLabel>Description</FormLabel>
+                    <Input onChange={(e) => setLineItemDescriptionInput(e.target.value)} />
+                  </FormControl>
+                </Box>
+                <Box w="15%">
+                  <FormControl isRequired>
+                    <FormLabel>Qty</FormLabel>
+                    <Input value="1" disabled />
+                  </FormControl>
+                </Box>
+                <Box w="20%">
+                  <FormControl isRequired>
+                    <FormLabel>Rate</FormLabel>
+                    <Input value="Fixed" disabled />
+                  </FormControl>
+                </Box>
+                <Box w="25%">
+                  <FormControl isRequired>
+                    <FormLabel>Amount</FormLabel>
+                    <Input onChange={(e) => setLineItemAmountInput(e.target.value)} />
+                  </FormControl>
+                </Box>
+              </Flex>
+            </ModalBody>
+            <ModalFooter>
+              <Flex gap="4">
+                <Button colorScheme="blue" type="submit" isLoading={loadingQuoteStatusIsOn}>
+                  Add Line Item
+                </Button>
+                <Button onClick={onAddLineItemClose}>Cancel</Button>
+              </Flex>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </Modal>
     </Container>
-    // <Flex direction='column' justifyContent='center' pb='1rem' pt='1rem' w={[300, 400, 800]} >
-    //         <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
-    //             <ModalOverlay />
-    //             <ModalContent p='1rem' ml='6rem'>
-    //                 <ModalHeader textAlign='center'>Edit Estimate</ModalHeader>
-    //                 <Text color='red' textAlign='center'>Fill all fields please!</Text>
-    //                 <ModalCloseButton />
-    //                 <form method='PUT' onSubmit={''}>
-    //                 <ModalBody>
-    //                         <FormControl isRequired>
-    //                             <FormLabel pt='1rem'>Estimate Date</FormLabel>
-    //                             <Input type='date' value={estDate} onChange={({target}) => setEstDate(target.value)} id='invDate' placeholder='Invoice date'/>
-    //                         </FormControl>
-    //                         <FormControl isRequired>
-    //                             <FormLabel pt='1rem'>Expiration Date</FormLabel>
-    //                             <Input type='date' value={expDate} onChange={({target}) => setExpDate(target.value)} id='dueDate' placeholder='Due date'/>
-    //                         </FormControl>
-    //                         <FormControl isRequired>
-    //                         <FormLabel pt='1rem'>Service Name</FormLabel>
-    //                             <InputGroup>
-    //                                 <Input value={serviceName} id='service' onChange={({target}) => setServiceName(target.value)} placeholder='Service Name' />
-    //                             </InputGroup>
-    //                         </FormControl>
-    //                         <FormControl isRequired={true}>
-    //                             <FormLabel pt='1rem'>Quoted Price</FormLabel>
-    //                             <Input value={quotePrice} onChange={({target}) => setQuotePrice(target.value)} placeholder='Quote price' type='number'/>
-    //                         </FormControl>
-    //                         <FormControl isRequired={true}>
-    //                             <FormLabel pt='1rem'>SQ FT Measurement</FormLabel>
-    //                             <Input value={sqMeasurement} onChange={({target}) => setSqMeasurement(target.value)} placeholder='Square Feet' type='number'></Input>
-    //                         </FormControl>
-    //                 </ModalBody>
-    //                 <ModalFooter>
-    //                     <Button colorScheme='blue' mr={3} type='submit' onClick={''} >Save</Button>
-    //                     <Button onClick={onClose} colorScheme='blue'>Cancel</Button>
-    //                 </ModalFooter>
-    //                 </form>
-    //             </ModalContent>
-    //         </Modal>
-    //         <Link to='/estimates'>
-    //         <Box display='flex' pt='1rem' pb='1rem' pl='1rem'>
-    //             <Box display='flex' _hover={{color: 'blue.400'}}>
-    //                 <ChevronLeftIcon fontSize='35px'/>
-    //                 <Text _hover={{color: "blue.400"}} fontWeight='bold' fontSize='20px'>Go Back</Text>
-    //             </Box>
-    //         </Box>
-    //     </Link>
-    //             <Box display='flex' pt='1rem' justifyContent='center'>
-    //                 <Box display='flex' p='1rem' bg='gray.600' rounded='2xl' shadow='md' w={[300, 400, 800]}>
-    //                     <Box display='flex' mr='auto' pl='1rem'>
-    //                         <Box display='flex' flexDir='column' justifyContent='center' pr='1rem'>
-    //                             <Text fontWeight='light' fontSize='18px' color='white'>Status:</Text>
-    //                         </Box>
-    //                         <Box display='flex' flexDir='column' justifyContent='center' >
-    //                             {/* <Badge colorScheme='yellow' variant='solid' p='8px'>{cuStatus.status_name}</Badge> */}
-    //                             {statusBadge()}
-    //                         </Box>
-    //                     </Box>
-    //                     <Box display='flex' pr='1rem'>
-    //                         <Box pr='1rem' >
-    //                             <Button colorScheme='yellow' onClick={''}>Mark Pending</Button>
-    //                         </Box>
-    //                         <Box pr='1rem'>
-    //                             <Button colorScheme='green' onClick={'markEstimateApproved'}>Approved</Button>
-    //                         </Box>
-    //                         <Box pr='1rem' >
-    //                             <Button colorScheme='red' onClick={'markEstimateExpired'}>Mark Expired</Button>
-    //                         </Box>
-    //                     </Box>
-    //                 </Box>
-    //             </Box>
-    //             <Box display='flex' pt='2rem'  justifyContent='center' color='white'>
-    //                 <Box display='flex' flexDir='column' p='1rem' rounded='2xl' bg='gray.600' shadow='md' w={[300, 400, 800]}>
-    //                     <Box display='flex' justifyContent='flex-end' pr='2rem' pt='1rem'>
-    //                         <Box pr='1rem' >
-    //                             <Button bg='white' color='green' onClick={convertToInvoice}>Convert To Invoice</Button>
-    //                         </Box>
-    //                         <Box>
-    //                             <Button colorScheme='blue' onClick={onOpen}>Edit</Button>
-    //                         </Box>
-    //                         <Box pl='1rem'>
-    //                             <Button colorScheme='red' onClick={'deleteEstimate'}>Delete</Button>
-    //                         </Box>
-    //                     </Box>
-    //                     <Box display='flex' p='2rem' bg='gray.600' rounded='xl'>
-    //                         <Box>
-    //                             <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>Estimate #{invoice.id}</Text>
-    //                             <Text  fontSize='20px' fontWeight='light' letterSpacing='1px'>{jobType.type_name}</Text>
-    //                         </Box>
-    //                         <Box display='flex' flexDir='column' ml='auto' >
-    //                             <Text textAlign='right' fontWeight='bold'>Rios Roofing</Text>
-    //                             <Text textAlign='right' fontWeight='light'>150 Tallant St</Text>
-    //                             <Text textAlign='right' fontWeight='light'>Houston, TX</Text>
-    //                             <Text textAlign='right' fontWeight='light'>77076</Text>
-    //                             <Text textAlign='right' fontWeight='light'>United States</Text>
-    //                         </Box>
-    //                     </Box>
-    //                     <Box display='flex' justifyContent='center' p='1rem' pt='1rem' pb='1rem'>
-    //                         <Box display='flex' flexDir='column' p='1rem' >
-    //                             <Box pb='1rem'>
-    //                                 {/* <Editable defaultValue={customer?.name}>
-    //                                     <EditablePreview/>
-    //                                     <EditableInput/>
-    //                                     <EditableControls/>
-    //                                 </Editable> */}
-    //                                 <Text fontSize='22px' fontWeight='bold'>Estimate Date:</Text>
-    //                                 <Text>{new Date(invoice.estimate_date).toLocaleDateString()}</Text>
-    //                             </Box>
-    //                             <Box>
-    //                                 <Text fontSize='22px' fontWeight='bold'>Expiration Date:</Text>
-    //                                 <Text>{new Date(invoice.exp_date).toLocaleDateString()}</Text>
-    //                             </Box>
-    //                         </Box>
-    //                         <Box display='flex' flexDir='column' p='1rem' ml='auto' mr='auto'>
-    //                             <Box>
-    //                                 <Text fontSize='22px' fontWeight='bold' letterSpacing='1px'>EST For:</Text>
-    //                             </Box>
-    //                             <Box pb='4px'>
-    //                                 <Text letterSpacing='1px'>{customer.name}</Text>
-    //                             </Box>
-    //                             <Box>
-    //                                 <Text fontWeight='light' letterSpacing='1px'>{customer.address},</Text>
-    //                             </Box>
-    //                             <Box>
-    //                                 <Text fontWeight='light' letterSpacing='1px'>{customer.city}, {customer.state},</Text>
-    //                             </Box>
-    //                             <Box>
-    //                                 <Text fontWeight='light' letterSpacing='1px'>{customer.zipcode}</Text>
-    //                             </Box>
-    //                             <Box>
-    //                                 <Text letterSpacing='1px'>United States</Text>
-    //                             </Box>
-
-    //                         </Box>
-    //                         <Box display='flex' flexDir='column' p='1rem'>
-    //                             <Box>
-    //                                 <Text fontSize='22px' fontWeight='bold'>Email To: </Text>
-    //                             </Box>
-    //                             <Text letterSpacing='1px'>{customer.email}</Text>
-    //                         </Box>
-    //                     </Box>
-    //                     <Box display='flex' flexDir='column' p='1rem' >
-    //                         <Box display='flex' flexDir='column' bg='gray.700' p='1rem' roundedTop='xl'>
-    //                             <Box display='flex' justifyContent='space-between' >
-    //                                     <Box ml='1rem'>
-    //                                         <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>Service Name</Text>
-    //                                     </Box>
-    //                                     <Box>
-    //                                         {/* <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>QTY.</Text> */}
-    //                                     </Box>
-    //                                     <Box>
-    //                                         <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>Price</Text>
-    //                                     </Box>
-    //                                     <Box mr='1rem'>
-    //                                         <Text letterSpacing='1px' fontSize='18px' fontWeight='bold'>Total</Text>
-    //                                     </Box>
-    //                             </Box>
-    //                             <Box display='flex' justifyContent='space-between' pt='1rem' pb='1rem' >
-    //                                     <Box ml='1rem'>
-    //                                         <Text letterSpacing='1px' fontSize='16px' fontWeight='light'>{invoice.service_name}</Text>
-    //                                     </Box>
-    //                                     <Box>
-    //                                         <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>{`${invoice.sqft_measurement} sqft.`}</Text>
-    //                                     </Box>
-    //                                     <Box>
-    //                                         <Text letterSpacing='1px' fontSize='16px' fontWeight='bold'>{invoice.quote_price}</Text>
-    //                                     </Box>
-    //                                     <Box mr='1rem'>
-    //                                         <Text letterSpacing='1px'  fontSize='16px' fontWeight='bold'>{invoice.quote_price}</Text>
-    //                                     </Box>
-    //                             </Box>
-    //                         </Box>
-    //                         <Box display='flex'  bg='blue.600' p='2rem' roundedBottom='xl'>
-    //                                 <Box ml='auto'>
-    //                                     <Text fontWeight='bold' letterSpacing='1px' fontSize='22px'>Estimated Price:</Text>
-    //                                 </Box>
-    //                                 <Box ml='4rem' >
-    //                                     <Text fontWeight='bold' letterSpacing='1px' fontSize='22px'>{invoice.quote_price}</Text>
-    //                                 </Box>
-    //                             </Box>
-
-    //                     </Box>
-    //                     <Grid>
-
-    //                     </Grid>
-    //                 </Box>
-    //             </Box>
-    //     </Flex>
   );
 };
 

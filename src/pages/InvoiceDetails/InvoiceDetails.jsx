@@ -162,7 +162,6 @@ const InvoiceDetails = () => {
 
   // Define variables
   const { id } = useParams();
-  // const url = `http://${process.env.REACT_APP_BASE_URL}:8081/api`;
   let navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef();
