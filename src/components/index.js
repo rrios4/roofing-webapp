@@ -62,3 +62,5 @@ export { default as InvoiceTitle } from './Reports/InvoiceDocComponents/InvoiceT
 export { default as InvoiceNo } from './Reports/InvoiceDocComponents/InvoiceNo';
 export { default as InvoiceBillTo } from './Reports/InvoiceDocComponents/InvoiceBillTo';
 export { default as InvoiceItemsTable } from './Reports/InvoiceDocComponents/InvoiceItemsTable';
+export { default as QuoteTitle } from './Reports/QuoteDocComponents/QuoteTitle';
+export { default as QuoteDocument } from './Reports/QuoteDocument';

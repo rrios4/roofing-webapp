@@ -13,8 +13,6 @@ import {
   InvoiceItemsTable
 } from '../';
 
-const tableRowsCount = 11;
-
 const styles = StyleSheet.create({
   page: {
     fontSize: 11,

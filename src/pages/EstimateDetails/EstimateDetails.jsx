@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, Fragment } from 'react';
 import {
   Select,
   Divider,
@@ -51,6 +51,7 @@ import supabase from '../../utils/supabaseClient.js';
 import formatNumber from '../../utils/formatNumber.js';
 import formatMoneyValue from '../../utils/formatMoneyValue.js';
 import formatDate from '../../utils/formatDate.js';
+import { PDFViewer, usePDF, PDFDownloadLink } from '@react-pdf/renderer';
 import {
   FiArrowLeft,
   FiMoreHorizontal,
@@ -76,7 +77,7 @@ import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { HiStatusOnline } from 'react-icons/hi';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { EditQuoteForm } from '../../components/index.js';
+import { EditQuoteForm, QuoteDocument } from '../../components/index.js';
 import { useServices } from '../../hooks/useServices.jsx';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
 
@@ -98,6 +99,11 @@ const EstimateDetails = (props) => {
     isOpen: isEditQuoteOpen,
     onOpen: onEditQuoteOpen,
     onClose: onEditQuoteClose
+  } = useDisclosure();
+  const {
+    isOpen: isExportPDFOpen,
+    onOpen: onExportPDFOpen,
+    onClose: onExportPDFClose
   } = useDisclosure();
 
   // React useState to store Objects
@@ -379,7 +385,7 @@ const EstimateDetails = (props) => {
               Send Quote
             </Button>
           </Tooltip> */}
-          <Button colorScheme="blue" gap="2">
+          <Button colorScheme="blue" gap="2" onClick={onExportPDFOpen}>
             <FiShare /> Export as PDF
           </Button>
         </Flex>
@@ -948,6 +954,32 @@ const EstimateDetails = (props) => {
             </ModalFooter>
           </ModalContent>
         </form>
+      </Modal>
+      {/* Export Quote PDF Preview */}
+      <Modal
+        onClose={onExportPDFClose}
+        isOpen={isExportPDFOpen}
+        size={'xl'}
+        isCentered
+        motionPreset="scale">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>PDF Preview</ModalHeader>
+          <ModalBody mx="auto">
+            <Fragment>
+              <PDFViewer width={'500'} height="660">
+                <QuoteDocument />
+              </PDFViewer>
+            </Fragment>
+          </ModalBody>
+          <ModalFooter>
+            <Flex gap="4">
+              <Button colorScheme="blue">Download</Button>
+              <Button onClick={onExportPDFClose}>Cancel</Button>
+            </Flex>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </Container>
   );
