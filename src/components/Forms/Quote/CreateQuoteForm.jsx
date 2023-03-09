@@ -113,9 +113,10 @@ const CreateQuoteForm = (props) => {
       total: calculatedQuoteTotal,
       note: noteInput ? noteInput : null,
       measurement_note: measurementNoteInput ? measurementNoteInput : null,
-      cust_note: customerMessageInput
-        ? customerMessageInput
-        : "If you have any questions or concerns don't hesitate to reach us. 👋",
+      cust_note:
+        customerMessageSwitchIsOn === true
+          ? customerMessageInput
+          : `If you have any questions or concerns don't hesitate to reach us. 👋`,
       custom_street_address: customStreetAddressInput ? customStreetAddressInput : null,
       custom_city: customCityInput ? customCityInput : null,
       custom_state: customStateInput ? customStateInput : null,

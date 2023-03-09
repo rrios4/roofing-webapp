@@ -331,6 +331,9 @@ const EstimateDetails = (props) => {
 
   // Convert Quote to Invoice
   // Handle adding new line item to quote
+  const handlePDFDownload = () => {
+    onExportPDFClose();
+  };
 
   return (
     <Container maxW={'1400px'} pt={'2rem'} pb={'4rem'}>
@@ -520,7 +523,9 @@ const EstimateDetails = (props) => {
                     />
                   ) : (
                     <>
-                      <Text ml={'3rem'}>{quote?.cust_note}</Text>
+                      <Text ml={'3rem'} maxW="500px">
+                        {quote?.cust_note}
+                      </Text>
                     </>
                   )}
                 </Flex>
@@ -969,13 +974,27 @@ const EstimateDetails = (props) => {
           <ModalBody mx="auto">
             <Fragment>
               <PDFViewer width={'500'} height="660">
-                <QuoteDocument />
+                <QuoteDocument quote={quote} />
               </PDFViewer>
             </Fragment>
           </ModalBody>
           <ModalFooter>
             <Flex gap="4">
-              <Button colorScheme="blue">Download</Button>
+              <PDFDownloadLink
+                document={<QuoteDocument quote={quote} />}
+                fileName={`RR-QT${formatNumber(quote?.quote_number)}`}>
+                {({ blob, url, loading, error }) =>
+                  loading ? (
+                    <Button colorScheme="blue" isLoading="true">
+                      Generating...
+                    </Button>
+                  ) : (
+                    <Button colorScheme="blue" onClick={() => handlePDFDownload()}>
+                      Download
+                    </Button>
+                  )
+                }
+              </PDFDownloadLink>
               <Button onClick={onExportPDFClose}>Cancel</Button>
             </Flex>
           </ModalFooter>

@@ -11,6 +11,7 @@ const ConnectedQuoteDeleteAlertDialog = (props) => {
 
   const handleSubmit = async () => {
     setLoadingState(true);
+    await deleteLineItems();
     const { data, error } = await supabase.from('quote').delete().eq('quote_number', itemNumber);
 
     if (error) {
@@ -30,7 +31,7 @@ const ConnectedQuoteDeleteAlertDialog = (props) => {
       toast({
         position: `top`,
         title: `QR #${itemNumber} deleted!`,
-        description: `We've deleted QR #${itemNumber} for you succesfully! 🚀`,
+        description: `We've deleted QR #${itemNumber} with line-items for you succesfully! 🚀`,
         status: 'success',
         duration: 5000,
         isClosable: true
@@ -38,6 +39,25 @@ const ConnectedQuoteDeleteAlertDialog = (props) => {
     }
     // Closes the drawer
     onClose();
+  };
+
+  const deleteLineItems = async () => {
+    const { data, error } = await supabase
+      .from('quote_line_item')
+      .delete()
+      .eq('quote_id', itemNumber);
+
+    if (error) {
+      console.log(error.message);
+      toast({
+        position: `top`,
+        title: `Error occured deleting line-item for Quote #${itemNumber}!`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
   };
 
   return (

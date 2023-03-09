@@ -4,22 +4,20 @@ import { Text, View, StyleSheet } from '@react-pdf/renderer';
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 24
+    marginTop: 24,
+    justifyContent: 'center'
   },
   reportTitle: {
-    color: '#3182CE',
-    letterSpacing: 4,
-    fontSize: 25,
+    fontSize: 10,
     textAlign: 'center',
     textTransform: 'uppercase'
   }
 });
 
-const InvoiceTitle = ({ title }) => (
+const QuoteThankYouMsg = ({ quote }) => (
   <View style={styles.titleContainer}>
-    <Text style={styles.reportTitle}>Roofing Invoice</Text>
+    <Text style={styles.reportTitle}>Thank You For Your Business!</Text>
   </View>
 );
 
-export default InvoiceTitle;
+export default QuoteThankYouMsg;

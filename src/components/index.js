@@ -64,3 +64,8 @@ export { default as InvoiceBillTo } from './Reports/InvoiceDocComponents/Invoice
 export { default as InvoiceItemsTable } from './Reports/InvoiceDocComponents/InvoiceItemsTable';
 export { default as QuoteTitle } from './Reports/QuoteDocComponents/QuoteTitle';
 export { default as QuoteDocument } from './Reports/QuoteDocument';
+export { default as QuoteNo } from './Reports/QuoteDocComponents/QuoteNo';
+export { default as QuoteBillTo } from './Reports/QuoteDocComponents/QuoteBillTo';
+export { default as QuoteTableHeader } from './Reports/QuoteDocComponents/QuoteTableHeader';
+export { default as QuoteItemsTable } from './Reports/QuoteDocComponents/QuoteItemsTable';
+export { default as QuoteThankYouMsg } from './Reports/QuoteDocComponents/QuoteThankYouMsg';
