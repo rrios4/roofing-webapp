@@ -6,7 +6,7 @@ export const useQRStatuses = () => {
 
   const fetchQRStatuses = async () => {
     const { data, error } = await supabase
-      .from('estimate_request_status')
+      .from('quote_request_status')
       .select('*')
       .order('id', { ascending: true });
 

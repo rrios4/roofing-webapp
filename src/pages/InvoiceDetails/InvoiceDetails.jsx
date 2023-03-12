@@ -176,7 +176,7 @@ const InvoiceDetails = () => {
     const { data, error } = await supabase
       .from('invoice')
       .select(
-        '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*), invoice_line_service(*), payment(*)'
+        '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*), invoice_line_service(*), invoice_payment(*)'
       )
       .eq('invoice_number', `${id}`);
 
@@ -225,7 +225,7 @@ const InvoiceDetails = () => {
     setLoadingState(true);
     e.preventDefault();
 
-    const { data, error } = await supabase.from('payment').insert({
+    const { data, error } = await supabase.from('invoice_payment').insert({
       invoice_id: invoice.invoice_number,
       date_received: dateReceivedPaymentInput,
       payment_method: paymentMethodPaymentInput,
@@ -267,7 +267,7 @@ const InvoiceDetails = () => {
   const handlePaymentDelete = async (item_id, date_received, amount) => {
     setLoadingState(true);
     console.log(item_id);
-    const { data, error } = await supabase.from('payment').delete().eq('id', item_id);
+    const { data, error } = await supabase.from('invoice_payment').delete().eq('id', item_id);
 
     if (error) {
       console.log(error);
@@ -996,7 +996,7 @@ const InvoiceDetails = () => {
                   </Flex>
                   <Flex w="full" px={6} mb={6} gap="4">
                     <Flex direction="column" gap="2" w="full">
-                      {invoice?.payment?.map((item, index) => (
+                      {invoice?.invoice_payment?.map((item, index) => (
                         <>
                           <Flex
                             key={index}

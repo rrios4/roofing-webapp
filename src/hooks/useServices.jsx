@@ -6,7 +6,7 @@ export const useServices = () => {
 
   const fetchServices = async () => {
     const { data, error } = await supabase
-      .from('services')
+      .from('service')
       .select('*')
       .order('id', { ascending: true });
 

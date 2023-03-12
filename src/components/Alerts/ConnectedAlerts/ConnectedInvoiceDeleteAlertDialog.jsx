@@ -52,7 +52,7 @@ const ConnectedInvoiceDeleteAlertDialog = (props) => {
 
   // Handles the action to all delete payments assiated with the invoice number
   const deletePaymentsByInvoiceNumber = async () => {
-    const { error } = await supabase.from('payment').delete().eq('invoice_id', itemNumber);
+    const { error } = await supabase.from('invoice_payment').delete().eq('invoice_id', itemNumber);
 
     if (error) {
       console.log(error);
