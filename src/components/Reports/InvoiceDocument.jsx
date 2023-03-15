@@ -90,7 +90,7 @@ const InvoiceDocument = (props) => {
         <InvoiceBillTo invoice={invoice} />
         <InvoiceItemsTable invoice={invoice} />
         {/* Payments Component */}
-        {invoice?.payment?.map((item, index) => (
+        {invoice?.invoice_payment?.map((item, index) => (
           <Fragment key={index}>
             <View style={styles.paymentsContainer}>
               <Text style={styles.paymentDateTextPadding}>{formatDate(item.date_received)}</Text>

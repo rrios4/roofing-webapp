@@ -9,7 +9,9 @@ export const useQuotes = () => {
     setQuotesLoadingStateIsOn(true);
     const { data, error } = await supabase
       .from('quote')
-      .select(`*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*)`);
+      .select(`*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*)`)
+      .order('status_id', { ascending: false })
+      .order('updated_at', { ascending: false });
 
     if (error) {
       console.log(error);

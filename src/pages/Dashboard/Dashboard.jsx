@@ -182,9 +182,9 @@ const Dashboard = ({ children }) => {
   // Handles getting a count of all quotes with a Pending Status
   const quotesPendingCount = async () => {
     const { count } = await supabase
-      .from('estimate')
+      .from('quote')
       .select('*', { count: 'exact' })
-      .eq('est_status_id', 4);
+      .eq('status_id', 2);
 
     setPendingQuotesCount(count);
   };
