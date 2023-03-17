@@ -1,0 +1,13 @@
+version: '3'
+services:
+  app:
+    container_name: roofing-app
+    restart: always
+    build: .
+    environment:
+      "REACT_APP_SUPABASE_URL": "https://kcasqwspojmlwabzxloe.supabase.co"
+      "REACT_APP_SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjYXNxd3Nwb2ptbHdhYnp4bG9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTQxNTUxNzcsImV4cCI6MTk2OTczMTE3N30.EHoyEMh039HTIBMt_oMr-a_ZdeXev7xaSLdt9RTFNeI"
+    expose:
+      - 5173
+    ports:
+      - "5173:5173"

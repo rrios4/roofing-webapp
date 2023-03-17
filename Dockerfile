@@ -1,18 +1,9 @@
-# FROM nginx:alpine
-# COPY build /usr/share/nginx/html
-
-FROM node:16.13.1 AS build
-WORKDIR /build
-
-COPY package.json package.json
-COPY package-lock.json package-lock.json
-RUN npm ci
-
-COPY public/ public
-COPY src/ src
-COPY .env .
+FROM node:16.14.2
+WORKDIR /app
+COPY package.json .
+RUN npm i
+COPY . .
 RUN npm run build
-
-FROM nginx:alpine
-COPY ./etc/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /build/build/ /usr/share/nginx/html
+## EXPOSE [Port you mentioned in the vite.config file]
+EXPOSE 5173
+CMD ["npm", "run", "preview"]

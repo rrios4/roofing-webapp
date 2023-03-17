@@ -33,7 +33,7 @@ import {
 } from '../../components';
 import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
-import { useInvoices } from '../../Hooks/useInvoices';
+import { useInvoices } from '../../hooks/useInvoices';
 import { useServices } from '../../hooks/useServices';
 import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
 
