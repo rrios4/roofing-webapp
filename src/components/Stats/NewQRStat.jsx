@@ -37,7 +37,13 @@ const NewQRStat = (props) => {
                 </Flex>
 
                 <StatNumber>
-                  {newQRRequestCount ? newQRRequestCount : <Spinner speed="0.65s" />}
+                  {newQRRequestCount ? (
+                    newQRRequestCount
+                  ) : newQRRequestCount === 0 ? (
+                    newQRRequestCount
+                  ) : (
+                    <Spinner speed="0.65s" />
+                  )}
                 </StatNumber>
                 {/* <StatHelpText>
                         <StatArrow type='increase' />
