@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex, StateOptions, MultiPurposeOptions } from '../../../components';
+import { StateOptions, MultiPurposeOptions } from '../../../components';
 import { formatPhoneNumber, supabase } from '../../../utils';
 import stateJSONData from '../../../data/state_titlecase.json';
 import {
@@ -20,9 +20,11 @@ import {
   DrawerBody,
   DrawerFooter
 } from '@chakra-ui/react';
+import { useQueryClient } from '@tanstack/react-query';
 
 const NewCustomerForm = (props) => {
-  const { isOpen, onClose, initialRef, updateCustomerData, toast, loadingState, customerTypes } = props;
+  const { isOpen, onClose, initialRef, toast, loadingState, customerTypes } = props;
+  const queryClient = useQueryClient();
 
   // useStates that pick up the values from the input fields of the form
   const [firstName, setfirstName] = useState('');
@@ -89,7 +91,7 @@ const NewCustomerForm = (props) => {
     // console.log(data);
     console.log('Submit Function works!');
     //history.go(0);
-    await updateCustomerData();
+    queryClient.invalidateQueries({ queryKey: ['customers'] });
     setfirstName('');
     setlastName('');
     setAddress('');

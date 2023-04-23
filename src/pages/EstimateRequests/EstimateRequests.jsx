@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   IconButton,
   Flex,
@@ -11,7 +10,6 @@ import {
   VStack,
   HStack,
   Tooltip,
-  useColorModeValue,
   Icon,
   Card,
   CardBody,
@@ -20,9 +18,7 @@ import {
 } from '@chakra-ui/react';
 import {
   EditEstimateRequestForm,
-  DeleteAlertDialog,
   NewEstimateRequestForm,
-  NewCustomerForm,
   QuoteRequestTable,
   ConnectedQRDeleteAlertDialog
 } from '../../components';
@@ -32,7 +28,7 @@ import { FiInbox } from 'react-icons/fi';
 import { useQuoteRequests } from '../../hooks/useQuoteRequests';
 import { useServices } from '../../hooks/useServices';
 import { useQRStatuses } from '../../hooks/useQRStatuses';
-import { useCustomerTypes } from '../../hooks/useCustomerTypes';
+import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
 
 const EstimateRequests = () => {
   // React Hook for managing state of quotes request
@@ -43,11 +39,6 @@ const EstimateRequests = () => {
   const { customerTypes } = useCustomerTypes();
   // Chakra UI Reacr hook for toasts
   const toast = useToast();
-
-  //Chakra UI styling parameters
-  const bg = useColorModeValue('white', 'gray.700');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const buttonColorScheme = useColorModeValue('blue', 'gray');
 
   // Chakra UI Modal
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
@@ -102,14 +93,6 @@ const EstimateRequests = () => {
       // console.log(qrSearchResult);
       setQuoteRequests(qrSearchResult);
     }
-  };
-
-  //Formats SQL date from DB to present in GUI table
-  const handleSQLFormatDate = (date) => {
-    let parsedDate = new Date(Date.parse(date));
-    let options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' };
-    let dateString = parsedDate.toLocaleDateString('en-US', options);
-    return dateString;
   };
 
   //Handles edit data

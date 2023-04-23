@@ -39,7 +39,7 @@ import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { FiArrowRight, FiFileText } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { formatDate, formatMoneyValue, formatNumber } from '../../utils';
-import { useCustomerTypes } from '../../hooks/useCustomerTypes';
+import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
 
 const CustomerDetails = () => {
   // React Hooks
