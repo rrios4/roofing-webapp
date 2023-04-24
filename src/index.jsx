@@ -2,7 +2,6 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 // import App from './App';
-import { AuthProvider } from './contexts/auth';
 import theme from './theme';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ColorModeScript, ThemeProvider, ChakraProvider, CSSReset } from '@chakra-ui/react';
@@ -19,6 +18,7 @@ import {
   EstimateDetails
 } from './pages';
 import { Layout, ProtectedRoute, EmployeeEdit, Employees } from './components';
+import { AuthProvider } from './hooks/useAuth';
 
 const container = document.getElementById('app');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
@@ -26,13 +26,13 @@ const root = createRoot(container); // createRoot(container!) if you use TypeScr
 const queryClient = new QueryClient();
 
 root.render(
-  <AuthProvider>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <CSSReset />
-          <ChakraProvider>
-            <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <CSSReset />
+        <ChakraProvider>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <AuthProvider>
             <Layout>
               <Routes>
                 <Route
@@ -119,9 +119,9 @@ root.render(
                 />
               </Routes>
             </Layout>
-          </ChakraProvider>
-        </ThemeProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </AuthProvider>
+          </AuthProvider>
+        </ChakraProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </QueryClientProvider>
 );

@@ -40,7 +40,7 @@ import {
 } from '@chakra-ui/react';
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/auth';
+import { useAuth } from '../../hooks/useAuth';
 import {
   Card,
   CustomerCountCard,
@@ -139,11 +139,12 @@ const Dashboard = ({ children }) => {
     getMonthlyRevenues03();
     getCurrentMonthRevenuesWithPercentageChange();
     getCurrentYearTotalRevenueWithPercentageChange();
+    console.log(auth.user);
   }, []);
 
   const logout = () => {
     // localStorage.clear();
-    auth.Logout();
+    auth.signOut();
     swal('Logged Out!', 'You are now logged out from the system!', 'success');
     navigate('/login');
   };

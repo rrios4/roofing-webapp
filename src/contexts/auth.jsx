@@ -1,79 +1,78 @@
-import supabase from "../utils/supabaseClient";
+import supabase from '../utils/supabaseClient';
 import { useState, useEffect, useContext, createContext } from 'react';
 
-const authContext = createContext()
+const authContext = createContext();
 
-export const AuthProvider = ({children}) => {
-    const auth = useProviderAuth()
-    return <authContext.Provider value={auth}>{children}</authContext.Provider>
-}
+export const AuthProvider = ({ children }) => {
+  const auth = useProviderAuth();
+  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
+};
 
 export const useAuth = () => {
-    return useContext(authContext)
-}
+  return useContext(authContext);
+};
 
 function useProviderAuth() {
-    const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
-    const Login = async(email, password) => {
-        const { data, error } = await supabase.auth.signIn({email, password})
-    
-        if(error){
-            console.log(error)
-        }
+  const Login = async (email, password) => {
+    const { data, error } = await supabase.auth.signIn({ email, password });
 
-        return {data, error}
+    if (error) {
+      console.log(error);
     }
 
-    const Logout = async () => {
-        const {error} = await supabase.auth.signOut();
+    return { data, error };
+  };
 
-        if(error){
-            console.log(error)
-        }
+  const Logout = async () => {
+    const { error } = await supabase.auth.signOut();
 
-        setUser(null)
+    if (error) {
+      console.log(error);
     }
 
-    const SignUp = async(email, password) => {
-        const { data, error } = await supabase.auth.signUp({email, password})
-    
-        if(error){
-            console.log(error)
-        }
+    setUser(null);
+  };
 
-        return {data, error}
+  const SignUp = async (email, password) => {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    if (error) {
+      console.log(error);
     }
 
-    const googleLogin = async() => {
-        const { error } = await supabase.auth.signIn({
-            provider: 'google',
-        })
+    return { data, error };
+  };
 
-        if(error){
-            console.log(error)
-        }
+  const googleLogin = async () => {
+    const { error } = await supabase.auth.signIn({
+      provider: 'google'
+    });
 
-        return {error}
+    if (error) {
+      console.log(error);
     }
 
-    useEffect(() => {
-        const user = supabase.auth.user()
-        setUser(user)
+    return { error };
+  };
 
-      const auth = supabase.auth.onAuthStateChange((event, session) => {
-          if(event === 'SIGNED_IN'){
-              setUser(session.user)
-          }
+  useEffect(() => {
+    const user = supabase.auth.user();
+    setUser(user);
 
-          if(event === 'SIGNED_OUT'){
-              setUser(null)
-          }
-      })
+    const auth = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        setUser(session.user);
+      }
 
-      return () => auth.data.unsubscribe();
-    
-    }, [])
-    
-    return { user, Login, Logout, SignUp, googleLogin }
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => auth.data.unsubscribe();
+  }, []);
+
+  return { user, Login, Logout, SignUp, googleLogin };
 }
