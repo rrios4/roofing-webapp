@@ -367,7 +367,7 @@ const Dashboard = ({ children }) => {
                     rounded="10">
                     <Flex flexDir={'row'} alignItems="center">
                       {loggedInUserData ? (
-                        <Avatar size={'sm'} src={`${loggedInUserData.avatar_url}`}>
+                        <Avatar size={'sm'} src={loggedInUserData.avatar_url}>
                           <AvatarBadge boxSize="1.25em" bg="green.500" />
                         </Avatar>
                       ) : (
@@ -391,7 +391,7 @@ const Dashboard = ({ children }) => {
                   <MenuList bg={useColorModeValue('white', 'gray.700')}>
                     <MenuItem display={'flex'} flexDir={'column'}>
                       {loggedInUserData ? (
-                        <Image
+                        <Avatar
                           boxSize={'3rem'}
                           borderRadius="full"
                           src={loggedInUserData.avatar_url}

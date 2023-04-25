@@ -84,9 +84,9 @@ export default function Customers() {
           size={{ base: 'md', lg: 'lg' }}>
           <CardBody>
             <Stack
-              direction={{ base: 'column-reverse', lg: 'row' }}
-              mb={'24px'}
-              mx={'1rem'}
+              direction={{ base: 'column', lg: 'row' }}
+              mb={{ base: '30px', lg: '24px' }}
+              mx={{ base: '', lg: '1rem' }}
               spacing="auto"
               gap={6}>
               <Flex alignItems={'center'} gap={8} justifyContent={'center'}>
@@ -105,10 +105,10 @@ export default function Customers() {
                         <Input
                           value={searchCustomer}
                           onChange={({ target }) => setSearchCustomer(target.value)}
-                          placeholder="Search for Customer"
+                          placeholder="Search for customer..."
                           colorScheme="blue"
                           size={'md'}
-                          width={{ base: 'full', lg: '250px' }}
+                          width={{ base: '300px', lg: '300px' }}
                         />
                         {/* <Tooltip label="Search">
                           <IconButton

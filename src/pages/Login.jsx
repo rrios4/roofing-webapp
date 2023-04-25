@@ -56,25 +56,25 @@ function Login() {
   };
 
   return (
-    <Flex minH={'100vh'} align={'center'} justify={'center'}>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+    <Flex>
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6} mt="6rem">
         <Stack align={'center'}>
           <Image
-            w="100px"
-            rounded="full"
+            w={{ base: '80px', lg: '100px' }}
+            rounded="30"
             bg="blue.500"
             src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
           />
-          <Heading pt="2px" fontSize={'4xl'}>
+          <Heading pt="1" fontSize={{ base: '3xl', lg: '4xl' }}>
             Sign in to your account
           </Heading>
-          <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool features ✌️
+          <Text fontSize={{ base: 'md', lg: 'lg' }} color={'gray.600'} textAlign={'center'}>
+            Welcome to "The Roofing App" to empower your business 🚀
           </Text>
         </Stack>
-        <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
+        <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={4}>
           <Stack spacing={4}>
-            <form onSubmit={handleSignIn}>
+            {/* <form onSubmit={handleSignIn}>
               <FormControl id="email">
                 <FormLabel>Email</FormLabel>
                 <Input
@@ -114,17 +114,22 @@ function Login() {
                   </Text>
                 </Link>
               </Stack>
-            </form>
-            <Flex paddingTop="1rem" justifyContent="center" align="center">
+            </form> */}
+            {/* <Flex paddingTop="1rem" justifyContent="center" align="center">
               <Divider maxW="6rem" />
               <Text fontSize="sm" color="gray.400" paddingX="1rem">
                 or continue with
               </Text>
               <Divider maxW="6rem" />
-            </Flex>
+            </Flex> */}
             <HStack justify="center" spacing="2rem">
               <form onSubmit={handleGoogleSignin}>
-                <Button type="submit" colorScheme="gray" variant="outline" leftIcon={<FcGoogle />}>
+                <Button
+                  type="submit"
+                  colorScheme="gray"
+                  variant="outline"
+                  leftIcon={<FcGoogle />}
+                  size={'lg'}>
                   Google
                 </Button>
               </form>
