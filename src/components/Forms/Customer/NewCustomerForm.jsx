@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StateOptions, MultiPurposeOptions } from '../../../components';
-import { formatPhoneNumber, supabase } from '../../../utils';
+import { formatPhoneNumber } from '../../../utils';
 import stateJSONData from '../../../data/state_titlecase.json';
 import {
   Select,
@@ -20,11 +20,14 @@ import {
   DrawerBody,
   DrawerFooter
 } from '@chakra-ui/react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useCreateCustomer } from '../../../hooks/useFetchData/useCustomers';
 
 const NewCustomerForm = (props) => {
-  const { isOpen, onClose, initialRef, toast, loadingState, customerTypes } = props;
-  const queryClient = useQueryClient();
+  const { isOpen, onClose, initialRef, toast, customerTypes } = props;
+
+  useEffect(() => {
+    setstates(stateJSONData);
+  }, []);
 
   // useStates that pick up the values from the input fields of the form
   const [firstName, setfirstName] = useState('');
@@ -40,58 +43,19 @@ const NewCustomerForm = (props) => {
 
   const [inputValue, SetInputValue] = useState('');
 
-  useEffect(() => {
-    // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-    // if (!localStorage.getItem('supabase.auth.token')) {
-    //     history.push('/login');
-    // }
-    setstates(stateJSONData);
-  }, []);
+  const newCustomerObject = {
+    first_name: firstName,
+    last_name: lastName,
+    street_address: address,
+    city: city,
+    state: selectedState,
+    zipcode: zipcode,
+    phone_number: inputValue,
+    email: email,
+    customer_type_id: selectedCustomerType
+  };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    let { data, error } = await supabase.from('customer').insert([
-      {
-        first_name: firstName,
-        last_name: lastName,
-        street_address: address,
-        city: city,
-        state: selectedState,
-        zipcode: zipcode,
-        phone_number: inputValue,
-        email: email,
-        customer_type_id: selectedCustomerType
-      }
-    ]);
-
-    if (error) {
-      console.log(error);
-      // Toast feedback when error occurs when creating new customer
-      toast({
-        position: 'top',
-        title: `Error Occured Creating Customer`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    if (data) {
-      // Toast feedback success when creating new customer
-      toast({
-        position: 'top',
-        title: `New Customer Created`,
-        description: `${firstName} ${lastName} has been created succesfully 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    // console.log(data);
-    console.log('Submit Function works!');
-    //history.go(0);
-    queryClient.invalidateQueries({ queryKey: ['customers'] });
+  const handleResettingUseState = () => {
     setfirstName('');
     setlastName('');
     setAddress('');
@@ -102,6 +66,14 @@ const NewCustomerForm = (props) => {
     setselectedCustomerType('');
     setSelectedState('');
     onClose();
+  };
+
+  // Custom hook to create a new customer
+  const { mutate, isLoading } = useCreateCustomer(toast, handleResettingUseState);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    mutate(newCustomerObject);
   };
 
   // Handles the phone number input formating
@@ -233,7 +205,7 @@ const NewCustomerForm = (props) => {
             <Flex pt={'2rem'} w="full" justifyContent={'flex-end'}></Flex>
           </DrawerBody>
           <DrawerFooter gap={4}>
-            <Button colorScheme={'blue'} type="submit" isLoading={loadingState}>
+            <Button colorScheme={'blue'} type="submit" isLoading={isLoading}>
               Create Customer
             </Button>
             <Button onClick={onClose} mr={'1rem'}>

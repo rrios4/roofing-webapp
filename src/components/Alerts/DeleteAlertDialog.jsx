@@ -19,6 +19,7 @@ const DeleteAlertDialog = (props) => {
   const handleOnClick = (e) => {
     e.preventDefault();
     onSubmit();
+    onClose();
   };
 
   return (

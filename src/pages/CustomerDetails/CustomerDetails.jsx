@@ -40,23 +40,23 @@ import { FiArrowRight, FiFileText } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { formatDate, formatMoneyValue, formatNumber } from '../../utils';
 import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
+import { useFetchCustomerByID, useUpdateCustomer } from '../../hooks/useFetchData/useCustomers';
 
 const CustomerDetails = () => {
   // React Hooks
+  const { id } = useParams();
   const toast = useToast();
   const { customerTypes } = useCustomerTypes();
+  const { customerById } = useFetchCustomerByID(id);
 
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
 
   const bg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
-
-  const { id } = useParams();
   // const {id} = props.match.params;
 
   // React State to store array of objects from GET request API
-  const [customer, getCustomer] = useState();
   const [customerInvoicesById, setCustomerInvoicesById] = useState();
   const [customerQuotesById, setCustomerQuotesById] = useState();
 
@@ -75,27 +75,9 @@ const CustomerDetails = () => {
   });
 
   useEffect(() => {
-    // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
-    // if (!localStorage.getItem('supabase.auth.token')) {
-    //     history.push('/login');
-    // }
-    getAllCustomer();
     getAllQuotesByCustomerId();
     getAllInvoicesByCustomerId();
   }, []);
-
-  const getAllCustomer = async () => {
-    const { data: customerById, error } = await supabase
-      .from('customer')
-      .select('*, customer_type:customer_type_id(*)')
-      .eq('id', `${id}`);
-
-    if (error) {
-      console.log(error);
-    }
-    getCustomer(customerById[0]);
-    // console.log(customerById)
-  };
 
   const getAllQuotesByCustomerId = async () => {
     const { data: quotes, error } = await supabase
@@ -164,52 +146,8 @@ const CustomerDetails = () => {
   };
 
   // Handles the submittion of data to make the updates to the DB
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-
-    const { data, error } = await supabase
-      .from('customer')
-      .update({
-        first_name: selectedCustomerObject.first_name,
-        last_name: selectedCustomerObject.last_name,
-        email: selectedCustomerObject.email,
-        phone_number: selectedCustomerObject.phone_number,
-        street_address: selectedCustomerObject.street_address,
-        city: selectedCustomerObject.city,
-        state: selectedCustomerObject.state,
-        zipcode: selectedCustomerObject.zipcode,
-        customer_type_id: selectedCustomerObject.customer_type_id
-      })
-      .match({ id: customer?.id });
-
-    if (error) {
-      console.log(error);
-      // handleCustomerErrorUpdateToast();
-      toast({
-        position: 'top',
-        title: 'Error Occured!',
-        description: `Message: ${error}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      toast({
-        position: 'top',
-        title: `Customer updated!`,
-        description: `We've updated customer with email ${selectedCustomerObject.email} data 🎉.`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    await getAllCustomer();
+  const handleResetUpdateCustomerState = () => {
     onEditClose();
-    // handleCustomerSuccessUpdateToast();
-
     setSelectedCustomerObject({
       id: '',
       customer_type_id: '',
@@ -223,11 +161,21 @@ const CustomerDetails = () => {
       email: ''
     });
   };
+  const { mutate: mutateUpdateCustomerById } = useUpdateCustomer(
+    toast,
+    handleResetUpdateCustomerState,
+    id
+  );
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    mutateUpdateCustomerById(selectedCustomerObject);
+  };
 
   // Customer Registered Date
   const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-  let customerDate = customer ? (
-    new Date(`${customer.created_at}`).toLocaleDateString('en-us', options)
+  let customerDate = customerById ? (
+    new Date(`${customerById.created_at}`).toLocaleDateString('en-us', options)
   ) : (
     <>
       <Spinner size={'xs'} />
@@ -241,8 +189,6 @@ const CustomerDetails = () => {
         isOpen={isEditOpen}
         onClose={handleCustomerEditCancel}
         customer={selectedCustomerObject}
-        updateParentState={getAllCustomer}
-        toast={toast}
         handleEditSubmit={handleEditSubmit}
         handleEditOnChange={handleCustomerEditChange}
         customerTypes={customerTypes}
@@ -254,11 +200,10 @@ const CustomerDetails = () => {
         onClose={onDeleteClose}
         onOpen={onDeleteOpen}
         toast={toast}
-        // updateParentState={getAllCustomer}
         header={'Delete Customer'}
-        entityDescription={`${customer?.first_name} ${customer?.last_name} ${customer?.email}`}
+        entityDescription={`${customerById?.first_name} ${customerById?.last_name} ${customerById?.email}`}
         body={`You can't undo this action afterwards. This will delete all information that pertained to the customer from quotes and invoices! 🚨`}
-        itemNumber={customer?.id}
+        itemNumber={customerById?.id}
       />
 
       <Flex direction="column" pb="2rem" pt="2rem" h={'full'}>
@@ -280,9 +225,9 @@ const CustomerDetails = () => {
             <CustomerDetailsCard
               bg={bg}
               borderColor={borderColor}
-              onOpen={() => handleCustomerEdit(customer)}
+              onOpen={() => handleCustomerEdit(customerById)}
               deleteCustomer={onDeleteOpen}
-              customer={customer}
+              customer={customerById}
               customerDate={customerDate}
             />
             <Flex w={'full'} h={'full'} gap={4} direction={{ base: 'column', lg: 'column' }}>

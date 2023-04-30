@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { DrawerIndex, MultiPurposeOptions } from '../../../components';
+import React from 'react';
+import { MultiPurposeOptions } from '../../../components';
 import {
   Flex,
   FormControl,
@@ -17,130 +17,9 @@ import {
   DrawerFooter,
   Select
 } from '@chakra-ui/react';
-import { formatPhoneNumber, supabase } from '../../../utils';
 
 const EditCustomerForm = (props) => {
-  const {
-    isOpen,
-    onOpen,
-    onClose,
-    initialRef,
-    customer,
-    updateParentState,
-    toast,
-    handleEditOnChange,
-    handleEditSubmit,
-    customerTypes
-  } = props;
-
-  // States that pick up the values from the input fields of the form
-  const [name, setCustomerName] = useState('');
-  const [firstName, setfirstName] = useState('');
-  const [lastName, setlastName] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zipcode, setZipcode] = useState('');
-  const [email, setEmail] = useState('');
-  const [selectField, setSelectField] = useState('');
-  const [phoneInputValue, setPhoneInputValue] = useState('');
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // const url2 = `http://${process.env.REACT_APP_BASE_URL}:8081/api/customers/${id}`
-    const json = {
-      name: name,
-      address: address,
-      city: city,
-      state: state,
-      zipcode: zipcode,
-      phone_number: !phoneInputValue ? customer?.phone_number : phoneInputValue,
-      email: email
-    };
-    console.log('Submit Function works!');
-
-    // getAllCustomer();
-    updateParentState();
-    toast();
-    setAddress('');
-    setCity('');
-    setZipcode('');
-    setPhoneInputValue('');
-    setEmail('');
-    setSelectField('');
-    setState('');
-    setfirstName('');
-    setlastName('');
-    setlastName('');
-    onClose();
-  };
-
-  const handlePhoneInput = (e) => {
-    //This is where we'll call our future formatPhoneNumber function
-    const formattedPhoneNumber = formatPhoneNumber(e.target.value);
-    console.log(formattedPhoneNumber);
-    //We'll set the input value using our setInputValue
-    setPhoneInputValue(formattedPhoneNumber);
-  };
-
-  const handleEditSubmit1 = async (event) => {
-    event.preventDefault();
-    const { data, error } = await supabase
-      .from('customer')
-      .update({
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        phone_number: phoneInputValue,
-        street_address: address,
-        city: city,
-        state: state,
-        zipcode: zipcode
-      })
-      .match({ id: customer?.id });
-
-    if (error) {
-      console.log(error);
-      // Feedback toast error has occured editing customer data
-      toast({
-        position: 'top',
-        title: `Error Occurred Updating Customer!`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      await updateParentState();
-
-      // Feedback toast when customer has been updated succesfully
-      toast({
-        position: 'top',
-        title: `Customer updated!`,
-        description: "We've updated customer for you 🎉.",
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    // Set React state input fields empty
-    setAddress('');
-    setCity('');
-    setZipcode('');
-    setPhoneInputValue('');
-    setEmail('');
-    setSelectField('');
-    setState('');
-    setfirstName('');
-    setlastName('');
-    setlastName('');
-
-    // Close drawer
-    onClose();
-  };
+  const { isOpen, onClose, customer, handleEditOnChange, handleEditSubmit, customerTypes } = props;
 
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={'lg'}>

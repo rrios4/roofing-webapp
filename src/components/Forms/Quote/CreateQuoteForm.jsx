@@ -25,10 +25,11 @@ import {
 } from '@chakra-ui/react';
 import { FiMap, FiUser } from 'react-icons/fi';
 import { TbNote, TbRuler } from 'react-icons/tb';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const CreateQuoteForm = (props) => {
-  const { isOpen, onClose, initialRef, updateParentState, services, quoteStatuses, toast, data } =
-    props;
+  const { isOpen, onClose, initialRef, services, quoteStatuses, toast, data } = props;
+  const queryClient = useQueryClient();
 
   // React styling hooks
   const { colorMode } = useColorMode();
@@ -100,73 +101,106 @@ const CreateQuoteForm = (props) => {
   };
 
   ///////////////////// Functions that handle submit functionality for new data being inputed ////////////////////////////
+  const { mutate: mutateQuote } = useMutation(
+    async () =>
+      await supabase.from('quote').insert({
+        quote_number: quoteNumberInput,
+        customer_id: selectedCustomerInput.selectedCustomer.value,
+        status_id: quoteStatusInput,
+        service_id: selectedQuoteServiceInput,
+        quote_date: quoteDateInput,
+        expiration_date: expirationDateInput,
+        subtotal: calculatedQuoteSubtotal,
+        total: calculatedQuoteTotal,
+        note: noteInput ? noteInput : null,
+        measurement_note: measurementNoteInput ? measurementNoteInput : null,
+        cust_note:
+          customerMessageSwitchIsOn === true
+            ? customerMessageInput
+            : `If you have any questions or concerns don't hesitate to reach us. 👋`,
+        custom_street_address: customStreetAddressInput ? customStreetAddressInput : null,
+        custom_city: customCityInput ? customCityInput : null,
+        custom_state: customStateInput ? customStateInput : null,
+        custom_zipcode: customZipcodeInput ? customZipcodeInput : null
+      }),
+    {
+      onError: (error) => {
+        toast({
+          position: 'top',
+          title: `Error Creating Quote`,
+          description: `Error: ${error.message} 🚨`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+      },
+      onSuccess: () => {
+        onClose();
+        toast({
+          position: 'top',
+          title: `Successfully Created Quote!`,
+          description: `We've created a new quote as number ${quoteNumberInput}  🎉`,
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
+        setQuoteNumberInput('');
+        setQuoteStatusInput('');
+        setSelectedCustomerInput('');
+        setSelectedQuoteServiceInput('');
+        setQuoteDateInput('');
+        setExpirationDateInput('');
+        setQuoteTotalInput('');
+        setMeasurementNoteInput('');
+        setNoteInput('');
+        setCustomerMessageInput('');
+        setCustomStreetAddressInput('');
+        setCustomCityInput('');
+        setCustomStateInput('');
+        setCustomZipcodeInput('');
+
+        setNoteSwitchIsOn(false);
+        setMeasurementsNoteSwitchIsOn(false);
+        setCustomerMessageSwitchIsOn(false);
+        setCustomAddressSwitchIsOn(false);
+        queryClient.invalidateQueries({ queryKey: ['quotes'] });
+      }
+    }
+  );
+
+  const { mutate: mutateQuoteLineItem } = useMutation(
+    async () =>
+      lineItemObjectList.map(async (item) => {
+        await supabase.from('quote_line_item').insert([
+          {
+            quote_id: quoteNumberInput,
+            service_id: selectedQuoteServiceInput,
+            description: item.description,
+            qty: 1,
+            amount: item.amount,
+            fixed_item: true
+          }
+        ]);
+      }),
+    {
+      onError: (error) => {
+        toast({
+          position: 'top',
+          title: `Error occured creating line-item`,
+          description: `Error: ${error.message}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+      },
+      onSuccess: () => {}
+    }
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase.from('quote').insert({
-      quote_number: quoteNumberInput,
-      customer_id: selectedCustomerInput.selectedCustomer.value,
-      status_id: quoteStatusInput,
-      service_id: selectedQuoteServiceInput,
-      quote_date: quoteDateInput,
-      expiration_date: expirationDateInput,
-      subtotal: calculatedQuoteSubtotal,
-      total: calculatedQuoteTotal,
-      note: noteInput ? noteInput : null,
-      measurement_note: measurementNoteInput ? measurementNoteInput : null,
-      cust_note:
-        customerMessageSwitchIsOn === true
-          ? customerMessageInput
-          : `If you have any questions or concerns don't hesitate to reach us. 👋`,
-      custom_street_address: customStreetAddressInput ? customStreetAddressInput : null,
-      custom_city: customCityInput ? customCityInput : null,
-      custom_state: customStateInput ? customStateInput : null,
-      custom_zipcode: customZipcodeInput ? customZipcodeInput : null
-    });
-
-    if (error) {
-      toast({
-        position: 'top',
-        title: `Error Creating Quote`,
-        description: `Error: ${error.message} 🚨`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    if (data) {
-      await handleQuoteLineItemsSubmit();
-      await updateParentState();
-      onClose();
-      toast({
-        position: 'top',
-        title: `Successfully Created Quote!`,
-        description: `We've created a quote for customer number #${selectedCustomerInput.selectedCustomer.value} 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-      console.log('Data submitted successfully!');
-    }
-
-    setQuoteNumberInput('');
-    setQuoteStatusInput('');
-    setSelectedCustomerInput('');
-    setSelectedQuoteServiceInput('');
-    setQuoteDateInput('');
-    setExpirationDateInput('');
-    setQuoteTotalInput('');
-    setMeasurementNoteInput('');
-    setNoteInput('');
-    setCustomerMessageInput('');
-    setCustomStreetAddressInput('');
-    setCustomCityInput('');
-    setCustomStateInput('');
-    setCustomZipcodeInput('');
-
-    setNoteSwitchIsOn(false);
-    setMeasurementsNoteSwitchIsOn(false);
-    setCustomerMessageSwitchIsOn(false);
-    setCustomAddressSwitchIsOn(false);
+    mutateQuote();
+    mutateQuoteLineItem();
   };
 
   ////////////////// Functions that handle line-item functionality ///////////////////////
@@ -221,31 +255,6 @@ const CreateQuoteForm = (props) => {
         0
       )
     );
-  };
-
-  const handleQuoteLineItemsSubmit = async () => {
-    lineItemObjectList.map(async (item) => {
-      const { error } = await supabase.from('quote_line_item').insert([
-        {
-          quote_id: quoteNumberInput,
-          service_id: selectedQuoteServiceInput,
-          description: item.description,
-          qty: 1,
-          amount: item.amount,
-          fixed_item: true
-        }
-      ]);
-      if (error) {
-        toast({
-          position: 'top',
-          title: `Error occured creating line-item`,
-          description: `Error: ${error.message}`,
-          status: 'error',
-          duration: 5000,
-          isClosable: true
-        });
-      }
-    });
   };
 
   return (

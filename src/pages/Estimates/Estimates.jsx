@@ -28,8 +28,10 @@ import { useQuotes } from '../../hooks/useQuotes';
 import { useServices } from '../../hooks/useServices';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses';
 import { supabase } from '../../utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 function Estimates() {
+  const queryClient = useQueryClient();
   // React Hooks
   const { quotes, fetchQuotes, quotesLoadingStateIsOn } = useQuotes();
   const { services } = useServices();
@@ -130,7 +132,7 @@ function Estimates() {
       });
     }
     if (data) {
-      await fetchQuotes();
+      queryClient.invalidateQueries({ queryKey: ['quotes'] });
       onEditClose();
       toast({
         position: 'top',
@@ -164,7 +166,6 @@ function Estimates() {
         onClose={onNewClose}
         services={services}
         quoteStatuses={quoteStatuses}
-        updateParentState={fetchQuotes}
         toast={toast}
         data={quotes}
       />
@@ -173,7 +174,6 @@ function Estimates() {
         onClose={onDeleteClose}
         onOpen={onDeleteOpen}
         toast={toast}
-        updateParentState={fetchQuotes}
         itemNumber={selectedEstimateNumber}
         header={`Delete Quote`}
         entityDescription={`Quote #${selectedEstimateNumber}`}
@@ -201,7 +201,7 @@ function Estimates() {
             </Button>
           </Link>
         </Box> */}
-        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
+        <Card width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
           <CardBody>
             <HStack mb={'24px'} mx={'1rem'}>
               <Flex display={'flex'} mr={'auto'} alignItems={'center'} gap={8}>

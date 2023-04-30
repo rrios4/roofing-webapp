@@ -308,7 +308,7 @@ const EstimateRequests = () => {
                         <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
                     </Link>
                 </Box> */}
-        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
+        <Card variant={'filled'} width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
           <CardBody>
             {/* Card Header with Search, Button, and etc... */}
             <HStack mb={'24px'} mx={'1rem'}>

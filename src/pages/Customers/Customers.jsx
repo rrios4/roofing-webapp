@@ -16,7 +16,8 @@ import {
   useToast,
   Skeleton,
   Card,
-  CardBody
+  CardBody,
+  Button
 } from '@chakra-ui/react';
 import { IoMdPersonAdd } from 'react-icons/io';
 // import { MdSearch } from 'react-icons/md';
@@ -25,6 +26,8 @@ import { useCustomers } from '../../hooks/useFetchData/useCustomers';
 import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
 import useDebounce from '../../hooks/useDebounce';
 import { useCustomerSearch } from '../../hooks/useFetchData/useCustomerSearch';
+import { Link } from 'react-router-dom';
+import { MdArrowBack } from 'react-icons/md';
 
 export default function Customers() {
   // Custom React Hook to use Customers with useState
@@ -60,57 +63,38 @@ export default function Customers() {
         onClose={onClose}
         initialRef={initialRef}
         toast={toast}
-        loadingState={isLoading}
         customerTypes={customerTypes}
       />
       <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '2', lg: '2rem' }}>
-        {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
-          <Link to={'/'}>
-            <Button
-              colorScheme={buttonColorScheme}
-              ml={'1rem'}
-              mb="1rem"
-              leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>
-              Back
-            </Button>
-          </Link>
-        </Box> */}
-        {/* Card Element for display main data for page */}
-        <Card
-          variant={'outline'}
-          width="full"
-          rounded={'xl'}
-          shadow={'sm'}
-          size={{ base: 'md', lg: 'lg' }}>
-          <CardBody>
-            <Stack
-              direction={{ base: 'column', lg: 'row' }}
-              mb={{ base: '30px', lg: '24px' }}
-              mx={{ base: '', lg: '1rem' }}
-              spacing="auto"
-              gap={6}>
-              <Flex alignItems={'center'} gap={8} justifyContent={'center'}>
-                <Flex>
-                  <Icon as={FiUsers} boxSize={'6'} my={'auto'} />
-                  <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
-                    Customers
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex gap={5} justifyContent={'center'}>
-                <Flex w={'full'}>
-                  <form>
-                    <FormControl>
-                      <Flex flexDir={'row'} w={'full'}>
-                        <Input
-                          value={searchCustomer}
-                          onChange={({ target }) => setSearchCustomer(target.value)}
-                          placeholder="Search for customer..."
-                          colorScheme="blue"
-                          size={'md'}
-                          width={{ base: '300px', lg: '300px' }}
-                        />
-                        {/* <Tooltip label="Search">
+        <Box
+          display={'flex'}
+          flexDirection={{ base: 'column', lg: 'row' }}
+          marginBottom={'1rem'}
+          justifyContent={{ base: 'center', lg: 'flex-start' }}
+          w="full"
+          gap={'4'}
+          px={'2rem'}>
+          <Flex mr={'auto'} w={'full'} justifyContent={{ base: 'center', lg: 'flex-start' }}>
+            <Icon as={FiUsers} boxSize={6} my={'auto'} />
+            <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
+              Customers
+            </Text>
+          </Flex>
+          <Flex gap={5} justifyContent={'center'}>
+            <Flex w={'full'}>
+              <form>
+                <FormControl>
+                  <Flex flexDir={'row'} w={'full'}>
+                    <Input
+                      variant={'outline'}
+                      borderColor={'gray.300'}
+                      value={searchCustomer}
+                      onChange={({ target }) => setSearchCustomer(target.value)}
+                      placeholder="Search for customer..."
+                      size={'md'}
+                      width={{ base: '300px', lg: '300px' }}
+                    />
+                    {/* <Tooltip label="Search">
                           <IconButton
                             ml={'1rem'}
                             type="submit"
@@ -118,22 +102,25 @@ export default function Customers() {
                             isLoading={isLoading || customerIsLoading}
                           />
                         </Tooltip> */}
-                      </Flex>
-                    </FormControl>
-                  </form>
-                </Flex>
-                <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
-                  <Tooltip label={'Create New Customer'}>
-                    <IconButton
-                      colorScheme="blue"
-                      variant="solid"
-                      onClick={onOpen}
-                      icon={<IoMdPersonAdd />}
-                    />
-                  </Tooltip>
-                </Box>
-              </Flex>
-            </Stack>
+                  </Flex>
+                </FormControl>
+              </form>
+            </Flex>
+            <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
+              <Tooltip label={'Create New Customer'}>
+                <IconButton
+                  colorScheme="blue"
+                  variant="solid"
+                  onClick={onOpen}
+                  icon={<IoMdPersonAdd />}
+                />
+              </Tooltip>
+            </Box>
+          </Flex>
+        </Box>
+        {/* Card Element for display main data for page */}
+        <Card width="full" rounded={'xl'} shadow={'sm'} size={{ base: 'md', lg: 'lg' }}>
+          <CardBody>
             {/* Customer Table Component */}
             {/* Renders a table with all customers stored from database */}
             {isLoading || customerIsLoading === true ? (
