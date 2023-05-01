@@ -40,7 +40,12 @@ import { FiArrowRight, FiFileText } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { formatDate, formatMoneyValue, formatNumber } from '../../utils';
 import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
-import { useFetchCustomerByID, useUpdateCustomer } from '../../hooks/useFetchData/useCustomers';
+import {
+  useFetchCustomerByID,
+  useFetchCustomerInvoices,
+  useFetchCustomerQuotes,
+  useUpdateCustomer
+} from '../../hooks/useFetchData/useCustomers';
 
 const CustomerDetails = () => {
   // React Hooks
@@ -48,6 +53,8 @@ const CustomerDetails = () => {
   const toast = useToast();
   const { customerTypes } = useCustomerTypes();
   const { customerById } = useFetchCustomerByID(id);
+  const { customerInvoices } = useFetchCustomerInvoices(id);
+  const { customerQuotes } = useFetchCustomerQuotes(id);
 
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
@@ -55,10 +62,6 @@ const CustomerDetails = () => {
   const bg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   // const {id} = props.match.params;
-
-  // React State to store array of objects from GET request API
-  const [customerInvoicesById, setCustomerInvoicesById] = useState();
-  const [customerQuotesById, setCustomerQuotesById] = useState();
 
   // States that pick up the values from the input fields of the form
   const [selectedCustomerObject, setSelectedCustomerObject] = useState({
@@ -73,38 +76,6 @@ const CustomerDetails = () => {
     phone_number: '',
     email: ''
   });
-
-  useEffect(() => {
-    getAllQuotesByCustomerId();
-    getAllInvoicesByCustomerId();
-  }, []);
-
-  const getAllQuotesByCustomerId = async () => {
-    const { data: quotes, error } = await supabase
-      .from('quote')
-      .select('*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*)')
-      .eq('customer_id', `${id}`);
-
-    if (error) {
-      console.log(error);
-    }
-    setCustomerQuotesById(quotes);
-  };
-
-  const getAllInvoicesByCustomerId = async () => {
-    const { data, error } = await supabase
-      .from('invoice')
-      .select(
-        '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)'
-      )
-      .eq('customer_id', `${id}`);
-
-    if (error) {
-      console.log(error);
-    }
-    // console.log(data)
-    setCustomerInvoicesById(data);
-  };
 
   // Handles customer edit data
   const handleCustomerEdit = (customer) => {
@@ -258,7 +229,7 @@ const CustomerDetails = () => {
                     </h2>
                     <AccordionPanel pb={4}>
                       {/* Table */}
-                      <CustomerInvoicesTable data={customerInvoicesById} />
+                      <CustomerInvoicesTable data={customerInvoices} />
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
@@ -290,7 +261,7 @@ const CustomerDetails = () => {
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4}>
-                      {!customerQuotesById ? (
+                      {!customerQuotes ? (
                         <Skeleton h={'20px'} w={'full'} />
                       ) : (
                         <>
@@ -307,7 +278,7 @@ const CustomerDetails = () => {
                                 </Tr>
                               </Thead>
                               <Tbody>
-                                {customerQuotesById?.map((item, index) => (
+                                {customerQuotes?.map((item, index) => (
                                   <Tr key={index}>
                                     <Td>{formatNumber(item.quote_number)}</Td>
                                     <Td>
