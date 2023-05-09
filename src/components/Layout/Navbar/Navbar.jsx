@@ -134,7 +134,7 @@ const Navbar = () => {
               </Box>
             </Tooltip>
           </Link>
-          <Link to={'/estimates'}>
+          <Link to={'/quotes'}>
             <Tooltip label="Quotes" bg={tooltipBackground}>
               <Box p={'1'} rounded="md" _hover={{ bg: buttonBackground }}>
                 {/* <MdSquareFoot color={iconColors} size={"28px"} /> */}
@@ -295,7 +295,7 @@ const Navbar = () => {
                     Invoices
                   </Flex>
                 </Link>
-                <Link to={'/estimates'}>
+                <Link to={'/quotes'}>
                   <Flex
                     align={'center'}
                     p="4"

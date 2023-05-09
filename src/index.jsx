@@ -12,10 +12,10 @@ import {
   Customers,
   EstimateRequests,
   Invoices,
-  Estimates,
-  CustomerDetails,
+  Quotes,
+  CustomerById,
   InvoiceDetails,
-  EstimateDetails
+  QuoteById
 } from './pages';
 import { Layout, ProtectedRoute, EmployeeEdit, Employees } from './components';
 import { AuthProvider } from './hooks/useAuth';
@@ -70,10 +70,10 @@ root.render(
                   }
                 />
                 <Route
-                  path="/estimates"
+                  path="/quotes"
                   element={
                     <ProtectedRoute>
-                      <Estimates />
+                      <Quotes />
                     </ProtectedRoute>
                   }
                 />
@@ -86,10 +86,10 @@ root.render(
                   }
                 />
                 <Route
-                  path="/editcustomer/:id"
+                  path="/customers/:id"
                   element={
                     <ProtectedRoute>
-                      <CustomerDetails />
+                      <CustomerById />
                     </ProtectedRoute>
                   }
                 />
@@ -102,10 +102,10 @@ root.render(
                   }
                 />
                 <Route
-                  path="/editestimate/:id"
+                  path="/quotes/:id"
                   element={
                     <ProtectedRoute>
-                      <EstimateDetails />
+                      <QuoteById />
                     </ProtectedRoute>
                   }
                 />

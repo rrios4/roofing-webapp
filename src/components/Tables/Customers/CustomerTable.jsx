@@ -116,7 +116,7 @@ const CustomerTable = (props) => {
                   <Td>{new Date(customer.created_at).toLocaleDateString('en-us', options)}</Td>
                 )}
                 <Td textAlign={'center'}>
-                  <Link to={`/editcustomer/${customer.id}`}>
+                  <Link to={`/customers/${customer.id}`}>
                     <Tooltip label="Go to Customer Details ">
                       <IconButton
                         ml={'1rem'}

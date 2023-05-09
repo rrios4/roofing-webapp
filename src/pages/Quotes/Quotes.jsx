@@ -24,7 +24,7 @@ import {
   EditQuoteForm
 } from '../../components';
 import { TbRuler } from 'react-icons/tb';
-import { useQuotes } from '../../hooks/useQuotes';
+import { useFetchQuotes, useUpdateQuote } from '../../hooks/useQuotes';
 import { useServices } from '../../hooks/useServices';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses';
 import { supabase } from '../../utils';
@@ -32,10 +32,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 function Estimates() {
   const queryClient = useQueryClient();
-  // React Hooks
-  const { quotes, fetchQuotes, quotesLoadingStateIsOn } = useQuotes();
-  const { services } = useServices();
-  const { quoteStatuses } = useQuoteStatuses();
 
   // Chakra UI Hooks
   const initialRef = React.useRef();
@@ -43,6 +39,11 @@ function Estimates() {
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+
+  // Custom React Hooks
+  const { quotes, isLoading: quotesLoadingStateIsOn } = useFetchQuotes();
+  const { services } = useServices();
+  const { quoteStatuses } = useQuoteStatuses();
 
   // States to manage data
   const [selectedEstimateId, setSelectedEstimateId] = useState('');
@@ -60,14 +61,29 @@ function Estimates() {
     cust_note: ''
   });
 
+  const handleResetQuoteEditState = () => {
+    onEditClose();
+    setSelectedEditQuote({
+      id: '',
+      quote_number: '',
+      status_id: '',
+      service_id: '',
+      quote_date: '',
+      issue_date: '',
+      expiration_date: '',
+      note: '',
+      measurement_note: '',
+      cust_note: ''
+    });
+  };
+
+  const { mutate: mutateUpdateQuote, isLoading: quoteUpdateIsLoading } = useUpdateQuote(
+    toast,
+    handleResetQuoteEditState
+  );
+
   const [searchCustomer, setSearchCustomer] = useState('');
   const [searchEstimateInput, setSearchEstimateInput] = useState('');
-
-  //React Render Hook
-  useEffect(() => {
-    // getAllQuotes();
-    // getCustomers();
-  }, []);
 
   const searchEstimate = async (e) => {
     e.preventDefault();
@@ -103,59 +119,7 @@ function Estimates() {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-
-    const { data, error } = await supabase
-      .from('quote')
-      .update({
-        status_id: selectedEditQuote.status_id,
-        service_id: selectedEditQuote.service_id,
-        quote_date: selectedEditQuote.quote_date ? selectedEditQuote.quote_date : null,
-        issue_date: selectedEditQuote.issue_date ? selectedEditQuote.issue_date : null,
-        expiration_date: selectedEditQuote.expiration_date
-          ? selectedEditQuote.expiration_date
-          : null,
-        note: selectedEditQuote.note,
-        measurement_note: selectedEditQuote.measurement_note,
-        cust_note: selectedEditQuote.cust_note,
-        updated_at: new Date()
-      })
-      .eq('quote_number', selectedEditQuote.quote_number);
-
-    if (error) {
-      toast({
-        position: 'top',
-        title: `Error Updating Quote Number ${selectedEditQuote.quote_number}`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    if (data) {
-      queryClient.invalidateQueries({ queryKey: ['quotes'] });
-      onEditClose();
-      toast({
-        position: 'top',
-        title: `Successfully Updated Quote - ${selectedEditQuote.quote_number}!`,
-        description: `We've updated quote information for you 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    setSelectedEditQuote({
-      id: '',
-      quote_number: '',
-      status_id: '',
-      service_id: '',
-      quote_date: '',
-      issue_date: '',
-      expiration_date: '',
-      note: '',
-      measurement_note: '',
-      cust_note: ''
-    });
+    await mutateUpdateQuote(selectedEditQuote);
   };
 
   return (
@@ -188,6 +152,7 @@ function Estimates() {
         quoteStatuses={quoteStatuses}
         handleEditOnChange={handleEditOnChange}
         handleEditSubmit={handleEditSubmit}
+        loadingState={quoteUpdateIsLoading}
       />
       <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">

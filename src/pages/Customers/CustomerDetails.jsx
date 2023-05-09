@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Flex,
@@ -26,8 +26,6 @@ import {
   Badge,
   Skeleton
 } from '@chakra-ui/react';
-
-import supabase from '../../utils/supabaseClient';
 import { Link, useParams } from 'react-router-dom';
 import {
   CustomerDetailsCard,
@@ -47,7 +45,7 @@ import {
   useUpdateCustomer
 } from '../../hooks/useFetchData/useCustomers';
 
-const CustomerDetails = () => {
+const CustomerById = () => {
   // React Hooks
   const { id } = useParams();
   const toast = useToast();
@@ -327,4 +325,4 @@ const CustomerDetails = () => {
   );
 };
 
-export default CustomerDetails;
+export default CustomerById;

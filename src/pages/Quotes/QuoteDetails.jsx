@@ -81,7 +81,7 @@ import { EditQuoteForm, QuoteDocument } from '../../components/index.js';
 import { useServices } from '../../hooks/useServices.jsx';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
 
-const EstimateDetails = (props) => {
+const QuoteById = (props) => {
   const { parentData } = props;
   const toast = useToast();
 
@@ -351,7 +351,7 @@ const EstimateDetails = (props) => {
       {/* Header */}
       <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
         <Flex px={'1rem'} gap={4} mb={{ base: '0rem', lg: '0' }}>
-          <Link to={`/estimates`}>
+          <Link to={`/quotes`}>
             <Button borderColor={'gray.300'} colorScheme={'gray'}>
               <FiArrowLeft />
             </Button>
@@ -1004,4 +1004,4 @@ const EstimateDetails = (props) => {
   );
 };
 
-export default EstimateDetails;
+export default QuoteById;

@@ -116,7 +116,7 @@ const EditQuoteForm = (props) => {
               placeholder="Here you enter customer message you want the customer to see..."
             />
           </DrawerBody>
-          <DrawerFooter gap={4} >
+          <DrawerFooter gap={4}>
             <Button colorScheme={'blue'} type="submit" isLoading={loadingState}>
               Update quote
             </Button>
