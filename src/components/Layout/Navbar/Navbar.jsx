@@ -117,7 +117,7 @@ const Navbar = () => {
           <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>
             CONTENT
           </Text>
-          <Link to={'/estimate-requests'}>
+          <Link to={'/qr'}>
             <Tooltip label="Quote Requests" bg={tooltipBackground}>
               <Box p={'1'} rounded="md" _hover={{ bg: buttonBackground }}>
                 {/* <MdScheduleSend size={'30px'}/> */}
@@ -269,7 +269,7 @@ const Navbar = () => {
                     Dashboard
                   </Flex>
                 </Link>
-                <Link to={'/estimate-requests'}>
+                <Link to={'/qr'}>
                   <Flex
                     align={'center'}
                     p="4"

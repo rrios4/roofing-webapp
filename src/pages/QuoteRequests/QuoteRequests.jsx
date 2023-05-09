@@ -30,7 +30,7 @@ import { useServices } from '../../hooks/useServices';
 import { useQRStatuses } from '../../hooks/useQRStatuses';
 import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
 
-const EstimateRequests = () => {
+const QuoteRequests = () => {
   // React Hook for managing state of quotes request
   const { quoteRequests, setQuoteRequests, fetchQuoteRequests, quoteRequestLoadingStateIsOn } =
     useQuoteRequests();
@@ -378,4 +378,4 @@ const EstimateRequests = () => {
   );
 };
 
-export default EstimateRequests;
+export default QuoteRequests;

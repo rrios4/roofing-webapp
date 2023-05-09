@@ -143,7 +143,7 @@ const InvoiceTable = (props) => {
                         }}
                       />
                     </Tooltip>
-                    <Link to={`/editinvoice/${invoice.invoice_number}`}>
+                    <Link to={`/invoices/${invoice.invoice_number}`}>
                       <Tooltip label="Go to Invoice Details ">
                         <IconButton
                           icon={<MdKeyboardArrowRight />}

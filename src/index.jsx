@@ -10,7 +10,7 @@ import {
   Signup,
   Dashboard,
   Customers,
-  EstimateRequests,
+  QuoteRequests,
   Invoices,
   Quotes,
   CustomerById,
@@ -46,10 +46,10 @@ root.render(
                 <Route path="/login" element={<Login />} />
                 {/* <Route path="/signup" element={<Signup />} /> */}
                 <Route
-                  path="/estimate-requests"
+                  path="/qr"
                   element={
                     <ProtectedRoute>
-                      <EstimateRequests />
+                      <QuoteRequests />
                     </ProtectedRoute>
                   }
                 />
@@ -94,7 +94,7 @@ root.render(
                   }
                 />
                 <Route
-                  path="/editinvoice/:id"
+                  path="/invoices/:id"
                   element={
                     <ProtectedRoute>
                       <InvoiceDetails />

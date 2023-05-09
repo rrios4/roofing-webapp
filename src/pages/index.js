@@ -1,9 +1,9 @@
 export { default as Login } from './Login';
 export { default as Signup } from './Signup';
 export { default as Dashboard } from './Dashboard/Dashboard';
-export { default as EstimateRequests } from './EstimateRequests/EstimateRequests';
+export { default as QuoteRequests } from './QuoteRequests/QuoteRequests';
 export { default as Invoices } from './Invoices/Invoices';
-export { default as InvoiceDetails } from './InvoiceDetails/InvoiceDetails';
+export { default as InvoiceDetails } from './Invoices/InvoiceDetails';
 export { default as Quotes } from './Quotes/Quotes';
 export { default as QuoteById } from './Quotes/QuoteDetails';
 export { default as Customers } from './Customers/Customers';
