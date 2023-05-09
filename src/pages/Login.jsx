@@ -63,7 +63,7 @@ function Login() {
             w={{ base: '80px', lg: '100px' }}
             rounded="30"
             bg="blue.500"
-            src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
+            src="/assets/LogoRR.png"
           />
           <Heading pt="1" fontSize={{ base: '3xl', lg: '4xl' }}>
             Sign in to your account
