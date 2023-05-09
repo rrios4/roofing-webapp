@@ -17,6 +17,22 @@ export const fetchQuotes = async () => {
 // GET request to API to obtain quote by id
 export const fetchQuoteById = async () => {};
 
+// GET request to API to search quote by query
+export const fetchSearchQuotes = async (query) => {
+  let { data, error } = await supabase
+    .from('quote')
+    .select('*, customer:customer_id(*)')
+    .textSearch(
+      ['quote_number', 'custom_street_address', 'custom_city', 'custom_state', 'custom_zipcode'],
+      query
+    );
+  if (error) {
+    console.log(error);
+  }
+  console.log(data);
+  return data;
+};
+
 // PATCH request to API to update a quote
 export const updateQuoteById = async (quoteObject) => {
   const { data, error } = await supabase

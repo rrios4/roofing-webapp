@@ -24,11 +24,12 @@ import {
   EditQuoteForm
 } from '../../components';
 import { TbRuler } from 'react-icons/tb';
-import { useFetchQuotes, useUpdateQuote } from '../../hooks/useQuotes';
+import { useFetchQuotes, useSearchQuote, useUpdateQuote } from '../../hooks/useQuotes';
 import { useServices } from '../../hooks/useServices';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses';
 import { supabase } from '../../utils';
 import { useQueryClient } from '@tanstack/react-query';
+import useDebounce from '../../hooks/useDebounce';
 
 function Estimates() {
   const queryClient = useQueryClient();
@@ -82,8 +83,10 @@ function Estimates() {
     handleResetQuoteEditState
   );
 
-  const [searchCustomer, setSearchCustomer] = useState('');
-  const [searchEstimateInput, setSearchEstimateInput] = useState('');
+  const [searchQuote, setSearchQuote] = useState('');
+  const [searchQuoteInput, setSearchQuoteInput] = useState('');
+  const deboundedQuoteSearchTerm = useDebounce(searchQuoteInput, 100);
+  const { quoteSearchResult, quoteSearchIsLoading } = useSearchQuote(deboundedQuoteSearchTerm);
 
   const searchEstimate = async (e) => {
     e.preventDefault();
@@ -180,9 +183,11 @@ function Estimates() {
                   <form method="GET" onSubmit={searchEstimate}>
                     <FormControl display={'flex'}>
                       <Input
-                        value={searchEstimateInput}
-                        onChange={({ target }) => setSearchEstimateInput(target.value)}
-                        placeholder="Search for Quotes"
+                        variant={'outline'}
+                        borderColor={'gray.300'}
+                        value={searchQuoteInput}
+                        onChange={({ target }) => setSearchQuoteInput(target.value)}
+                        placeholder="Search for quotes..."
                         colorScheme="blue"
                         size={'md'}
                       />
@@ -220,7 +225,7 @@ function Estimates() {
             ) : (
               <>
                 <QuoteTable
-                  data={quotes}
+                  data={!searchQuoteInput ? quotes : quoteSearchResult}
                   handleDelete={handleDelete}
                   handleEditDrawer={handleEditDrawer}
                 />
