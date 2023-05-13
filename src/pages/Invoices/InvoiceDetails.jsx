@@ -973,7 +973,7 @@ const InvoiceDetails = () => {
                   ) : (
                     <>
                       <Flex>
-                        <Link to={`/editcustomer/${invoice?.customer.id}`}>
+                        <Link to={`/invoices/${invoice?.customer.id}`}>
                           <Button variant={'ghost'}>
                             <Avatar size={'xs'} />
                             <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>

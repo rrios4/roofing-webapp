@@ -789,7 +789,7 @@ const QuoteById = (props) => {
                   ) : (
                     <>
                       <Flex>
-                        <Link to={`/editcustomer/${quoteById?.customer?.id}`}>
+                        <Link to={`/customers/${quoteById?.customer?.id}`}>
                           <Button variant={'ghost'}>
                             <Avatar size={'xs'} />
                             <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>

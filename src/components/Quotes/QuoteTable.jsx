@@ -92,7 +92,7 @@ const QuoteTable = (props) => {
                   {quote?.customer?.first_name && quote?.customer?.last_name ? (
                     <>
                       <Flex>
-                        <Link to={`/editcustomer/${quote.customer.id}`}>
+                        <Link to={`/customers/${quote.customer.id}`}>
                           <Button variant={'ghost'} colorScheme={'facebook'}>
                             <Avatar size={'xs'} mr={'8px'} my={'auto'} />
                             <Flex flexDir={'column'}>

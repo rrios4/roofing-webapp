@@ -318,7 +318,7 @@ function Invoices() {
             </Button>
           </Link>
         </Box> */}
-        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
+        <Card width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
           <CardBody>
             {/* Header Page info & Actions */}
             <HStack mb={'24px'} mx={'1rem'}>

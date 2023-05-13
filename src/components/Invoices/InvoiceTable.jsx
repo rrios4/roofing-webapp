@@ -95,7 +95,7 @@ const InvoiceTable = (props) => {
                   {invoice.customer.first_name && invoice.customer.last_name ? (
                     <>
                       <Flex>
-                        <Link to={`/editcustomer/${invoice.customer.id}`}>
+                        <Link to={`/customers/${invoice.customer.id}`}>
                           <Button variant={'ghost'} colorScheme={'facebook'}>
                             <Avatar size={'xs'} mr={'8px'} my={'auto'} />
                             <Flex flexDir={'column'}>
