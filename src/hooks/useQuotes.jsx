@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   deleteQuoteById,
+  fetchQuoteById,
   fetchQuotes,
   fetchSearchQuotes,
   updateQuoteById
@@ -19,6 +20,18 @@ export const useFetchQuotes = () => {
 };
 
 // Custom hook to get quote by id
+export const useFetchQuoteById = (quote_number) => {
+  const {
+    data: quoteById,
+    isLoading,
+    isError
+  } = useQuery({
+    queryKey: ['quoteById', quote_number],
+    queryFn: () => fetchQuoteById(quote_number)
+  });
+  return { quoteById, isLoading, isError };
+};
+
 // Custom hook to search for customer
 export const useSearchQuote = (query) => {
   // React-Query

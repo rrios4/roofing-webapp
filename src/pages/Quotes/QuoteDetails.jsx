@@ -80,12 +80,15 @@ import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { EditQuoteForm, QuoteDocument } from '../../components/index.js';
 import { useServices } from '../../hooks/useServices.jsx';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
+import { useFetchQuoteById } from '../../hooks/useQuotes.jsx';
 
 const QuoteById = (props) => {
   const { parentData } = props;
+  const { id } = useParams();
   const toast = useToast();
 
   // Custom Hooks
+  const { quoteById, isLoading } = useFetchQuoteById(id);
   const { services } = useServices();
   const { quoteStatuses } = useQuoteStatuses();
 
@@ -138,38 +141,15 @@ const QuoteById = (props) => {
   const paymentBorderColor = useColorModeValue('gray.200', 'gray.400');
   const secondaryTextColor = useColorModeValue('gray.600', 'gray.300');
 
-  // Define variables
-  const { id } = useParams();
+  // React-Hooks
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef();
   let navigate = useNavigate();
 
-  // React functions
-  useEffect(() => {
-    getQuoteById();
-  }, []);
-
-  // Handle the GET request for Qoute data from DB
-  const getQuoteById = async () => {
-    const { data, error } = await supabase
-      .from('quote')
-      .select(
-        '*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*), quote_line_item(*)'
-      )
-      .eq('quote_number', id);
-
-    if (error) {
-      console.log(error);
-    }
-    setQuote(data[0]);
-    console.log(id);
-    console.log(data);
-  };
-
   // Handle quote status when selected in menu
   const handleQuoteStatusMenuSelection = async (status_id) => {
     setLoadingQuoteStatusIsOn(true);
-    if (status_id === quote?.status_id) {
+    if (status_id === quoteById?.status_id) {
       console.log(status_id);
     } else {
       const { data, error } = await supabase
@@ -181,7 +161,7 @@ const QuoteById = (props) => {
         console.log(error);
       }
       console.log(data);
-      await getQuoteById();
+      // await getQuoteById();
     }
     setLoadingQuoteStatusIsOn(false);
   };
@@ -201,7 +181,7 @@ const QuoteById = (props) => {
       });
     }
     if (data) {
-      await getQuoteById();
+      // await getQuoteById();
       toast({
         position: 'top',
         title: `Succesfully Deleted Quote Line Item`,
@@ -238,7 +218,7 @@ const QuoteById = (props) => {
       });
     }
     if (data) {
-      await getQuoteById();
+      // await getQuoteById();
       setLoadingQuoteStatusIsOn(false);
       onAddLineItemClose();
       toast({
@@ -303,7 +283,7 @@ const QuoteById = (props) => {
     }
 
     if (data) {
-      await getQuoteById();
+      // await getQuoteById();
       onEditQuoteClose();
       toast({
         position: 'top',
@@ -352,7 +332,7 @@ const QuoteById = (props) => {
       <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
         <Flex px={'1rem'} gap={4} mb={{ base: '0rem', lg: '0' }}>
           <Link to={`/quotes`}>
-            <Button borderColor={'gray.300'} colorScheme={'gray'}>
+            <Button variant={'outline'} border={'1px'} borderColor={'gray.300'}>
               <FiArrowLeft />
             </Button>
           </Link>
@@ -360,11 +340,11 @@ const QuoteById = (props) => {
         </Flex>
         <Flex px={'1rem'} gap={4} ml={{ base: 'auto', lg: '0' }}>
           <Menu>
-            <MenuButton as={Button}>
+            <MenuButton as={Button} variant={'outline'} border={'1px'} borderColor={'gray.300'}>
               <FiMoreHorizontal />
             </MenuButton>
             <MenuList>
-              <MenuItem icon={<FiEdit />} onClick={() => handleEditQuoteModal(quote)}>
+              <MenuItem icon={<FiEdit />} onClick={() => handleEditQuoteModal(quoteById)}>
                 Edit Quote
               </MenuItem>
               <MenuItem icon={<MdOutlinePayments />}>Edit Payments</MenuItem>
@@ -372,7 +352,7 @@ const QuoteById = (props) => {
             </MenuList>
           </Menu>
           <Tooltip hasArrow label="Convert Quote to Invoice">
-            <Button>
+            <Button variant={'outline'} border={'1px'} borderColor={'gray.300'}>
               <MdTransform />
             </Button>
           </Tooltip>
@@ -425,10 +405,10 @@ const QuoteById = (props) => {
                     <Text as={'span'} color={'blue.400'}>
                       #
                     </Text>{' '}
-                    {formatNumber(quote?.quote_number)}
+                    {formatNumber(quoteById?.quote_number)}
                   </Text>
                   <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'gray.500'}>
-                    Expires {quote?.expiration_date}
+                    Expires {quoteById?.expiration_date}
                   </Text>
                 </Box>
               </Flex>
@@ -437,7 +417,7 @@ const QuoteById = (props) => {
                   <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
                     To
                   </Text>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton
                       bg={paymentCardBgColor}
                       height={'100px'}
@@ -447,18 +427,19 @@ const QuoteById = (props) => {
                     />
                   ) : (
                     <>
-                      {quote?.bill_to === true ? (
+                      {quoteById?.bill_to === true ? (
                         <>
                           <Box>
                             <Text ml={'3rem'} fontWeight={'semibold'}>
-                              {quote?.customer?.first_name} {quote?.customer?.last_name}
+                              {quoteById?.customer?.first_name} {quoteById?.customer?.last_name}
                             </Text>
-                            <Text ml={'3rem'}>{quote?.bill_to_street_address}</Text>
+                            <Text ml={'3rem'}>{quoteById?.bill_to_street_address}</Text>
                             <Text ml={'3rem'}>
-                              {quote?.bill_to_city}, {quote?.bill_to_state} {quote?.bill_to_zipcode}
+                              {quoteById?.bill_to_city}, {quoteById?.bill_to_state}{' '}
+                              {quoteById?.bill_to_zipcode}
                             </Text>
                             <Text ml={'3rem'} color={'blue.400'}>
-                              {quote?.customer?.email}
+                              {quoteById?.customer?.email}
                             </Text>
                           </Box>
                         </>
@@ -466,15 +447,15 @@ const QuoteById = (props) => {
                         <>
                           <Box>
                             <Text ml={'3rem'} fontWeight={'semibold'}>
-                              {quote?.customer?.first_name} {quote?.customer?.last_name}
+                              {quoteById?.customer?.first_name} {quoteById?.customer?.last_name}
                             </Text>
-                            <Text ml={'3rem'}>{quote?.customer?.street_address}</Text>
+                            <Text ml={'3rem'}>{quoteById?.customer?.street_address}</Text>
                             <Text ml={'3rem'}>
-                              {quote?.customer?.city}, {quote?.customer?.state}{' '}
-                              {quote?.customer?.zipcode}
+                              {quoteById?.customer?.city}, {quoteById?.customer?.state}{' '}
+                              {quoteById?.customer?.zipcode}
                             </Text>
                             <Text ml={'3rem'} color={'blue.400'}>
-                              {quote?.customer?.email}
+                              {quoteById?.customer?.email}
                             </Text>
                           </Box>
                         </>
@@ -486,7 +467,7 @@ const QuoteById = (props) => {
                   <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
                     From
                   </Text>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton
                       bg={paymentCardBgColor}
                       height={'100px'}
@@ -513,7 +494,7 @@ const QuoteById = (props) => {
                   <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
                     Note
                   </Text>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton
                       bg={paymentCardBgColor}
                       height={'20px'}
@@ -524,7 +505,7 @@ const QuoteById = (props) => {
                   ) : (
                     <>
                       <Text ml={'3rem'} maxW="500px">
-                        {quote?.cust_note}
+                        {quoteById?.cust_note}
                       </Text>
                     </>
                   )}
@@ -535,7 +516,7 @@ const QuoteById = (props) => {
               {/* Line Item Table */}
               <Box px={'2rem'} py={'2rem'}>
                 <TableContainer rounded={'xl'}>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton bg={paymentCardBgColor} height={'100px'} w={'full'} rounded={'xl'} />
                   ) : (
                     <>
@@ -551,7 +532,7 @@ const QuoteById = (props) => {
                         </Thead>
                         <Tbody>
                           {/* Table Row Data Component */}
-                          {quote?.quote_line_item?.map((item, index) => (
+                          {quoteById?.quote_line_item?.map((item, index) => (
                             <Tr key={index}>
                               <Td whiteSpace="normal" height="auto" blockSize="auto">
                                 {item.description}
@@ -583,7 +564,7 @@ const QuoteById = (props) => {
                     Subtotal
                   </Text>
                   <Text ml={'auto'} mr={'1rem'}>
-                    ${formatMoneyValue(quote?.subtotal)}
+                    ${formatMoneyValue(quoteById?.subtotal)}
                   </Text>
                 </Flex>
                 <Flex mb={'2rem'} bg={'blue.500'} color={'white'} px={4} py={4} rounded={'xl'}>
@@ -591,7 +572,7 @@ const QuoteById = (props) => {
                     Total
                   </Text>
                   <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'}>
-                    ${formatMoneyValue(quote?.total)}
+                    ${formatMoneyValue(quoteById?.total)}
                   </Text>
                 </Flex>
               </Box>
@@ -604,7 +585,7 @@ const QuoteById = (props) => {
           <Card rounded={'xl'}>
             <CardBody>
               <Flex px={'8px'} gap={2}>
-                {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(quote?.amount_due)}</Text> */}
+                {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(quoteById?.amount_due)}</Text> */}
                 {/* Menu Button to update status of invoice */}
                 <Menu>
                   {({ isOpen }) => (
@@ -617,40 +598,40 @@ const QuoteById = (props) => {
                         rightIcon={
                           isOpen ? <BsChevronDown size="10px" /> : <BsChevronUp size="10px" />
                         }>
-                        {quote?.quote_status?.name === 'Draft' ? (
+                        {quoteById?.quote_status?.name === 'Draft' ? (
                           <>
                             <Flex gap="2">
                               <Box my="auto">
                                 <FiFolder />
                               </Box>
-                              {quote?.quote_status?.name}
+                              {quoteById?.quote_status?.name}
                             </Flex>
                           </>
-                        ) : quote?.quote_status?.name === 'Pending' ? (
+                        ) : quoteById?.quote_status?.name === 'Pending' ? (
                           <>
                             <Flex gap="2">
                               <Box my="auto">
                                 <MdPendingActions />
                               </Box>
-                              {quote?.quote_status?.name}
+                              {quoteById?.quote_status?.name}
                             </Flex>
                           </>
-                        ) : quote?.quote_status?.name === 'Accepted' ? (
+                        ) : quoteById?.quote_status?.name === 'Accepted' ? (
                           <>
                             <Flex gap="2">
                               <Box my="auto">
                                 <AiOutlineCheckCircle />
                               </Box>
-                              {quote?.quote_status?.name}
+                              {quoteById?.quote_status?.name}
                             </Flex>
                           </>
-                        ) : quote?.quote_status?.name === 'Rejected' ? (
+                        ) : quoteById?.quote_status?.name === 'Rejected' ? (
                           <>
                             <Flex gap="2">
                               <Box my="auto">
                                 <BiCalendarExclamation />
                               </Box>
-                              {quote?.quote_status?.name}
+                              {quoteById?.quote_status?.name}
                             </Flex>
                           </>
                         ) : (
@@ -664,7 +645,7 @@ const QuoteById = (props) => {
                               <FiFolder size="20px" />
                             </Box>
                             <Text>Draft</Text>
-                            {quote?.quote_status?.name === 'Draft' ? (
+                            {quoteById?.quote_status?.name === 'Draft' ? (
                               <Box my="auto" ml="1rem">
                                 <FiCheck size="15px" />
                               </Box>
@@ -679,7 +660,7 @@ const QuoteById = (props) => {
                               <AiOutlineCheckCircle size="20px" />
                             </Box>
                             <Text>Accepted</Text>
-                            {quote?.quote_status?.name === 'Accepted' ? (
+                            {quoteById?.quote_status?.name === 'Accepted' ? (
                               <Box my="auto" ml="1rem">
                                 <FiCheck size="15px" />
                               </Box>
@@ -694,7 +675,7 @@ const QuoteById = (props) => {
                               <MdPendingActions size="20px" />
                             </Box>
                             <Text>Pending</Text>
-                            {quote?.quote_status?.name === 'Pending' ? (
+                            {quoteById?.quote_status?.name === 'Pending' ? (
                               <Box my="auto" ml="1rem">
                                 <FiCheck size="15px" />
                               </Box>
@@ -709,7 +690,7 @@ const QuoteById = (props) => {
                               <BiCalendarExclamation size="20px" />
                             </Box>
                             <Text>Rejected</Text>
-                            {quote?.quote_status?.name === 'Rejected' ? (
+                            {quoteById?.quote_status?.name === 'Rejected' ? (
                               <Box my="auto" ml="1rem">
                                 <FiCheck size="15px" />
                               </Box>
@@ -755,18 +736,18 @@ const QuoteById = (props) => {
                     my={'auto'}>
                     Status
                   </Text>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
                   ) : (
                     <Badge
                       colorScheme={
-                        quote?.quote_status?.name === 'Accepted'
+                        quoteById?.quote_status?.name === 'Accepted'
                           ? 'green'
-                          : quote?.quote_status?.name === 'Pending'
+                          : quoteById?.quote_status?.name === 'Pending'
                           ? 'yellow'
-                          : quote?.quote_status?.name === 'Rejected'
+                          : quoteById?.quote_status?.name === 'Rejected'
                           ? 'red'
-                          : quote?.quote_status?.name === 'Draft'
+                          : quoteById?.quote_status?.name === 'Draft'
                           ? 'gray'
                           : 'facebook'
                       }
@@ -776,7 +757,7 @@ const QuoteById = (props) => {
                       w={'80px'}
                       rounded={'xl'}
                       textAlign={'center'}>
-                      {quote?.quote_status?.name}
+                      {quoteById?.quote_status?.name}
                     </Badge>
                   )}
                 </Flex>
@@ -787,10 +768,10 @@ const QuoteById = (props) => {
                   <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor} my="auto">
                     Service
                   </Text>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
                   ) : (
-                    <Text mr={'1rem'}>{quote?.services?.name}</Text>
+                    <Text mr={'1rem'}>{quoteById?.services?.name}</Text>
                   )}
                 </Flex>
                 <Flex mb={'1rem'} gap="2">
@@ -800,11 +781,11 @@ const QuoteById = (props) => {
                   <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor}>
                     Quote Date
                   </Text>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
                   ) : (
                     <>
-                      <Text mr={'1rem'}>{quote?.quote_date}</Text>
+                      <Text mr={'1rem'}>{quoteById?.quote_date}</Text>
                     </>
                   )}
                 </Flex>
@@ -815,12 +796,14 @@ const QuoteById = (props) => {
                   <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor}>
                     Issue Date
                   </Text>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
                   ) : (
                     <>
                       <Text mr={'1rem'}>
-                        {!quote.issue_date ? 'Not issued yet... 🙅‍♂️' : formatDate(quote.issue_date)}
+                        {!quoteById.issue_date
+                          ? 'Not issued yet... 🙅‍♂️'
+                          : formatDate(quote.issue_date)}
                       </Text>
                     </>
                   )}
@@ -836,16 +819,16 @@ const QuoteById = (props) => {
                     my={'auto'}>
                     Customer
                   </Text>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
                   ) : (
                     <>
                       <Flex>
-                        <Link to={`/editcustomer/${quote?.customer?.id}`}>
+                        <Link to={`/editcustomer/${quoteById?.customer?.id}`}>
                           <Button variant={'ghost'}>
                             <Avatar size={'xs'} />
                             <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>
-                              {quote?.customer?.first_name} {quote?.customer?.last_name}
+                              {quoteById?.customer?.first_name} {quoteById?.customer?.last_name}
                             </Text>
                           </Button>
                         </Link>
@@ -862,7 +845,7 @@ const QuoteById = (props) => {
                       Note
                     </Text>
                   </Flex>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} />
                   ) : (
                     <>
@@ -871,9 +854,11 @@ const QuoteById = (props) => {
                           border="none"
                           h={'100px'}
                           isReadOnly
-                          value={!quote?.note ? 'No note for this quote... 🙅‍♂️' : quote?.note}
+                          value={
+                            !quoteById?.note ? 'No note for this quote... 🙅‍♂️' : quoteById?.note
+                          }
                         />
-                        {/* {!quote?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
+                        {/* {!quoteById?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
                       </Box>
                     </>
                   )}
@@ -887,7 +872,7 @@ const QuoteById = (props) => {
                       Measurements
                     </Text>
                   </Flex>
-                  {!quote ? (
+                  {!quoteById ? (
                     <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} />
                   ) : (
                     <>
@@ -896,9 +881,9 @@ const QuoteById = (props) => {
                           border="none"
                           isReadOnly
                           value={
-                            !quote?.measurement_note
+                            !quoteById?.measurement_note
                               ? 'No measurement information... 🙅‍♂️'
-                              : quote?.measurement_note
+                              : quoteById?.measurement_note
                           }
                         />
                       </Box>
@@ -982,7 +967,7 @@ const QuoteById = (props) => {
             <Flex gap="4">
               <PDFDownloadLink
                 document={<QuoteDocument quote={quote} />}
-                fileName={`RR-QT${formatNumber(quote?.quote_number)}`}>
+                fileName={`RR-QT${formatNumber(quoteById?.quote_number)}`}>
                 {({ blob, url, loading, error }) =>
                   loading ? (
                     <Button colorScheme="blue" isLoading="true">

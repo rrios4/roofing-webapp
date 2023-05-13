@@ -15,7 +15,19 @@ export const fetchQuotes = async () => {
 };
 
 // GET request to API to obtain quote by id
-export const fetchQuoteById = async () => {};
+export const fetchQuoteById = async (quote_number) => {
+  const { data, error } = await supabase
+    .from('quote')
+    .select(
+      '*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*), quote_line_item(*)'
+    )
+    .eq('quote_number', quote_number);
+
+  if (error) {
+    console.log(error);
+  }
+  return data[0];
+};
 
 // GET request to API to search quote by query
 export const fetchSearchQuotes = async (query) => {
