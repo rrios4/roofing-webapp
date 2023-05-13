@@ -17,7 +17,7 @@ import {
   InvoiceDetails,
   QuoteById
 } from './pages';
-import { Layout, ProtectedRoute, EmployeeEdit, Employees } from './components';
+import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
 
 const container = document.getElementById('app');
@@ -78,14 +78,6 @@ root.render(
                   }
                 />
                 <Route
-                  path="/employees"
-                  element={
-                    <ProtectedRoute>
-                      <Employees />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
                   path="/customers/:id"
                   element={
                     <ProtectedRoute>
@@ -106,14 +98,6 @@ root.render(
                   element={
                     <ProtectedRoute>
                       <QuoteById />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/editemployee/:id"
-                  element={
-                    <ProtectedRoute>
-                      <EmployeeEdit />
                     </ProtectedRoute>
                   }
                 />

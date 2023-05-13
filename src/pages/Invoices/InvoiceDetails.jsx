@@ -85,7 +85,7 @@ import formatMoneyValue from '../../utils/formatMoneyValue';
 import formatNumber from '../../utils/formatNumber';
 import formatDate from '../../utils/formatDate';
 import { EditInvoiceForm, InvoiceDocument } from '../../components';
-import DeleteInvoiceLineServiceAlertDialog from '../../components/Alerts/DeleteInvoiceLineServiceAlertDialog';
+import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog';
 import { useServices } from '../../hooks/useServices';
 import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
 

@@ -36,13 +36,15 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverHeader,
-  PopoverBody
+  PopoverBody,
+  MenuGroup,
+  Card,
+  CardBody
 } from '@chakra-ui/react';
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import {
-  Card,
   CustomerCountCard,
   EstimateRequestCountCard,
   MonthlyRevenueCard,
@@ -63,6 +65,7 @@ import { FiActivity, FiBarChart2, FiSearch, FiBell, FiX } from 'react-icons/fi';
 import { BsChevronDown } from 'react-icons/bs';
 import { faker } from '@faker-js/faker';
 import supabase from '../../utils/supabaseClient';
+import { LogOut, Settings, User } from 'lucide-react';
 
 // export const data = {
 //   labels,
@@ -321,110 +324,99 @@ const Dashboard = ({ children }) => {
 
   return (
     <>
-      <Flex flexDir="column" px={{ base: '1rem', lg: '1rem' }} w={'full'}>
-        <Box mt={'1rem'} display={{ base: 'none', lg: 'block' }}>
-          <Card
-            bg={useColorModeValue('white', 'gray.700')}
-            borderColor={useColorModeValue('gray.200', 'gray.700')}>
-            <Flex justifyContent={'space-between'}>
-              {/* <Text>{loggedInUserData.email}</Text> */}
-              <Box display={'flex'} alignItems={'center'}>
-                <IconButton
-                  variant={'ghost'}
-                  onClick={onSearchOpen}
-                  aria-label="Search database"
-                  icon={<FiSearch />}
-                  size={'md'}
-                />
-              </Box>
-              <Flex>
-                <Flex alignItems={'center'}>
-                  <Popover>
-                    <PopoverTrigger>
-                      <IconButton variant={'ghost'} icon={<FiBell />} mx={'10px'} size={'md'} />
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader fontWeight={'bold'}>
-                        <Flex alignItems={'center'}>
-                          <Icon as={FiBell} mr={'2'} />
-                          Notifications
-                        </Flex>
-                      </PopoverHeader>
-                      <PopoverBody display={'flex'} justifyContent={'center'}>
-                        <Text>No Notification!</Text>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                  <Divider orientation="vertical" px={'10px'} mx={'1px'} />
-                </Flex>
-                <Menu>
-                  <MenuButton
-                    _hover={{ bg: useColorModeValue('gray.100', 'gray.600') }}
-                    py={1}
-                    px={2}
-                    rounded="10">
-                    <Flex flexDir={'row'} alignItems="center">
-                      {loggedInUserData ? (
-                        <Avatar size={'sm'} src={loggedInUserData.avatar_url}>
-                          <AvatarBadge boxSize="1.25em" bg="green.500" />
-                        </Avatar>
-                      ) : (
-                        <SkeletonCircle size="10" />
-                      )}
-                      <Flex>
-                        <Text ml={'10px'} fontSize={'16px'}>
+      <Flex flexDir="column" px={{ base: '1rem', lg: '1rem' }} w={'full'} mt={'1rem'}>
+        {/*  */}
+        <Box display={{ base: 'none', lg: 'block' }}>
+          <Card size="sm" rounded="lg">
+            <CardBody>
+              <Flex justifyContent={'space-between'}>
+                {/* <Text>{loggedInUserData.email}</Text> */}
+                <Box display={'flex'} alignItems={'center'}>
+                  <IconButton
+                    variant={'ghost'}
+                    onClick={onSearchOpen}
+                    aria-label="Search database"
+                    icon={<FiSearch />}
+                    size={'md'}
+                  />
+                </Box>
+                <Flex>
+                  <Flex alignItems={'center'}>
+                    <Popover>
+                      <PopoverTrigger>
+                        <IconButton variant={'ghost'} icon={<FiBell />} mx={'10px'} size={'md'} />
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <PopoverHeader fontWeight={'bold'}>
+                          <Flex alignItems={'center'}>
+                            <Icon as={FiBell} mr={'2'} />
+                            Notifications
+                          </Flex>
+                        </PopoverHeader>
+                        <PopoverBody display={'flex'} justifyContent={'center'}>
+                          <Text>No Notification!</Text>
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                    <Divider orientation="vertical" px={'10px'} mx={'1px'} />
+                  </Flex>
+                  <Menu>
+                    <MenuButton
+                      _hover={{ bg: useColorModeValue('gray.100', 'gray.600') }}
+                      py={1}
+                      px={2}
+                      rounded="10">
+                      <Flex flexDir={'row'} alignItems="center">
+                        {loggedInUserData ? (
+                          <Avatar size={'sm'} src={loggedInUserData.avatar_url} mr={'1rem'}>
+                            <AvatarBadge boxSize="1.25em" bg="green.500" />
+                          </Avatar>
+                        ) : (
+                          <SkeletonCircle size="10" />
+                        )}
+                        <Box w={'full'}>
+                          {/* <Text ml={'10px'} fontSize={'16px'}>
                           Hi,
-                        </Text>
-                        <Text ml={'4px'} fontWeight={'bold'} fontSize={'16px'}>
-                          {loggedInUserData ? (
-                            loggedInUserData.full_name
-                          ) : (
-                            <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-                          )}
-                        </Text>
-                      </Flex>
-                      <Icon as={BsChevronDown} mx={'10px'} />
-                    </Flex>
-                  </MenuButton>
-                  <MenuList bg={useColorModeValue('white', 'gray.700')}>
-                    <MenuItem display={'flex'} flexDir={'column'}>
-                      {loggedInUserData ? (
-                        <Avatar
-                          boxSize={'3rem'}
-                          borderRadius="full"
-                          src={loggedInUserData.avatar_url}
-                        />
-                      ) : (
-                        <SkeletonCircle />
-                      )}
-                      <span>
-                        {loggedInUserData ? (
-                          <Text mt={'2'} fontWeight={'bold'} fontSize={'lg'}>
-                            {loggedInUserData.full_name}
+                        </Text> */}
+                          <Text ml={'4px'} fontWeight={'medium'} fontSize={'12px'}>
+                            {loggedInUserData ? (
+                              loggedInUserData.full_name
+                            ) : (
+                              <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
+                            )}
                           </Text>
-                        ) : (
-                          <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-                        )}
-                      </span>
-                      <span>
-                        {loggedInUserData ? (
-                          <Text fontSize={'sm'}>{loggedInUserData.email}</Text>
-                        ) : (
-                          <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-                        )}
-                      </span>
-                    </MenuItem>
-                    <MenuDivider />
-                    <MenuItem>Profile</MenuItem>
-                    <MenuItem>Settings</MenuItem>
-                    <MenuDivider />
-                    <MenuItem onClick={logout}>Sign out</MenuItem>
-                  </MenuList>
-                </Menu>
+                          <Text fontSize={'12px'} fontWeight="light">
+                            {loggedInUserData.email}
+                          </Text>
+                        </Box>
+                        <Icon as={BsChevronDown} mx={'10px'} />
+                      </Flex>
+                    </MenuButton>
+                    <MenuList bg={useColorModeValue('white', 'gray.700')}>
+                      <MenuGroup title="My Account" icon={<User />}>
+                        <MenuItem flexDir={'row'} gap={'2'}>
+                          <User size={'15px'} />
+                          <Text>Profile</Text>
+                        </MenuItem>
+                        <MenuItem flexDir={'row'} gap={'2'}>
+                          <Settings size={'15px'} />
+                          <Text>Settings</Text>
+                        </MenuItem>
+                      </MenuGroup>
+                      <MenuDivider />
+                      <MenuGroup>
+                        <MenuItem onClick={logout} flexDir={'row'} gap={'2'}>
+                          <LogOut size={'15px'} />
+                          <Text>Sign Out</Text>
+                        </MenuItem>
+                      </MenuGroup>
+                    </MenuList>
+                  </Menu>
+                </Flex>
               </Flex>
-            </Flex>
+            </CardBody>
           </Card>
         </Box>
         <SimpleGrid
@@ -459,62 +451,62 @@ const Dashboard = ({ children }) => {
         </SimpleGrid>
         <SimpleGrid spacing={4} mb={'2rem'} minChildWidth={'420px'}>
           {/* Montly Revenue Line Graph Card */}
-          <Card
-            bg={useColorModeValue('white', 'gray.700')}
-            borderColor={useColorModeValue('gray.200', 'gray.700')}>
-            <Flex alignItems={'center'} ml="8px" gap={3}>
-              <Icon as={FiBarChart2} boxSize={6} />
-              <Text fontSize="2xl" fontWeight={'bold'}>
-                Monthly Revenue
-              </Text>
-            </Flex>
-            {/* Line Graph Component */}
-            <MonthlyRevenueLineGraph
-              currentYear={currentYear}
-              lastYear={lastYear}
-              twoYearsAgo={twoYearsAgo}
-              monthlyGraphRevenueDataSet01={monthlyGraphRevenueDataSet01}
-              monthlyGraphRevenueDataSet02={monthlyGraphRevenueDataSet02}
-              monthlyGraphRevenueDataSet03={monthlyGraphRevenueDataSet03}
-            />
+          <Card size="md" rounded="lg">
+            <CardBody>
+              <Flex alignItems={'center'} ml="8px" gap={3}>
+                <Icon as={FiBarChart2} boxSize={6} />
+                <Text fontSize="2xl" fontWeight={'bold'}>
+                  Monthly Revenue
+                </Text>
+              </Flex>
+              {/* Line Graph Component */}
+              <MonthlyRevenueLineGraph
+                currentYear={currentYear}
+                lastYear={lastYear}
+                twoYearsAgo={twoYearsAgo}
+                monthlyGraphRevenueDataSet01={monthlyGraphRevenueDataSet01}
+                monthlyGraphRevenueDataSet02={monthlyGraphRevenueDataSet02}
+                monthlyGraphRevenueDataSet03={monthlyGraphRevenueDataSet03}
+              />
+            </CardBody>
           </Card>
           {/* Recent Activity Card */}
-          <Card
-            bg={useColorModeValue('white', 'gray.700')}
-            borderColor={useColorModeValue('gray.200', 'gray.700')}>
-            <Flex alignItems={'center'} mb={'1rem'} ml="8px">
-              <Icon as={FiActivity} boxSize={6} />
-              <Text ml={'1rem'} fontSize="2xl" fontWeight={'bold'}>
-                Recent Activity
-              </Text>
-            </Flex>
-            {/* Tabs */}
-            <Tabs variant={'line'}>
-              <TabList>
-                <Tab>Quote Requests</Tab>
-                <Tab>Quotes</Tab>
-                <Tab>Invoices</Tab>
-                <Tab>Customers</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel px={2} pt={5}>
-                  {/* Recent Quotes Request Updated Table */}
-                  <QuoteRequestRecentTable data={quoteRequestsRecentData} />
-                </TabPanel>
-                <TabPanel px={2} pt={5}>
-                  {/* Recent Quote Updated Table */}
-                  <QuoteRecentTable data={quotesRecentData} />
-                </TabPanel>
-                <TabPanel px={2} pt={5}>
-                  {/* Recent Invoice Updated Table */}
-                  <InvoiceRecentTable data={invoiceRecentData} />
-                </TabPanel>
-                <TabPanel px={2} pt={5}>
-                  {/* Recent Customer Updated Table */}
-                  <CustomerRecentTable data={customerRecentData} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+          <Card size="md" rounded="lg">
+            <CardBody>
+              <Flex alignItems={'center'} mb={'1rem'} ml="8px">
+                <Icon as={FiActivity} boxSize={6} />
+                <Text ml={'1rem'} fontSize="2xl" fontWeight={'bold'}>
+                  Recent Activity
+                </Text>
+              </Flex>
+              {/* Tabs */}
+              <Tabs variant={'line'}>
+                <TabList>
+                  <Tab>Quote Requests</Tab>
+                  <Tab>Quotes</Tab>
+                  <Tab>Invoices</Tab>
+                  <Tab>Customers</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel px={2} pt={5}>
+                    {/* Recent Quotes Request Updated Table */}
+                    <QuoteRequestRecentTable data={quoteRequestsRecentData} />
+                  </TabPanel>
+                  <TabPanel px={2} pt={5}>
+                    {/* Recent Quote Updated Table */}
+                    <QuoteRecentTable data={quotesRecentData} />
+                  </TabPanel>
+                  <TabPanel px={2} pt={5}>
+                    {/* Recent Invoice Updated Table */}
+                    <InvoiceRecentTable data={invoiceRecentData} />
+                  </TabPanel>
+                  <TabPanel px={2} pt={5}>
+                    {/* Recent Customer Updated Table */}
+                    <CustomerRecentTable data={customerRecentData} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </CardBody>
           </Card>
         </SimpleGrid>
       </Flex>

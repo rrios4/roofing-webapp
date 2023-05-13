@@ -77,10 +77,11 @@ import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { HiStatusOnline } from 'react-icons/hi';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { EditQuoteForm, QuoteDocument } from '../../components/index.js';
+import { EditQuoteForm, QuoteDetailsLineItemTable, QuoteDocument } from '../../components/index.js';
 import { useServices } from '../../hooks/useServices.jsx';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
 import { useFetchQuoteById } from '../../hooks/useQuotes.jsx';
+import { FileText } from 'lucide-react';
 
 const QuoteById = (props) => {
   const { parentData } = props;
@@ -123,7 +124,7 @@ const QuoteById = (props) => {
     measurement_note: '',
     cust_note: ''
   });
-
+  2;
   // React useState switches
   const [loadingQuoteStatusIsOn, setLoadingQuoteStatusIsOn] = useState(false);
   const [editSwitchIsOn, setEditSwitchIsOn] = useState(false);
@@ -514,50 +515,14 @@ const QuoteById = (props) => {
               <Divider w={'95%'} mx={'auto'} />
 
               {/* Line Item Table */}
-              <Box px={'2rem'} py={'2rem'}>
-                <TableContainer rounded={'xl'}>
-                  {!quoteById ? (
-                    <Skeleton bg={paymentCardBgColor} height={'100px'} w={'full'} rounded={'xl'} />
-                  ) : (
-                    <>
-                      <Table variant={'simple'}>
-                        <Thead bg={bgColorMode} rounded={'xl'}>
-                          <Tr>
-                            <Th>Description</Th>
-                            <Th>Qty</Th>
-                            <Th>Rate</Th>
-                            <Th>Amount</Th>
-                            {editSwitchIsOn === true ? <Th></Th> : <></>}
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {/* Table Row Data Component */}
-                          {quoteById?.quote_line_item?.map((item, index) => (
-                            <Tr key={index}>
-                              <Td whiteSpace="normal" height="auto" blockSize="auto">
-                                {item.description}
-                              </Td>
-                              <Td>{item.qty}</Td>
-                              <Td>{item.item_rate === true ? item.rate : 'Fixed'}</Td>
-                              <Td>${formatMoneyValue(item.amount)}</Td>
-                              {editSwitchIsOn === true ? (
-                                <Td>
-                                  <IconButton
-                                    icon={<FiX />}
-                                    onClick={() => handleLineItemDelete(item)}
-                                  />
-                                </Td>
-                              ) : (
-                                <></>
-                              )}
-                            </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
-                    </>
-                  )}
-                </TableContainer>
-              </Box>
+              <QuoteDetailsLineItemTable
+                quoteById={quoteById}
+                handleLineItemDelete={handleLineItemDelete}
+                editSwitchIsOn={editSwitchIsOn}
+                paymentCardBgColor={paymentCardBgColor}
+                bgColorMode={bgColorMode}
+              />
+
               <Box px={'4rem'} pb="2rem">
                 <Flex mb={'2rem'} px={4} py={2}>
                   <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
@@ -949,24 +914,31 @@ const QuoteById = (props) => {
       <Modal
         onClose={onExportPDFClose}
         isOpen={isExportPDFOpen}
-        size={'xl'}
+        size={'lg'}
         isCentered
         motionPreset="scale">
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalHeader>PDF Preview</ModalHeader>
-          <ModalBody mx="auto">
+          <ModalHeader>
+            <Flex gap="2">
+              <FileText size={'25px'} />
+              <Text my="auto" textAlign="middle" align="center">
+                PDF Preview
+              </Text>
+            </Flex>
+          </ModalHeader>
+          <ModalBody mx="auto" p="1rem">
             <Fragment>
-              <PDFViewer width={'500'} height="660">
-                <QuoteDocument quote={quote} />
+              <PDFViewer width={'350px'} height={'500px'}>
+                <QuoteDocument quote={quoteById} />
               </PDFViewer>
             </Fragment>
           </ModalBody>
           <ModalFooter>
             <Flex gap="4">
               <PDFDownloadLink
-                document={<QuoteDocument quote={quote} />}
+                document={<QuoteDocument quote={quoteById} />}
                 fileName={`RR-QT${formatNumber(quoteById?.quote_number)}`}>
                 {({ blob, url, loading, error }) =>
                   loading ? (
