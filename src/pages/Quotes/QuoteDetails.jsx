@@ -1,95 +1,21 @@
 import React, { useEffect, useState, useContext, Fragment } from 'react';
-import {
-  Select,
-  Divider,
-  Badge,
-  Card,
-  CardBody,
-  Skeleton,
-  Grid,
-  Box,
-  Flex,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  Button,
-  FormHelperText,
-  Text,
-  useDisclosure,
-  Container,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Tooltip,
-  Image,
-  TableContainer,
-  Thead,
-  Th,
-  Tr,
-  Td,
-  Table,
-  Tbody,
-  IconButton,
-  useToast,
-  useColorModeValue,
-  Avatar,
-  Textarea
-} from '@chakra-ui/react';
+import { Flex, useDisclosure, Container, useToast, useColorModeValue } from '@chakra-ui/react';
 //import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient.js';
-import formatNumber from '../../utils/formatNumber.js';
 import formatMoneyValue from '../../utils/formatMoneyValue.js';
-import formatDate from '../../utils/formatDate.js';
-import { PDFViewer, usePDF, PDFDownloadLink } from '@react-pdf/renderer';
-import {
-  FiArrowLeft,
-  FiMoreHorizontal,
-  FiEdit,
-  FiShare2,
-  FiSend,
-  FiUploadCloud,
-  FiPaperclip,
-  FiClock,
-  FiRefreshCw,
-  FiShare,
-  FiAlignLeft,
-  FiCheck,
-  FiX,
-  FiFolder,
-  FiBriefcase,
-  FiCalendar,
-  FiUser
-} from 'react-icons/fi';
-import { MdOutlinePayments, MdPendingActions, MdTransform } from 'react-icons/md';
-import { AiOutlineBars } from 'react-icons/ai';
-import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
-import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { HiStatusOnline } from 'react-icons/hi';
-import { AiOutlineCheckCircle } from 'react-icons/ai';
 import {
   EditQuoteForm,
   QuoteDetailsAddLineItemModal,
-  QuoteDetailsLineItemTable,
+  QuoteDetailsHeader,
+  QuoteDetailsMain,
   QuoteDetailsPane,
   QuoteDetailsPdfPreviewModal,
-  QuoteDetailsQuickAction,
-  QuoteDocument
+  QuoteDetailsQuickAction
 } from '../../components/index.js';
 import { useServices } from '../../hooks/useServices.jsx';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
 import { useFetchQuoteById } from '../../hooks/useQuotes.jsx';
-import { FileText } from 'lucide-react';
 
 const QuoteById = (props) => {
   const { parentData } = props;
@@ -325,226 +251,27 @@ const QuoteById = (props) => {
   };
 
   return (
-    <Container maxW={'1400px'} pt={'2rem'} pb={'4rem'}>
+    <Container maxW={'1400px'} mt={'1rem'} mb={'2rem'}>
       {/* <DeleteInvoiceLineServiceAlertDialog toast={handleDeleteToast} updateParentState={getInvoiceDetailsById} /> */}
-      {/* Header */}
-      <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
-        <Flex px={'1rem'} gap={4} mb={{ base: '0rem', lg: '0' }}>
-          <Link to={`/quotes`}>
-            <Button variant={'outline'} border={'1px'} borderColor={'gray.300'}>
-              <FiArrowLeft />
-            </Button>
-          </Link>
-          {/* <Text my={'auto'} fontSize={'xl'} fontWeight={'bold'}>INV #{id}</Text> */}
-        </Flex>
-        <Flex px={'1rem'} gap={4} ml={{ base: 'auto', lg: '0' }}>
-          <Menu>
-            <MenuButton as={Button} variant={'outline'} border={'1px'} borderColor={'gray.300'}>
-              <FiMoreHorizontal />
-            </MenuButton>
-            <MenuList>
-              <MenuItem icon={<FiEdit />} onClick={() => handleEditQuoteModal(quoteById)}>
-                Edit Quote
-              </MenuItem>
-              <MenuItem icon={<MdOutlinePayments />}>Edit Payments</MenuItem>
-              <MenuItem icon={<AiOutlineBars />}>Edit Line Items</MenuItem>
-            </MenuList>
-          </Menu>
-          <Tooltip hasArrow label="Convert Quote to Invoice">
-            <Button variant={'outline'} border={'1px'} borderColor={'gray.300'}>
-              <MdTransform />
-            </Button>
-          </Tooltip>
-          {/* <Tooltip hasArrow label="More"><Button colorScheme={'gray'}><FiMoreHorizontal/></Button></Tooltip> */}
-          {/* <Tooltip hasArrow label="Share">
-            <Button colorScheme={'gray'}>
-              <FiShare2 />
-            </Button>
-          </Tooltip> */}
-          {/* <Tooltip hasArrow label="Send Quote">
-            <Button colorScheme={'blue'} gap={2}>
-              <FiSend />
-              Send Quote
-            </Button>
-          </Tooltip> */}
-          <Button colorScheme="blue" gap="2" onClick={onExportPDFOpen}>
-            <FiShare /> Export as PDF
-          </Button>
-        </Flex>
-      </Flex>
+      <QuoteDetailsHeader
+        quoteById={quoteById}
+        onExportPDFOpen={onExportPDFOpen}
+        handleEditQuoteModal={handleEditQuoteModal}
+      />
       <Flex px={'1rem'} gap={6} flexDir={{ base: 'column', lg: 'row' }}>
         {/* Left Section */}
-        <Flex w={{ base: 'full', lg: '60%' }}>
-          <Card w={'full'} rounded={'xl'}>
-            <CardBody>
-              {/* Header with Buttons */}
-              <Flex justifyContent={'flex-end'} pr={'1rem'}>
-                <Tooltip hasArrow label="Upload images">
-                  <Button variant={'outline'} roundedRight={'none'}>
-                    <FiUploadCloud />
-                  </Button>
-                </Tooltip>
-                <Tooltip hasArrow label="Upload documents">
-                  <Button variant={'outline'} roundedLeft={'none'}>
-                    <FiPaperclip />
-                  </Button>
-                </Tooltip>
-              </Flex>
-              <Flex px={'2rem'} pb="3rem">
-                <Image
-                  src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
-                  maxW={'70px'}
-                  p={'1'}
-                  bg={'blue.500'}
-                  rounded={'2xl'}
-                />
-                <Box ml={'2rem'}>
-                  <Text fontWeight={'semibold'} fontSize={'3xl'} letterSpacing={'0px'}>
-                    Quote{' '}
-                    <Text as={'span'} color={'blue.400'}>
-                      #
-                    </Text>{' '}
-                    {formatNumber(quoteById?.quote_number)}
-                  </Text>
-                  <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'gray.500'}>
-                    Expires {quoteById?.expiration_date}
-                  </Text>
-                </Box>
-              </Flex>
-              <Box px={'2rem'} mb={'3rem'}>
-                <Flex mb={'1rem'}>
-                  <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
-                    To
-                  </Text>
-                  {!quoteById ? (
-                    <Skeleton
-                      bg={paymentCardBgColor}
-                      height={'100px'}
-                      w={'250px'}
-                      rounded={'xl'}
-                      mx={'1rem'}
-                    />
-                  ) : (
-                    <>
-                      {quoteById?.bill_to === true ? (
-                        <>
-                          <Box>
-                            <Text ml={'3rem'} fontWeight={'semibold'}>
-                              {quoteById?.customer?.first_name} {quoteById?.customer?.last_name}
-                            </Text>
-                            <Text ml={'3rem'}>{quoteById?.bill_to_street_address}</Text>
-                            <Text ml={'3rem'}>
-                              {quoteById?.bill_to_city}, {quoteById?.bill_to_state}{' '}
-                              {quoteById?.bill_to_zipcode}
-                            </Text>
-                            <Text ml={'3rem'} color={'blue.400'}>
-                              {quoteById?.customer?.email}
-                            </Text>
-                          </Box>
-                        </>
-                      ) : (
-                        <>
-                          <Box>
-                            <Text ml={'3rem'} fontWeight={'semibold'}>
-                              {quoteById?.customer?.first_name} {quoteById?.customer?.last_name}
-                            </Text>
-                            <Text ml={'3rem'}>{quoteById?.customer?.street_address}</Text>
-                            <Text ml={'3rem'}>
-                              {quoteById?.customer?.city}, {quoteById?.customer?.state}{' '}
-                              {quoteById?.customer?.zipcode}
-                            </Text>
-                            <Text ml={'3rem'} color={'blue.400'}>
-                              {quoteById?.customer?.email}
-                            </Text>
-                          </Box>
-                        </>
-                      )}
-                    </>
-                  )}
-                </Flex>
-                <Flex mb={'1rem'}>
-                  <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
-                    From
-                  </Text>
-                  {!quoteById ? (
-                    <Skeleton
-                      bg={paymentCardBgColor}
-                      height={'100px'}
-                      w={'250px'}
-                      rounded={'xl'}
-                      mx={'1rem'}
-                    />
-                  ) : (
-                    <>
-                      <Box>
-                        <Text ml={'3rem'} fontWeight={'semibold'}>
-                          Rios Roofing
-                        </Text>
-                        <Text ml={'3rem'}>150 Tallant St</Text>
-                        <Text ml={'3rem'}>Houston, TX 77076</Text>
-                        <Text ml={'3rem'} color={'blue.400'}>
-                          rrios.roofing@gmail.com
-                        </Text>
-                      </Box>
-                    </>
-                  )}
-                </Flex>
-                <Flex>
-                  <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
-                    Note
-                  </Text>
-                  {!quoteById ? (
-                    <Skeleton
-                      bg={paymentCardBgColor}
-                      height={'20px'}
-                      w={'250px'}
-                      rounded={'xl'}
-                      mx={'1rem'}
-                    />
-                  ) : (
-                    <>
-                      <Text ml={'3rem'} maxW="500px">
-                        {quoteById?.cust_note}
-                      </Text>
-                    </>
-                  )}
-                </Flex>
-              </Box>
-              <Divider w={'95%'} mx={'auto'} />
-
-              {/* Line Item Table */}
-              <QuoteDetailsLineItemTable
-                quoteById={quoteById}
-                handleLineItemDelete={handleLineItemDelete}
-                editSwitchIsOn={editSwitchIsOn}
-                paymentCardBgColor={paymentCardBgColor}
-                bgColorMode={bgColorMode}
-              />
-
-              <Box px={'4rem'} pb="2rem">
-                <Flex mb={'2rem'} px={4} py={2}>
-                  <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                    Subtotal
-                  </Text>
-                  <Text ml={'auto'} mr={'1rem'}>
-                    ${formatMoneyValue(quoteById?.subtotal)}
-                  </Text>
-                </Flex>
-                <Flex mb={'2rem'} bg={'blue.500'} color={'white'} px={4} py={4} rounded={'xl'}>
-                  <Text fontWeight={'bold'} fontSize={'xl'}>
-                    Total
-                  </Text>
-                  <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'}>
-                    ${formatMoneyValue(quoteById?.total)}
-                  </Text>
-                </Flex>
-              </Box>
-            </CardBody>
-          </Card>
+        <Flex w={{ base: 'full', lg: '65%' }}>
+          <QuoteDetailsMain
+            quoteById={quoteById}
+            paymentCardBgColor={paymentCardBgColor}
+            secondaryTextColor={secondaryTextColor}
+            handleLineItemDelete={handleLineItemDelete}
+            editSwitchIsOn={editSwitchIsOn}
+            bgColorMode={bgColorMode}
+          />
         </Flex>
-
         {/* Right Section */}
-        <Flex w={{ base: 'full', lg: '40%' }} direction={'column'} gap={4}>
+        <Flex w={{ base: 'full', lg: '35%' }} direction={'column'} gap={4}>
           <QuoteDetailsQuickAction
             quoteById={quoteById}
             loadingQuoteStatusIsOn={loadingQuoteStatusIsOn}

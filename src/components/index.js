@@ -71,3 +71,5 @@ export { default as QuoteDetailsQuickAction } from './Quotes/QuoteDetails/QuoteD
 export { default as QuoteDetailsPane } from './Quotes/QuoteDetails/QuoteDetailsPane';
 export { default as QuoteDetailsPdfPreviewModal } from './Quotes/QuoteDetails/QuoteDetailsPdfPreviewModal';
 export { default as QuoteDetailsAddLineItemModal } from './Quotes/QuoteDetails/QuoteDetailsAddLineItemModal';
+export { default as QuoteDetailsMain } from './Quotes/QuoteDetails/QuoteDetailsMain';
+export { default as QuoteDetailsHeader } from './Quotes/QuoteDetails/QuoteDetailsHeader';
