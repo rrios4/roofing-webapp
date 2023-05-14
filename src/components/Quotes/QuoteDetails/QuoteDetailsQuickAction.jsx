@@ -66,7 +66,7 @@ const QuoteDetailsQuickAction = (props) => {
                       <>
                         <Flex gap="2">
                           <Box my="auto">
-                            <Clock />
+                            <Clock size={'15px'} />
                           </Box>
                           {quoteById?.quote_status?.name}
                         </Flex>
@@ -84,7 +84,7 @@ const QuoteDetailsQuickAction = (props) => {
                       <>
                         <Flex gap="2">
                           <Box my="auto">
-                            <Ban />
+                            <Ban size={'15px'} />
                           </Box>
                           {quoteById?.quote_status?.name}
                         </Flex>

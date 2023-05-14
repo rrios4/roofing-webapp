@@ -77,3 +77,18 @@ export const deleteQuoteById = async (quoteNumber) => {
   }
   return data;
 };
+
+// PATCH request to API to update the status for a quote
+export const updateQuoteStatusById = async (status_id, quote_number) => {
+  console.log(status_id);
+  console.log(quote_number);
+  const { data, error } = await supabase
+    .from('quote')
+    .update({ status_id: status_id })
+    .eq('quote_number', quote_number);
+
+  if (error) {
+    throw error;
+  }
+  return data;
+};

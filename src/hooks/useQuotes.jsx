@@ -4,7 +4,8 @@ import {
   fetchQuoteById,
   fetchQuotes,
   fetchSearchQuotes,
-  updateQuoteById
+  updateQuoteById,
+  updateQuoteStatusById
 } from '../services/api/quote';
 
 // Custom hook to get all quotes
@@ -97,6 +98,34 @@ export const useUpdateQuote = (toast, resetQuoteState) => {
         position: 'top',
         title: `Successfully Updated Quote!`,
         description: `We've updated quote information for you 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  });
+};
+
+// Custom hook to update a status for a quote
+export const useUpdateQuoteStatusById = (toast, quote_number) => {
+  const queryClient = useQueryClient();
+  return useMutation((status_id) => updateQuoteStatusById(status_id, quote_number), {
+    onError: (error) => {
+      toast({
+        position: 'top',
+        title: `Error Updating Quote Status`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['quoteById', quote_number] });
+      toast({
+        position: 'top',
+        title: `Successfully Updated Quote Status!`,
+        description: `We've updated quote status information for you 🎉`,
         status: 'success',
         duration: 5000,
         isClosable: true

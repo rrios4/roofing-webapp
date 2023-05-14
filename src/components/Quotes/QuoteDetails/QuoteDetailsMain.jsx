@@ -42,13 +42,7 @@ const QuoteDetailsMain = (props) => {
             </Tooltip>
           </Flex>
           <Flex px={'2rem'} pb="3rem">
-            <Image
-              src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
-              maxW={'70px'}
-              p={'1'}
-              bg={'blue.500'}
-              rounded={'2xl'}
-            />
+            <Image src="/LogoRR.png" maxW={'70px'} p={'1'} bg={'blue.500'} rounded={'2xl'} />
             <Box ml={'2rem'}>
               <Text fontWeight={'semibold'} fontSize={'3xl'} letterSpacing={'0px'}>
                 Quote{' '}

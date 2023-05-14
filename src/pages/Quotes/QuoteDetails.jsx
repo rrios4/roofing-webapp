@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useContext, Fragment } from 'react';
-import { Flex, useDisclosure, Container, useToast, useColorModeValue } from '@chakra-ui/react';
+import {
+  Flex,
+  useDisclosure,
+  Container,
+  useToast,
+  useColorModeValue,
+  Text,
+  Spinner
+} from '@chakra-ui/react';
 //import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient.js';
@@ -15,7 +23,7 @@ import {
 } from '../../components/index.js';
 import { useServices } from '../../hooks/useServices.jsx';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
-import { useFetchQuoteById } from '../../hooks/useQuotes.jsx';
+import { useFetchQuoteById, useUpdateQuoteStatusById } from '../../hooks/useQuotes.jsx';
 
 const QuoteById = (props) => {
   const { parentData } = props;
@@ -23,9 +31,11 @@ const QuoteById = (props) => {
   const toast = useToast();
 
   // Custom Hooks
-  const { quoteById, isLoading } = useFetchQuoteById(id);
+  const { quoteById, isLoading: isQuoteByIdLoading } = useFetchQuoteById(id);
   const { services } = useServices();
   const { quoteStatuses } = useQuoteStatuses();
+  const { mutate: mutateUpdateQuoteStatusById, isLoading: isUpdateQuoteStatusByIdLoading } =
+    useUpdateQuoteStatusById(toast, id);
 
   // Modal useDisclousures
   const {
@@ -73,7 +83,6 @@ const QuoteById = (props) => {
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
   const paymentCardBgColor = useColorModeValue('gray.100', 'gray.600');
-  const paymentBorderColor = useColorModeValue('gray.200', 'gray.400');
   const secondaryTextColor = useColorModeValue('gray.600', 'gray.300');
 
   // React-Hooks
@@ -86,17 +95,16 @@ const QuoteById = (props) => {
     setLoadingQuoteStatusIsOn(true);
     if (status_id === quoteById?.status_id) {
       console.log(status_id);
+      toast({
+        position: 'top',
+        title: `Error Updating Quote Status`,
+        description: `Error: Status is already selected. Please select another status for quote.`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     } else {
-      const { data, error } = await supabase
-        .from('quote')
-        .update({ status_id: status_id })
-        .eq('quote_number', id);
-
-      if (error) {
-        console.log(error);
-      }
-      console.log(data);
-      // await getQuoteById();
+      mutateUpdateQuoteStatusById(status_id);
     }
     setLoadingQuoteStatusIsOn(false);
   };
@@ -250,6 +258,21 @@ const QuoteById = (props) => {
     onExportPDFClose();
   };
 
+  if (isQuoteByIdLoading === true) {
+    return (
+      <>
+        <Container maxW={'1400px'} mt={'1rem'} mb={'2rem'}>
+          <Flex gap={2} justify={'center'}>
+            <Spinner size={'sm'} my={'auto'} />
+            <Text fontSize={'xl'} fontWeight={'bold'}>
+              Loading...
+            </Text>
+          </Flex>
+        </Container>
+      </>
+    );
+  }
+
   return (
     <Container maxW={'1400px'} mt={'1rem'} mb={'2rem'}>
       {/* <DeleteInvoiceLineServiceAlertDialog toast={handleDeleteToast} updateParentState={getInvoiceDetailsById} /> */}
@@ -274,7 +297,7 @@ const QuoteById = (props) => {
         <Flex w={{ base: 'full', lg: '35%' }} direction={'column'} gap={4}>
           <QuoteDetailsQuickAction
             quoteById={quoteById}
-            loadingQuoteStatusIsOn={loadingQuoteStatusIsOn}
+            loadingQuoteStatusIsOn={isUpdateQuoteStatusByIdLoading}
             handleQuoteStatusMenuSelection={handleQuoteStatusMenuSelection}
             onAddLineItemOpen={onAddLineItemOpen}
             editSwitchIsOn={editSwitchIsOn}
@@ -309,7 +332,7 @@ const QuoteById = (props) => {
         isAddLineItemOpen={isAddLineItemOpen}
         setLineItemAmountInput={setLineItemAmountInput}
         setLineItemDescriptionInput={setLineItemDescriptionInput}
-        loadingQuoteStatusIsOn={loadingQuoteStatusIsOn}
+        loadingQuoteStatusIsOn={isUpdateQuoteStatusByIdLoading}
       />
     </Container>
   );
