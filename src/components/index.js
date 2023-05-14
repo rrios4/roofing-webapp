@@ -67,3 +67,7 @@ export { default as QuoteTableHeader } from './PDF/QuoteDocument/QuoteTableHeade
 export { default as QuoteItemsTable } from './PDF/QuoteDocument/QuoteItemsTable';
 export { default as QuoteThankYouMsg } from './PDF/QuoteDocument/QuoteThankYouMsg';
 export { default as QuoteDetailsLineItemTable } from './Quotes/QuoteDetails/QuoteDetailsLineItemTable';
+export { default as QuoteDetailsQuickAction } from './Quotes/QuoteDetails/QuoteDetailsQuickAction';
+export { default as QuoteDetailsPane } from './Quotes/QuoteDetails/QuoteDetailsPane';
+export { default as QuoteDetailsPdfPreviewModal } from './Quotes/QuoteDetails/QuoteDetailsPdfPreviewModal';
+export { default as QuoteDetailsAddLineItemModal } from './Quotes/QuoteDetails/QuoteDetailsAddLineItemModal';
