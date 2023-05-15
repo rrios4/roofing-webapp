@@ -1,17 +1,10 @@
-import React, { useEffect, useState, useContext, Fragment } from 'react';
-import {
-  Flex,
-  useDisclosure,
-  Container,
-  useToast,
-  useColorModeValue,
-  Text,
-  Spinner
-} from '@chakra-ui/react';
+import React, { useState } from 'react';
 //import {Link, Redirect, useHistory} from 'react-router-dom';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient.js';
-import formatMoneyValue from '../../utils/formatMoneyValue.js';
+import { useServices } from '../../hooks/useServices.jsx';
+import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
+import { useFetchQuoteById, useUpdateQuoteStatusById } from '../../hooks/useQuotes.jsx';
 import {
   EditQuoteForm,
   QuoteDetailsAddLineItemModal,
@@ -21,13 +14,21 @@ import {
   QuoteDetailsPdfPreviewModal,
   QuoteDetailsQuickAction
 } from '../../components/index.js';
-import { useServices } from '../../hooks/useServices.jsx';
-import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
-import { useFetchQuoteById, useUpdateQuoteStatusById } from '../../hooks/useQuotes.jsx';
-import { useCreateQuoteLineItem } from '../../hooks/useQuoteLineItem.jsx';
+import {
+  Flex,
+  useDisclosure,
+  Container,
+  useToast,
+  useColorModeValue,
+  Text,
+  Spinner
+} from '@chakra-ui/react';
+import {
+  useCreateQuoteLineItem,
+  useDeleteQuoteLineItemById
+} from '../../hooks/useQuoteLineItem.jsx';
 
-const QuoteById = (props) => {
-  const { parentData } = props;
+const QuoteById = () => {
   const { id } = useParams();
   const toast = useToast();
 
@@ -39,6 +40,8 @@ const QuoteById = (props) => {
     useUpdateQuoteStatusById(toast, id);
   const { mutate: mutateCreateQuoteLineItem, isLoading: isCreateQuoteLineItemLoading } =
     useCreateQuoteLineItem(toast, id);
+  const { mutate: mutateDeleteQuoteLineItemById, isLoading: isDeleteQuoteLineItemByIdLoading } =
+    useDeleteQuoteLineItemById(toast, id);
 
   // Modal useDisclousures
   const {
@@ -88,11 +91,6 @@ const QuoteById = (props) => {
   const paymentCardBgColor = useColorModeValue('gray.100', 'gray.600');
   const secondaryTextColor = useColorModeValue('gray.600', 'gray.300');
 
-  // React-Hooks
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialRef = React.useRef();
-  let navigate = useNavigate();
-
   // Handle quote status when selected in menu
   const handleQuoteStatusMenuSelection = async (status_id) => {
     setLoadingQuoteStatusIsOn(true);
@@ -114,68 +112,11 @@ const QuoteById = (props) => {
 
   //////////////////////// Functions to handle line items //////////////////////////////
   const handleLineItemDelete = async (item) => {
-    const { data, error } = await supabase.from('quote_line_item').delete().eq('id', item.id);
-
-    if (error) {
-      toast({
-        position: 'top',
-        title: `Error Occurend Deleting Line Item 🚨`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    if (data) {
-      // await getQuoteById();
-      toast({
-        position: 'top',
-        title: `Succesfully Deleted Quote Line Item`,
-        description: `We were able to delete a line item with description of "${
-          item.description
-        }" with an amount of "${formatMoneyValue(item.amount)}" successfully 🎉`,
-        duration: 5000,
-        isClosable: true,
-        status: 'success'
-      });
-    }
+    mutateDeleteQuoteLineItemById(item);
   };
 
   const handleAddLineItemSubmit = async (e) => {
     e.preventDefault();
-    setLoadingQuoteStatusIsOn(true);
-    // const { data, error } = await supabase.from('quote_line_item').insert({
-    //   quote_id: quote.quote_number,
-    //   service_id: quote.service_id,
-    //   qty: 1,
-    //   amount: lineItemAmountInput,
-    //   description: lineItemDescriptionInput,
-    //   fixed_item: true
-    // });
-
-    // if (error) {
-    //   toast({
-    //     position: 'top',
-    //     title: `Error Occured Creating Line Item`,
-    //     description: `Error: ${error.message}`,
-    //     status: 'error',
-    //     duration: 5000,
-    //     isClosable: true
-    //   });
-    // }
-    // if (data) {
-    //   // await getQuoteById();
-    //   setLoadingQuoteStatusIsOn(false);
-    //   onAddLineItemClose();
-    //   toast({
-    //     position: 'top',
-    //     title: `Succesfully Added Line Item`,
-    //     description: `We were able to add a line-item for quote number ${quote.quote_number} 🎉`,
-    //     status: 'success',
-    //     duration: 5000,
-    //     isClosable: true
-    //   });
-    // }
     mutateCreateQuoteLineItem(lineItemObject);
     onAddLineItemClose();
   };
@@ -266,8 +207,8 @@ const QuoteById = (props) => {
     fixed_item: true
   };
 
-  // Convert Quote to Invoice 
-  
+  // Convert Quote to Invoice
+
   // Handle adding new line item to quote
   const handlePDFDownload = () => {
     onExportPDFClose();
