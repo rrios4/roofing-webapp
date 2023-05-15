@@ -13,3 +13,11 @@ export const deleteQuoteLineItems = async (quoteNumber) => {
   }
   return data;
 };
+
+export const createQuoteLineItem = async (lineItemObject) => {
+  const { data, error } = await supabase.from('quote_line_item').insert(lineItemObject);
+  if (error) {
+    throw error;
+  }
+  return data;
+};
