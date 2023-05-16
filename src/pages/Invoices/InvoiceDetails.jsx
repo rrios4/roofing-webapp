@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useContext, Fragment } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import {
-  Select,
   Badge,
   Textarea,
-  Grid,
   Box,
   Flex,
   Modal,
@@ -16,78 +14,46 @@ import {
   FormControl,
   FormLabel,
   Input,
-  InputGroup,
-  InputLeftAddon,
   Button,
-  FormHelperText,
   Text,
   useDisclosure,
   Container,
   Card,
   CardBody,
-  Image,
-  Divider,
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Td,
-  Tbody,
-  Tooltip,
   Avatar,
-  Accordion,
   Skeleton,
   useColorModeValue,
   IconButton,
-  useEditableControls,
-  ButtonGroup,
-  Editable,
-  EditablePreview,
-  EditableInput,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   useToast
 } from '@chakra-ui/react';
 // import {Link, Redirect, useHistory} from 'react-router-dom';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PDFViewer, usePDF, PDFDownloadLink } from '@react-pdf/renderer';
 import {
-  FiArrowLeft,
   FiBriefcase,
   FiCalendar,
-  FiMoreHorizontal,
   FiUser,
-  FiShare2,
-  FiUploadCloud,
-  FiPaperclip,
   FiSend,
-  FiClock,
   FiAlignLeft,
-  FiCircle,
-  FiCheck,
   FiX,
-  FiEdit,
-  FiFolder,
-  FiPlus,
-  FiShare,
   FiFileText
 } from 'react-icons/fi';
-import { MdOutlinePayments, MdPendingActions, MdPayment } from 'react-icons/md';
-import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { AiOutlineCheckCircle, AiOutlineBars } from 'react-icons/ai';
-import { BiCalendarExclamation, BiNote, BiRuler } from 'react-icons/bi';
+import { MdPayment } from 'react-icons/md';
+import { BiNote, BiRuler } from 'react-icons/bi';
 import { HiStatusOnline } from 'react-icons/hi';
 import supabase from '../../utils/supabaseClient';
 import formatMoneyValue from '../../utils/formatMoneyValue';
-import formatNumber from '../../utils/formatNumber';
 import formatDate from '../../utils/formatDate';
-import { EditInvoiceForm, InvoiceDocument } from '../../components';
+import {
+  EditInvoiceForm,
+  InvoiceDetailsMain,
+  InvoiceDetailsQuickActionCard,
+  InvoiceDocument
+} from '../../components';
 import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog';
 import { useServices } from '../../hooks/useServices';
 import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
+import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader';
 
 const InvoiceDetails = () => {
   // Chakra UI hooks
@@ -457,7 +423,7 @@ const InvoiceDetails = () => {
   };
 
   return (
-    <Container maxW={'1400px'} pt={'1rem'} pb={'4rem'}>
+    <Container maxW={'1440px'} pt={'1rem'} pb={'2rem'}>
       <DeleteInvoiceLineServiceAlertDialog
         toast={handleDeleteToast}
         updateParentState={getInvoiceDetailsById}
@@ -472,398 +438,29 @@ const InvoiceDetails = () => {
         invoiceStatuses={invoiceStatuses}
         loadingState={invoiceLoadingState}
       />
-      {/* Header */}
-      <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
-        <Flex px={'1rem'} gap={4} mb={{ base: '0rem', lg: '0' }}>
-          <Link to={`/invoices`}>
-            <Button borderColor={'gray.300'} colorScheme={'gray'}>
-              <FiArrowLeft />
-            </Button>
-          </Link>
-          {/* <Text my={'auto'} fontSize={'xl'} fontWeight={'bold'}>INV #{id}</Text> */}
-        </Flex>
-        <Flex px={'1rem'} gap={4} ml={{ base: 'auto', lg: '0' }}>
-          <Menu>
-            <MenuButton as={Button}>
-              <FiMoreHorizontal />
-            </MenuButton>
-            <MenuList>
-              <MenuItem icon={<FiEdit />} onClick={() => handleEditInvoiceModal(invoice)}>
-                Edit Invoice
-              </MenuItem>
-              <MenuItem icon={<MdOutlinePayments />}>Edit Payments</MenuItem>
-              <MenuItem icon={<AiOutlineBars />}>Edit Line Items</MenuItem>
-            </MenuList>
-          </Menu>
-          {/* <Tooltip hasArrow label="More"><Button colorScheme={'gray'}><FiMoreHorizontal/></Button></Tooltip> */}
-          {/* <Tooltip hasArrow label="Share">
-            <Button colorScheme={'gray'}>
-              <FiShare2 />
-            </Button>
-          </Tooltip> */}
-          {/* <Tooltip hasArrow label="Send invoice">
-            <Button colorScheme={'blue'} gap={2}>
-              <FiSend />
-              Send invoice
-            </Button>
-          </Tooltip> */}
-          <Button colorScheme={'blue'} onClick={onExportPDFOpen} gap={2}>
-            <FiShare />
-            Export as PDF
-          </Button>
-        </Flex>
-      </Flex>
+      {/* Page Header */}
+      <InvoiceDetailsHeader handleEditInvoiceModal={handleEditInvoiceModal} invoice={invoice} />
       <Flex px={'1rem'} gap={4} flexDir={{ base: 'column', lg: 'row' }}>
         {/* Left Section */}
-        <Flex w={{ base: 'full', lg: '60%' }}>
-          <Card w={'full'} rounded={'xl'}>
-            <CardBody>
-              {/* Header with Buttons */}
-              <Flex justifyContent={'flex-end'} pr={'1rem'}>
-                <Tooltip hasArrow label="Upload images">
-                  <Button variant={'outline'} roundedRight={'none'}>
-                    <FiUploadCloud />
-                  </Button>
-                </Tooltip>
-                <Tooltip hasArrow label="Upload documents">
-                  <Button variant={'outline'} roundedLeft={'none'}>
-                    <FiPaperclip />
-                  </Button>
-                </Tooltip>
-              </Flex>
-              <Flex px={'2rem'} pb="3rem">
-                <Image
-                  src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
-                  maxW={'70px'}
-                  p={'1'}
-                  bg={'blue.500'}
-                  rounded={'2xl'}
-                />
-                <Box ml={'2rem'}>
-                  <Text fontWeight={'semibold'} fontSize={'3xl'} letterSpacing={'0px'}>
-                    Invoice{' '}
-                    <Text as={'span'} color={'blue.400'}>
-                      #
-                    </Text>{' '}
-                    {formatNumber(invoice?.invoice_number)}
-                  </Text>
-                  <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'gray.500'}>
-                    Due {formatDate(invoice?.due_date)}
-                  </Text>
-                </Box>
-              </Flex>
-              <Box px={'2rem'} mb={'3rem'}>
-                <Flex mb={'1rem'}>
-                  <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
-                    To
-                  </Text>
-                  {!invoice ? (
-                    <Skeleton
-                      bg={paymentCardBgColor}
-                      height={'100px'}
-                      w={'250px'}
-                      rounded={'xl'}
-                      mx={'1rem'}
-                    />
-                  ) : (
-                    <>
-                      {invoice?.bill_to === true ? (
-                        <>
-                          <Box>
-                            <Text ml={'3rem'} fontWeight={'semibold'}>
-                              {invoice?.customer.first_name} {invoice?.customer.last_name}
-                            </Text>
-                            <Text ml={'3rem'}>{invoice?.bill_to_street_address}</Text>
-                            <Text ml={'3rem'}>
-                              {invoice?.bill_to_city}, {invoice?.bill_to_state}{' '}
-                              {invoice?.bill_to_zipcode}
-                            </Text>
-                            <Text ml={'3rem'} color={'blue.400'}>
-                              {invoice?.customer.email}
-                            </Text>
-                          </Box>
-                        </>
-                      ) : (
-                        <>
-                          <Box>
-                            <Text ml={'3rem'} fontWeight={'semibold'}>
-                              {invoice?.customer.first_name} {invoice?.customer.last_name}
-                            </Text>
-                            <Text ml={'3rem'}>{invoice?.customer.street_address}</Text>
-                            <Text ml={'3rem'}>
-                              {invoice?.customer.city}, {invoice?.customer.state}{' '}
-                              {invoice?.customer.zipcode}
-                            </Text>
-                            <Text ml={'3rem'} color={'blue.400'}>
-                              {invoice?.customer.email}
-                            </Text>
-                          </Box>
-                        </>
-                      )}
-                    </>
-                  )}
-                </Flex>
-                <Flex mb={'1rem'}>
-                  <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
-                    From
-                  </Text>
-                  {!invoice ? (
-                    <Skeleton
-                      bg={paymentCardBgColor}
-                      height={'100px'}
-                      w={'250px'}
-                      rounded={'xl'}
-                      mx={'1rem'}
-                    />
-                  ) : (
-                    <>
-                      <Box>
-                        <Text ml={'3rem'} fontWeight={'semibold'}>
-                          Rios Roofing
-                        </Text>
-                        <Text ml={'3rem'}>150 Tallant St</Text>
-                        <Text ml={'3rem'}>Houston, TX 77076</Text>
-                        <Text ml={'3rem'} color={'blue.400'}>
-                          rrios.roofing@gmail.com
-                        </Text>
-                      </Box>
-                    </>
-                  )}
-                </Flex>
-                <Flex>
-                  <Text w="50px" fontWeight={'bold'} textColor={'gray.500'}>
-                    Notes
-                  </Text>
-                  {!invoice ? (
-                    <Skeleton
-                      bg={paymentCardBgColor}
-                      height={'20px'}
-                      w={'250px'}
-                      rounded={'xl'}
-                      mx={'1rem'}
-                    />
-                  ) : (
-                    <>
-                      <Text ml={'3rem'}>{invoice?.cust_note}</Text>
-                    </>
-                  )}
-                </Flex>
-              </Box>
-              <Divider w={'95%'} mx={'auto'} />
-              {/* Line Item Table */}
-              <Box px={'2rem'} py={'2rem'}>
-                <TableContainer rounded={'xl'}>
-                  {!invoice ? (
-                    <Skeleton bg={paymentCardBgColor} height={'100px'} w={'full'} rounded={'xl'} />
-                  ) : (
-                    <>
-                      <Table variant={'simple'}>
-                        <Thead bg={bgColorMode} rounded={'xl'}>
-                          <Tr>
-                            <Th>Description</Th>
-                            <Th>Qty</Th>
-                            <Th>Rate</Th>
-                            <Th>Amount</Th>
-                            {editSwitchIsOn === true ? <Th></Th> : <></>}
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {/* Table Row Data Component */}
-                          {invoice?.invoice_line_service?.map((item, index) => (
-                            <Tr key={index}>
-                              <Td whiteSpace="normal" height="auto" blockSize="auto">
-                                {item.description}
-                              </Td>
-                              <Td>{item.qty}</Td>
-                              <Td>{item.item_rate === true ? item.rate : 'Fixed'}</Td>
-                              <Td>${formatMoneyValue(item.amount)}</Td>
-                              {editSwitchIsOn === true ? (
-                                <Td>
-                                  <IconButton
-                                    icon={<FiX />}
-                                    onClick={() =>
-                                      handleLineItemDelete(item.id, item.description, item.amount)
-                                    }
-                                  />
-                                </Td>
-                              ) : (
-                                <></>
-                              )}
-                            </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
-                    </>
-                  )}
-                </TableContainer>
-              </Box>
-
-              <Box px={'4rem'} pb="0rem">
-                <Flex mb={'0rem'} mx={8} py={2}>
-                  <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                    Subtotal
-                  </Text>
-                  <Text ml={'auto'} mr={'1rem'}>
-                    ${formatMoneyValue(invoice?.total)}
-                  </Text>
-                </Flex>
-                <Flex mb={'1rem'} mx={8} py={2}>
-                  <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                    Total
-                  </Text>
-                  <Text ml={'auto'} mr={'1rem'}>
-                    ${formatMoneyValue(invoice?.total)}
-                  </Text>
-                </Flex>
-                <Flex my={'3rem'} bg={'blue.500'} color={'white'} px={4} py={4} rounded={'xl'}>
-                  <Text fontWeight={'bold'} fontSize={'xl'}>
-                    Amount Due
-                  </Text>
-                  <Text ml={'auto'} fontWeight={'bold'} fontSize={'xl'}>
-                    ${formatMoneyValue(invoice?.amount_due)}
-                  </Text>
-                </Flex>
-              </Box>
-            </CardBody>
-          </Card>
-        </Flex>
+        <InvoiceDetailsMain
+          invoice={invoice}
+          paymentCardBgColor={paymentCardBgColor}
+          editSwitchIsOn={editSwitchIsOn}
+          handleLineItemDelete={handleLineItemDelete}
+          bgColorMode={bgColorMode}
+          secondaryTextColor={secondaryTextColor}
+        />
         {/* Right Section */}
         <Flex w={{ base: 'full', lg: '40%' }} direction={'column'} gap={3}>
-          <Card rounded={'xl'} size="md">
-            <CardBody>
-              <Flex gap={2} justify={'center'}>
-                {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(invoice?.amount_due)}</Text> */}
-                {/* Menu Button to update status of invoice */}
-                <Menu>
-                  {({ isOpen }) => (
-                    <>
-                      <MenuButton
-                        isLoading={loadingInvoiceStatusIsOn}
-                        isActive={isOpen}
-                        as={Button}
-                        rightIcon={
-                          isOpen ? <BsChevronDown size="10px" /> : <BsChevronUp size="10px" />
-                        }>
-                        {invoice?.invoice_status.name === 'Draft' ? (
-                          <>
-                            <Flex gap="2" pr="4">
-                              <Box my="auto">
-                                <FiFolder />
-                              </Box>
-                              {invoice?.invoice_status.name}
-                            </Flex>
-                          </>
-                        ) : invoice?.invoice_status.name === 'Pending' ? (
-                          <>
-                            <Flex gap="2">
-                              <Box my="auto">
-                                <MdPendingActions />
-                              </Box>
-                              {invoice?.invoice_status.name}
-                            </Flex>
-                          </>
-                        ) : invoice?.invoice_status.name === 'Paid' ? (
-                          <>
-                            <Flex gap="2">
-                              <Box my="auto">
-                                <AiOutlineCheckCircle />
-                              </Box>
-                              {invoice?.invoice_status.name}
-                            </Flex>
-                          </>
-                        ) : invoice?.invoice_status.name === 'Overdue' ? (
-                          <>
-                            <Flex gap="2">
-                              <Box my="auto">
-                                <BiCalendarExclamation />
-                              </Box>
-                              {invoice?.invoice_status.name}
-                            </Flex>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem onClick={() => handleInvoiceStatusMenuSelection(4)}>
-                          <Flex gap="2">
-                            <Box my="auto">
-                              <FiFolder size="20px" />
-                            </Box>
-                            <Text>Draft</Text>
-                            {invoice?.invoice_status.name === 'Draft' ? (
-                              <Box my="auto" ml="1rem">
-                                <FiCheck size="15px" />
-                              </Box>
-                            ) : (
-                              <></>
-                            )}
-                          </Flex>
-                        </MenuItem>
-                        <MenuItem onClick={() => handleInvoiceStatusMenuSelection(1)}>
-                          <Flex gap="2">
-                            <Box my="auto">
-                              <AiOutlineCheckCircle size="20px" />
-                            </Box>
-                            <Text>Paid</Text>
-                            {invoice?.invoice_status.name === 'Paid' ? (
-                              <Box my="auto" ml="1rem">
-                                <FiCheck size="15px" />
-                              </Box>
-                            ) : (
-                              <></>
-                            )}
-                          </Flex>
-                        </MenuItem>
-                        <MenuItem onClick={() => handleInvoiceStatusMenuSelection(2)}>
-                          <Flex gap="2">
-                            <Box my="auto">
-                              <MdPendingActions size="20px" />
-                            </Box>
-                            <Text>Pending</Text>
-                            {invoice?.invoice_status.name === 'Pending' ? (
-                              <Box my="auto" ml="1rem">
-                                <FiCheck size="15px" />
-                              </Box>
-                            ) : (
-                              <></>
-                            )}
-                          </Flex>
-                        </MenuItem>
-                        <MenuItem onClick={() => handleInvoiceStatusMenuSelection(3)}>
-                          <Flex gap="2">
-                            <Box my="auto">
-                              <BiCalendarExclamation size="20px" />
-                            </Box>
-                            <Text>Overdue</Text>
-                            {invoice?.invoice_status.name === 'Overdue' ? (
-                              <Box my="auto" ml="1rem">
-                                <FiCheck size="15px" />
-                              </Box>
-                            ) : (
-                              <></>
-                            )}
-                          </Flex>
-                        </MenuItem>
-                      </MenuList>
-                    </>
-                  )}
-                </Menu>
-                <Button leftIcon={<FiPlus />} onClick={onAddLineItemOpen}>
-                  Line Item
-                </Button>
-                <Button leftIcon={<FiPlus />} onClick={onAddPaymentOpen}>
-                  Payment
-                </Button>
-                <Tooltip hasArrow label="Edit">
-                  <IconButton
-                    icon={editSwitchIsOn === true ? <FiX /> : <FiEdit />}
-                    onClick={() => setEditSwitchIsOn(!editSwitchIsOn)}
-                  />
-                </Tooltip>
-              </Flex>
-            </CardBody>
-          </Card>
+          <InvoiceDetailsQuickActionCard
+            invoice={invoice}
+            handleInvoiceStatusMenuSelection={handleInvoiceStatusMenuSelection}
+            loadingInvoiceStatusIsOn={loadingInvoiceStatusIsOn}
+            onAddLineItemOpen={onAddLineItemOpen}
+            onAddPaymentOpen={onAddPaymentOpen}
+            setEditSwitchIsOn={setEditSwitchIsOn}
+            editSwitchIsOn={editSwitchIsOn}
+          />
           <Card w={'full'} rounded={'xl'} size="lg">
             <CardBody overflowY={'auto'}>
               {/* Invoice Extra Details */}
