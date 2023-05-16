@@ -439,7 +439,11 @@ const InvoiceDetails = () => {
         loadingState={invoiceLoadingState}
       />
       {/* Page Header */}
-      <InvoiceDetailsHeader handleEditInvoiceModal={handleEditInvoiceModal} invoice={invoice} />
+      <InvoiceDetailsHeader
+        handleEditInvoiceModal={handleEditInvoiceModal}
+        invoice={invoice}
+        onExportPDFOpen={onExportPDFOpen}
+      />
       <Flex px={'1rem'} gap={4} flexDir={{ base: 'column', lg: 'row' }}>
         {/* Left Section */}
         <InvoiceDetailsMain
@@ -819,7 +823,7 @@ const InvoiceDetails = () => {
       <Modal
         onClose={onExportPDFClose}
         isOpen={isExportPDFOpen}
-        size={'xl'}
+        size={{ base: 'full', md: 'md' }}
         isCentered
         motionPreset="scale">
         <ModalOverlay />
@@ -834,9 +838,9 @@ const InvoiceDetails = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Flex>
+            <Flex overflow={'scroll'} justify={'center'}>
               <Fragment>
-                <PDFViewer width="1000" height="800">
+                <PDFViewer width="700" height="500">
                   <InvoiceDocument invoice={invoice} />
                 </PDFViewer>
               </Fragment>

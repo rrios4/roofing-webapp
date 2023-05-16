@@ -23,7 +23,7 @@ const QuoteDetailsPdfPreviewModal = (props) => {
       <Modal
         onClose={onExportPDFClose}
         isOpen={isExportPDFOpen}
-        size={'lg'}
+        size={{ base: 'full', md: 'md' }}
         isCentered
         motionPreset="scale">
         <ModalOverlay />
@@ -37,12 +37,14 @@ const QuoteDetailsPdfPreviewModal = (props) => {
               </Text>
             </Flex>
           </ModalHeader>
-          <ModalBody mx="auto" p="1rem">
-            <Fragment>
-              <PDFViewer width={'350px'} height={'500px'}>
-                <QuoteDocument quote={quoteById} />
-              </PDFViewer>
-            </Fragment>
+          <ModalBody>
+            <Flex overflow={'scroll'} justify={'center'}>
+              <Fragment>
+                <PDFViewer width="700" height="500">
+                  <QuoteDocument quote={quoteById} />
+                </PDFViewer>
+              </Fragment>
+            </Flex>
           </ModalBody>
           <ModalFooter>
             <Flex gap="4">
