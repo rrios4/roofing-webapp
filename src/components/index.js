@@ -73,3 +73,6 @@ export { default as QuoteDetailsPdfPreviewModal } from './Quotes/QuoteDetails/Qu
 export { default as QuoteDetailsAddLineItemModal } from './Quotes/QuoteDetails/QuoteDetailsAddLineItemModal';
 export { default as QuoteDetailsMain } from './Quotes/QuoteDetails/QuoteDetailsMain';
 export { default as QuoteDetailsHeader } from './Quotes/QuoteDetails/QuoteDetailsHeader';
+export { default as InvoceDetailsHeader } from './Invoices/InvoiceDetails/InvoiceDetailsHeader';
+export { default as InvoiceDetailsMain } from './Invoices/InvoiceDetails/InvoiceDetailsMain';
+export { default as InvoiceDetailsQuickActionCard } from './Invoices/InvoiceDetails/InvoiceDetailsQuickActionCard';
