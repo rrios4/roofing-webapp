@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Button, Menu, MenuButton, MenuList, MenuItem, Tooltip } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiMoreHorizontal, FiEdit, FiShare } from 'react-icons/fi';
+import { FiEdit } from 'react-icons/fi';
 import { MdOutlinePayments, MdTransform } from 'react-icons/md';
 import { AiOutlineBars } from 'react-icons/ai';
 import { RefreshCcw, MoreHorizontal, Share, FileOutput, ChevronLeft } from 'lucide-react';
