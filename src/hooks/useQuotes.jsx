@@ -78,14 +78,14 @@ export const useDeleteQuote = (toast) => {
 };
 
 // Custom hook to update a quote
-export const useUpdateQuote = (toast, resetQuoteState) => {
+export const useUpdateQuote = (toast) => {
   const queryClient = useQueryClient();
   return useMutation((quoteObject) => updateQuoteById(quoteObject), {
     onError: (error) => {
       toast({
         position: 'top',
         title: `Error Updating Quote`,
-        description: `Error: ${error.details}`,
+        description: `Error: ${error.message}`,
         status: 'error',
         duration: 5000,
         isClosable: true
@@ -93,7 +93,7 @@ export const useUpdateQuote = (toast, resetQuoteState) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['quotes'] });
-      resetQuoteState();
+      queryClient.invalidateQueries({ queryKey: ['quoteById'] });
       toast({
         position: 'top',
         title: `Successfully Updated Quote!`,

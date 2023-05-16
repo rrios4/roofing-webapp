@@ -62,26 +62,7 @@ function Estimates() {
     cust_note: ''
   });
 
-  const handleResetQuoteEditState = () => {
-    onEditClose();
-    setSelectedEditQuote({
-      id: '',
-      quote_number: '',
-      status_id: '',
-      service_id: '',
-      quote_date: '',
-      issue_date: '',
-      expiration_date: '',
-      note: '',
-      measurement_note: '',
-      cust_note: ''
-    });
-  };
-
-  const { mutate: mutateUpdateQuote, isLoading: quoteUpdateIsLoading } = useUpdateQuote(
-    toast,
-    handleResetQuoteEditState
-  );
+  const { mutate: mutateUpdateQuote, isLoading: quoteUpdateIsLoading } = useUpdateQuote(toast);
 
   const [searchQuote, setSearchQuote] = useState('');
   const [searchQuoteInput, setSearchQuoteInput] = useState('');
@@ -122,7 +103,20 @@ function Estimates() {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    await mutateUpdateQuote(selectedEditQuote);
+    mutateUpdateQuote(selectedEditQuote);
+    onEditClose();
+    setSelectedEditQuote({
+      id: '',
+      quote_number: '',
+      status_id: '',
+      service_id: '',
+      quote_date: '',
+      issue_date: '',
+      expiration_date: '',
+      note: '',
+      measurement_note: '',
+      cust_note: ''
+    });
   };
 
   return (

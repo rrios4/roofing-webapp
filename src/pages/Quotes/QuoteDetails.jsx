@@ -4,7 +4,11 @@ import { useParams } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient.js';
 import { useServices } from '../../hooks/useServices.jsx';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
-import { useFetchQuoteById, useUpdateQuoteStatusById } from '../../hooks/useQuotes.jsx';
+import {
+  useFetchQuoteById,
+  useUpdateQuote,
+  useUpdateQuoteStatusById
+} from '../../hooks/useQuotes.jsx';
 import {
   EditQuoteForm,
   QuoteDetailsAddLineItemModal,
@@ -21,7 +25,8 @@ import {
   useToast,
   useColorModeValue,
   Text,
-  Spinner
+  Spinner,
+  Skeleton
 } from '@chakra-ui/react';
 import {
   useCreateQuoteLineItem,
@@ -42,6 +47,7 @@ const QuoteById = () => {
     useCreateQuoteLineItem(toast, id);
   const { mutate: mutateDeleteQuoteLineItemById, isLoading: isDeleteQuoteLineItemByIdLoading } =
     useDeleteQuoteLineItemById(toast, id);
+  const { mutate: mutateUpdateQuote, isLoading: isUpdateQuoteLoading } = useUpdateQuote(toast);
 
   // Modal useDisclousures
   const {
@@ -74,17 +80,11 @@ const QuoteById = () => {
     measurement_note: '',
     cust_note: ''
   });
-  2;
-  // React useState switches
-  const [loadingQuoteStatusIsOn, setLoadingQuoteStatusIsOn] = useState(false);
   const [editSwitchIsOn, setEditSwitchIsOn] = useState(false);
 
   // React state input variables
   const [lineItemDescriptionInput, setLineItemDescriptionInput] = useState('');
   const [lineItemAmountInput, setLineItemAmountInput] = useState('');
-
-  // Chakra UI states
-  // const toast = useToast()
 
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
@@ -93,7 +93,6 @@ const QuoteById = () => {
 
   // Handle quote status when selected in menu
   const handleQuoteStatusMenuSelection = async (status_id) => {
-    setLoadingQuoteStatusIsOn(true);
     if (status_id === quoteById?.status_id) {
       console.log(status_id);
       toast({
@@ -107,7 +106,6 @@ const QuoteById = () => {
     } else {
       mutateUpdateQuoteStatusById(status_id);
     }
-    setLoadingQuoteStatusIsOn(false);
   };
 
   //////////////////////// Functions to handle line items //////////////////////////////
@@ -144,46 +142,8 @@ const QuoteById = () => {
 
   const handleEditQuoteSubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase
-      .from('quote')
-      .update({
-        status_id: selectedEditQuote.status_id,
-        service_id: selectedEditQuote.service_id,
-        quote_date: selectedEditQuote.quote_date,
-        issue_date: selectedEditQuote.issue_date,
-        expiration_date: selectedEditQuote.expiration_date,
-        note: selectedEditQuote.note,
-        measurement_note: selectedEditQuote.measurement_note,
-        cust_note: selectedEditQuote.cust_note,
-        updated_at: new Date()
-      })
-      .eq('quote_number', selectedEditQuote.quote_number);
-
-    if (error) {
-      toast({
-        position: 'top',
-        title: `Error Updating Quote Number ${selectedEditQuote.quote_number}`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-      onEditQuoteClose();
-    }
-
-    if (data) {
-      // await getQuoteById();
-      onEditQuoteClose();
-      toast({
-        position: 'top',
-        title: `Successfully Updated Quote!`,
-        description: `We've updated INV# ${selectedEditQuote.quote_number} for you 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
+    mutateUpdateQuote(selectedEditQuote);
+    onEditQuoteClose();
     setSelectedEditQuote({
       id: '',
       quote_number: '',
@@ -217,12 +177,13 @@ const QuoteById = () => {
   if (isQuoteByIdLoading === true) {
     return (
       <>
-        <Container maxW={'1400px'} mt={'1rem'} mb={'2rem'}>
-          <Flex gap={2} justify={'center'}>
-            <Spinner size={'sm'} my={'auto'} />
-            <Text fontSize={'xl'} fontWeight={'bold'}>
+        <Container maxW={'1440px'} mt={'1rem'} mb={'2rem'}>
+          <Flex gap={2} justify={'center'} px={'1rem'} py="1rem">
+            {/* <Spinner size={'sm'} my={'auto'} /> */}
+            <Skeleton width={'full'} height={'100vh'} rounded={'lg'} />
+            {/* <Text fontSize={'xl'} fontWeight={'bold'}>
               Loading...
-            </Text>
+            </Text> */}
           </Flex>
         </Container>
       </>
