@@ -1,7 +1,7 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import { Flex, useDisclosure, Container, useColorModeValue, useToast } from '@chakra-ui/react';
 // import {Link, Redirect, useHistory} from 'react-router-dom';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { usePDF } from '@react-pdf/renderer';
 import supabase from '../../utils/supabaseClient';
 import formatMoneyValue from '../../utils/formatMoneyValue';
@@ -20,10 +20,18 @@ import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/Dele
 import { useServices } from '../../hooks/useServices';
 import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
 import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader';
+import { useFetchInvoiceById } from '../../hooks/useInvoices';
 
 const InvoiceDetails = () => {
-  // Chakra UI hooks
+  const { id } = useParams();
   const toast = useToast();
+  const {
+    data: invoice,
+    isLoading: isInvoiceLoading,
+    isError: isInvoiceError
+  } = useFetchInvoiceById(id);
+
+  // Modal useDisclose Hooks
   const {
     isOpen: isAddPaymentOpen,
     onOpen: onAddPaymentOpen,
@@ -58,7 +66,7 @@ const InvoiceDetails = () => {
   const secondaryTextColor = useColorModeValue('gray.600', 'gray.300');
 
   // React Array Object States
-  const [invoice, setInvoice] = useState();
+  // const [invoice, setInvoice] = useState();
   const [selectedEditInvoice, setSelectedEditInvoice] = useState({
     id: '',
     invoice_number: '',
@@ -92,33 +100,6 @@ const InvoiceDetails = () => {
   const [descriptionLineItemInput, setDescriptionLineItemInput] = useState('');
   const [amountLineItemInput, setAmountLineItemInput] = useState('');
 
-  // Define variables
-  const { id } = useParams();
-  let navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialRef = React.useRef();
-
-  //React functions to load when component is rendering
-  useEffect(() => {
-    getInvoiceDetailsById();
-  }, []);
-
-  // Function that call the supabase DB to get invoice info
-  const getInvoiceDetailsById = async () => {
-    const { data, error } = await supabase
-      .from('invoice')
-      .select(
-        '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*), invoice_line_service(*), invoice_payment(*)'
-      )
-      .eq('invoice_number', `${id}`);
-
-    if (error) {
-      console.log(error);
-    }
-    setInvoice(data[0]);
-    console.log(data[0]);
-  };
-
   // Handle selection from menu item for invoice status
   const handleInvoiceStatusMenuSelection = async (status_id) => {
     setLoadingInvoiceStatusIsOn(true);
@@ -135,7 +116,7 @@ const InvoiceDetails = () => {
       if (error) {
         console.log(error);
       }
-      await getInvoiceDetailsById();
+      // await getInvoiceDetailsById();
     }
     setLoadingInvoiceStatusIsOn(false);
   };
@@ -176,7 +157,7 @@ const InvoiceDetails = () => {
     }
 
     if (data) {
-      await getInvoiceDetailsById();
+      // await getInvoiceDetailsById();
       toast({
         position: 'top',
         title: `Succesfully Added Payment`,
@@ -213,7 +194,7 @@ const InvoiceDetails = () => {
       });
     }
     if (data) {
-      await getInvoiceDetailsById();
+      // await getInvoiceDetailsById();
       console.log(data);
       toast({
         position: 'top',
@@ -247,7 +228,7 @@ const InvoiceDetails = () => {
     }
 
     if (data) {
-      await getInvoiceDetailsById();
+      // await getInvoiceDetailsById();
       toast({
         position: 'top',
         title: `Succesfully Deleted Invoice Line Item`,
@@ -286,7 +267,7 @@ const InvoiceDetails = () => {
       });
     }
     if (data) {
-      await getInvoiceDetailsById();
+      // await getInvoiceDetailsById();
       setInvoiceLineItemLoadingState(false);
       onAddLineItemClose();
       toast({
@@ -351,7 +332,7 @@ const InvoiceDetails = () => {
     }
 
     if (data) {
-      await getInvoiceDetailsById();
+      // await getInvoiceDetailsById();
       setInvoiceLoadingState(false);
       onEditInvoiceClose();
       toast({
@@ -430,7 +411,7 @@ const InvoiceDetails = () => {
       {/* Alert to delete line service */}
       <DeleteInvoiceLineServiceAlertDialog
         toast={handleDeleteToast}
-        updateParentState={getInvoiceDetailsById}
+        // updateParentState={getInvoiceDetailsById}
       />
       {/* Modal form to edit invoice */}
       <EditInvoiceForm
@@ -441,7 +422,7 @@ const InvoiceDetails = () => {
         handleEditSubmit={handleEditInvoiceSubmit}
         services={services}
         invoiceStatuses={invoiceStatuses}
-        loadingState={invoiceLoadingState}
+        loadingState={isInvoiceLoading}
       />
       {/* Modal to add payments to invoice */}
       <InvoiceDetailsAddPaymenyModal

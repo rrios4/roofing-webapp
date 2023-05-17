@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import supabase from '../utils/supabaseClient';
+import { useQuery } from '@tanstack/react-query';
+import { fetchInvoiceById } from '../services/api/invoice';
 
 export const useInvoices = () => {
   const [invoices, setInvoices] = useState([]);
@@ -27,4 +29,13 @@ export const useInvoices = () => {
   }, []);
 
   return { invoices, fetchInvoices, setInvoices, invoicesLoadingStateIsOn };
+};
+
+export const useFetchInvoiceById = (invoice_number) => {
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ['invoiceById', invoice_number],
+    queryFn: () => fetchInvoiceById(invoice_number)
+  });
+
+  return { data, isError, isLoading };
 };
