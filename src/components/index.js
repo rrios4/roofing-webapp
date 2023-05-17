@@ -76,3 +76,4 @@ export { default as QuoteDetailsHeader } from './Quotes/QuoteDetails/QuoteDetail
 export { default as InvoceDetailsHeader } from './Invoices/InvoiceDetails/InvoiceDetailsHeader';
 export { default as InvoiceDetailsMain } from './Invoices/InvoiceDetails/InvoiceDetailsMain';
 export { default as InvoiceDetailsQuickActionCard } from './Invoices/InvoiceDetails/InvoiceDetailsQuickActionCard';
+export { default as InvoiceDetailsAddPaymenyModal } from './Invoices/InvoiceDetails/InvoiceDetailsAddPaymenyModal';
