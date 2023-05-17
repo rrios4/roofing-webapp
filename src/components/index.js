@@ -77,3 +77,6 @@ export { default as InvoceDetailsHeader } from './Invoices/InvoiceDetails/Invoic
 export { default as InvoiceDetailsMain } from './Invoices/InvoiceDetails/InvoiceDetailsMain';
 export { default as InvoiceDetailsQuickActionCard } from './Invoices/InvoiceDetails/InvoiceDetailsQuickActionCard';
 export { default as InvoiceDetailsAddPaymenyModal } from './Invoices/InvoiceDetails/InvoiceDetailsAddPaymenyModal';
+export { default as InvoiceDetailsAddLineItemModal } from './Invoices/InvoiceDetails/InvoiceDetailsAddLineItemModal';
+export { default as InvoiceDetailsPreviewPDFModal } from './Invoices/InvoiceDetails/InvoiceDetailsPreviewPDFModal';
+export { default as InvoiceDetailsPane } from './Invoices/InvoiceDetails/InvoiceDetailsPane';

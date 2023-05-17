@@ -1,53 +1,18 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import {
-  Badge,
-  Textarea,
-  Box,
-  Flex,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Text,
-  useDisclosure,
-  Container,
-  Card,
-  CardBody,
-  Avatar,
-  Skeleton,
-  useColorModeValue,
-  IconButton,
-  useToast
-} from '@chakra-ui/react';
+import { Flex, useDisclosure, Container, useColorModeValue, useToast } from '@chakra-ui/react';
 // import {Link, Redirect, useHistory} from 'react-router-dom';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { PDFViewer, usePDF, PDFDownloadLink } from '@react-pdf/renderer';
-import {
-  FiBriefcase,
-  FiCalendar,
-  FiUser,
-  FiSend,
-  FiAlignLeft,
-  FiX,
-  FiFileText
-} from 'react-icons/fi';
-import { MdPayment } from 'react-icons/md';
-import { BiNote, BiRuler } from 'react-icons/bi';
-import { HiStatusOnline } from 'react-icons/hi';
+import { useNavigate, useParams } from 'react-router-dom';
+import { usePDF } from '@react-pdf/renderer';
 import supabase from '../../utils/supabaseClient';
 import formatMoneyValue from '../../utils/formatMoneyValue';
 import formatDate from '../../utils/formatDate';
 import {
   EditInvoiceForm,
+  InvoiceDetailsAddLineItemModal,
   InvoiceDetailsAddPaymenyModal,
   InvoiceDetailsMain,
+  InvoiceDetailsPane,
+  InvoiceDetailsPreviewPDFModal,
   InvoiceDetailsQuickActionCard,
   InvoiceDocument
 } from '../../components';
@@ -425,20 +390,6 @@ const InvoiceDetails = () => {
 
   return (
     <Container maxW={'1440px'} pt={'1rem'} pb={'2rem'}>
-      <DeleteInvoiceLineServiceAlertDialog
-        toast={handleDeleteToast}
-        updateParentState={getInvoiceDetailsById}
-      />
-      <EditInvoiceForm
-        onClose={onEditInvoiceClose}
-        isOpen={isEditInvoiceOpen}
-        invoice={selectedEditInvoice}
-        handleEditOnChange={handleEditInvoiceOnChange}
-        handleEditSubmit={handleEditInvoiceSubmit}
-        services={services}
-        invoiceStatuses={invoiceStatuses}
-        loadingState={invoiceLoadingState}
-      />
       {/* Page Header */}
       <InvoiceDetailsHeader
         handleEditInvoiceModal={handleEditInvoiceModal}
@@ -466,245 +417,32 @@ const InvoiceDetails = () => {
             setEditSwitchIsOn={setEditSwitchIsOn}
             editSwitchIsOn={editSwitchIsOn}
           />
-          <Card w={'full'} rounded={'xl'} size="lg">
-            <CardBody overflowY={'auto'}>
-              {/* Invoice Extra Details */}
-              <Box>
-                <Flex alignItems={'center'} gap={3} mb={'1rem'}>
-                  <FiAlignLeft size={'20px'} color="gray" />
-                  <Text fontSize={'xl'} fontWeight={'semibold'} color={secondaryTextColor}>
-                    Details
-                  </Text>
-                </Flex>
-                <Flex mb={'1rem'} gap="2">
-                  <Box my="auto">
-                    <HiStatusOnline />
-                  </Box>
-                  <Text
-                    w={'40%'}
-                    fontWeight={'semibold'}
-                    textColor={secondaryTextColor}
-                    my={'auto'}>
-                    Status
-                  </Text>
-                  {!invoice ? (
-                    <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
-                  ) : (
-                    <Badge
-                      colorScheme={
-                        invoice?.invoice_status.name === 'Paid'
-                          ? 'green'
-                          : invoice?.invoice_status.name === 'Pending'
-                          ? 'yellow'
-                          : invoice?.invoice_status.name === 'Overdue'
-                          ? 'red'
-                          : invoice?.invoice_status.name === 'Draft'
-                          ? 'gray'
-                          : 'facebook'
-                      }
-                      variant={'subtle'}
-                      mr={'1rem'}
-                      pt={'2px'}
-                      w={'80px'}
-                      rounded={'xl'}
-                      textAlign={'center'}>
-                      {invoice?.invoice_status.name}
-                    </Badge>
-                  )}
-                </Flex>
-                <Flex mb={'1rem'} gap="2">
-                  <Box my="auto">
-                    <FiBriefcase />
-                  </Box>
-                  <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor} my="auto">
-                    Service
-                  </Text>
-                  {!invoice ? (
-                    <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
-                  ) : (
-                    <Text mr={'1rem'}>{invoice?.service_type.name}</Text>
-                  )}
-                </Flex>
-                <Flex mb={'1rem'} gap="2">
-                  <Box my="auto">
-                    <FiCalendar />
-                  </Box>
-                  <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor}>
-                    Invoice Date
-                  </Text>
-                  {!invoice ? (
-                    <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
-                  ) : (
-                    <>
-                      <Text mr={'1rem'}>{formatDate(invoice?.invoice_date)}</Text>
-                    </>
-                  )}
-                </Flex>
-                <Flex mb={'1rem'} gap="2">
-                  <Box my="auto">
-                    <FiSend />
-                  </Box>
-                  <Text w={'40%'} fontWeight={'semibold'} textColor={secondaryTextColor}>
-                    Issue Date
-                  </Text>
-                  {!invoice ? (
-                    <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
-                  ) : (
-                    <>
-                      <Text mr={'1rem'}>
-                        {!invoice?.issue_date
-                          ? 'Not Issued yet... 🙅‍♂️'
-                          : formatDate(invoice?.issue_date)}
-                      </Text>
-                    </>
-                  )}
-                </Flex>
-                <Flex mb={'1rem'} gap="2">
-                  <Box my="auto">
-                    <FiUser />
-                  </Box>
-                  <Text
-                    w={'36%'}
-                    fontWeight={'semibold'}
-                    textColor={secondaryTextColor}
-                    my={'auto'}>
-                    Customer
-                  </Text>
-                  {!invoice ? (
-                    <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
-                  ) : (
-                    <>
-                      <Flex>
-                        <Link to={`/invoices/${invoice?.customer.id}`}>
-                          <Button variant={'ghost'}>
-                            <Avatar size={'xs'} />
-                            <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>
-                              {invoice?.customer.first_name} {invoice?.customer.last_name}
-                            </Text>
-                          </Button>
-                        </Link>
-                      </Flex>
-                    </>
-                  )}
-                </Flex>
-                <Box w="full">
-                  <Flex my={'1rem'} gap={2}>
-                    <Box my="auto">
-                      <MdPayment />
-                    </Box>
-                    <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                      Payments
-                    </Text>
-                  </Flex>
-                  <Flex w="full" px={6} mb={6} gap="4">
-                    <Flex direction="column" gap="2" w="full">
-                      {invoice?.invoice_payment?.map((item, index) => (
-                        <>
-                          <Flex
-                            key={index}
-                            gap="6"
-                            bg={useColorModeValue('gray.100', 'gray.600')}
-                            py="2"
-                            px="6"
-                            rounded="xl"
-                            w="full">
-                            <Box w="5%" my="auto">
-                              <Box h="10px" w="10px" bg="green.300" rounded="full"></Box>
-                            </Box>
-                            <Flex gap="6">
-                              <Text
-                                w="60%"
-                                fontWeight={'semibold'}
-                                my="auto"
-                                textColor={secondaryTextColor}>
-                                {formatDate(item.date_received)}
-                              </Text>
-                              <Text w="full" my="auto" textAlign="center">
-                                {item.payment_method}
-                              </Text>
-                            </Flex>
-                            <Box ml="auto" my="auto">
-                              <Text ml="2rem">${formatMoneyValue(item.amount)}</Text>
-                            </Box>
-                            {editSwitchIsOn === true ? (
-                              <>
-                                <Box>
-                                  <IconButton
-                                    onClick={() =>
-                                      handlePaymentDelete(item.id, item.date_received, item.amount)
-                                    }
-                                    icon={<FiX size="15px" />}
-                                    isLoading={loadingState}
-                                  />
-                                </Box>
-                              </>
-                            ) : (
-                              <></>
-                            )}
-                          </Flex>
-                        </>
-                      ))}
-                    </Flex>
-                  </Flex>
-                </Box>
-                <Box w="full" mb="2rem">
-                  <Flex mb={'1rem'} gap={2}>
-                    <Box my="auto">
-                      <BiNote />
-                    </Box>
-                    <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                      Note
-                    </Text>
-                  </Flex>
-                  {!invoice ? (
-                    <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} />
-                  ) : (
-                    <>
-                      <Box px={6}>
-                        <Box bg={paymentCardBgColor} p="2" rounded="xl">
-                          <Textarea
-                            border="none"
-                            isReadOnly
-                            value={
-                              !invoice?.note ? 'No note for this invoice... 🙅‍♂️' : invoice?.note
-                            }
-                          />
-                          {/* {!invoice?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
-                        </Box>
-                      </Box>
-                    </>
-                  )}
-                </Box>
-                <Box w="full">
-                  <Flex mb={'1rem'} gap={2}>
-                    <Box my="auto">
-                      <BiRuler />
-                    </Box>
-                    <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                      Measurements
-                    </Text>
-                  </Flex>
-                  {!invoice ? (
-                    <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} />
-                  ) : (
-                    <>
-                      <Box px="6">
-                        <Box bg={paymentCardBgColor} p="2" rounded="xl">
-                          <Textarea border="none" isReadOnly>
-                            {!invoice?.sqft_measurement
-                              ? 'No measurement information... 🙅‍♂️'
-                              : invoice?.sqft_measurement}
-                          </Textarea>
-                        </Box>
-                      </Box>
-                    </>
-                  )}
-                </Box>
-              </Box>
-            </CardBody>
-          </Card>
+          <InvoiceDetailsPane
+            invoice={invoice}
+            secondaryTextColor={secondaryTextColor}
+            paymentCardBgColor={paymentCardBgColor}
+            handlePaymentDelete={handlePaymentDelete}
+            loadingState={loadingState}
+            editSwitchIsOn
+          />
         </Flex>
       </Flex>
+      {/* Alert to delete line service */}
+      <DeleteInvoiceLineServiceAlertDialog
+        toast={handleDeleteToast}
+        updateParentState={getInvoiceDetailsById}
+      />
+      {/* Modal form to edit invoice */}
+      <EditInvoiceForm
+        onClose={onEditInvoiceClose}
+        isOpen={isEditInvoiceOpen}
+        invoice={selectedEditInvoice}
+        handleEditOnChange={handleEditInvoiceOnChange}
+        handleEditSubmit={handleEditInvoiceSubmit}
+        services={services}
+        invoiceStatuses={invoiceStatuses}
+        loadingState={invoiceLoadingState}
+      />
       {/* Modal to add payments to invoice */}
       <InvoiceDetailsAddPaymenyModal
         onAddPaymentClose={onAddPaymentClose}
@@ -719,104 +457,21 @@ const InvoiceDetails = () => {
         loadingState={loadingState}
       />
       {/* Modal to add line item to invoice */}
-      <Modal
-        onClose={onAddLineItemClose}
-        isOpen={isAddLineItemOpen}
-        size="xl"
-        isCentered
-        motionPreset="scale">
-        <ModalOverlay />
-        <form method="POST" onSubmit={handleAddLineItemSubmit}>
-          <ModalContent>
-            <ModalHeader>Add Line Item</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Flex gap="4">
-                <Box w="60%">
-                  <FormControl isRequired>
-                    <FormLabel>Description</FormLabel>
-                    <Input onChange={(e) => setDescriptionLineItemInput(e.target.value)} />
-                  </FormControl>
-                </Box>
-                <Box w="15%">
-                  <FormControl isRequired>
-                    <FormLabel>Qty</FormLabel>
-                    <Input value="1" disabled />
-                  </FormControl>
-                </Box>
-                <Box w="20%">
-                  <FormControl isRequired>
-                    <FormLabel>Rate</FormLabel>
-                    <Input value="Fixed" disabled />
-                  </FormControl>
-                </Box>
-                <Box w="25%">
-                  <FormControl isRequired>
-                    <FormLabel>Amount</FormLabel>
-                    <Input onChange={(e) => setAmountLineItemInput(e.target.value)} />
-                  </FormControl>
-                </Box>
-              </Flex>
-            </ModalBody>
-            <ModalFooter>
-              <Flex gap="4">
-                <Button colorScheme="blue" type="submit" isLoading={invoiceLineItemLoadingState}>
-                  Add Line Item
-                </Button>
-                <Button onClick={onAddLineItemClose}>Cancel</Button>
-              </Flex>
-            </ModalFooter>
-          </ModalContent>
-        </form>
-      </Modal>
+      <InvoiceDetailsAddLineItemModal
+        onAddLineItemClose={onAddLineItemClose}
+        isAddLineItemOpen={isAddLineItemOpen}
+        handleAddLineItemSubmit={handleAddLineItemSubmit}
+        setDescriptionLineItemInput={setDescriptionLineItemInput}
+        setAmountLineItemInput={setAmountLineItemInput}
+        invoiceLineItemLoadingState={invoiceLineItemLoadingState}
+      />
       {/* Modal for Previewing PDF */}
-      <Modal
-        onClose={onExportPDFClose}
-        isOpen={isExportPDFOpen}
-        size={{ base: 'full', md: 'md' }}
-        isCentered
-        motionPreset="scale">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Flex gap="2">
-              <Box my="auto">
-                <FiFileText />
-              </Box>
-              <Text>Invoice Preview</Text>
-            </Flex>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Flex overflow={'scroll'} justify={'center'}>
-              <Fragment>
-                <PDFViewer width="700" height="500">
-                  <InvoiceDocument invoice={invoice} />
-                </PDFViewer>
-              </Fragment>
-            </Flex>
-          </ModalBody>
-          <ModalFooter>
-            <Flex gap="4">
-              <Button colorScheme="blue" onClick={() => handleDownloadPDFButton()}>
-                <PDFDownloadLink
-                  document={<InvoiceDocument invoice={invoice} />}
-                  fileName={`INV-${invoice?.invoice_number}`}>
-                  {({ blob, url, loading, error }) =>
-                    loading ? 'Loading document...' : 'Download'
-                  }
-                </PDFDownloadLink>
-              </Button>
-              {/* <Button colorScheme="blue">
-                <a href={instance.url} download="test.pdf">
-                  Download
-                </a>
-              </Button> */}
-              <Button onClick={onExportPDFClose}>Cancel</Button>
-            </Flex>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <InvoiceDetailsPreviewPDFModal
+        invoice={invoice}
+        onExportPDFClose={onExportPDFClose}
+        isExportPDFOpen={isExportPDFOpen}
+        handleDownloadPDFButton={handleDownloadPDFButton}
+      />
     </Container>
   );
 };
