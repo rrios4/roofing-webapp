@@ -33,6 +33,7 @@ import {
 import formatMoneyValue from '../../../utils/formatMoneyValue';
 import { TbNote, TbRuler } from 'react-icons/tb';
 import { FiMap, FiUser } from 'react-icons/fi';
+import { useQueryClient } from '@tanstack/react-query';
 
 const NewInvoiceForm = (props) => {
   const {
@@ -40,13 +41,13 @@ const NewInvoiceForm = (props) => {
     isNewOpen,
     initialRef,
     data,
-    updateParentData,
     toast,
     services,
     invoiceStatuses
   } = props;
 
   // React styling hooks
+  const queryClient = useQueryClient();
   const { colorMode } = useColorMode();
   const bg = useColorModeValue('white', 'gray.800');
   const tableHeaderColor = useColorModeValue('blue.400', 'blue.600');
@@ -182,7 +183,8 @@ const NewInvoiceForm = (props) => {
     setCustomerNoteSwitchIsOn(false);
     setLoadingState(false);
 
-    await updateParentData();
+    // await updateParentData();
+    queryClient.invalidateQueries({ queryKey: ['invoices'] });
     onNewClose();
   };
 

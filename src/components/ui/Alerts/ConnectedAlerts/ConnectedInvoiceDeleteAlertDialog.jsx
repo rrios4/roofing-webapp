@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { DeleteAlertDialog } from '../../..';
 import supabase from '../../../../utils/supabaseClient.js';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ConnectedInvoiceDeleteAlertDialog = (props) => {
-  const { toast, itemNumber, updateParentState, isOpen, onClose, header, body, entityDescription } =
-    props;
+  const { toast, itemNumber, isOpen, onClose, header, body, entityDescription } = props;
 
   // Handles the loading state to complete process
+  const queryClient = useQueryClient();
   const [loadingState, setLoadingState] = useState(false);
 
   // Main function that sends request to delete associated items and invoice data for selected id
@@ -33,7 +34,7 @@ const ConnectedInvoiceDeleteAlertDialog = (props) => {
     }
 
     if (data) {
-      await updateParentState();
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
       setLoadingState(false);
 
       toast({

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // import { useHistory } from "react-router-dom";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   useColorModeValue,
   useToast,
@@ -31,15 +31,20 @@ import {
   InvoiceTable,
   ConnectedInvoiceDeleteAlertDialog
 } from '../../components';
-import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
+import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
-import { useInvoices } from '../../hooks/useInvoices';
+import { useFetchAllInvoices } from '../../hooks/useInvoices';
 import { useServices } from '../../hooks/useServices';
 import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
 
 function Invoices() {
+  const toast = useToast();
   // Hooks
-  const { invoices, fetchInvoices, setInvoices, invoicesLoadingStateIsOn } = useInvoices();
+  const {
+    data: invoices,
+    isLoading: isInvoicesLoading,
+    isError: isInvoicesError
+  } = useFetchAllInvoices();
   const { services } = useServices();
   const { invoiceStatuses } = useInvoiceStatuses();
 
@@ -51,7 +56,6 @@ function Invoices() {
   // Ref for to focus cursor or field for elements
   const initialRef = React.useRef();
   let navigate = useNavigate();
-  const toast = useToast();
 
   //Style for Card component
   const bg = useColorModeValue('white', 'gray.700');
@@ -86,32 +90,8 @@ function Invoices() {
   const [draftInvoiceButtonSwitchIsOn, setDraftInvoiceButtonSwitchIsOn] = useState(false);
 
   // Invoice React State Array filtered
-  const filteredInvoiceDraftArray = () =>
-    setInvoices((invoices) => invoices.filter((invoice) => invoice.invoice_status_id === 4));
-
-  // Functions to program events or actions
-  useEffect(() => {
-    // getAllInvoices();
-    // getCustomers();
-  }, []);
-
-  //   Handles getting a list of all invoices from DB
-  // const getAllInvoices = async () => {
-  //   const { data: allInvoices, error } = await supabase
-  //     .from('invoice')
-  //     .select(
-  //       '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)'
-  //     )
-  //     // .neq('invoice_status_id', 4)
-  //     .order('invoice_status_id', { ascending: false })
-  //     .order('updated_at', { ascending: false });
-
-  //   if (error) {
-  //     console.log(error);
-  //   }
-  //   // getInvoices(allInvoices);
-  //   console.log(allInvoices);
-  // };
+  // const filteredInvoiceDraftArray = () =>
+  //   setInvoices((invoices) => invoices.filter((invoice) => invoice.invoice_status_id === 4));
 
   // Function to handle the search through all invoices
   const searchInvoice = async () => {};
@@ -170,7 +150,7 @@ function Invoices() {
     }
 
     if (data) {
-      await fetchInvoices();
+      // await fetchInvoices();
       // Toast to give feedback when success happens updating invoice
       toast({
         position: 'top',
@@ -201,9 +181,9 @@ function Invoices() {
     const newSwitchValue = !draftInvoiceButtonSwitchIsOn;
     setDraftInvoiceButtonSwitchIsOn(newSwitchValue);
     if (newSwitchValue === true) {
-      filteredInvoiceDraftArray();
+      // filteredInvoiceDraftArray();
     } else {
-      fetchInvoices();
+      // fetchInvoices();
     }
     console.log(invoices);
   };
@@ -222,18 +202,6 @@ function Invoices() {
     filterSwitchStatus4IsOn === true
       ? setFilterSwitchStatus4IsOn(false)
       : setFilterSwitchStatus4IsOn(switchFour);
-  };
-
-  // Handles the toast to give feedback to the user
-  const handleToastMessage = (status, position, invoice_numer, title, description) => {
-    toast({
-      position: position,
-      title: title,
-      description: description,
-      status: status,
-      duration: 5000,
-      isClosable: true
-    });
   };
 
   // Handles the opening of the alert
@@ -269,11 +237,10 @@ function Invoices() {
         isNewOpen={isNewOpen}
         onNewClose={onNewClose}
         onNewOpen={onNewOpen}
-        updateParentData={fetchInvoices}
         toast={toast}
         data={invoices}
         nextInvoiceNumberValue={nextInvoiceNumber}
-        loadingState={invoicesLoadingStateIsOn}
+        loadingState={isInvoicesLoading}
         services={services}
         invoiceStatuses={invoiceStatuses}
       />
@@ -284,7 +251,7 @@ function Invoices() {
         invoice={selectedEditInvoice}
         handleEditOnChange={handleEditChange}
         handleEditSubmit={handleEditSubmit}
-        loadingState={invoicesLoadingStateIsOn}
+        loadingState={isInvoicesLoading}
         services={services}
         invoiceStatuses={invoiceStatuses}
       />
@@ -293,7 +260,6 @@ function Invoices() {
         onClose={onDeleteClose}
         onOpen={onDeleteOpen}
         toast={toast}
-        updateParentState={fetchInvoices}
         header={'Delete Invoice'}
         entityDescription={`INVOICE # ${selectedInvoiceNumber}`}
         body={`You can't undo this action afterwards. This will delete associated payments and line-items that depend on this invoice. 🚨`}
@@ -301,7 +267,7 @@ function Invoices() {
       />
 
       {/* Main Invoice Page Code */}
-      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
+      <VStack my={'2rem'} w={'full'} mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
         {/* <Alert status='success' mb={'1rem'} flexDir={'column'} alignItems={'center'} justifyContent={'center'} textAlign={'center'} height={'200px'} rounded={'8'}>
                 <AlertIcon boxSize='40px' mr={0} />
                 <AlertTitle mt={4} mb={1} fontSize='lg'>Invoice Submitted!</AlertTitle>
@@ -381,7 +347,7 @@ function Invoices() {
               </Flex>
             </HStack>
             {/* Table Component for Invoices Data */}
-            {invoicesLoadingStateIsOn === true ? (
+            {isInvoicesLoading === true ? (
               <Box w={'full'} h={'200px'}>
                 <Skeleton w={'full'} h={'200px'} rounded={'xl'} />
               </Box>

@@ -1,37 +1,18 @@
-import { useEffect, useState } from 'react';
-import supabase from '../utils/supabaseClient';
 import { useQuery } from '@tanstack/react-query';
-import { fetchInvoiceById } from '../services/api/invoice';
+import { fetchAllInvoices, fetchInvoiceById } from '../services/api/invoice';
 
-export const useInvoices = () => {
-  const [invoices, setInvoices] = useState([]);
-  const [invoicesLoadingStateIsOn, setInvoicesLoadingStateIsOn] = useState(false);
+export const useFetchAllInvoices = () => {
+  // react-query
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['invoices'],
+    queryFn: () => fetchAllInvoices()
+  });
 
-  const fetchInvoices = async () => {
-    setInvoicesLoadingStateIsOn(true);
-    const { data, error } = await supabase
-      .from('invoice')
-      .select(
-        `*, customer:customer_id(*), services:service_type_id(*), invoice_status:invoice_status_id(*)`
-      )
-      .order('invoice_status_id', { ascending: false })
-      .order('updated_at', { ascending: false });
-
-    if (error) {
-      console.log(error.message);
-    }
-    setInvoices(data);
-    setInvoicesLoadingStateIsOn(false);
-  };
-
-  useEffect(() => {
-    fetchInvoices();
-  }, []);
-
-  return { invoices, fetchInvoices, setInvoices, invoicesLoadingStateIsOn };
+  return { data, isError, isLoading };
 };
 
 export const useFetchInvoiceById = (invoice_number) => {
+  // react-query
   const { data, isError, isLoading } = useQuery({
     queryKey: ['invoiceById', invoice_number],
     queryFn: () => fetchInvoiceById(invoice_number)
