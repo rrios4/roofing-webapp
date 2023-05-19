@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src/assets/LogoRR-blue-shadow.png" width="40%" height="60%" alt="Banner"><br>
+  <img src="public/LogoRR-blue-circle.png" width="40%" height="60%" alt="The Roofing App Logo"><br>
   <!-- <img src="https://github.com/rrios4/portfolio-v2/blob/master/assets/projects/roofingv2-webapp-poster.png?raw=true"/> -->
 </p>
 <h1 align="center"> Roofing Web App v2.0 </h1>
@@ -80,6 +80,7 @@ This subsection is meant to be used once you want to deploy just the client app 
 ```
 
 ## Setting up DB Schema & Core Data
+![The Roofing App v2.0 Schema](public/images/app-v2.0-erd-sketch.png)
 The purpose of this section is to provide SQL scripts that will get you up in running automatically for the app to function correctly. Without this section they app will be empty and might error out since the schema is required.
 
 Currently as for version 2.0 and greater of the application it will rely on a total of 12 tables:
@@ -95,6 +96,19 @@ Currently as for version 2.0 and greater of the application it will rely on a to
 - quote_request_status
 - quote_status
 - service
+
+Tables currently under review for v2.2 and greater:
+
+- project
+- project_image_tag
+- image
+- image_tag
+- document
+- project_status
+
+![The Roofing App v2.2 Schema](public/images/app-v2.2-erd-sketch.png)
+
+These tables will play in a role of gathering the invoices, quotes, quote request, images, documents into one place. This way we can created multiple invoices for one project and later down the line we can track expense based by a project instead of just using the invoice for the hub for a job.
 
 Below is the code that you must run in the "SQL Editor" section in you project in [Supabase](https://app.supabase.com) by copying it and running that code. 
 (Note that this also includes triggers and functions that have been creating during the development of the app.)
