@@ -17,10 +17,10 @@ import {
   InvoiceDocument
 } from '../../components';
 import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog';
-import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
+import { useInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader';
-import { useFetchInvoiceById } from '../../hooks/useInvoices';
-import { useFetchAllServices } from '../../hooks/useServices';
+import { useFetchInvoiceById } from '../../hooks/useAPI/useInvoices';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 
 const InvoiceDetails = () => {
   const { id } = useParams();

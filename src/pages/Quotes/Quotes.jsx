@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Flex,
@@ -24,15 +24,14 @@ import {
   EditQuoteForm
 } from '../../components';
 import { TbRuler } from 'react-icons/tb';
-import { useFetchQuotes, useSearchQuote, useUpdateQuote } from '../../hooks/useQuotes';
-import { useQuoteStatuses } from '../../hooks/useQuoteStatuses';
-import { supabase } from '../../utils';
-import { useQueryClient } from '@tanstack/react-query';
+import { useFetchQuotes, useSearchQuote, useUpdateQuote } from '../../hooks/useAPI/useQuotes';
+import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses';
+// import { useQueryClient } from '@tanstack/react-query';
 import useDebounce from '../../hooks/useDebounce';
-import { useFetchAllServices } from '../../hooks/useServices';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 
 function Estimates() {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   // Chakra UI Hooks
   const initialRef = React.useRef();

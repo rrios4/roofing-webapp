@@ -3,7 +3,7 @@ import {
   createQuoteLineItem,
   deleteQuoteLineItemById,
   deleteQuoteLineItems
-} from '../services/api/quoteLineItem';
+} from '../../services/api/quoteLineItem';
 import { useDeleteQuote } from './useQuotes';
 
 // Custom hook to delete all line items for a given quote number with quote also

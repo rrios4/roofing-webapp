@@ -55,6 +55,22 @@ export const fetchCustomerQuotes = async (customerId) => {
   return data;
 };
 
+// GET request to API to search for customer
+export const fetchSearchCustomers = async (query) => {
+  let { data, error } = await supabase
+    .from('customer')
+    .select('*')
+    .or(
+      `first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%,phone_number.ilike.%${query}%`
+    );
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+};
+
 // DELETE request to API to delete a customer by id
 export const deleteCustomer = async (itemNumber) => {
   const { data, error } = await supabase.from('customer').delete().eq('id', `${itemNumber}`);

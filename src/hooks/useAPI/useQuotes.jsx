@@ -6,7 +6,7 @@ import {
   fetchSearchQuotes,
   updateQuoteById,
   updateQuoteStatusById
-} from '../services/api/quote';
+} from '../../services/api/quote';
 
 // Custom hook to get all quotes
 export const useFetchQuotes = () => {

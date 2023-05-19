@@ -13,8 +13,8 @@ import {
   Button,
   Text
 } from '@chakra-ui/react';
-import { useQuoteStatuses } from '../../../hooks/useQuoteStatuses';
-import { useFetchAllServices } from '../../../hooks/useServices';
+import { useQuoteStatuses } from '../../../hooks/useAPI/useQuoteStatuses';
+import { useFetchAllServices } from '../../../hooks/useAPI/useServices';
 
 const NewEstimateForm = (props) => {
   const { isOpen, onClose, initialRef, updateEstimateData } = props;

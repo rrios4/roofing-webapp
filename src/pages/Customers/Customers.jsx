@@ -22,10 +22,9 @@ import {
 import { IoMdPersonAdd } from 'react-icons/io';
 // import { MdSearch } from 'react-icons/md';
 import { FiUsers } from 'react-icons/fi';
-import { useFetchCustomers } from '../../hooks/useFetchData/useCustomers';
-import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
+import { useFetchCustomers, useSearchCustomers } from '../../hooks/useAPI/useCustomers';
+import { useCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import useDebounce from '../../hooks/useDebounce';
-import { useCustomerSearch } from '../../hooks/useFetchData/useCustomerSearch';
 // import { Link } from 'react-router-dom';
 // import { MdArrowBack } from 'react-icons/md';
 
@@ -46,7 +45,7 @@ export default function Customers() {
   const [searchCustomer, setSearchCustomer] = useState('');
   const debouncedCustomerSearchTerm = useDebounce(searchCustomer, 100);
   const { customers, isLoading } = useFetchCustomers();
-  const { customerSearchResult, customerIsLoading } = useCustomerSearch(
+  const { data: customerSearchResult, isLoading: customerIsLoading } = useSearchCustomers(
     debouncedCustomerSearchTerm
   );
 

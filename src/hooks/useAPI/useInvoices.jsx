@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchAllInvoices, fetchInvoiceById } from '../services/api/invoice';
+import { fetchAllInvoices, fetchInvoiceById } from '../../services/api/invoice';
 
 export const useFetchAllInvoices = () => {
   // react-query

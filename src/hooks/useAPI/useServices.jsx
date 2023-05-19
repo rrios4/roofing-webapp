@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchAllServices } from '../services/api/service';
+import { fetchAllServices } from '../../services/api/service';
 
 export const useFetchAllServices = () => {
   // react-query

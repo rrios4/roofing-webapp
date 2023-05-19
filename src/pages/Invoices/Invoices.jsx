@@ -33,9 +33,9 @@ import {
 } from '../../components';
 import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
-import { useFetchAllInvoices } from '../../hooks/useInvoices';
-import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
-import { useFetchAllServices } from '../../hooks/useServices';
+import { useFetchAllInvoices } from '../../hooks/useAPI/useInvoices';
+import { useInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 
 function Invoices() {
   const toast = useToast();

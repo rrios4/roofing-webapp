@@ -25,10 +25,10 @@ import {
 import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 import { FiInbox } from 'react-icons/fi';
-import { useQuoteRequests } from '../../hooks/useQuoteRequests';
-import { useQRStatuses } from '../../hooks/useQRStatuses';
-import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
-import { useFetchAllServices } from '../../hooks/useServices';
+import { useQuoteRequests } from '../../hooks/useAPI/useQuoteRequests';
+import { useQRStatuses } from '../../hooks/useAPI/useQRStatuses';
+import { useCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 
 const QuoteRequests = () => {
   // React Hook for managing state of quotes request

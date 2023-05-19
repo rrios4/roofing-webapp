@@ -8,7 +8,8 @@ import {
   createCustomer,
   updateCustomerById,
   fetchCustomerInvoices,
-  fetchCustomerQuotes
+  fetchCustomerQuotes,
+  fetchSearchCustomers
 } from '../../services/api/customer';
 
 // Custom hook to get all customers from db
@@ -24,6 +25,16 @@ export const useFetchCustomers = () => {
   });
 
   return { customers, isLoading, isError };
+};
+
+// Custom hook to search for customers
+export const useSearchCustomers = (query) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['customerSearch', query],
+    queryFn: () => fetchSearchCustomers(query)
+  });
+
+  return { data, isLoading, isError };
 };
 
 // Custom hook to get a customer's information by id

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DeleteAlertDialog } from '../../..';
-import { useDeleteAllQuoteLineItemsWithQuote } from '../../../../hooks/useQuoteLineItem';
+import { useDeleteAllQuoteLineItemsWithQuote } from '../../../../hooks/useAPI/useQuoteLineItem';
 
 const ConnectedQuoteDeleteAlertDialog = (props) => {
   const { toast, itemNumber, isOpen, onClose, header, body, entityDescription } = props;

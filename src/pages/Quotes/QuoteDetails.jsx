@@ -1,22 +1,5 @@
 import React, { useState } from 'react';
-//import {Link, Redirect, useHistory} from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import supabase from '../../utils/supabaseClient.js';
-import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
-import {
-  useFetchQuoteById,
-  useUpdateQuote,
-  useUpdateQuoteStatusById
-} from '../../hooks/useQuotes.jsx';
-import {
-  EditQuoteForm,
-  QuoteDetailsAddLineItemModal,
-  QuoteDetailsHeader,
-  QuoteDetailsMain,
-  QuoteDetailsPane,
-  QuoteDetailsPdfPreviewModal,
-  QuoteDetailsQuickAction
-} from '../../components/index.js';
 import {
   Flex,
   useDisclosure,
@@ -28,10 +11,25 @@ import {
   Skeleton
 } from '@chakra-ui/react';
 import {
+  EditQuoteForm,
+  QuoteDetailsAddLineItemModal,
+  QuoteDetailsHeader,
+  QuoteDetailsMain,
+  QuoteDetailsPane,
+  QuoteDetailsPdfPreviewModal,
+  QuoteDetailsQuickAction
+} from '../../components/index.js';
+import {
+  useFetchQuoteById,
+  useUpdateQuote,
+  useUpdateQuoteStatusById
+} from '../../hooks/useAPI/useQuotes.jsx';
+import {
   useCreateQuoteLineItem,
   useDeleteQuoteLineItemById
-} from '../../hooks/useQuoteLineItem.jsx';
-import { useFetchAllServices } from '../../hooks/useServices.jsx';
+} from '../../hooks/useAPI/useQuoteLineItem.jsx';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices.jsx';
+import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses.jsx';
 
 const QuoteById = () => {
   const { id } = useParams();

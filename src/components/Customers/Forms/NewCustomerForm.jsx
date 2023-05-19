@@ -20,7 +20,7 @@ import {
   DrawerBody,
   DrawerFooter
 } from '@chakra-ui/react';
-import { useCreateCustomer } from '../../../hooks/useFetchData/useCustomers';
+import { useCreateCustomer } from '../../../hooks/useAPI/useCustomers';
 
 const NewCustomerForm = (props) => {
   const { isOpen, onClose, initialRef, toast, customerTypes } = props;
