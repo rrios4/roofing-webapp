@@ -34,8 +34,8 @@ import {
 import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
 import { useFetchAllInvoices } from '../../hooks/useInvoices';
-import { useServices } from '../../hooks/useServices';
 import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
+import { useFetchAllServices } from '../../hooks/useServices';
 
 function Invoices() {
   const toast = useToast();
@@ -45,7 +45,11 @@ function Invoices() {
     isLoading: isInvoicesLoading,
     isError: isInvoicesError
   } = useFetchAllInvoices();
-  const { services } = useServices();
+  const {
+    data: services,
+    isRoofingServicesLoading,
+    isRoofingServicesError
+  } = useFetchAllServices();
   const { invoiceStatuses } = useInvoiceStatuses();
 
   // Use Disclosured used for opening drawers where forms are at

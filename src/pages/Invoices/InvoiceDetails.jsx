@@ -17,10 +17,10 @@ import {
   InvoiceDocument
 } from '../../components';
 import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog';
-import { useServices } from '../../hooks/useServices';
 import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
 import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader';
 import { useFetchInvoiceById } from '../../hooks/useInvoices';
+import { useFetchAllServices } from '../../hooks/useServices';
 
 const InvoiceDetails = () => {
   const { id } = useParams();
@@ -54,7 +54,11 @@ const InvoiceDetails = () => {
   } = useDisclosure();
 
   // Custom React Hooks
-  const { services } = useServices();
+  const {
+    data: services,
+    isLoading: isRoofingServicesLoading,
+    isError: isRoofingServicesError
+  } = useFetchAllServices();
   const { invoiceStatuses } = useInvoiceStatuses();
   const [instance, updateInstance] = usePDF({ document: InvoiceDocument });
 

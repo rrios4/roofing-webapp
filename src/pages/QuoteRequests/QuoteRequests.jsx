@@ -26,15 +26,19 @@ import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 import { FiInbox } from 'react-icons/fi';
 import { useQuoteRequests } from '../../hooks/useQuoteRequests';
-import { useServices } from '../../hooks/useServices';
 import { useQRStatuses } from '../../hooks/useQRStatuses';
 import { useCustomerTypes } from '../../hooks/useFetchData/useCustomerTypes';
+import { useFetchAllServices } from '../../hooks/useServices';
 
 const QuoteRequests = () => {
   // React Hook for managing state of quotes request
   const { quoteRequests, setQuoteRequests, fetchQuoteRequests, quoteRequestLoadingStateIsOn } =
     useQuoteRequests();
-  const { services } = useServices();
+  const {
+    data: services,
+    isRoofingServicesLoading,
+    isRoofingServicesError
+  } = useFetchAllServices();
   const { qrStatuses } = useQRStatuses();
   const { customerTypes } = useCustomerTypes();
   // Chakra UI Reacr hook for toasts

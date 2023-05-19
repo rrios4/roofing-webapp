@@ -25,11 +25,11 @@ import {
 } from '../../components';
 import { TbRuler } from 'react-icons/tb';
 import { useFetchQuotes, useSearchQuote, useUpdateQuote } from '../../hooks/useQuotes';
-import { useServices } from '../../hooks/useServices';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses';
 import { supabase } from '../../utils';
 import { useQueryClient } from '@tanstack/react-query';
 import useDebounce from '../../hooks/useDebounce';
+import { useFetchAllServices } from '../../hooks/useServices';
 
 function Estimates() {
   const queryClient = useQueryClient();
@@ -43,7 +43,11 @@ function Estimates() {
 
   // Custom React Hooks
   const { quotes, isLoading: quotesLoadingStateIsOn } = useFetchQuotes();
-  const { services } = useServices();
+  const {
+    data: services,
+    isLoading: isRoofingServicesLoading,
+    isError: isRoofingServicesError
+  } = useFetchAllServices();
   const { quoteStatuses } = useQuoteStatuses();
 
   // States to manage data

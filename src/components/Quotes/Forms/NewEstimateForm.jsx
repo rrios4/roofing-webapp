@@ -13,14 +13,14 @@ import {
   Button,
   Text
 } from '@chakra-ui/react';
-import { useServices } from '../../../hooks/useServices';
 import { useQuoteStatuses } from '../../../hooks/useQuoteStatuses';
+import { useFetchAllServices } from '../../../hooks/useServices';
 
 const NewEstimateForm = (props) => {
   const { isOpen, onClose, initialRef, updateEstimateData } = props;
 
   // React hooks
-  const { services } = useServices();
+  const { data: services, isLoading, isError } = useFetchAllServices();
   const { quoteStatuses } = useQuoteStatuses();
 
   // React styling hooks

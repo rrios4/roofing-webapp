@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 //import {Link, Redirect, useHistory} from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient.js';
-import { useServices } from '../../hooks/useServices.jsx';
 import { useQuoteStatuses } from '../../hooks/useQuoteStatuses.jsx';
 import {
   useFetchQuoteById,
@@ -32,6 +31,7 @@ import {
   useCreateQuoteLineItem,
   useDeleteQuoteLineItemById
 } from '../../hooks/useQuoteLineItem.jsx';
+import { useFetchAllServices } from '../../hooks/useServices.jsx';
 
 const QuoteById = () => {
   const { id } = useParams();
@@ -39,7 +39,11 @@ const QuoteById = () => {
 
   // Custom Hooks
   const { quoteById, isLoading: isQuoteByIdLoading } = useFetchQuoteById(id);
-  const { services } = useServices();
+  const {
+    data: services,
+    isRoofingServicesLoading,
+    isRoofingServicesError
+  } = useFetchAllServices();
   const { quoteStatuses } = useQuoteStatuses();
   const { mutate: mutateUpdateQuoteStatusById, isLoading: isUpdateQuoteStatusByIdLoading } =
     useUpdateQuoteStatusById(toast, id);

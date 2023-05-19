@@ -1,24 +1,12 @@
-import { useEffect, useState } from 'react';
-import supabase from '../utils/supabaseClient';
+import { useQuery } from '@tanstack/react-query';
+import { fetchAllServices } from '../services/api/service';
 
-export const useServices = () => {
-  const [services, setServices] = useState([]);
+export const useFetchAllServices = () => {
+  // react-query
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['roofingServices'],
+    queryFn: () => fetchAllServices()
+  });
 
-  const fetchServices = async () => {
-    const { data, error } = await supabase
-      .from('service')
-      .select('*')
-      .order('id', { ascending: true });
-
-    if (error) {
-      console.log(error);
-    }
-    setServices(data);
-  };
-
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  return { services, setServices, fetchServices };
+  return { data, isLoading, isError };
 };
