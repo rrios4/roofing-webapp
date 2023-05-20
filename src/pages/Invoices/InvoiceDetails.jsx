@@ -19,12 +19,14 @@ import {
 import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog';
 import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader';
-import { useFetchInvoiceById } from '../../hooks/useAPI/useInvoices';
+import { useFetchInvoiceById, useUpdateInvoiceStatusById } from '../../hooks/useAPI/useInvoices';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { useQueryClient } from '@tanstack/react-query';
 
 const InvoiceDetails = () => {
   const { id } = useParams();
   const toast = useToast();
+  const queryClient = useQueryClient();
   const {
     data: invoice,
     isLoading: isInvoiceLoading,
@@ -65,6 +67,11 @@ const InvoiceDetails = () => {
     isLoading: isInvoiceStatusesLoading
   } = useFetchAllInvoiceStatuses();
   const [instance, updateInstance] = usePDF({ document: InvoiceDocument });
+  const {
+    mutate: mutateUpdateInvoiceStatusById,
+    isLoading: isUpdateInvoiceStatusByIdLoading,
+    isError: isUpdateInvoiceStatusByIdError
+  } = useUpdateInvoiceStatusById(toast);
 
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
@@ -110,21 +117,32 @@ const InvoiceDetails = () => {
 
   // Handle selection from menu item for invoice status
   const handleInvoiceStatusMenuSelection = async (status_id) => {
+    const updateInvoiceStatusObject = {
+      status_id: status_id,
+      invoice_number: id
+    };
     setLoadingInvoiceStatusIsOn(true);
     // console.log(status_id)
     if (status_id === invoice?.invoice_status.id) {
-      // Create toast feedback to let user know that they
-      console.log(status_id);
+      toast({
+        position: 'top',
+        title: `Error Updating Invoice Status`,
+        description: `Error: Status is already selected. Please select another status for quote.`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     } else {
-      const { error } = await supabase
-        .from('invoice')
-        .update({ invoice_status_id: status_id })
-        .eq('invoice_number', invoice.invoice_number);
-
-      if (error) {
-        console.log(error);
-      }
+      // const { error } = await supabase
+      //   .from('invoice')
+      //   .update({ invoice_status_id: status_id })
+      //   .eq('invoice_number', invoice.invoice_number);
+      // if (error) {
+      //   console.log(error);
+      // }
       // await getInvoiceDetailsById();
+      mutateUpdateInvoiceStatusById(updateInvoiceStatusObject);
+      // await queryClient.invalidateQueries({ queryKey: ['invoiceById', id] });
     }
     setLoadingInvoiceStatusIsOn(false);
   };
@@ -400,7 +418,7 @@ const InvoiceDetails = () => {
           <InvoiceDetailsQuickActionCard
             invoice={invoice}
             handleInvoiceStatusMenuSelection={handleInvoiceStatusMenuSelection}
-            loadingInvoiceStatusIsOn={loadingInvoiceStatusIsOn}
+            loadingInvoiceStatusIsOn={isUpdateInvoiceStatusByIdLoading}
             onAddLineItemOpen={onAddLineItemOpen}
             onAddPaymentOpen={onAddPaymentOpen}
             setEditSwitchIsOn={setEditSwitchIsOn}

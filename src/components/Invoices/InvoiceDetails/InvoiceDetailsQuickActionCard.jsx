@@ -40,7 +40,7 @@ const InvoiceDetailsQuickActionCard = (props) => {
   } = props;
   return (
     <>
-      <Card rounded={'xl'} size="md">
+      <Card rounded={'xl'} size="sm">
         <CardBody>
           <Flex gap={2} justify={'center'}>
             {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(invoice?.amount_due)}</Text> */}

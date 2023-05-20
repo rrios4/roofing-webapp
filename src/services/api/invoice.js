@@ -1,5 +1,6 @@
 import supabase from '../../utils/supabaseClient';
 
+// GET request to fetch all invoices
 export const fetchAllInvoices = async () => {
   const { data, error } = await supabase
     .from('invoice')
@@ -15,6 +16,7 @@ export const fetchAllInvoices = async () => {
   return data;
 };
 
+// GET request to get invoice by id
 export const fetchInvoiceById = async (invoice_number) => {
   const { data, error } = await supabase
     .from('invoice')
@@ -27,4 +29,17 @@ export const fetchInvoiceById = async (invoice_number) => {
     console.log(error);
   }
   return data[0];
+};
+
+// PUT request to update invoice status
+export const updateInvoiceStatusById = async (updateInvoiceStatusObject) => {
+  const { error } = await supabase
+    .from('invoice')
+    .update({ invoice_status_id: updateInvoiceStatusObject.status_id })
+    .eq('invoice_number', updateInvoiceStatusObject.invoice_number);
+
+  if (error) {
+    throw error;
+  }
+  return updateInvoiceStatusObject.invoice_number;
 };
