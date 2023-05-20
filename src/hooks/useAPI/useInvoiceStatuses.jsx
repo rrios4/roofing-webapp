@@ -1,24 +1,12 @@
-import { useEffect, useState } from 'react';
-import supabase from '../../utils/supabaseClient';
+import { useQuery } from '@tanstack/react-query';
+import { fetchAllInvoiceStatuses } from '../../services/api/invoice_status';
 
-export const useInvoiceStatuses = () => {
-  const [invoiceStatuses, setInvoiceStatuses] = useState([]);
+// Custom hook that uses react-query to get all invoice statuses
+export const useFetchAllInvoiceStatuses = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['invoiceStatuses'],
+    queryFn: () => fetchAllInvoiceStatuses()
+  });
 
-  const fetchInvoiceStatuses = async () => {
-    const { data, error } = await supabase
-      .from('invoice_status')
-      .select('*')
-      .order('id', { ascending: true });
-
-    if (error) {
-      console.log(error);
-    }
-    setInvoiceStatuses(data);
-  };
-
-  useEffect(() => {
-    fetchInvoiceStatuses();
-  }, []);
-
-  return { invoiceStatuses, setInvoiceStatuses };
+  return { data, isLoading, isError };
 };

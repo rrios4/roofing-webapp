@@ -34,10 +34,11 @@ import {
 import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
 import { useFetchAllInvoices } from '../../hooks/useAPI/useInvoices';
-import { useInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
+import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 
 function Invoices() {
+  const initialRef = React.useRef();
   const toast = useToast();
   // Hooks
   const {
@@ -50,21 +51,16 @@ function Invoices() {
     isRoofingServicesLoading,
     isRoofingServicesError
   } = useFetchAllServices();
-  const { invoiceStatuses } = useInvoiceStatuses();
+  const {
+    data: invoiceStatuses,
+    isLoading: isInvoiceStatuses,
+    isError: isInvoicesStatusesError
+  } = useFetchAllInvoiceStatuses();
 
   // Use Disclosured used for opening drawers where forms are at
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
-
-  // Ref for to focus cursor or field for elements
-  const initialRef = React.useRef();
-  let navigate = useNavigate();
-
-  //Style for Card component
-  const bg = useColorModeValue('white', 'gray.700');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const buttonColorScheme = useColorModeValue('gray', 'gray');
 
   //React States to manage data
   // const [invoices, getInvoices] = useState();

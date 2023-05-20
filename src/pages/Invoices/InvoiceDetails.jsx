@@ -17,7 +17,7 @@ import {
   InvoiceDocument
 } from '../../components';
 import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog';
-import { useInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
+import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader';
 import { useFetchInvoiceById } from '../../hooks/useAPI/useInvoices';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
@@ -59,7 +59,11 @@ const InvoiceDetails = () => {
     isLoading: isRoofingServicesLoading,
     isError: isRoofingServicesError
   } = useFetchAllServices();
-  const { invoiceStatuses } = useInvoiceStatuses();
+  const {
+    data: invoiceStatuses,
+    isError: isInvoiceStatusesError,
+    isLoading: isInvoiceStatusesLoading
+  } = useFetchAllInvoiceStatuses();
   const [instance, updateInstance] = usePDF({ document: InvoiceDocument });
 
   // Custom color configs for UX elements
