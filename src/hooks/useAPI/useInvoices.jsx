@@ -45,7 +45,7 @@ export const useUpdateInvoiceStatusById = (toast) => {
         });
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ['invoiceById', data] });
+        queryClient.invalidateQueries({ queryKey: ['invoiceById', data.toString()] });
         toast({
           position: `top`,
           title: `Invoice Status Updated!`,

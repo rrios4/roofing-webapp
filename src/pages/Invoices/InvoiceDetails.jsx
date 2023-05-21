@@ -22,11 +22,11 @@ import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/Invoi
 import { useFetchInvoiceById, useUpdateInvoiceStatusById } from '../../hooks/useAPI/useInvoices';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 import { useQueryClient } from '@tanstack/react-query';
+import { useCreateInvoiceLineItem } from '../../hooks/useAPI/useInvoiceLineItem';
 
 const InvoiceDetails = () => {
   const { id } = useParams();
   const toast = useToast();
-  const queryClient = useQueryClient();
   const {
     data: invoice,
     isLoading: isInvoiceLoading,
@@ -72,6 +72,11 @@ const InvoiceDetails = () => {
     isLoading: isUpdateInvoiceStatusByIdLoading,
     isError: isUpdateInvoiceStatusByIdError
   } = useUpdateInvoiceStatusById(toast);
+  const {
+    mutate: mutateCreateInvoiceLineItem,
+    isLoading: isCreateInvoiceLineItemLoading,
+    isError: isCreateInvoiceLineItemError
+  } = useCreateInvoiceLineItem(toast);
 
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
@@ -121,8 +126,6 @@ const InvoiceDetails = () => {
       status_id: status_id,
       invoice_number: id
     };
-    setLoadingInvoiceStatusIsOn(true);
-    // console.log(status_id)
     if (status_id === invoice?.invoice_status.id) {
       toast({
         position: 'top',
@@ -133,18 +136,8 @@ const InvoiceDetails = () => {
         isClosable: true
       });
     } else {
-      // const { error } = await supabase
-      //   .from('invoice')
-      //   .update({ invoice_status_id: status_id })
-      //   .eq('invoice_number', invoice.invoice_number);
-      // if (error) {
-      //   console.log(error);
-      // }
-      // await getInvoiceDetailsById();
       mutateUpdateInvoiceStatusById(updateInvoiceStatusObject);
-      // await queryClient.invalidateQueries({ queryKey: ['invoiceById', id] });
     }
-    setLoadingInvoiceStatusIsOn(false);
   };
 
   // Handle success message toast when invoice has been deleted
@@ -270,41 +263,46 @@ const InvoiceDetails = () => {
   };
 
   const handleAddLineItemSubmit = async (e) => {
-    setInvoiceLineItemLoadingState(true);
+    // setInvoiceLineItemLoadingState(true);
     e.preventDefault();
-
-    const { data, error } = await supabase.from('invoice_line_service').insert({
+    const newInvoiceLineItemObject = {
       invoice_id: invoice.invoice_number,
       service_id: invoice.service_type_id,
       qty: '1',
       fixed_item: 'true',
       description: descriptionLineItemInput,
       amount: amountLineItemInput
-    });
+    };
 
-    if (error) {
-      toast({
-        position: 'top',
-        title: `Error Occured Creating Line Item`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    if (data) {
-      // await getInvoiceDetailsById();
-      setInvoiceLineItemLoadingState(false);
-      onAddLineItemClose();
-      toast({
-        position: 'top',
-        title: `Succesfully Added Line Item`,
-        description: `We were able to add a line-item for invoice number ${invoice.invoice_number} 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+    // const { data, error } = await supabase
+    //   .from('invoice_line_service')
+    //   .insert(newInvoiceLineItemObject);
+
+    // if (error) {
+    //   toast({
+    //     position: 'top',
+    //     title: `Error Occured Creating Line Item`,
+    //     description: `Error: ${error.message}`,
+    //     status: 'error',
+    //     duration: 5000,
+    //     isClosable: true
+    //   });
+    // }
+    // if (data) {
+    //   // await getInvoiceDetailsById();
+    //   setInvoiceLineItemLoadingState(false);
+    //   onAddLineItemClose();
+    //   toast({
+    //     position: 'top',
+    //     title: `Succesfully Added Line Item`,
+    //     description: `We were able to add a line-item for invoice number ${invoice.invoice_number} 🎉`,
+    //     status: 'success',
+    //     duration: 5000,
+    //     isClosable: true
+    //   });
+    // }
+    mutateCreateInvoiceLineItem(newInvoiceLineItemObject);
+    onAddLineItemClose();
   };
 
   //////////////////////////// Functions that handle invoice edit functionality /////////////////////////////////////////
