@@ -1,5 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createInvoiceLineItem } from '../../services/api/invoice_lineItem';
+import {
+  createInvoiceLineItem,
+  deleteInvoiceLineItemById
+} from '../../services/api/invoice_lineItem';
+import { formatMoneyValue } from '../../utils';
 
 // Custom hook to create a new line item for a invoice
 export const useCreateInvoiceLineItem = (toast) => {
@@ -32,4 +36,35 @@ export const useCreateInvoiceLineItem = (toast) => {
       }
     }
   );
+};
+
+// Custom hook to delete a line item for a invoice
+export const useDeleteInvoiceLineItem = (toast) => {
+  const queryClient = useQueryClient();
+  return useMutation((deleteLineItemObject) => deleteInvoiceLineItemById(deleteLineItemObject), {
+    onError: (error) => {
+      toast({
+        position: 'top',
+        title: `Error Occured Deleting Line Item`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ['invoiceById', data.invoice_number] });
+      toast({
+        position: 'top',
+        title: `Succesfully Deleted Invoice Line Item`,
+        description: `We were able to delete a line item with description of "${
+          data.description
+        }" with an amount of "${formatMoneyValue(data.amount)}" successfully 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  });
 };

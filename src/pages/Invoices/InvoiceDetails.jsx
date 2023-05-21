@@ -22,7 +22,10 @@ import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/Invoi
 import { useFetchInvoiceById, useUpdateInvoiceStatusById } from '../../hooks/useAPI/useInvoices';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCreateInvoiceLineItem } from '../../hooks/useAPI/useInvoiceLineItem';
+import {
+  useCreateInvoiceLineItem,
+  useDeleteInvoiceLineItem
+} from '../../hooks/useAPI/useInvoiceLineItem';
 
 const InvoiceDetails = () => {
   const { id } = useParams();
@@ -77,6 +80,11 @@ const InvoiceDetails = () => {
     isLoading: isCreateInvoiceLineItemLoading,
     isError: isCreateInvoiceLineItemError
   } = useCreateInvoiceLineItem(toast);
+  const {
+    mutate: mutateDeleteInvoiceLineItem,
+    isLoading: isDeleteInvoiceLineItemLoading,
+    isError: isDeleteInvoiceLineItemError
+  } = useDeleteInvoiceLineItem(toast);
 
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
@@ -231,35 +239,13 @@ const InvoiceDetails = () => {
 
   //////////////////////////// Functions that handle line-item functionality /////////////////////////////////////////
   const handleLineItemDelete = async (item_id, description, amount) => {
-    setLoadingState(false);
-    const { data, error } = await supabase.from('invoice_line_service').delete().eq('id', item_id);
-
-    if (error) {
-      console.log(error);
-      toast({
-        position: 'top',
-        title: `Error Occured Deleting Line Item`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      // await getInvoiceDetailsById();
-      toast({
-        position: 'top',
-        title: `Succesfully Deleted Invoice Line Item`,
-        description: `We were able to delete a line item with description of "${description}" with an amount of "${formatMoneyValue(
-          amount
-        )}" successfully 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    setLoadingState(false);
+    const deleteLineItemObject = {
+      item_id: item_id,
+      invoice_number: id,
+      description: description,
+      amount: amount
+    };
+    mutateDeleteInvoiceLineItem(deleteLineItemObject);
   };
 
   const handleAddLineItemSubmit = async (e) => {
@@ -273,34 +259,6 @@ const InvoiceDetails = () => {
       description: descriptionLineItemInput,
       amount: amountLineItemInput
     };
-
-    // const { data, error } = await supabase
-    //   .from('invoice_line_service')
-    //   .insert(newInvoiceLineItemObject);
-
-    // if (error) {
-    //   toast({
-    //     position: 'top',
-    //     title: `Error Occured Creating Line Item`,
-    //     description: `Error: ${error.message}`,
-    //     status: 'error',
-    //     duration: 5000,
-    //     isClosable: true
-    //   });
-    // }
-    // if (data) {
-    //   // await getInvoiceDetailsById();
-    //   setInvoiceLineItemLoadingState(false);
-    //   onAddLineItemClose();
-    //   toast({
-    //     position: 'top',
-    //     title: `Succesfully Added Line Item`,
-    //     description: `We were able to add a line-item for invoice number ${invoice.invoice_number} 🎉`,
-    //     status: 'success',
-    //     duration: 5000,
-    //     isClosable: true
-    //   });
-    // }
     mutateCreateInvoiceLineItem(newInvoiceLineItemObject);
     onAddLineItemClose();
   };
