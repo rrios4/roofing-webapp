@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createInvoiceLineItem,
+  deleteAllInvoiceLineItemsByInvoiceNumber,
   deleteInvoiceLineItemById
 } from '../../services/api/invoice_lineItem';
 import { formatMoneyValue } from '../../utils';
+import { useDeleteInvoiceById } from './useInvoices';
 
 // Custom hook to create a new line item for a invoice
 export const useCreateInvoiceLineItem = (toast) => {
@@ -66,5 +68,22 @@ export const useDeleteInvoiceLineItem = (toast) => {
         isClosable: true
       });
     }
+  });
+};
+
+export const useDeleteAllInvoiceLineItemsByInvoiceNumber = (toast) => {
+  const { mutate } = useDeleteInvoiceById(toast);
+  return useMutation((invoiceNumber) => deleteAllInvoiceLineItemsByInvoiceNumber(invoiceNumber), {
+    onError: (error) => {
+      toast({
+        position: `top`,
+        title: `Error occured deleting Invoice's' Line Items!`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    },
+    onSuccess: (data) => mutate(data)
   });
 };

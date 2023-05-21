@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createInvoicePayment, deleteInvoicePayment } from '../../services/api/invoice_payment';
+import {
+  createInvoicePayment,
+  deleteAllInvoicePaymentsByInvoiceNumber,
+  deleteInvoicePayment
+} from '../../services/api/invoice_payment';
 import { formatDate, formatMoneyValue } from '../../utils';
+import { useDeleteAllInvoiceLineItemsByInvoiceNumber } from './useInvoiceLineItem';
 
 // Custom hook to create a new invoice payment
 export const useCreateInvoicePayment = (toast) => {
@@ -63,4 +68,24 @@ export const useDeleteInvoicePayment = (toast) => {
       }
     }
   );
+};
+
+// Custom hook to delete all invoice payments that belong to invoice number
+export const useDeleteAllInvoicePaymentsByInvoiceNumber = (toast) => {
+  const { mutate } = useDeleteAllInvoiceLineItemsByInvoiceNumber(toast);
+  return useMutation((invoiceNumber) => deleteAllInvoicePaymentsByInvoiceNumber(invoiceNumber), {
+    onError: (error) => {
+      toast({
+        position: `top`,
+        title: `Error occured deleting Invoice's Payments!`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    },
+    onSuccess: (data) => {
+      mutate(data);
+    }
+  });
 };

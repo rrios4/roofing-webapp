@@ -20,3 +20,12 @@ export const deleteInvoicePayment = async (deleteInvoicePaymentObject) => {
   }
   return deleteInvoicePaymentObject;
 };
+
+// DELETE request to delete all invoice payments that belong to a invoice number
+export const deleteAllInvoicePaymentsByInvoiceNumber = async (invoiceNumber) => {
+  const { error } = await supabase.from('invoice_payment').delete().eq('invoice_id', invoiceNumber);
+  if (error) {
+    throw error;
+  }
+  return invoiceNumber;
+};

@@ -1,91 +1,24 @@
 import React, { useState } from 'react';
-import { DeleteAlertDialog } from '../../..';
 import supabase from '../../../../utils/supabaseClient.js';
-import { useQueryClient } from '@tanstack/react-query';
+import { DeleteAlertDialog } from '../../..';
+import { useDeleteAllInvoicePaymentsByInvoiceNumber } from '../../../../hooks/useAPI/useInvoicePayments';
 
 const ConnectedInvoiceDeleteAlertDialog = (props) => {
   const { toast, itemNumber, isOpen, onClose, header, body, entityDescription } = props;
 
   // Handles the loading state to complete process
-  const queryClient = useQueryClient();
   const [loadingState, setLoadingState] = useState(false);
+  const { mutate } = useDeleteAllInvoicePaymentsByInvoiceNumber(toast);
 
   // Main function that sends request to delete associated items and invoice data for selected id
   const handleSubmit = async () => {
     setLoadingState(true);
-    await deletePaymentsByInvoiceNumber();
-    await deleteInvoiceLineItems();
-
-    const { data, error } = await supabase
-      .from('invoice')
-      .delete()
-      .eq('invoice_number', itemNumber);
-
-    if (error) {
-      // console.log(error);
-      toast({
-        position: `top`,
-        title: `Error occured deleting Invoice #${itemNumber} !`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
-      setLoadingState(false);
-
-      toast({
-        position: `top`,
-        title: `Invoice #${itemNumber} deleted!`,
-        description: `We've deleted all invoice's payments & line-items associated with invoice #${itemNumber} for you succesfully! 🚀`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+    // Muratuion that starts by deleting invoice payments, then to line items, then to invoice. All chain after onSuccess
+    mutate(itemNumber);
 
     // Closes Drawer
     onClose();
-  };
-
-  // Handles the action to all delete payments assiated with the invoice number
-  const deletePaymentsByInvoiceNumber = async () => {
-    const { error } = await supabase.from('invoice_payment').delete().eq('invoice_id', itemNumber);
-
-    if (error) {
-      console.log(error);
-      toast({
-        position: `top`,
-        title: `Error occured deleting Invoice's Payments #${itemNumber}!`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-  };
-
-  // Handles the action to delete all invoice line services associated with the invoice number
-  const deleteInvoiceLineItems = async () => {
-    const { error } = await supabase
-      .from('invoice_line_service')
-      .delete()
-      .eq('invoice_id', itemNumber);
-
-    if (error) {
-      console.log(error);
-      toast({
-        position: `top`,
-        title: `Error occured deleting Invoice's' Line Items #${itemNumber}!`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+    setLoadingState(false);
   };
 
   return (

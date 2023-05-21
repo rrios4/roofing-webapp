@@ -31,6 +31,15 @@ export const fetchInvoiceById = async (invoice_number) => {
   return data[0];
 };
 
+// DELETE request to delete invoice by id
+export const deleteInvoiceById = async (invoiceNumber) => {
+  const { error } = await supabase.from('invoice').delete().eq('invoice_number', invoiceNumber);
+  if (error) {
+    throw error;
+  }
+  return invoiceNumber;
+};
+
 // PUT request to update invoice
 export const updateInvoice = async (updateInvoiceObject) => {
   const { error } = await supabase

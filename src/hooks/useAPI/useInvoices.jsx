@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  deleteInvoiceById,
   fetchAllInvoices,
   fetchInvoiceById,
   updateInvoice,
@@ -26,6 +27,34 @@ export const useFetchInvoiceById = (invoice_number) => {
   });
 
   return { data, isError, isLoading };
+};
+
+// Custom hook to delete invoice by id
+export const useDeleteInvoiceById = (toast) => {
+  const queryClient = useQueryClient();
+  return useMutation((invoiceNumber) => deleteInvoiceById(invoiceNumber), {
+    onError: (error) => {
+      toast({
+        position: `top`,
+        title: `Error occured deleting Invoice!`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      toast({
+        position: `top`,
+        title: `Invoice #${data} deleted!`,
+        description: `We've deleted all invoice's payments & line-items associated with invoice #${data} for you succesfully! 🚀`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  });
 };
 
 // Custom hook to update invoice
