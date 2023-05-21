@@ -43,7 +43,10 @@ export const useUpdateInvoice = (toast) => {
       });
     },
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries({ queryKey: ['invoiceById', data.toString()] });
+      await queryClient.invalidateQueries({
+        queryKey: ['invoiceById', data.toString()]
+      });
+      await queryClient.invalidateQueries({ queryKey: ['invoices'] });
       toast({
         position: 'top',
         title: `Successfully Updated Invoice!`,

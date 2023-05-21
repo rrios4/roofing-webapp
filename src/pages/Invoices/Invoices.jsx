@@ -33,7 +33,7 @@ import {
 } from '../../components';
 import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
-import { useFetchAllInvoices } from '../../hooks/useAPI/useInvoices';
+import { useFetchAllInvoices, useUpdateInvoice } from '../../hooks/useAPI/useInvoices';
 import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 
@@ -56,6 +56,11 @@ function Invoices() {
     isLoading: isInvoiceStatuses,
     isError: isInvoicesStatusesError
   } = useFetchAllInvoiceStatuses();
+  const {
+    mutate: mutateUpdateInvoice,
+    isLoading: isUpdateInvoiceLoading,
+    isError: isUpdateInvoiceError
+  } = useUpdateInvoice(toast);
 
   // Use Disclosured used for opening drawers where forms are at
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
@@ -121,10 +126,8 @@ function Invoices() {
   // Handles the submitting of edited information from drawer form
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    console.log(selectedEditInvoice);
-    const { data, error } = await supabase
-      .from('invoice')
-      .update({
+    const updateInvoiceObject = [
+      {
         service_type_id: selectedEditInvoice.service_type_id,
         invoice_status_id: selectedEditInvoice.invoice_status_id,
         invoice_date: selectedEditInvoice.invoice_date,
@@ -134,33 +137,12 @@ function Invoices() {
         note: selectedEditInvoice.note,
         cust_note: selectedEditInvoice.cust_note,
         updated_at: new Date()
-      })
-      .eq('invoice_number', selectedEditInvoice.invoice_number);
-
-    if (error) {
-      // Toast to give feedback when error happens updating invoice
-      toast({
-        position: 'top',
-        title: `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
-        description: `Error: ${error.message}`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      // await fetchInvoices();
-      // Toast to give feedback when success happens updating invoice
-      toast({
-        position: 'top',
-        title: `Successfully Updated Invoice!`,
-        description: `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+      },
+      {
+        invoice_number: selectedEditInvoice.invoice_number
+      }
+    ];
+    mutateUpdateInvoice(updateInvoiceObject);
     onEditClose();
     setSelectedEditInvoice({
       id: '',
