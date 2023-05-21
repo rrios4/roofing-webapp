@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   fetchAllInvoices,
   fetchInvoiceById,
+  updateInvoice,
   updateInvoiceStatusById
 } from '../../services/api/invoice';
 
@@ -25,6 +26,34 @@ export const useFetchInvoiceById = (invoice_number) => {
   });
 
   return { data, isError, isLoading };
+};
+
+// Custom hook to update invoice
+export const useUpdateInvoice = (toast) => {
+  const queryClient = useQueryClient();
+  return useMutation((updateInvoiceObject) => updateInvoice(updateInvoiceObject), {
+    onError: (error) => {
+      toast({
+        position: 'top',
+        title: `Error Updating Invoice`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    },
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ['invoiceById', data.toString()] });
+      toast({
+        position: 'top',
+        title: `Successfully Updated Invoice!`,
+        description: `We've updated INV# ${data} for you 🎉`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  });
 };
 
 // Custom hook that updates the status of an invoice

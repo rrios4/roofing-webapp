@@ -19,7 +19,11 @@ import {
 import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog';
 import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader';
-import { useFetchInvoiceById, useUpdateInvoiceStatusById } from '../../hooks/useAPI/useInvoices';
+import {
+  useFetchInvoiceById,
+  useUpdateInvoice,
+  useUpdateInvoiceStatusById
+} from '../../hooks/useAPI/useInvoices';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -75,8 +79,13 @@ const InvoiceDetails = () => {
   const {
     mutate: mutateDeleteInvoicePayment,
     isLoading: isDeleteInvoicePaymentLoading,
-    isDeleteInvoicePaymentError
+    isError: isDeleteInvoicePaymentError
   } = useDeleteInvoicePayment(toast);
+  const {
+    mutate: mutateUpdateInvoice,
+    isLoading: isUpdateInvoiceLoading,
+    isError: isUpdateInvoiceError
+  } = useUpdateInvoice(toast);
 
   // Modal useDisclose Hooks
   const {
@@ -250,10 +259,19 @@ const InvoiceDetails = () => {
 
   const handleEditInvoiceSubmit = async (e) => {
     e.preventDefault();
-    setInvoiceLoadingState(true);
-    const { data, error } = await supabase
-      .from('invoice')
-      .update({
+    // const updateInvoiceObject = {
+    //   service_type_id: selectedEditInvoice.service_type_id,
+    //   invoice_status_id: selectedEditInvoice.invoice_status_id,
+    //   invoice_date: selectedEditInvoice.invoice_date,
+    //   issue_date: selectedEditInvoice.issue_date,
+    //   due_date: selectedEditInvoice.due_date,
+    //   sqft_measurement: selectedEditInvoice.sqft_measurement,
+    //   note: selectedEditInvoice.note,
+    //   cust_note: selectedEditInvoice.cust_note,
+    //   updated_at: new Date()
+    // };
+    const updateInvoiceObjectArray = [
+      {
         service_type_id: selectedEditInvoice.service_type_id,
         invoice_status_id: selectedEditInvoice.invoice_status_id,
         invoice_date: selectedEditInvoice.invoice_date,
@@ -263,33 +281,44 @@ const InvoiceDetails = () => {
         note: selectedEditInvoice.note,
         cust_note: selectedEditInvoice.cust_note,
         updated_at: new Date()
-      })
-      .eq('invoice_number', selectedEditInvoice.invoice_number);
+      },
+      {
+        invoice_number: id
+      }
+    ];
+    mutateUpdateInvoice(updateInvoiceObjectArray);
+    onEditInvoiceClose();
+    // setInvoiceLoadingState(true);
+    // const { data, error } = await supabase
+    //   .from('invoice')
+    //   .update(updateInvoiceObject)
+    //   .eq('invoice_number', selectedEditInvoice.invoice_number);
 
-    if (error) {
-      toast({
-        position: 'top',
-        title: `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+    // if (error) {
+    //   toast({
+    //     position: 'top',
+    //     title: `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
+    //     description: `Error: ${error.message}`,
+    //     status: 'error',
+    //     duration: 5000,
+    //     isClosable: true
+    //   });
+    // }
 
-    if (data) {
-      // await getInvoiceDetailsById();
-      setInvoiceLoadingState(false);
-      onEditInvoiceClose();
-      toast({
-        position: 'top',
-        title: `Successfully Updated Invoice!`,
-        description: `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+    // if (data) {
+    //   // await getInvoiceDetailsById();
+    //   setInvoiceLoadingState(false);
+    //   onEditInvoiceClose();
+    //   toast({
+    //     position: 'top',
+    //     title: `Successfully Updated Invoice!`,
+    //     description: `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`,
+    //     status: 'success',
+    //     duration: 5000,
+    //     isClosable: true
+    //   });
+    // }
+
     setSelectedEditInvoice({
       id: '',
       invoice_number: '',

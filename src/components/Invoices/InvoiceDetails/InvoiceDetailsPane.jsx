@@ -253,11 +253,15 @@ const InvoiceDetailsPane = (props) => {
                 <>
                   <Box px="6">
                     <Box bg={paymentCardBgColor} p="2" rounded="xl">
-                      <Textarea border="none" isReadOnly>
-                        {!invoice?.sqft_measurement
-                          ? 'No measurement information... 🙅‍♂️'
-                          : invoice?.sqft_measurement}
-                      </Textarea>
+                      <Textarea
+                        border="none"
+                        isReadOnly
+                        value={
+                          !invoice?.sqft_measurement
+                            ? 'No measurement information... 🙅‍♂️'
+                            : invoice?.sqft_measurement
+                        }
+                      />
                     </Box>
                   </Box>
                 </>

@@ -31,6 +31,19 @@ export const fetchInvoiceById = async (invoice_number) => {
   return data[0];
 };
 
+// PUT request to update invoice
+export const updateInvoice = async (updateInvoiceObject) => {
+  const { error } = await supabase
+    .from('invoice')
+    .update(updateInvoiceObject[0])
+    .eq('invoice_number', updateInvoiceObject[1].invoice_number);
+
+  if (error) {
+    throw error;
+  }
+  return updateInvoiceObject[1].invoice_number;
+};
+
 // PUT request to update invoice status
 export const updateInvoiceStatusById = async (updateInvoiceStatusObject) => {
   const { error } = await supabase
