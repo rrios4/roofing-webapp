@@ -26,6 +26,10 @@ import {
   useCreateInvoiceLineItem,
   useDeleteInvoiceLineItem
 } from '../../hooks/useAPI/useInvoiceLineItem';
+import {
+  useCreateInvoicePayment,
+  useDeleteInvoicePayment
+} from '../../hooks/useAPI/useInvoicePayments';
 
 const InvoiceDetails = () => {
   const { id } = useParams();
@@ -35,28 +39,6 @@ const InvoiceDetails = () => {
     isLoading: isInvoiceLoading,
     isError: isInvoiceError
   } = useFetchInvoiceById(id);
-
-  // Modal useDisclose Hooks
-  const {
-    isOpen: isAddPaymentOpen,
-    onOpen: onAddPaymentOpen,
-    onClose: onAddPaymentClose
-  } = useDisclosure();
-  const {
-    isOpen: isAddLineItemOpen,
-    onOpen: onAddLineItemOpen,
-    onClose: onAddLineItemClose
-  } = useDisclosure();
-  const {
-    isOpen: isEditInvoiceOpen,
-    onOpen: onEditInvoiceOpen,
-    onClose: onEditInvoiceClose
-  } = useDisclosure();
-  const {
-    isOpen: isExportPDFOpen,
-    onOpen: onExportPDFOpen,
-    onClose: onExportPDFClose
-  } = useDisclosure();
 
   // Custom React Hooks
   const {
@@ -85,6 +67,38 @@ const InvoiceDetails = () => {
     isLoading: isDeleteInvoiceLineItemLoading,
     isError: isDeleteInvoiceLineItemError
   } = useDeleteInvoiceLineItem(toast);
+  const {
+    mutate: mutateCreateInvoicePayment,
+    isError: isCreateInvoicePaymentError,
+    isLoading: isCreateInvoicePaymentLoading
+  } = useCreateInvoicePayment(toast);
+  const {
+    mutate: mutateDeleteInvoicePayment,
+    isLoading: isDeleteInvoicePaymentLoading,
+    isDeleteInvoicePaymentError
+  } = useDeleteInvoicePayment(toast);
+
+  // Modal useDisclose Hooks
+  const {
+    isOpen: isAddPaymentOpen,
+    onOpen: onAddPaymentOpen,
+    onClose: onAddPaymentClose
+  } = useDisclosure();
+  const {
+    isOpen: isAddLineItemOpen,
+    onOpen: onAddLineItemOpen,
+    onClose: onAddLineItemClose
+  } = useDisclosure();
+  const {
+    isOpen: isEditInvoiceOpen,
+    onOpen: onEditInvoiceOpen,
+    onClose: onEditInvoiceClose
+  } = useDisclosure();
+  const {
+    isOpen: isExportPDFOpen,
+    onOpen: onExportPDFOpen,
+    onClose: onExportPDFClose
+  } = useDisclosure();
 
   // Custom color configs for UX elements
   const bgColorMode = useColorModeValue('gray.100', 'gray.600');
@@ -162,79 +176,29 @@ const InvoiceDetails = () => {
 
   //////////////////////////// Functions that handle payments functionality /////////////////////////////////////////
   const handleAddPaymentSubmit = async (e) => {
-    setLoadingState(true);
     e.preventDefault();
-
-    const { data, error } = await supabase.from('invoice_payment').insert({
+    const newInvoicePaymentObject = {
       invoice_id: invoice.invoice_number,
       date_received: dateReceivedPaymentInput,
       payment_method: paymentMethodPaymentInput,
       amount: amountPaymentInput
-    });
-
-    if (error) {
-      toast({
-        position: 'top',
-        title: `Error Occured Adding Payment`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      // await getInvoiceDetailsById();
-      toast({
-        position: 'top',
-        title: `Succesfully Added Payment`,
-        description: `We were able to add a payment for invoice number ${invoice.invoice_number} 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
+    };
+    mutateCreateInvoicePayment(newInvoicePaymentObject);
+    onAddPaymentClose();
     // Set values empty
     setDateReceivedPaymnetInput('');
     setPaymentMethodPaymentInput('');
     setAmountPaymentInput('');
-
-    setLoadingState(false);
-    onAddPaymentClose();
   };
 
   const handlePaymentDelete = async (item_id, date_received, amount) => {
-    setLoadingState(true);
-    console.log(item_id);
-    const { data, error } = await supabase.from('invoice_payment').delete().eq('id', item_id);
-
-    if (error) {
-      console.log(error);
-      toast({
-        position: 'top',
-        title: `Error Occured Deleting Payment`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    if (data) {
-      // await getInvoiceDetailsById();
-      console.log(data);
-      toast({
-        position: 'top',
-        title: `Succesfully Deleted Payment`,
-        description: `We were able to delete a payment that was posted for ${formatDate(
-          date_received
-        )} for a total of $${formatMoneyValue(amount)} 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-    setLoadingState(false);
+    const deleteInvoicePaymentObject = {
+      item_id: item_id,
+      date_received: date_received,
+      amount: amount,
+      invoice_number: id
+    };
+    mutateDeleteInvoicePayment(deleteInvoicePaymentObject);
   };
 
   //////////////////////////// Functions that handle line-item functionality /////////////////////////////////////////
@@ -386,7 +350,7 @@ const InvoiceDetails = () => {
             paymentCardBgColor={paymentCardBgColor}
             handlePaymentDelete={handlePaymentDelete}
             loadingState={loadingState}
-            editSwitchIsOn
+            editSwitchIsOn={editSwitchIsOn}
           />
         </Flex>
       </Flex>
@@ -416,8 +380,8 @@ const InvoiceDetails = () => {
         paymentMethodPaymentInput={paymentMethodPaymentInput}
         setPaymentMethodPaymentInput={setPaymentMethodPaymentInput}
         amountPaymentInput={amountPaymentInput}
-        setAmountPaymentInput={setAmountLineItemInput}
-        loadingState={loadingState}
+        setAmountPaymentInput={setAmountPaymentInput}
+        loadingState={isCreateInvoicePaymentLoading}
       />
       {/* Modal to add line item to invoice */}
       <InvoiceDetailsAddLineItemModal
