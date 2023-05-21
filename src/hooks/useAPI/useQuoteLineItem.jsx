@@ -20,9 +20,7 @@ export const useDeleteAllQuoteLineItemsWithQuote = (toast, itemNumber) => {
         isClosable: true
       });
     },
-    onSuccess: () => {
-      mutateDeleteQuote(itemNumber);
-    }
+    onSuccess: () => mutateDeleteQuote(itemNumber)
   });
 };
 

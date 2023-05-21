@@ -136,6 +136,7 @@ const CreateQuoteForm = (props) => {
       },
       onSuccess: () => {
         onClose();
+        mutateQuoteLineItem();
         toast({
           position: 'top',
           title: `Successfully Created Quote!`,
@@ -200,7 +201,6 @@ const CreateQuoteForm = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     mutateQuote();
-    mutateQuoteLineItem();
   };
 
   ////////////////// Functions that handle line-item functionality ///////////////////////
