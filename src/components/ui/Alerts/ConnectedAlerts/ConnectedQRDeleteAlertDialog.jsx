@@ -1,45 +1,38 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DeleteAlertDialog } from '../../..';
-import supabase from '../../../../utils/supabaseClient.js';
-import { useQueryClient } from '@tanstack/react-query';
+import { useDeleteQRById } from '../../../../hooks/useAPI/useQuoteRequests';
 
 const ConnectedQRDeleteAlertDialog = (props) => {
-  const { toast, itemNumber, isOpen, onClose, header, body, entityDescription } =
-    props;
-  const queryClient = useQueryClient();
-
-  // Handles the loading state to complete process
-  const [loadingState, setLoadingState] = useState(false);
+  const { toast, itemNumber, isOpen, onClose, header, body, entityDescription } = props;
+  const { mutate, isLoading } = useDeleteQRById(toast);
 
   const handleSubmit = async () => {
-    setLoadingState(true);
-    const { data, error } = await supabase.from('quote_request').delete().eq('id', itemNumber);
+    // const { data, error } = await supabase.from('quote_request').delete().eq('id', itemNumber);
 
-    if (error) {
-      toast({
-        position: `top`,
-        title: `Error occured deleting QR #${itemNumber}!`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+    // if (error) {
+    //   toast({
+    //     position: `top`,
+    //     title: `Error occured deleting QR #${itemNumber}!`,
+    //     description: `Error: ${error.message}`,
+    //     status: 'error',
+    //     duration: 5000,
+    //     isClosable: true
+    //   });
+    // }
 
-    if (data) {
-      queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
-      setLoadingState(false);
+    // if (data) {
+    //   queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
 
-      toast({
-        position: `top`,
-        title: `QR #${itemNumber} deleted!`,
-        description: `We've deleted QR #${itemNumber} for you succesfully! 🚀`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
+    //   toast({
+    //     position: `top`,
+    //     title: `QR #${itemNumber} deleted!`,
+    //     description: `We've deleted QR #${itemNumber} for you succesfully! 🚀`,
+    //     status: 'success',
+    //     duration: 5000,
+    //     isClosable: true
+    //   });
+    // }
+    mutate(itemNumber);
     // Closes Drawer
     onClose();
   };
@@ -52,7 +45,7 @@ const ConnectedQRDeleteAlertDialog = (props) => {
       body={body}
       onClose={onClose}
       isOpen={isOpen}
-      loadingState={loadingState}
+      loadingState={isLoading}
     />
   );
 };

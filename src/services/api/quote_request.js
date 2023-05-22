@@ -16,6 +16,15 @@ export const fetchAllQuoteRequests = async () => {
   return data;
 };
 
+// DELETE request to delete a qr by id
+export const deleteQuoteRequestById = async (itemId) => {
+  const { error } = await supabase.from('quote_request').delete().eq('id', itemId);
+  if (error) {
+    throw error;
+  }
+  return itemId;
+};
+
 // PUT request to update a quote request
 export const updateQuoteRequestById = async (updatedQRObject) => {
   const { error } = await supabase
