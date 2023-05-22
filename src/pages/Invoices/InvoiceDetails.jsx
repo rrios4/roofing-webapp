@@ -378,7 +378,7 @@ const InvoiceDetails = () => {
             secondaryTextColor={secondaryTextColor}
             paymentCardBgColor={paymentCardBgColor}
             handlePaymentDelete={handlePaymentDelete}
-            loadingState={loadingState}
+            loadingState={isDeleteInvoicePaymentLoading}
             editSwitchIsOn={editSwitchIsOn}
           />
         </Flex>

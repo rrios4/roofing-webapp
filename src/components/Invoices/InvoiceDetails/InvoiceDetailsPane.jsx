@@ -140,7 +140,7 @@ const InvoiceDetailsPane = (props) => {
               ) : (
                 <>
                   <Flex>
-                    <Link to={`/invoices/${invoice?.customer.id}`}>
+                    <Link to={`/customers/${invoice?.customer.id}`}>
                       <Button variant={'ghost'}>
                         <Avatar size={'xs'} />
                         <Text my={'auto'} ml={'8px'} fontWeight={'medium'}>
