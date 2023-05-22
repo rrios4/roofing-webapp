@@ -16,6 +16,15 @@ export const fetchAllQuoteRequests = async () => {
   return data;
 };
 
+// POST request to create a new qr
+export const createNewQuoteRequest = async (newQuoteRequest) => {
+  let { error } = await supabase.from('quote_request').insert([newQuoteRequest]);
+  if (error) {
+    throw error;
+  }
+  return newQuoteRequest;
+};
+
 // DELETE request to delete a qr by id
 export const deleteQuoteRequestById = async (itemId) => {
   const { error } = await supabase.from('quote_request').delete().eq('id', itemId);

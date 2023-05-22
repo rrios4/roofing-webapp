@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DrawerIndex, MultiPurposeOptions, StateOptions } from '../..';
+import { MultiPurposeOptions, StateOptions } from '../..';
 import {
   Text,
   FormControl,
@@ -18,22 +18,13 @@ import {
   DrawerHeader,
   DrawerBody
 } from '@chakra-ui/react';
-import { formatPhoneNumber, supabase } from '../../../utils';
+import { formatPhoneNumber } from '../../../utils';
 import stateJSONData from '../../../data/state_titlecase.json';
-import { useQueryClient } from '@tanstack/react-query';
+import { useCreateNewQuoteRequest } from '../../../hooks/useAPI/useQuoteRequests';
 
 const NewEstimateRequestForm = (props) => {
-  const {
-    isOpen,
-    onOpen,
-    onClose,
-    initialRef,
-    toast,
-    services,
-    qrStatuses,
-    customerTypes
-  } = props;
-  const queryClient = useQueryClient();
+  const { isOpen, onOpen, onClose, initialRef, toast, services, qrStatuses, customerTypes } = props;
+  const { mutate, isLoading } = useCreateNewQuoteRequest(toast);
 
   //React useStates for capturing data from input fields
   const [selectedQuoteStatus, setSelectedQuoteStatus] = useState('');
@@ -61,47 +52,24 @@ const NewEstimateRequestForm = (props) => {
   //Function that gets the data from the fields from form and submits them to DB
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const newQuoteRequestObject = {
+      est_request_status_id: selectedQuoteStatus,
+      service_type_id: selectedService,
+      requested_date: selectedQuoteDate,
+      firstName: qrClientFirstName,
+      lastName: qrClientLastname,
+      streetAddress: qrStreetAddress,
+      city: qrCity,
+      state: selectedState,
+      zipcode: qrPostalCode,
+      customer_typeID: selectedCustomerType,
+      phone_number: inputValue,
+      email: qrClientEmail
+    };
+    mutate(newQuoteRequestObject);
 
-    let { data, error } = await supabase.from('quote_request').insert([
-      {
-        est_request_status_id: selectedQuoteStatus,
-        service_type_id: selectedService,
-        requested_date: selectedQuoteDate,
-        firstName: qrClientFirstName,
-        lastName: qrClientLastname,
-        streetAddress: qrStreetAddress,
-        city: qrCity,
-        state: selectedState,
-        zipcode: qrPostalCode,
-        customer_typeID: selectedCustomerType,
-        phone_number: inputValue,
-        email: qrClientEmail
-      }
-    ]);
-
-    if (error) {
-      // Toast to give feedback when erorr occurs
-      toast({
-        position: 'top',
-        title: `Error Occured Creating New QR`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      // Toast to give feedback when success happens saving new QR
-      toast({
-        position: 'top',
-        title: `Quote Request created!`,
-        description: `We've created a new quote request for ${qrClientFirstName} ${qrClientLastname} with email ${qrClientEmail} 🚀`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+    // Closes drawer
+    onClose();
 
     // Set useState back to empty values
     setSelectedQuoteDate('');
@@ -116,15 +84,6 @@ const NewEstimateRequestForm = (props) => {
     setSelectedState('');
     SetInputValue('');
     setSelectedCustomerType('');
-    // setQrState('');
-    // setQrDate('');
-
-    // Updates the parent data
-    // updateQRData();
-    queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
-
-    // Closes drawer
-    onClose();
   };
 
   //Clear values when cancel button is presses
@@ -294,7 +253,7 @@ const NewEstimateRequestForm = (props) => {
             </FormControl>
           </DrawerBody>
           <DrawerFooter gap={4}>
-            <Button type="submit" colorScheme={'blue'}>
+            <Button type="submit" colorScheme={'blue'} isLoading={isLoading}>
               Create QR
             </Button>
             <Button onClick={handleCancel} mr="1rem">
