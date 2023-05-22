@@ -33,18 +33,11 @@ import {
 import formatMoneyValue from '../../../utils/formatMoneyValue';
 import { TbNote, TbRuler } from 'react-icons/tb';
 import { FiMap, FiUser } from 'react-icons/fi';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createNewInvoice } from '../../../services/api/invoice';
 
 const NewInvoiceForm = (props) => {
-  const {
-    onNewClose,
-    isNewOpen,
-    initialRef,
-    data,
-    toast,
-    services,
-    invoiceStatuses
-  } = props;
+  const { onNewClose, isNewOpen, initialRef, data, toast, services, invoiceStatuses } = props;
 
   // React styling hooks
   const queryClient = useQueryClient();
@@ -96,96 +89,122 @@ const NewInvoiceForm = (props) => {
   ]);
   const [numOfLineItemFields, setNumOfLineItemFields] = useState(1);
 
+  const { mutate: mutateCreateNewInvoice } = useMutation(
+    (newInvoiceObject) => createNewInvoice(newInvoiceObject),
+    {
+      onError: (error) => {
+        toast({
+          position: 'top',
+          title: `Error Occured Creating New Invoice`,
+          description: `Error: ${error.message}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+      },
+      onSuccess: () => {
+        mutateCreateNewInvoiceLineItems();
+        onNewClose();
+      }
+    }
+  );
+
+  const { mutate: mutateCreateNewInvoiceLineItems } = useMutation(
+    async () =>
+      lineItemList.map(async (item) => {
+        await supabase.from('invoice_line_service').insert([
+          {
+            invoice_id: parseInt(invoiceNumberInput),
+            service_id: parseInt(selectedServiceType),
+            fixed_item: fixedRateSwitchIsOn,
+            description: item.description,
+            qty: fixedRateSwitchIsOn === true ? 1 : 1,
+            rate: fixedRateSwitchIsOn === true ? null : parseInt(item.rate),
+            amount: item.amount,
+            sq_ft: fixedRateSwitchIsOn === true ? null : parseInt(item.sq_ft)
+          }
+        ]);
+      }),
+    {
+      onError: (error) => {
+        toast({
+          position: 'top',
+          title: `Error occured creating invoice line-item`,
+          description: `Error: ${error.message}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['invoices'] });
+        toast({
+          position: 'top',
+          title: `Invoice #${invoiceNumberInput} was created succesfully! 🎉`,
+          description: "We've sucessfully created an invoice for you!",
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
+        // Set line items to 0 in total and number of lines
+        setLineItemList([]);
+        setNumOfLineItemFields(0);
+        setInvoiceTotalCalculatedValue(0);
+        setInvoiceSubTotalCalculatedvalue(0);
+
+        // Setting input fields to empty
+        setInvoiceNumberInput('');
+        setSelectedCustomer('');
+        setSelectedServiceType('');
+        setSelectedInvoiceStatus('');
+        setInvoiceDateInput('');
+        setInvoiceDueDateInput('');
+        setSqftInput('');
+        setNoteInput('');
+        setBillToCityInput('');
+        setBillToStateInput('');
+        setBillToStreetAddressInput('');
+        setBillToZipcodeInput('');
+        setCustomerNoteMessage('');
+        setFixedRateSwitchIsOn(true);
+        setBillToSwitchIsOn(false);
+        setNoteSwitchIsOn(false);
+        setMeasurementNoteSwitchIsOn(false);
+        setCustomerNoteSwitchIsOn(false);
+        setLoadingState(false);
+      }
+    }
+  );
+
   // Function to handle the submit data from the form to supabase DB
   const handleSubmit = async (event) => {
-    setLoadingState(true);
     event.preventDefault();
-    // POST request to supabase to save new invoice
-    const { data, error } = await supabase.from('invoice').insert([
-      {
-        invoice_number: invoiceNumberInput,
-        customer_id: selectedCustomer.selectedCustomer.value,
-        service_type_id: selectedServiceType,
-        invoice_status_id: selectedInvoiceStatus,
-        invoice_date: invoiceDateInput,
-        due_date: invoiceDueDateInput,
-        sqft_measurement: sqftInput ? sqftInput : null,
-        note: noteInput ? noteInput : null,
-        cust_note:
-          customerNoteSwitchIsOn === true ? customerNoteMessage : 'Thank you for your business! 🚀',
-        bill_to_street_address: billToSwitchIsOn === true ? billToStreetAddressInput : null,
-        bill_to_city: billToSwitchIsOn === true ? billToCityInput : null,
-        bill_to_state: billToSwitchIsOn === true ? billToStateInput : null,
-        bill_to_zipcode: billToSwitchIsOn === true ? billToZipcodeInput : null,
-        bill_from_email: 'rrios.roofing@gmail.com',
-        bill_from_street_address: '150 Tallant St',
-        bill_from_city: 'Houston',
-        bill_from_state: 'TX',
-        bill_from_zipcode: '77076',
-        bill_to: billToSwitchIsOn === true ? true : false,
-        subtotal: invoiceSubTotalCalculatedvalue >= 0 ? invoiceSubTotalCalculatedvalue : 0,
-        total: invoiceTotalCalculatedValue >= 0 ? invoiceTotalCalculatedValue : 0,
-        amount_due: invoiceTotalCalculatedValue >= 0 ? invoiceTotalCalculatedValue : 0
-      }
-    ]);
-
-    if (error) {
-      // console.log(error);
-      // Handles feedback toast when there is an error creating new invoice
-      toast({
-        position: 'top',
-        title: `Error Occured Creating New Invoice`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      await handleLineItemSubmit();
-
-      // Toast Feedback when invoice was created sucessfully
-      toast({
-        position: 'top',
-        title: `Invoice #${invoiceNumberInput} was created succesfully! 🎉`,
-        description: "We've sucessfully created an invoice for you!",
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    // Set line items to 0 in total and number of lines
-    setLineItemList([]);
-    setNumOfLineItemFields(0);
-    setInvoiceTotalCalculatedValue(0);
-    setInvoiceSubTotalCalculatedvalue(0);
-
-    // Setting input fields to empty
-    setInvoiceNumberInput('');
-    setSelectedCustomer('');
-    setSelectedServiceType('');
-    setSelectedInvoiceStatus('');
-    setInvoiceDateInput('');
-    setInvoiceDueDateInput('');
-    setSqftInput('');
-    setNoteInput('');
-    setBillToCityInput('');
-    setBillToStateInput('');
-    setBillToStreetAddressInput('');
-    setBillToZipcodeInput('');
-    setCustomerNoteMessage('');
-    setFixedRateSwitchIsOn(true);
-    setBillToSwitchIsOn(false);
-    setNoteSwitchIsOn(false);
-    setMeasurementNoteSwitchIsOn(false);
-    setCustomerNoteSwitchIsOn(false);
-    setLoadingState(false);
-
-    // await updateParentData();
-    queryClient.invalidateQueries({ queryKey: ['invoices'] });
-    onNewClose();
+    const newInvoiceObject = {
+      invoice_number: invoiceNumberInput,
+      customer_id: selectedCustomer.selectedCustomer.value,
+      service_type_id: selectedServiceType,
+      invoice_status_id: selectedInvoiceStatus,
+      invoice_date: invoiceDateInput,
+      due_date: invoiceDueDateInput,
+      sqft_measurement: sqftInput ? sqftInput : null,
+      note: noteInput ? noteInput : null,
+      cust_note:
+        customerNoteSwitchIsOn === true ? customerNoteMessage : 'Thank you for your business! 🚀',
+      bill_to_street_address: billToSwitchIsOn === true ? billToStreetAddressInput : null,
+      bill_to_city: billToSwitchIsOn === true ? billToCityInput : null,
+      bill_to_state: billToSwitchIsOn === true ? billToStateInput : null,
+      bill_to_zipcode: billToSwitchIsOn === true ? billToZipcodeInput : null,
+      bill_from_email: 'rrios.roofing@gmail.com',
+      bill_from_street_address: '150 Tallant St',
+      bill_from_city: 'Houston',
+      bill_from_state: 'TX',
+      bill_from_zipcode: '77076',
+      bill_to: billToSwitchIsOn === true ? true : false,
+      subtotal: invoiceSubTotalCalculatedvalue >= 0 ? invoiceSubTotalCalculatedvalue : 0,
+      total: invoiceTotalCalculatedValue >= 0 ? invoiceTotalCalculatedValue : 0,
+      amount_due: invoiceTotalCalculatedValue >= 0 ? invoiceTotalCalculatedValue : 0
+    };
+    mutateCreateNewInvoice(newInvoiceObject);
   };
 
   // Function that will handle the selected value from react-select component and stores it in a useState
@@ -221,7 +240,7 @@ const NewInvoiceForm = (props) => {
 
   //////////////////////////// Functions that handle line item logic ///////////////////////////////
   // Delete Line Item Field
-  const handleDeleteLineItemField = (index) => {
+  const handleDeleteLineItemField = () => {
     const list = lineItemList;
     console.log(numOfLineItemFields);
     list.pop();
@@ -243,7 +262,7 @@ const NewInvoiceForm = (props) => {
   };
 
   // Handle adding new line items to be stored in a react useState
-  const handleAddingLineItem = (newLineItem) => {
+  const handleAddingLineItem = () => {
     setNumOfLineItemFields(numOfLineItemFields + 1);
     // setServiceLineItems(prevServiceLineItems => [...prevServiceLineItems, newLineItem])
     setLineItemList([
@@ -315,43 +334,6 @@ const NewInvoiceForm = (props) => {
     setNoteSwitchIsOn(false);
     setMeasurementNoteSwitchIsOn(false);
     setCustomerNoteSwitchIsOn(false);
-  };
-
-  const handleLineItemSubmit = async () => {
-    lineItemList.map(async (item) => {
-      const { error } = await supabase.from('invoice_line_service').insert([
-        {
-          invoice_id: parseInt(invoiceNumberInput),
-          service_id: parseInt(selectedServiceType),
-          fixed_item: fixedRateSwitchIsOn,
-          description: item.description,
-          qty: fixedRateSwitchIsOn === true ? 1 : 1,
-          rate: fixedRateSwitchIsOn === true ? null : parseInt(item.rate),
-          amount: item.amount,
-          sq_ft: fixedRateSwitchIsOn === true ? null : parseInt(item.sq_ft)
-        }
-      ]);
-
-      if (error) {
-        // console.log(error);
-
-        // Toast Feedback when invoice line-item creation failed
-        toast({
-          position: 'top',
-          title: `Error occured creating line-item`,
-          description: `Error: ${error.message}`,
-          status: 'error',
-          duration: 5000,
-          isClosable: true
-        });
-      }
-    });
-    // console.log({
-    //     invoice_id: parseInt(invoiceNumberInput),
-    //     service_id: selectedServiceType,
-    //     fixed_item: fixedRateSwitchIsOn,
-    //     item_list: lineItemList
-    // })
   };
 
   // I want to use this for the future

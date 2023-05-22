@@ -10,17 +10,6 @@ export const createInvoiceLineItem = async (newInvoiceLineItemObject) => {
   return newInvoiceLineItemObject;
 };
 
-// POST request to create multiple new line items for a new invoice
-export const createMultipleInvoiceLineItems = async (invoiceLineItemsArray) => {
-  console.log(invoiceLineItemsArray);
-  const { error } = await supabase.from('invoice_line_service').insert(invoiceLineItemsArray);
-  if (error) {
-    throw error;
-  }
-  console.log(invoiceLineItemsArray);
-  // return invoiceLineItemsArray[0].invoice_id;
-};
-
 // DELETE request to delete all invoice line item that belong to a invoice number
 export const deleteAllInvoiceLineItemsByInvoiceNumber = async (invoiceNumber) => {
   const { error } = await supabase

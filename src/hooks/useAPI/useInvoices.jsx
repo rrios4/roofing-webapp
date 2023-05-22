@@ -7,7 +7,6 @@ import {
   updateInvoice,
   updateInvoiceStatusById
 } from '../../services/api/invoice';
-import { useCreateMultipleLineItemFromArray } from './useInvoiceLineItem';
 
 // Custom hook that get all invoices
 export const useFetchAllInvoices = () => {
@@ -33,7 +32,6 @@ export const useFetchInvoiceById = (invoice_number) => {
 
 // Custom hook to create a new invoice
 export const useCreateInvoice = (toast) => {
-  const { mutate } = useCreateMultipleLineItemFromArray(toast);
   return useMutation((newInvoiceObject) => createNewInvoice(newInvoiceObject), {
     onError: (error) => {
       toast({
@@ -47,7 +45,7 @@ export const useCreateInvoice = (toast) => {
     },
     onSuccess: (data) => {
       console.log(data);
-      mutate(data.lineItemObjectArray);
+      // mutate(data.lineItemObjectArray);
       // toast({
       //   position: 'top',
       //   title: `Invoice #${data.invoice_number} was created succesfully! 🎉`,

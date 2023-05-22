@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createInvoiceLineItem,
-  createMultipleInvoiceLineItems,
   deleteAllInvoiceLineItemsByInvoiceNumber,
   deleteInvoiceLineItemById
 } from '../../services/api/invoice_lineItem';
@@ -32,37 +31,6 @@ export const useCreateInvoiceLineItem = (toast) => {
           position: 'top',
           title: `Succesfully Added Line Item`,
           description: `We were able to add a line-item for invoice# ${data.invoice_id} 🎉`,
-          status: 'success',
-          duration: 5000,
-          isClosable: true
-        });
-      }
-    }
-  );
-};
-
-// Custom hook to create multiple line items from an array
-export const useCreateMultipleLineItemFromArray = (toast) => {
-  const queryClient = useQueryClient();
-  return useMutation(
-    (invoiceLineItemsArray) => createMultipleInvoiceLineItems(invoiceLineItemsArray),
-    {
-      onError: (error) => {
-        toast({
-          position: 'top',
-          title: `Error occured creating line-items`,
-          description: `Error: ${error.message}`,
-          status: 'error',
-          duration: 5000,
-          isClosable: true
-        });
-      },
-      onSuccess: async (data) => {
-        queryClient.invalidateQueries({ queryKey: ['invoices'] });
-        toast({
-          position: 'top',
-          title: `Invoice# ${data} was created succesfully! 🎉`,
-          description: "We've sucessfully created an invoice for you!",
           status: 'success',
           duration: 5000,
           isClosable: true

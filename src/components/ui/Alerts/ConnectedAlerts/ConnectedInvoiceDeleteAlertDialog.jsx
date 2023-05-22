@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import supabase from '../../../../utils/supabaseClient.js';
 import { DeleteAlertDialog } from '../../..';
 import { useDeleteAllInvoicePaymentsByInvoiceNumber } from '../../../../hooks/useAPI/useInvoicePayments';
 
@@ -13,7 +12,7 @@ const ConnectedInvoiceDeleteAlertDialog = (props) => {
   // Main function that sends request to delete associated items and invoice data for selected id
   const handleSubmit = async () => {
     setLoadingState(true);
-    // Muratuion that starts by deleting invoice payments, then to line items, then to invoice. All chain after onSuccess
+    // Muratuion that starts by deleting invoice payments, then to line items, then to invoice. All chain after each onSuccess
     mutate(itemNumber);
 
     // Closes Drawer

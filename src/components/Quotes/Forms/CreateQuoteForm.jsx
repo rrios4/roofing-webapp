@@ -187,7 +187,7 @@ const CreateQuoteForm = (props) => {
       onError: (error) => {
         toast({
           position: 'top',
-          title: `Error occured creating line-item`,
+          title: `Error occured creating quote line-item`,
           description: `Error: ${error.message}`,
           status: 'error',
           duration: 5000,
