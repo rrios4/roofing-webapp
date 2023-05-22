@@ -31,6 +31,15 @@ export const fetchInvoiceById = async (invoice_number) => {
   return data[0];
 };
 
+// POST request to create a new invoice
+export const createNewInvoice = async (newInvoiceObject) => {
+  const { error } = await supabase.from('invoice').insert(newInvoiceObject[0]);
+  if (error) {
+    throw error;
+  }
+  return newInvoiceObject[1];
+};
+
 // DELETE request to delete invoice by id
 export const deleteInvoiceById = async (invoiceNumber) => {
   const { error } = await supabase.from('invoice').delete().eq('invoice_number', invoiceNumber);

@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  createNewInvoice,
   deleteInvoiceById,
   fetchAllInvoices,
   fetchInvoiceById,
   updateInvoice,
   updateInvoiceStatusById
 } from '../../services/api/invoice';
+import { useCreateMultipleLineItemFromArray } from './useInvoiceLineItem';
 
 // Custom hook that get all invoices
 export const useFetchAllInvoices = () => {
@@ -27,6 +29,35 @@ export const useFetchInvoiceById = (invoice_number) => {
   });
 
   return { data, isError, isLoading };
+};
+
+// Custom hook to create a new invoice
+export const useCreateInvoice = (toast) => {
+  const { mutate } = useCreateMultipleLineItemFromArray(toast);
+  return useMutation((newInvoiceObject) => createNewInvoice(newInvoiceObject), {
+    onError: (error) => {
+      toast({
+        position: 'top',
+        title: `Error Occured Creating New Invoice`,
+        description: `Error: ${error.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      mutate(data.lineItemObjectArray);
+      // toast({
+      //   position: 'top',
+      //   title: `Invoice #${data.invoice_number} was created succesfully! 🎉`,
+      //   description: "We've sucessfully created an invoice for you!",
+      //   status: 'success',
+      //   duration: 5000,
+      //   isClosable: true
+      // });
+    }
+  });
 };
 
 // Custom hook to delete invoice by id

@@ -216,6 +216,7 @@ function Invoices() {
     <>
       {/* Drawer Component Forms */}
       <NewInvoiceForm
+        initialRef={initialRef}
         isNewOpen={isNewOpen}
         onNewClose={onNewClose}
         onNewOpen={onNewOpen}
