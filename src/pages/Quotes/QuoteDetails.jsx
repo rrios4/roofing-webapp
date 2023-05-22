@@ -176,22 +176,6 @@ const QuoteById = () => {
     onExportPDFClose();
   };
 
-  if (isQuoteByIdLoading === true) {
-    return (
-      <>
-        <Container maxW={'1440px'} mt={'1rem'} mb={'2rem'}>
-          <Flex gap={2} justify={'center'} px={'1rem'} py="1rem">
-            {/* <Spinner size={'sm'} my={'auto'} /> */}
-            <Skeleton width={'full'} height={'100vh'} rounded={'lg'} />
-            {/* <Text fontSize={'xl'} fontWeight={'bold'}>
-              Loading...
-            </Text> */}
-          </Flex>
-        </Container>
-      </>
-    );
-  }
-
   return (
     <Container maxW={'1400px'} mt={'1rem'} mb={'2rem'}>
       {/* <DeleteInvoiceLineServiceAlertDialog toast={handleDeleteToast} updateParentState={getInvoiceDetailsById} /> */}
