@@ -34,18 +34,37 @@ const QuoteBillTo = ({ quote }) => (
       <Text style={styles.mainText}>832-310-3593</Text>
       <Text style={styles.mainText}>rrios.roofing@gmail.com</Text>
     </View>
-    <View style={styles.rightItem}>
-      <Text style={styles.billTo}>To:</Text>
-      <Text style={styles.mainText}>
-        {quote?.customer?.first_name} {quote?.customer?.last_name}
-      </Text>
-      <Text style={styles.subText}>{quote?.customer?.street_address}</Text>
-      <Text style={styles.mainText}>
-        {quote?.customer?.city}, {quote?.customer?.state} {quote?.customer?.zipcode}
-      </Text>
-      <Text style={styles.mainText}>{quote?.customer?.phone_number}</Text>
-      <Text style={styles.mainText}>{quote?.customer?.email}</Text>
-    </View>
+    {quote.custom_address === true ? (
+      <>
+        <View style={styles.rightItem}>
+          <Text style={styles.billTo}>To:</Text>
+          <Text style={styles.mainText}>
+            {quote?.customer?.first_name} {quote?.customer?.last_name}
+          </Text>
+          <Text style={styles.subText}>{quote?.custom_street_address}</Text>
+          <Text style={styles.mainText}>
+            {quote?.custom_city}, {quote?.custom_state} {quote?.custom_zipcode}
+          </Text>
+          <Text style={styles.mainText}>{quote?.customer?.phone_number}</Text>
+          <Text style={styles.mainText}>{quote?.customer?.email}</Text>
+        </View>
+      </>
+    ) : (
+      <>
+        <View style={styles.rightItem}>
+          <Text style={styles.billTo}>To:</Text>
+          <Text style={styles.mainText}>
+            {quote?.customer?.first_name} {quote?.customer?.last_name}
+          </Text>
+          <Text style={styles.subText}>{quote?.customer?.street_address}</Text>
+          <Text style={styles.mainText}>
+            {quote?.customer?.city}, {quote?.customer?.state} {quote?.customer?.zipcode}
+          </Text>
+          <Text style={styles.mainText}>{quote?.customer?.phone_number}</Text>
+          <Text style={styles.mainText}>{quote?.customer?.email}</Text>
+        </View>
+      </>
+    )}
   </View>
 );
 

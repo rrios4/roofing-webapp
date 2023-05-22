@@ -121,7 +121,9 @@ const CreateQuoteForm = (props) => {
         custom_street_address: customStreetAddressInput ? customStreetAddressInput : null,
         custom_city: customCityInput ? customCityInput : null,
         custom_state: customStateInput ? customStateInput : null,
-        custom_zipcode: customZipcodeInput ? customZipcodeInput : null
+        custom_zipcode: customZipcodeInput ? customZipcodeInput : null,
+        custom_address:
+          customAddressSwitchIsOn === true ? customAddressSwitchIsOn : customAddressSwitchIsOn
       }),
     {
       onError: (error) => {

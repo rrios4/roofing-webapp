@@ -71,16 +71,16 @@ const QuoteDetailsMain = (props) => {
                 />
               ) : (
                 <>
-                  {quoteById?.bill_to === true ? (
+                  {quoteById?.custom_address === true ? (
                     <>
                       <Box>
                         <Text ml={'3rem'} fontWeight={'semibold'}>
                           {quoteById?.customer?.first_name} {quoteById?.customer?.last_name}
                         </Text>
-                        <Text ml={'3rem'}>{quoteById?.bill_to_street_address}</Text>
+                        <Text ml={'3rem'}>{quoteById?.custom_street_address}</Text>
                         <Text ml={'3rem'}>
-                          {quoteById?.bill_to_city}, {quoteById?.bill_to_state}{' '}
-                          {quoteById?.bill_to_zipcode}
+                          {quoteById?.custom_city}, {quoteById?.custom_state}{' '}
+                          {quoteById?.custom_zipcode}
                         </Text>
                         <Text ml={'3rem'} color={'blue.400'}>
                           {quoteById?.customer?.email}
