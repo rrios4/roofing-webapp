@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { DeleteAlertDialog } from '../../..';
 import supabase from '../../../../utils/supabaseClient.js';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ConnectedQRDeleteAlertDialog = (props) => {
-  const { toast, itemNumber, updateParentState, isOpen, onClose, header, body, entityDescription } =
+  const { toast, itemNumber, isOpen, onClose, header, body, entityDescription } =
     props;
+  const queryClient = useQueryClient();
 
   // Handles the loading state to complete process
   const [loadingState, setLoadingState] = useState(false);
@@ -25,7 +27,7 @@ const ConnectedQRDeleteAlertDialog = (props) => {
     }
 
     if (data) {
-      await updateParentState();
+      queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
       setLoadingState(false);
 
       toast({

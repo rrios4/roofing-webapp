@@ -37,7 +37,7 @@ import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { FiArrowRight, FiFileText } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { formatDate, formatMoneyValue, formatNumber } from '../../utils';
-import { useCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import {
   useFetchCustomerByID,
   useFetchCustomerInvoices,
@@ -49,7 +49,7 @@ const CustomerById = () => {
   // React Hooks
   const { id } = useParams();
   const toast = useToast();
-  const { customerTypes } = useCustomerTypes();
+  const { data: customerTypes } = useFetchAllCustomerTypes();
   const { customerById } = useFetchCustomerByID(id);
   const { customerInvoices } = useFetchCustomerInvoices(id);
   const { customerQuotes } = useFetchCustomerQuotes(id);

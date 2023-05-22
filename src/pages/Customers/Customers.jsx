@@ -11,26 +11,24 @@ import {
   FormControl,
   VStack,
   Icon,
-  Stack,
   IconButton,
   useToast,
   Skeleton,
   Card,
-  CardBody,
-  Button
+  CardBody
 } from '@chakra-ui/react';
 import { IoMdPersonAdd } from 'react-icons/io';
 // import { MdSearch } from 'react-icons/md';
 import { FiUsers } from 'react-icons/fi';
 import { useFetchCustomers, useSearchCustomers } from '../../hooks/useAPI/useCustomers';
-import { useCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import useDebounce from '../../hooks/useDebounce';
 // import { Link } from 'react-router-dom';
 // import { MdArrowBack } from 'react-icons/md';
 
 export default function Customers() {
   // Custom React Hook to use Customers with useState
-  const { customerTypes } = useCustomerTypes();
+  const { data: customerTypes } = useFetchAllCustomerTypes();
 
   // Chakra UI Hook toast
   const toast = useToast();

@@ -25,24 +25,21 @@ import {
 import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
 import { FiInbox } from 'react-icons/fi';
-import { useQuoteRequests } from '../../hooks/useAPI/useQuoteRequests';
-import { useQRStatuses } from '../../hooks/useAPI/useQRStatuses';
-import { useCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
+import { useFetchAllQuoteRequests, useUpdateQRById } from '../../hooks/useAPI/useQuoteRequests';
+import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 
 const QuoteRequests = () => {
   // React Hook for managing state of quotes request
-  const { quoteRequests, setQuoteRequests, fetchQuoteRequests, quoteRequestLoadingStateIsOn } =
-    useQuoteRequests();
-  const {
-    data: services,
-    isRoofingServicesLoading,
-    isRoofingServicesError
-  } = useFetchAllServices();
-  const { qrStatuses } = useQRStatuses();
-  const { customerTypes } = useCustomerTypes();
   // Chakra UI Reacr hook for toasts
   const toast = useToast();
+  const { data: quoteRequests, isLoading: isQRLoading } = useFetchAllQuoteRequests();
+  const { data: services } = useFetchAllServices();
+  const { data: qrStatuses } = useFetchAllQRStatuses();
+  // const { customerTypes } = useCustomerTypes();
+  const { data: customerTypes } = useFetchAllCustomerTypes();
+  const { mutate: mutateUpdateQRById } = useUpdateQRById(toast);
 
   // Chakra UI Modal
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
@@ -69,35 +66,30 @@ const QuoteRequests = () => {
     phone_number: ''
   });
   const [selectedEstimateRequestId, setSelectedEstimateRequestId] = useState('');
-  const [selectedEstimateRequestNumber, setSelectedEstimateRequestNumber] = useState('');
-
-  const [inputValue, SetInputValue] = useState('');
-
-  useEffect(() => {}, []);
 
   // Search for customer quote request
-  const searchEstimateRequest = async (event) => {
-    event.preventDefault();
+  // const searchEstimateRequest = async (event) => {
+  //   event.preventDefault();
 
-    if (searchEstimateRequestsInput === '') {
-      fetchQuoteRequests();
-    } else {
-      let { data: qrSearchResult, error } = await supabase
-        .from('quote_request')
-        .select(
-          '*, services:service_type_id(*), customer_type:customer_typeID(*), estimate_request_status:est_request_status_id(*)'
-        )
-        .or(
-          `firstName.ilike.%${searchEstimateRequestsInput}%,lastName.ilike.%${searchEstimateRequestsInput}%,email.ilike.%${searchEstimateRequestsInput}%,phone_number.ilike.%${searchEstimateRequestsInput}%`
-        );
+  //   if (searchEstimateRequestsInput === '') {
+  //     fetchQuoteRequests();
+  //   } else {
+  //     let { data: qrSearchResult, error } = await supabase
+  //       .from('quote_request')
+  //       .select(
+  //         '*, services:service_type_id(*), customer_type:customer_typeID(*), estimate_request_status:est_request_status_id(*)'
+  //       )
+  //       .or(
+  //         `firstName.ilike.%${searchEstimateRequestsInput}%,lastName.ilike.%${searchEstimateRequestsInput}%,email.ilike.%${searchEstimateRequestsInput}%,phone_number.ilike.%${searchEstimateRequestsInput}%`
+  //       );
 
-      if (error) {
-        console.log(error);
-      }
-      // console.log(qrSearchResult);
-      setQuoteRequests(qrSearchResult);
-    }
-  };
+  //     if (error) {
+  //       console.log(error);
+  //     }
+  //     // console.log(qrSearchResult);
+  //     setQuoteRequests(qrSearchResult);
+  //   }
+  // };
 
   //Handles edit data
   const handleEdit = (estimate_request) => {
@@ -150,38 +142,24 @@ const QuoteRequests = () => {
   // Handles the submition of new edited information to the database
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    const { error } = await supabase
-      .from('quote_request')
-      .update({
-        id: selectedEstimateRequestObject.id,
-        service_type_id: selectedEstimateRequestObject.service_type_id,
-        est_request_status_id: selectedEstimateRequestObject.est_request_status_id,
-        requested_date: selectedEstimateRequestObject.requested_date,
-        firstName: selectedEstimateRequestObject.firstName,
-        lastName: selectedEstimateRequestObject.lastName,
-        streetAddress: selectedEstimateRequestObject.streetAddress,
-        city: selectedEstimateRequestObject.city,
-        state: selectedEstimateRequestObject.state,
-        zipcode: selectedEstimateRequestObject.zipcode,
-        email: selectedEstimateRequestObject.email,
-        phone_number: selectedEstimateRequestObject.phone_number,
-        customer_typeID: selectedEstimateRequestObject.customer_typeID,
-        updated_at: new Date()
-      })
-      .eq('id', selectedEstimateRequestObject.id);
+    const updatedQRObject = {
+      id: selectedEstimateRequestObject.id,
+      service_type_id: selectedEstimateRequestObject.service_type_id,
+      est_request_status_id: selectedEstimateRequestObject.est_request_status_id,
+      requested_date: selectedEstimateRequestObject.requested_date,
+      firstName: selectedEstimateRequestObject.firstName,
+      lastName: selectedEstimateRequestObject.lastName,
+      streetAddress: selectedEstimateRequestObject.streetAddress,
+      city: selectedEstimateRequestObject.city,
+      state: selectedEstimateRequestObject.state,
+      zipcode: selectedEstimateRequestObject.zipcode,
+      email: selectedEstimateRequestObject.email,
+      phone_number: selectedEstimateRequestObject.phone_number,
+      customer_typeID: selectedEstimateRequestObject.customer_typeID,
+      updated_at: new Date()
+    };
 
-    if (error) {
-      console.log(error);
-      // Toast to give feedback when error occurs
-      toast({
-        position: 'top',
-        title: 'Error Occured Updating Request',
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+    mutateUpdateQRById(updatedQRObject);
     onEditClose();
     setSelectedEstimateRequestObject({
       id: '',
@@ -196,17 +174,6 @@ const QuoteRequests = () => {
       lastName: '',
       email: ''
     });
-    await fetchQuoteRequests();
-    // Toast to give feedback when success occurs
-    toast({
-      position: 'top',
-      title: `QR# ${selectedEstimateRequestObject.id} updated!`,
-      description: "We've updated quote request for you 🎉",
-      status: 'success',
-      duration: 5000,
-      isClosable: true
-    });
-    // console.log(selectedEstimateRequestObject)
   };
 
   // Handles to determine if email alredy exist in DB to then save data as a new customer
@@ -265,7 +232,7 @@ const QuoteRequests = () => {
   };
 
   // Handles alert box to user when they click to delete data
-  const handleDeleteAlert = (estimateRequestId, estimateRequestNumber) => {
+  const handleDeleteAlert = (estimateRequestId) => {
     setSelectedEstimateRequestId(estimateRequestId);
     // setSelectedEstimateRequestNumber(estimateRequestNumber);
     onDeleteOpen();
@@ -277,7 +244,6 @@ const QuoteRequests = () => {
         isOpen={isNewOpen}
         onClose={onNewClose}
         initialRef={initialRef}
-        updateQRData={fetchQuoteRequests}
         toast={toast}
         services={services}
         qrStatuses={qrStatuses}
@@ -299,7 +265,6 @@ const QuoteRequests = () => {
         onClose={onDeleteClose}
         onOpen={onDeleteOpen}
         toast={toast}
-        updateParentState={fetchQuoteRequests}
         itemNumber={selectedEstimateRequestId}
         header={'Delete Quote Request'}
         entityDescription={`QR # ${selectedEstimateRequestId}`}
@@ -324,7 +289,7 @@ const QuoteRequests = () => {
                   </Text>
                 </Flex>
                 <Flex>
-                  <form method="GET" onSubmit={searchEstimateRequest}>
+                  <form method="GET">
                     <FormControl display={'flex'}>
                       <Input
                         value={searchEstimateRequestsInput}
@@ -361,7 +326,7 @@ const QuoteRequests = () => {
             </HStack>
             {/* Main Body for content */}
             {/* Quote Request Table to display all requests from company website */}
-            {quoteRequestLoadingStateIsOn === true ? (
+            {isQRLoading === true ? (
               <Box w={'full'} height={'200px'}>
                 <Skeleton height={'200px'} rounded={'xl'} />
               </Box>

@@ -1,24 +1,12 @@
-import { useEffect, useState } from 'react';
-import supabase from '../../utils/supabaseClient';
+import { useQuery } from '@tanstack/react-query';
+import { fetchAllQuoteRequestStatuses } from '../../services/api/quote_request_status';
 
-export const useQRStatuses = () => {
-  const [qrStatuses, setQrStatuses] = useState([]);
+// Custom hook to fetch all quote request statuses from database
+export const useFetchAllQRStatuses = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['qrStatuses'],
+    queryFn: () => fetchAllQuoteRequestStatuses()
+  });
 
-  const fetchQRStatuses = async () => {
-    const { data, error } = await supabase
-      .from('quote_request_status')
-      .select('*')
-      .order('id', { ascending: true });
-
-    if (error) {
-      console.log(error);
-    }
-    setQrStatuses(data);
-  };
-
-  useEffect(() => {
-    fetchQRStatuses();
-  }, []);
-
-  return { qrStatuses, setQrStatuses, fetchQRStatuses };
+  return { data, isLoading, isError };
 };

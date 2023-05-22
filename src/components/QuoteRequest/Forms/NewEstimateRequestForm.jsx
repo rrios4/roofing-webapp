@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { formatPhoneNumber, supabase } from '../../../utils';
 import stateJSONData from '../../../data/state_titlecase.json';
+import { useQueryClient } from '@tanstack/react-query';
 
 const NewEstimateRequestForm = (props) => {
   const {
@@ -27,12 +28,12 @@ const NewEstimateRequestForm = (props) => {
     onOpen,
     onClose,
     initialRef,
-    updateQRData,
     toast,
     services,
     qrStatuses,
     customerTypes
   } = props;
+  const queryClient = useQueryClient();
 
   //React useStates for capturing data from input fields
   const [selectedQuoteStatus, setSelectedQuoteStatus] = useState('');
@@ -119,7 +120,8 @@ const NewEstimateRequestForm = (props) => {
     // setQrDate('');
 
     // Updates the parent data
-    updateQRData();
+    // updateQRData();
+    queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
 
     // Closes drawer
     onClose();
