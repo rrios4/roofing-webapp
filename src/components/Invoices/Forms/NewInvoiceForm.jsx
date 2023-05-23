@@ -78,6 +78,10 @@ const NewInvoiceForm = (props) => {
   const [customerNoteSwitchIsOn, setCustomerNoteSwitchIsOn] = useState(false);
   const [loadingState, setLoadingState] = useState(false);
 
+  useEffect(() => {
+    handleNextInvoice(data);
+  }, []);
+
   // Line Item React State
   const [lineItemList, setLineItemList] = useState([
     {
@@ -336,6 +340,18 @@ const NewInvoiceForm = (props) => {
     setCustomerNoteSwitchIsOn(false);
   };
 
+  const handleNextInvoice = (data) => {
+    if (data) {
+      Math.max(...data?.map((item) => item.invoice_number)) + 1 == -Infinity
+        ? '1'
+        : setNextInvoiceNumber(
+            Math.max(...data?.map((item) => item.invoice_number)) + 1 == -Infinity
+          );
+    } else {
+      setNextInvoiceNumber('Loading...');
+    }
+  };
+
   // I want to use this for the future
   // const subtotal = lineItemList.reduce((total, currentItem) => total = parseInt(total) + parseInt(currentItem.amount), 0)
   // const total = lineItemList.reduce((total, currentItem) => total = parseInt(total) + parseInt(currentItem.amount), 0);
@@ -447,9 +463,9 @@ const NewInvoiceForm = (props) => {
                       placeholder={
                         !data
                           ? 'Loading...'
-                          : Math.max(...data?.map((item) => item.invoice_number)) + 1 == '-Infinity'
+                          : Math.max(...data?.map((item) => item.invoice_number)) + 1 === -Infinity
                           ? '1'
-                          : Math.max(...data?.map((item) => item.quote_number)) + 1
+                          : Math.max(...data?.map((item) => item.invoice_number)) + 1
                       }
                       type={'number'}
                       value={invoiceNumberInput}
