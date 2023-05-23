@@ -447,7 +447,9 @@ const NewInvoiceForm = (props) => {
                       placeholder={
                         !data
                           ? 'Loading...'
-                          : Math.max(...data?.map((item) => item.invoice_number)) + 1
+                          : Math.max(...data?.map((item) => item.invoice_number)) + 1 == '-Infinity'
+                          ? '1'
+                          : Math.max(...data?.map((item) => item.quote_number)) + 1
                       }
                       type={'number'}
                       value={invoiceNumberInput}

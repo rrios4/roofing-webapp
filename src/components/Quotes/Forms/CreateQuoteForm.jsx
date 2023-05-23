@@ -357,6 +357,8 @@ const CreateQuoteForm = (props) => {
                     placeholder={
                       !data
                         ? 'Quote Number'
+                        : Math.max(...data?.map((item) => item.quote_number)) + 1 == '-Infinity'
+                        ? '1'
                         : Math.max(...data?.map((item) => item.quote_number)) + 1
                     }
                     value={quoteNumberInput}
