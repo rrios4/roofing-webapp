@@ -57,7 +57,14 @@ function Login() {
 
   return (
     <Flex>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6} mt="6rem">
+      <Stack
+        spacing={8}
+        mx={'auto'}
+        maxW={'lg'}
+        px={6}
+        pb={'16rem'}
+        minH={'100vh'}
+        justify={'center'}>
         <Stack align={'center'}>
           <Image
             w={{ base: '80px', lg: '100px' }}
@@ -68,7 +75,7 @@ function Login() {
           <Heading pt="1" fontSize={{ base: '3xl', lg: '4xl' }}>
             Sign in to your account
           </Heading>
-          <Text fontSize={{ base: 'md', lg: 'lg' }} color={'gray.600'} textAlign={'center'}>
+          <Text fontSize={{ base: 'md', lg: 'md' }} color={'gray.600'} textAlign={'center'}>
             Welcome to "The Roofing App" to empower your business 🚀
           </Text>
         </Stack>
