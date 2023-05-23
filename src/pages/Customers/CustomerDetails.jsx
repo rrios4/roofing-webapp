@@ -302,7 +302,7 @@ const CustomerById = () => {
                                     <Td>{formatDate(item.expiration_date)}</Td>
                                     <Td>{formatMoneyValue(item.total)}</Td>
                                     <Td>
-                                      <Link to={`/editestimate/${item.quote_number}`}>
+                                      <Link to={`/quotes/${item.quote_number}`}>
                                         <IconButton icon={<FiArrowRight />} />
                                       </Link>
                                     </Td>

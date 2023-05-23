@@ -77,11 +77,19 @@ const QuoteDetailsMain = (props) => {
                         <Text ml={'3rem'} fontWeight={'semibold'}>
                           {quoteById?.customer?.first_name} {quoteById?.customer?.last_name}
                         </Text>
-                        <Text ml={'3rem'}>{quoteById?.custom_street_address}</Text>
-                        <Text ml={'3rem'}>
-                          {quoteById?.custom_city}, {quoteById?.custom_state}{' '}
-                          {quoteById?.custom_zipcode}
-                        </Text>
+                        <Box
+                          _hover={{ cursor: 'pointer', color: 'blue.500' }}
+                          onClick={() =>
+                            window.open(
+                              `https://www.google.com/maps/search/?api=1&query=${quoteById?.custom_street_address}+${quoteById?.custom_city}+${quoteById?.custom_state}+${quoteById?.custom_zipcode}`
+                            )
+                          }>
+                          <Text ml={'3rem'}>{quoteById?.custom_street_address}</Text>
+                          <Text ml={'3rem'}>
+                            {quoteById?.custom_city}, {quoteById?.custom_state}{' '}
+                            {quoteById?.custom_zipcode}
+                          </Text>
+                        </Box>
                         <Text ml={'3rem'} color={'blue.400'}>
                           {quoteById?.customer?.email}
                         </Text>
@@ -93,11 +101,19 @@ const QuoteDetailsMain = (props) => {
                         <Text ml={'3rem'} fontWeight={'semibold'}>
                           {quoteById?.customer?.first_name} {quoteById?.customer?.last_name}
                         </Text>
-                        <Text ml={'3rem'}>{quoteById?.customer?.street_address}</Text>
-                        <Text ml={'3rem'}>
-                          {quoteById?.customer?.city}, {quoteById?.customer?.state}{' '}
-                          {quoteById?.customer?.zipcode}
-                        </Text>
+                        <Box
+                          _hover={{ cursor: 'pointer', color: 'blue.500' }}
+                          onClick={() =>
+                            window.open(
+                              `https://www.google.com/maps/search/?api=1&query=${quoteById?.customer.street_address}+${quoteById?.customer.city}+${quoteById?.customer.state}+${quoteById?.customer.zipcode}`
+                            )
+                          }>
+                          <Text ml={'3rem'}>{quoteById?.customer?.street_address}</Text>
+                          <Text ml={'3rem'}>
+                            {quoteById?.customer?.city}, {quoteById?.customer?.state}{' '}
+                            {quoteById?.customer?.zipcode}
+                          </Text>
+                        </Box>
                         <Text ml={'3rem'} color={'blue.400'}>
                           {quoteById?.customer?.email}
                         </Text>

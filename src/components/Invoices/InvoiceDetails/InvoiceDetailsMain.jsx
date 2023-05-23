@@ -87,14 +87,22 @@ const InvoiceDetailsMain = (props) => {
                           <Text ml={'3rem'} fontWeight={'semibold'}>
                             {invoice?.customer.first_name} {invoice?.customer.last_name}
                           </Text>
-                          <Text ml={'3rem'}>{invoice?.bill_to_street_address}</Text>
-                          <Text ml={'3rem'}>
-                            {invoice?.bill_to_city}, {invoice?.bill_to_state}{' '}
-                            {invoice?.bill_to_zipcode}
-                          </Text>
-                          <Text ml={'3rem'} color={'blue.400'}>
-                            {invoice?.customer.email}
-                          </Text>
+                          <Box
+                            _hover={{ cursor: 'pointer', color: 'blue.500' }}
+                            onClick={() =>
+                              window.open(
+                                `https://www.google.com/maps/search/?api=1&query=${invoice.bill_to_street_address}+${invoice?.bill_to_city}+${invoice?.bill_to_state}+${invoice?.bill_to_zipcode}`
+                              )
+                            }>
+                            <Text ml={'3rem'}>{invoice?.bill_to_street_address}</Text>
+                            <Text ml={'3rem'}>
+                              {invoice?.bill_to_city}, {invoice?.bill_to_state}{' '}
+                              {invoice?.bill_to_zipcode}
+                            </Text>
+                            <Text ml={'3rem'} color={'blue.400'}>
+                              {invoice?.customer.email}
+                            </Text>
+                          </Box>
                         </Box>
                       </>
                     ) : (
@@ -103,14 +111,24 @@ const InvoiceDetailsMain = (props) => {
                           <Text ml={'3rem'} fontWeight={'semibold'}>
                             {invoice?.customer.first_name} {invoice?.customer.last_name}
                           </Text>
-                          <Text ml={'3rem'}>{invoice?.customer.street_address}</Text>
-                          <Text ml={'3rem'}>
-                            {invoice?.customer.city}, {invoice?.customer.state}{' '}
-                            {invoice?.customer.zipcode}
-                          </Text>
-                          <Text ml={'3rem'} color={'blue.400'}>
-                            {invoice?.customer.email}
-                          </Text>
+                          <Box
+                            _hover={{ cursor: 'pointer', color: 'blue.500' }}
+                            onClick={() =>
+                              window.open(
+                                `https://www.google.com/maps/search/?api=1&query=${invoice.customer.street_address}+${invoice?.customer.city}+${invoice?.customer.state}+${invoice?.customer.zipcode}`
+                              )
+                            }>
+                            <Box>
+                              <Text ml={'3rem'}>{invoice?.customer.street_address}</Text>
+                              <Text ml={'3rem'}>
+                                {invoice?.customer.city}, {invoice?.customer.state}{' '}
+                                {invoice?.customer.zipcode}
+                              </Text>
+                            </Box>
+                            <Text ml={'3rem'} color={'blue.400'}>
+                              {invoice?.customer.email}
+                            </Text>
+                          </Box>
                         </Box>
                       </>
                     )}

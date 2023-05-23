@@ -74,7 +74,7 @@ const CustomerInvoicesTable = (props) => {
                       <Text>${formatMoneyValue(item.total)}</Text>
                     </Td>
                     <Td>
-                      <Link to={`/editinvoice/${item.invoice_number}`}>
+                      <Link to={`/invoices/${item.invoice_number}`}>
                         <IconButton icon={<FiArrowRight />} />
                       </Link>
                     </Td>
