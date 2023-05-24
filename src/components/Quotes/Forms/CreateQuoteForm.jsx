@@ -260,7 +260,7 @@ const CreateQuoteForm = (props) => {
   };
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} placement="right" size={'lg'}>
+    <Drawer isOpen={isOpen} onClose={onClose} placement="right" size={{ base: 'full', md: 'lg' }}>
       <DrawerOverlay />
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>

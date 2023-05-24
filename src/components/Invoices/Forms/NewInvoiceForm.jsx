@@ -357,7 +357,11 @@ const NewInvoiceForm = (props) => {
   // const total = lineItemList.reduce((total, currentItem) => total = parseInt(total) + parseInt(currentItem.amount), 0);
 
   return (
-    <Drawer placement="right" onClose={onNewClose} isOpen={isNewOpen} size={'lg'}>
+    <Drawer
+      placement="right"
+      onClose={onNewClose}
+      isOpen={isNewOpen}
+      size={{ base: 'full', md: 'lg' }}>
       <DrawerOverlay />
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>

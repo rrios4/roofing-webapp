@@ -30,7 +30,7 @@ const QuoteRequestTable = (props) => {
           <TableCaption>Total of {data?.length} requests in our system ✌️</TableCaption>
           <Thead>
             <Tr>
-              <Th>QR #</Th>
+              <Th>Lead #</Th>
               <Th textAlign={'center'}>Status</Th>
               <Th>Requestor</Th>
               <Th>Desired Date</Th>

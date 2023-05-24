@@ -37,12 +37,12 @@ const EditEstimateRequestForm = (props) => {
   // const initialRef = React.useRef();
 
   return (
-    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={'lg'}>
+    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
       <DrawerOverlay />
       <form onSubmit={handleSubmit} method="PATCH">
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader shadow={'xs'}>Edit Quote Request-{objectData.id}</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>Edit Lead #{objectData.id}</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
             Edit
@@ -183,7 +183,7 @@ const EditEstimateRequestForm = (props) => {
           </DrawerBody>
           <DrawerFooter>
             <Button colorScheme={'blue'} type="submit">
-              Update QR
+              Update Lead
             </Button>
             <Button mx={'1rem'} onClick={handleEditCancel}>
               Cancel

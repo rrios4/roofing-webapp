@@ -250,12 +250,7 @@ function Invoices() {
       />
 
       {/* Main Invoice Page Code */}
-      <VStack my={'2rem'} w={'full'} mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
-        {/* <Alert status='success' mb={'1rem'} flexDir={'column'} alignItems={'center'} justifyContent={'center'} textAlign={'center'} height={'200px'} rounded={'8'}>
-                <AlertIcon boxSize='40px' mr={0} />
-                <AlertTitle mt={4} mb={1} fontSize='lg'>Invoice Submitted!</AlertTitle>
-                <AlertDescription maxWidth='sm'>New invoice saved to the server. Fire on! 👋</AlertDescription>
-            </Alert> */}
+      <VStack my={'2rem'} w={'full'} mx={'auto'} px={{ base: '4', lg: '4' }}>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
           <Link to={'/'}>
             <Button
@@ -267,68 +262,110 @@ function Invoices() {
             </Button>
           </Link>
         </Box> */}
-        <Card width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
-          <CardBody>
-            {/* Header Page info & Actions */}
-            <HStack mb={'24px'} mx={'1rem'}>
-              <Flex display={'flex'} mr={'auto'} alignItems={'center'} gap={8}>
-                <Flex>
-                  <Icon as={FiFileText} boxSize={'6'} my={'auto'} />
-                  <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
-                    Invoices
-                  </Text>
-                </Flex>
-                <Flex>
-                  {/* Search Input for Invoices */}
-                  <form method="GET" onSubmit={searchInvoice}>
-                    <FormControl display={'flex'}>
-                      <Input
-                        value={searchInvoiceInput}
-                        onChange={({ target }) => setSearchInvoiceInput(target.value)}
-                        placeholder="Search for Invoice"
-                        colorScheme="blue"
-                        size={'md'}
-                      />
-                      <Tooltip label="Search">
-                        <IconButton mx={'1rem'} type="submit" icon={<MdSearch />} />
-                      </Tooltip>
-                    </FormControl>
-                  </form>
-                </Flex>
-              </Flex>
-              <Flex mr={'1rem'} justifyContent={'end'} gap={10}>
-                <Flex gap={4}>
-                  {/* Popover component to filter invoices by status */}
-                  <InvoiceFilterSwitchPopover
-                    handleSwitches={handleSwitchesStatusFilter}
-                    switchOne={filterSwitchStatus1IsOn}
-                    switchTwo={filterSwitchStatus2IsOn}
-                    switchThree={filterSwitchStatus3IsOn}
-                    switchFour={filterSwitchStatus4IsOn}
+        <Box
+          display={'flex'}
+          flexDirection={{ base: 'column', lg: 'row' }}
+          marginBottom={'1rem'}
+          justifyContent={{ base: 'center', lg: 'flex-start' }}
+          w="full"
+          gap={'4'}
+          px={'2rem'}>
+          <Flex
+            mr={'auto'}
+            w={'full'}
+            justifyContent={{ base: 'center', lg: 'flex-start' }}
+            gap={'4'}>
+            <Icon as={FiFileText} boxSize={6} my={'auto'} />
+            <Text fontSize={'2xl'} fontWeight="semibold">
+              Invoices
+            </Text>
+          </Flex>
+          <Flex gap={5} justify={'space-between'}>
+            <Flex>
+              {/* <form method="GET" onSubmit={searchEstimate}>
+                <FormControl display={'flex'}>
+                  <Input
+                    variant={'outline'}
+                    borderColor={'gray.300'}
+                    value={searchQuoteInput}
+                    onChange={({ target }) => setSearchQuoteInput(target.value)}
+                    placeholder="Search for quotes..."
+                    colorScheme="blue"
+                    size={'md'}
                   />
-                  {/* Sort Button */}
-                  <Tooltip label="Sort">
-                    <IconButton icon={<MdFilterList />} />
+                  <Tooltip label="Search">
+                    <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
                   </Tooltip>
-                  {/* Draft View Button */}
-                  <Tooltip
-                    label={
-                      draftInvoiceButtonSwitchIsOn === true
-                        ? 'Close View of Drafts'
-                        : 'Click to view all Draft Invoices'
-                    }>
-                    <IconButton
-                      icon={draftInvoiceButtonSwitchIsOn === true ? <FiX /> : <FiFolder />}
-                      onClick={handleDraftInvoiceView}
-                    />
+                </FormControl>
+              </form> */}
+              {/* Search Input for Invoices */}
+              {/* <form method="GET" onSubmit={searchInvoice}>
+                <FormControl display={'flex'}>
+                  <Input
+                    value={searchInvoiceInput}
+                    onChange={({ target }) => setSearchInvoiceInput(target.value)}
+                    placeholder="Search for Invoice"
+                    colorScheme="blue"
+                    size={'md'}
+                  />
+                  <Tooltip label="Search">
+                    <IconButton mx={'1rem'} type="submit" icon={<MdSearch />} />
                   </Tooltip>
-                  {/* Create New Invoice Button */}
-                  <Tooltip label="Create New Invoice">
-                    <IconButton icon={<MdPostAdd />} onClick={onNewOpen} colorScheme={'blue'} />
-                  </Tooltip>
-                </Flex>
+                </FormControl>
+              </form> */}
+            </Flex>
+            <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
+              {/* <Tooltip label={'Create New Customer'}>
+                <IconButton
+                  colorScheme="blue"
+                  variant="solid"
+                  onClick={onOpen}
+                  icon={<IoMdPersonAdd />}
+                />
+              </Tooltip> */}
+              <Flex gap={4}>
+                {/* <Tooltip label="Filter">
+                  <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
+                </Tooltip>
+                <Tooltip label="Sort">
+                  <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
+                </Tooltip> */}
+                {/* Popover component to filter invoices by status */}
+                {/* <InvoiceFilterSwitchPopover
+                  handleSwitches={handleSwitchesStatusFilter}
+                  switchOne={filterSwitchStatus1IsOn}
+                  switchTwo={filterSwitchStatus2IsOn}
+                  switchThree={filterSwitchStatus3IsOn}
+                  switchFour={filterSwitchStatus4IsOn}
+                /> */}
+                {/* Sort Button */}
+                {/* <Tooltip label="Sort">
+                  <IconButton variant={'outline'} icon={<MdFilterList />} />
+                </Tooltip> */}
+                {/* Draft View Button */}
+                {/* <Tooltip
+                  variant={'outline'}
+                  label={
+                    draftInvoiceButtonSwitchIsOn === true
+                      ? 'Close View of Drafts'
+                      : 'Click to view all Draft Invoices'
+                  }>
+                  <IconButton
+                    variant={'outline'}
+                    icon={draftInvoiceButtonSwitchIsOn === true ? <FiX /> : <FiFolder />}
+                    onClick={handleDraftInvoiceView}
+                  />
+                </Tooltip> */}
+                {/* Create New Invoice Button */}
+                <Tooltip label="Create New Invoice">
+                  <IconButton icon={<MdPostAdd />} onClick={onNewOpen} colorScheme={'blue'} />
+                </Tooltip>
               </Flex>
-            </HStack>
+            </Box>
+          </Flex>
+        </Box>
+        <Card width="full" rounded={'xl'} shadow={'sm'} size={{ base: 'md', md: 'lg' }}>
+          <CardBody>
             {/* Table Component for Invoices Data */}
             {isInvoicesLoading === true ? (
               <Box w={'full'} h={'200px'}>

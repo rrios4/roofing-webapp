@@ -22,7 +22,7 @@ const EditCustomerForm = (props) => {
   const { isOpen, onClose, customer, handleEditOnChange, handleEditSubmit, customerTypes } = props;
 
   return (
-    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={'lg'}>
+    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
       <DrawerOverlay />
       <form method="PATCH" onSubmit={handleEditSubmit}>
         <DrawerContent>

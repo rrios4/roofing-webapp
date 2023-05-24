@@ -21,7 +21,7 @@ const InvoiceFilterSwitchPopover = (props) => {
       {/* Filter Popover */}
       <Popover>
         <PopoverTrigger>
-          <IconButton icon={<FiFilter />} colorScheme={'gray'} />
+          <IconButton variant={'outline'} icon={<FiFilter />} colorScheme={'gray'} />
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />

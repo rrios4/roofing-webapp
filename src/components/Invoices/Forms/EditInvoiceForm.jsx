@@ -37,7 +37,7 @@ const EditInvoiceForm = (props) => {
   const bg = useColorModeValue('white', 'gray.800');
 
   return (
-    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={'lg'}>
+    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
       <form method="PATCH" onSubmit={handleEditSubmit}>
         <DrawerOverlay />
         <DrawerContent>

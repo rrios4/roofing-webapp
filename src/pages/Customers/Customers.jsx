@@ -62,7 +62,7 @@ export default function Customers() {
         toast={toast}
         customerTypes={customerTypes}
       />
-      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '2', lg: '2rem' }}>
+      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '4', lg: '4' }}>
         <Box
           display={'flex'}
           flexDirection={{ base: 'column', lg: 'row' }}

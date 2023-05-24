@@ -9,8 +9,11 @@ import {
   ModalBody,
   ModalFooter,
   Text,
-  Button
+  Button,
+  Flex,
+  Box
 } from '@chakra-ui/react';
+import { Trash2 } from 'lucide-react';
 
 const DeleteAlertDialog = (props) => {
   const { body, isOpen, onClose, header, entityDescription, loadingState, onSubmit } = props;
@@ -23,22 +26,27 @@ const DeleteAlertDialog = (props) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size={{ base: 'full', md: 'lg' }}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader textAlign={'center'}>
-          {header}
+        <ModalHeader>
+          <Flex gap={'2'}>
+            <Box my={'auto'}>
+              <Trash2 size={'20px'} />
+            </Box>
+            <Text>{header}</Text>
+          </Flex>
           {/* Delete {tableName} */}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text fontWeight={'bold'} mb={'1rem'}>
+          <Box fontWeight={'bold'} mb={'1rem'} textColor={useColorModeValue('red.500', 'red.400')}>
             Are you sure you want to delete:{' '}
-            <Text as="span" textColor={useColorModeValue('blue.400', 'blue.500')}>
+            <Text as="span" textColor={useColorModeValue('gray.700', 'gray.300')}>
               {entityDescription}{' '}
             </Text>
             ?{' '}
-          </Text>
+          </Box>
           {/* <Text>Once you confirm there will be no way to restore the information. 😢</Text> */}
           <Text>{body}</Text>
         </ModalBody>

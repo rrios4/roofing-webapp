@@ -91,44 +91,51 @@ const CustomerDetailsCard = (props) => {
               <Divider w={'full'} mb={'2rem'} />
               {/* Customer Body Info */}
               <Box px={'1rem'} mx={'auto'}>
-                <Flex gap={4} mb={'2'}>
-                  <Box my={'auto'}>
-                    <FiMail />
-                  </Box>
-                  <Text
-                    w={'100px'}
-                    fontWeight={'semibold'}
-                    textColor={useColorModeValue('gray.500', 'gray.400')}
-                    fontSize={'md'}>
-                    Email
-                  </Text>
-                  <Text>{customer?.email}</Text>
+                <Flex gap={4} mb={'2'} flexDir={{ base: 'column', md: 'row' }}>
+                  <Flex gap={'4'} justify={'center'}>
+                    <Box my={'auto'}>
+                      <FiMail />
+                    </Box>
+                    <Text
+                      w={'100px'}
+                      fontWeight={'semibold'}
+                      textColor={useColorModeValue('gray.500', 'gray.400')}
+                      fontSize={'md'}>
+                      Email
+                    </Text>
+                  </Flex>
+                  <Text textAlign={{ base: 'center', md: '' }}>{customer?.email}</Text>
                 </Flex>
-                <Flex gap={4} mb={'2'}>
-                  <Box my={'auto'}>
-                    <FiPhone />
-                  </Box>
-                  <Text
-                    w={'100px'}
-                    fontWeight={'semibold'}
-                    textColor={useColorModeValue('gray.500', 'gray.400')}
-                    fontSize={'md'}>
-                    Phone
-                  </Text>
-                  <Text>{customer?.phone_number}</Text>
+                <Flex gap={4} mb={'2'} flexDir={{ base: 'column', md: 'row' }}>
+                  <Flex gap={4} justify={'center'}>
+                    <Box my={'auto'}>
+                      <FiPhone />
+                    </Box>
+                    <Text
+                      w={'100px'}
+                      fontWeight={'semibold'}
+                      textColor={useColorModeValue('gray.500', 'gray.400')}
+                      fontSize={'md'}>
+                      Phone
+                    </Text>
+                  </Flex>
+                  <Text textAlign={{ base: 'center', md: '' }}>{customer?.phone_number}</Text>
                 </Flex>
-                <Flex gap={4} mb={'2'}>
-                  <Box my={'auto'}>
-                    <FiMapPin />
-                  </Box>
+                <Flex gap={4} mb={'2'} flexDir={{ base: 'column', md: 'row' }}>
+                  <Flex gap={4} justify={'center'}>
+                    <Box my={'auto'}>
+                      <FiMapPin />
+                    </Box>
+                    <Text
+                      w={'100px'}
+                      fontWeight={'semibold'}
+                      textColor={useColorModeValue('gray.500', 'gray.400')}
+                      fontSize={'md'}>
+                      Address
+                    </Text>
+                  </Flex>
                   <Text
-                    w={'100px'}
-                    fontWeight={'semibold'}
-                    textColor={useColorModeValue('gray.500', 'gray.400')}
-                    fontSize={'md'}>
-                    Address
-                  </Text>
-                  <Text
+                    textAlign={{ base: 'center', md: '' }}
                     _hover={{ textColor: 'blue.500', cursor: 'pointer' }}
                     onClick={() =>
                       window.open(
@@ -139,18 +146,20 @@ const CustomerDetailsCard = (props) => {
                     {customer?.zipcode}
                   </Text>
                 </Flex>
-                <Flex gap={4} mb={'2'}>
-                  <Box my={'auto'}>
-                    <FiCalendar />
-                  </Box>
-                  <Text
-                    w={'100px'}
-                    fontWeight={'semibold'}
-                    textColor={useColorModeValue('gray.500', 'gray.400')}
-                    fontSize={'md'}>
-                    Registered
-                  </Text>
-                  <Text>{customerDate}</Text>
+                <Flex gap={4} mb={'2'} flexDir={{ base: 'column', md: 'row' }}>
+                  <Flex gap={'4'} justify={'center'}>
+                    <Box my={'auto'}>
+                      <FiCalendar />
+                    </Box>
+                    <Text
+                      w={'100px'}
+                      fontWeight={'semibold'}
+                      textColor={useColorModeValue('gray.500', 'gray.400')}
+                      fontSize={'md'}>
+                      Registered
+                    </Text>
+                  </Flex>
+                  <Text textAlign={{ base: 'center', md: '' }}>{customerDate}</Text>
                 </Flex>
               </Box>
             </Flex>

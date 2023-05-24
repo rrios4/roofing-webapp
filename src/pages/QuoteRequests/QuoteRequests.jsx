@@ -266,64 +266,82 @@ const QuoteRequests = () => {
         onOpen={onDeleteOpen}
         toast={toast}
         itemNumber={selectedEstimateRequestId}
-        header={'Delete Quote Request'}
-        entityDescription={`QR # ${selectedEstimateRequestId}`}
+        header={'Delete Lead'}
+        entityDescription={`Lead # ${selectedEstimateRequestId}`}
         body={`Once you confirm there will be no way to restore the information. 🚨`}
       />
 
-      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
+      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '4', lg: '4' }}>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
                     </Link>
                 </Box> */}
-        <Card width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
+        <Box
+          display={'flex'}
+          flexDirection={{ base: 'column', lg: 'row' }}
+          marginBottom={'1rem'}
+          justifyContent={{ base: 'center', lg: 'flex-start' }}
+          w="full"
+          gap={'4'}
+          px={'2rem'}>
+          <Flex
+            mr={'auto'}
+            w={'full'}
+            justifyContent={{ base: 'center', lg: 'flex-start' }}
+            gap={'4'}>
+            <Icon as={FiInbox} boxSize={6} my={'auto'} />
+            <Text fontSize={'2xl'} fontWeight="semibold">
+              Leads
+            </Text>
+          </Flex>
+          <Flex gap={5} justify={'space-between'}>
+            <Flex>
+              {/* <form method="GET">
+                <FormControl display={'flex'}>
+                  <Input
+                    value={searchEstimateRequestsInput}
+                    onChange={({ target }) => setSearchEstimateRequestsInput(target.value)}
+                    placeholder="Search for Leads"
+                    colorScheme="blue"
+                    border="2px"
+                  />
+                  <Tooltip label="Search">
+                    <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
+                  </Tooltip>
+                </FormControl>
+              </form> */}
+            </Flex>
+            <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
+              {/* <Tooltip label={'Create New Customer'}>
+                <IconButton
+                  colorScheme="blue"
+                  variant="solid"
+                  onClick={onOpen}
+                  icon={<IoMdPersonAdd />}
+                />
+              </Tooltip> */}
+              <Flex gap={4}>
+                {/* <Tooltip label="Filter">
+                  <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
+                </Tooltip>
+                <Tooltip label="Sort">
+                  <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
+                </Tooltip> */}
+                <Tooltip label="Create New Lead">
+                  <IconButton
+                    colorScheme="blue"
+                    variant="solid"
+                    onClick={onNewOpen}
+                    icon={<MdPostAdd />}
+                  />
+                </Tooltip>
+              </Flex>
+            </Box>
+          </Flex>
+        </Box>
+        <Card width="full" rounded={'xl'} shadow={'sm'} size={{ base: 'md', md: 'lg' }}>
           <CardBody>
-            {/* Card Header with Search, Button, and etc... */}
-            <HStack mb={'24px'} mx={'1rem'}>
-              <Flex display={'flex'} mr={'auto'} alignItems={'center'} gap={8}>
-                <Flex>
-                  <Icon as={FiInbox} boxSize={'6'} my={'auto'} />
-                  <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
-                    Quote Requests
-                  </Text>
-                </Flex>
-                <Flex>
-                  <form method="GET">
-                    <FormControl display={'flex'}>
-                      <Input
-                        value={searchEstimateRequestsInput}
-                        onChange={({ target }) => setSearchEstimateRequestsInput(target.value)}
-                        placeholder="Search for Request"
-                        colorScheme="blue"
-                        border="2px"
-                      />
-                      <Tooltip label="Search">
-                        <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
-                      </Tooltip>
-                    </FormControl>
-                  </form>
-                </Flex>
-              </Flex>
-              <Flex justifyContent={'end'} gap={10}>
-                <Flex gap={4}>
-                  <Tooltip label="Filter">
-                    <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
-                  </Tooltip>
-                  <Tooltip label="Sort">
-                    <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
-                  </Tooltip>
-                  <Tooltip label="Create New Request">
-                    <IconButton
-                      colorScheme="blue"
-                      variant="solid"
-                      onClick={onNewOpen}
-                      icon={<MdPostAdd />}
-                    />
-                  </Tooltip>
-                </Flex>
-              </Flex>
-            </HStack>
             {/* Main Body for content */}
             {/* Quote Request Table to display all requests from company website */}
             {isQRLoading === true ? (

@@ -154,7 +154,72 @@ function Estimates() {
         handleEditSubmit={handleEditSubmit}
         loadingState={quoteUpdateIsLoading}
       />
-      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
+      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '4', lg: '4' }}>
+        <Box
+          display={'flex'}
+          flexDirection={{ base: 'column', lg: 'row' }}
+          marginBottom={'1rem'}
+          justifyContent={{ base: 'center', lg: 'flex-start' }}
+          w="full"
+          gap={'4'}
+          px={'2rem'}>
+          <Flex
+            mr={'auto'}
+            w={'full'}
+            justifyContent={{ base: 'center', lg: 'flex-start' }}
+            gap={'4'}>
+            <Icon as={TbRuler} boxSize={6} my={'auto'} />
+            <Text fontSize={'2xl'} fontWeight="semibold">
+              Quotes
+            </Text>
+          </Flex>
+          <Flex gap={5} justify={'space-between'}>
+            <Flex>
+              {/* <form method="GET" onSubmit={searchEstimate}>
+                <FormControl display={'flex'}>
+                  <Input
+                    variant={'outline'}
+                    borderColor={'gray.300'}
+                    value={searchQuoteInput}
+                    onChange={({ target }) => setSearchQuoteInput(target.value)}
+                    placeholder="Search for quotes..."
+                    colorScheme="blue"
+                    size={'md'}
+                  />
+                  <Tooltip label="Search">
+                    <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
+                  </Tooltip>
+                </FormControl>
+              </form> */}
+            </Flex>
+            <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
+              {/* <Tooltip label={'Create New Customer'}>
+                <IconButton
+                  colorScheme="blue"
+                  variant="solid"
+                  onClick={onOpen}
+                  icon={<IoMdPersonAdd />}
+                />
+              </Tooltip> */}
+              <Flex gap={4}>
+                {/* <Tooltip label="Filter">
+                  <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
+                </Tooltip>
+                <Tooltip label="Sort">
+                  <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
+                </Tooltip> */}
+                <Tooltip label="Create a new quote">
+                  <IconButton
+                    colorScheme="blue"
+                    variant="solid"
+                    onClick={onNewOpen}
+                    icon={<MdPostAdd />}
+                  />
+                </Tooltip>
+              </Flex>
+            </Box>
+          </Flex>
+        </Box>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
           <Link to={'/'}>
             <Button
@@ -166,54 +231,8 @@ function Estimates() {
             </Button>
           </Link>
         </Box> */}
-        <Card width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
+        <Card width="full" rounded={'xl'} shadow={'sm'} size={{ base: 'md', md: 'lg' }}>
           <CardBody>
-            <HStack mb={'24px'} mx={'1rem'}>
-              <Flex display={'flex'} mr={'auto'} alignItems={'center'} gap={8}>
-                <Flex>
-                  <Icon as={TbRuler} boxSize={'6'} my={'auto'} />
-                  <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
-                    Quotes
-                  </Text>
-                </Flex>
-                <Flex>
-                  <form method="GET" onSubmit={searchEstimate}>
-                    <FormControl display={'flex'}>
-                      <Input
-                        variant={'outline'}
-                        borderColor={'gray.300'}
-                        value={searchQuoteInput}
-                        onChange={({ target }) => setSearchQuoteInput(target.value)}
-                        placeholder="Search for quotes..."
-                        colorScheme="blue"
-                        size={'md'}
-                      />
-                      <Tooltip label="Search">
-                        <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
-                      </Tooltip>
-                    </FormControl>
-                  </form>
-                </Flex>
-              </Flex>
-              <Flex justifyContent={'end'} gap={10}>
-                <Flex gap={4}>
-                  <Tooltip label="Filter">
-                    <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
-                  </Tooltip>
-                  <Tooltip label="Sort">
-                    <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
-                  </Tooltip>
-                  <Tooltip label="Create a new quote">
-                    <IconButton
-                      colorScheme="blue"
-                      variant="solid"
-                      onClick={onNewOpen}
-                      icon={<MdPostAdd />}
-                    />
-                  </Tooltip>
-                </Flex>
-              </Flex>
-            </HStack>
             {/* Table for all all quotes from DB */}
             {quotesLoadingStateIsOn === true ? (
               <Box w={'full'} h={'200px'}>

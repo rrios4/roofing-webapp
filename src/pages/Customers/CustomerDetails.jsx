@@ -152,7 +152,7 @@ const CustomerById = () => {
   );
 
   return (
-    <Container maxWidth={'1400px'} h={'full'}>
+    <Container maxWidth={'1440px'} minH={'100vh'}>
       {/* Edit Form Modal */}
       <EditCustomerForm
         isOpen={isEditOpen}

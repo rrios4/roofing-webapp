@@ -114,12 +114,12 @@ const NewEstimateRequestForm = (props) => {
   };
 
   return (
-    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={'lg'}>
+    <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
       <DrawerOverlay />
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader shadow={'xs'}>New Quote Request</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>Create Lead</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
               Create
@@ -254,7 +254,7 @@ const NewEstimateRequestForm = (props) => {
           </DrawerBody>
           <DrawerFooter gap={4}>
             <Button type="submit" colorScheme={'blue'} isLoading={isLoading}>
-              Create QR
+              Create Lead
             </Button>
             <Button onClick={handleCancel} mr="1rem">
               Cancel

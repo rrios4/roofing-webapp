@@ -89,7 +89,7 @@ const NewCustomerForm = (props) => {
       placement="right"
       onClose={onClose}
       isOpen={isOpen}
-      size={'lg'}
+      size={{ base: 'full', md: 'lg' }}
       initialFocusRef={initialRef}>
       <DrawerOverlay />
       <form method="POST" onSubmit={handleSubmit}>
