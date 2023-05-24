@@ -15,11 +15,22 @@ import { RefreshCcw } from 'lucide-react';
 import React from 'react';
 
 const ActionModal = (props) => {
-  const { header, initialRef, finalRef, isOpen, onClose, onSubmit } = props;
+  const {
+    header,
+    initialRef,
+    finalRef,
+    isOpen,
+    onClose,
+    onSubmit,
+    alertQuestion,
+    actionBody,
+    headerIcon,
+    isLoading,
+    actionButtonMsg
+  } = props;
   const handleOnClick = (e) => {
     e.preventDefault();
     onSubmit();
-    onClose();
   };
 
   return (
@@ -28,32 +39,25 @@ const ActionModal = (props) => {
       finalFocusRef={finalRef}
       isOpen={isOpen}
       onClose={onClose}
-      size={{ base: 'full', md: 'lg' }}>
+      size={{ base: 'full', md: 'xl' }}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           <Flex gap={4}>
-            <Box my={'auto'}>
-              <RefreshCcw size={'20px'} />
-            </Box>
+            <Box my={'auto'}>{headerIcon}</Box>
             <Text fontWeight={'bold'}>{header}</Text>
           </Flex>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text mb={'4'} fontWeight={'medium'}>
-            Are you sure you want to continue? ⚠️
+          <Text mb={'2'} fontWeight={'bold'} textColor={'yellow.500'}>
+            {alertQuestion}
           </Text>
-          <Text fontWeight={'regular'}>
-            The process works by using the quote information and creating a new invoice from it.
-            Once the invoice is created the column in quote named <Text as="span">invoiced</Text>{' '}
-            will be filled with the quote total. This will signify that the quote has been converted
-            and can no longer be used again to create a new invoice.
-          </Text>
+          <Text fontWeight={'regular'}>{actionBody}</Text>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleOnClick}>
-            Convert to Invoice
+          <Button colorScheme="blue" mr={3} onClick={handleOnClick} isLoading={isLoading}>
+            {actionButtonMsg}
           </Button>
           <Button onClick={onClose}>Cancel</Button>
         </ModalFooter>

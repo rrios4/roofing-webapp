@@ -246,7 +246,9 @@ const QuoteById = () => {
         setLineItemDescriptionInput={setLineItemDescriptionInput}
         loadingQuoteStatusIsOn={isUpdateQuoteStatusByIdLoading}
       />
+      {/* Modal to alert user that they are about to convert quote into a invoice */}
       <ConnectedConvertQuoteToInvoice
+        data={quoteById}
         isOpen={isConvertToInvoiceOpen}
         intialRef={initialRef}
         finalRef={finalRef}
@@ -255,6 +257,8 @@ const QuoteById = () => {
         toast={toast}
         itemNumber={id}
         header={`Convert Quote to Invoice`}
+        alertQuestion={'Are you sure you want to continue? ⚠️'}
+        actionButtonMsg={'Convert to Invoice'}
       />
     </Container>
   );
