@@ -80,3 +80,4 @@ export { default as InvoiceDetailsAddPaymenyModal } from './Invoices/InvoiceDeta
 export { default as InvoiceDetailsAddLineItemModal } from './Invoices/InvoiceDetails/InvoiceDetailsAddLineItemModal';
 export { default as InvoiceDetailsPreviewPDFModal } from './Invoices/InvoiceDetails/InvoiceDetailsPreviewPDFModal';
 export { default as InvoiceDetailsPane } from './Invoices/InvoiceDetails/InvoiceDetailsPane';
+export { default as ConnectedConvertQuoteToInvoice } from './ui/Alerts/ConnectedAlerts/ConnectedConvertQuoteToInvoice';

@@ -7,7 +7,7 @@ import { AiOutlineBars } from 'react-icons/ai';
 import { RefreshCcw, MoreHorizontal, Share, FileOutput, ChevronLeft } from 'lucide-react';
 
 const QuoteDetailsHeader = (props) => {
-  const { quoteById, onExportPDFOpen, handleEditQuoteModal } = props;
+  const { quoteById, onExportPDFOpen, handleEditQuoteModal, openConvertAlert } = props;
   return (
     <>
       {/* Header */}
@@ -34,7 +34,11 @@ const QuoteDetailsHeader = (props) => {
             </MenuList>
           </Menu>
           <Tooltip hasArrow label="Convert Quote to Invoice">
-            <Button variant={'outline'} border={'1px'} borderColor={'gray.300'}>
+            <Button
+              variant={'outline'}
+              border={'1px'}
+              borderColor={'gray.300'}
+              onClick={() => openConvertAlert()}>
               <RefreshCcw size={'15px'} />
             </Button>
           </Tooltip>

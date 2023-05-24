@@ -11,6 +11,7 @@ import {
   Skeleton
 } from '@chakra-ui/react';
 import {
+  ConnectedConvertQuoteToInvoice,
   EditQuoteForm,
   QuoteDetailsAddLineItemModal,
   QuoteDetailsHeader,
@@ -34,6 +35,8 @@ import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses.jsx';
 const QuoteById = () => {
   const { id } = useParams();
   const toast = useToast();
+  const initialRef = React.useRef(null);
+  const finalRef = React.useRef(null);
 
   // Custom Hooks
   const { quoteById, isLoading: isQuoteByIdLoading } = useFetchQuoteById(id);
@@ -66,6 +69,11 @@ const QuoteById = () => {
     isOpen: isExportPDFOpen,
     onOpen: onExportPDFOpen,
     onClose: onExportPDFClose
+  } = useDisclosure();
+  const {
+    isOpen: isConvertToInvoiceOpen,
+    onOpen: onConvertToInvoiceOpen,
+    onClose: onConvertToInvoiceClose
   } = useDisclosure();
 
   // React useState to store Objects
@@ -183,6 +191,7 @@ const QuoteById = () => {
         quoteById={quoteById}
         onExportPDFOpen={onExportPDFOpen}
         handleEditQuoteModal={handleEditQuoteModal}
+        openConvertAlert={onConvertToInvoiceOpen}
       />
       <Flex px={'1rem'} gap={6} flexDir={{ base: 'column', lg: 'row' }}>
         {/* Left Section */}
@@ -236,6 +245,16 @@ const QuoteById = () => {
         setLineItemAmountInput={setLineItemAmountInput}
         setLineItemDescriptionInput={setLineItemDescriptionInput}
         loadingQuoteStatusIsOn={isUpdateQuoteStatusByIdLoading}
+      />
+      <ConnectedConvertQuoteToInvoice
+        isOpen={isConvertToInvoiceOpen}
+        intialRef={initialRef}
+        finalRef={finalRef}
+        onClose={onConvertToInvoiceClose}
+        onOpen={onConvertToInvoiceOpen}
+        toast={toast}
+        itemNumber={id}
+        header={`Convert Quote to Invoice`}
       />
     </Container>
   );
