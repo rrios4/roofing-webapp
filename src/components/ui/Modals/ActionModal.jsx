@@ -53,7 +53,7 @@ const ActionModal = (props) => {
           <Text mb={'2'} fontWeight={'bold'} textColor={'yellow.500'}>
             {alertQuestion}
           </Text>
-          <Text fontWeight={'regular'}>{actionBody}</Text>
+          <Box>{actionBody}</Box>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={handleOnClick} isLoading={isLoading}>
