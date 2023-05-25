@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NewCustomerForm, CustomerTable, PageHeader } from '../../components';
+import { NewCustomerForm, CustomerTable, PageHeader, CustomerFilterBar } from '../../components';
 import {
   Flex,
   Box,
@@ -62,15 +62,16 @@ export default function Customers() {
         toast={toast}
         customerTypes={customerTypes}
       />
-      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }}>
+      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
         <PageHeader
           title={'Customers'}
           subheading={'Manage customers and view information focused on them.'}
           addItemButtonText="Add customer"
           onOpen={onOpen}
         />
+        <CustomerFilterBar />
         {/* Card Element for display main data for page */}
-        <Card width="full" variant={'outline'} rounded={'lg'} size={{ base: 'md', lg: 'md' }}>
+        <Card width="full" rounded={'lg'} size={{ base: 'md', lg: 'md' }}>
           <CardBody>
             {/* Customer Table Component */}
             {/* Renders a table with all customers stored from database */}

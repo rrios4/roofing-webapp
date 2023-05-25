@@ -14,7 +14,11 @@ import {
   Icon,
   Card,
   CardBody,
-  Skeleton
+  Skeleton,
+  InputGroup,
+  InputLeftElement,
+  Select,
+  useColorModeValue
 } from '@chakra-ui/react';
 import { MdPostAdd, MdSearch, MdFilterList, MdFilterAlt } from 'react-icons/md';
 import {
@@ -30,6 +34,7 @@ import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses';
 // import { useQueryClient } from '@tanstack/react-query';
 import useDebounce from '../../hooks/useDebounce';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { Circle, Search } from 'lucide-react';
 
 function Estimates() {
   // const queryClient = useQueryClient();
@@ -42,7 +47,7 @@ function Estimates() {
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
 
   // Custom React Hooks
-  const { quotes, isLoading: quotesLoadingStateIsOn } = useFetchQuotes();
+  const { quotes, isLoading: quotesLoadingStateIsOn, isError } = useFetchQuotes();
   const {
     data: services,
     isLoading: isRoofingServicesLoading,
@@ -155,14 +160,73 @@ function Estimates() {
         handleEditSubmit={handleEditSubmit}
         loadingState={quoteUpdateIsLoading}
       />
-      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }}>
+      <VStack my={'4'} w="full" mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
         <PageHeader
           title={'Quotes'}
           subheading={'Manage your quotes to send out to your customers.'}
           addItemButtonText={'Add quote'}
           onOpen={onNewOpen}
         />
-        <Card width="full" rounded={'lg'} shadow={'sm'} size={{ base: 'md', md: 'md' }}>
+        <Box w={'full'}>
+          <Flex
+            w={'full'}
+            gap={4}
+            bg={useColorModeValue('gray.50', 'gray.800')}
+            border={'1px'}
+            borderColor={useColorModeValue('gray.200', 'gray.700')}
+            px={'1rem'}
+            py={'6'}
+            rounded={'lg'}
+            flexDir={{ base: 'column', md: 'row' }}>
+            <Box w={{ base: 'full', md: '40%' }}>
+              <Text fontSize={'14px'} fontWeight={500} mb={'2'}>
+                Search for Quote
+              </Text>
+              <InputGroup>
+                <InputLeftElement>
+                  <Search size={'20px'} color="gray" />
+                </InputLeftElement>
+                <Input
+                  type={'search'}
+                  placeholder="Search"
+                  bg={useColorModeValue('white', 'gray.800')}
+                />
+              </InputGroup>
+            </Box>
+            <Box w={{ base: 'full', md: '20%' }}>
+              <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
+                Status
+              </Text>
+              <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
+                <option>Accepted</option>
+              </Select>
+            </Box>
+            <Box w={{ base: 'full', md: '20%' }}>
+              <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
+                Service Type
+              </Text>
+              <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
+                <option>All</option>
+              </Select>
+            </Box>
+            <Box w={{ base: 'full', md: '20%' }}>
+              <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
+                Customer
+              </Text>
+              <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
+                <option>All</option>
+              </Select>
+            </Box>
+          </Flex>
+        </Box>
+        {quotesLoadingStateIsOn === true && (
+          <>
+            <Box w={'full'} h={'200px'}>
+              <Skeleton h={'200px'} rounded={'xl'} />
+            </Box>
+          </>
+        )}
+        <Card width="full" rounded={'lg'} size={{ base: 'md', md: 'md' }}>
           <CardBody>
             {/* Table for all all quotes from DB */}
             {quotesLoadingStateIsOn === true ? (

@@ -327,7 +327,12 @@ const Dashboard = ({ children }) => {
       <Flex flexDir="column" px={{ base: '1rem', lg: '1rem' }} w={'full'} mt={'1rem'}>
         {/*  */}
         <Box display={{ base: 'none', lg: 'block' }}>
-          <Card size="sm" rounded="lg">
+          <Card
+            size="sm"
+            rounded="lg"
+            shadow={'none'}
+            border={'1px'}
+            borderColor={useColorModeValue('gray.200', 'gray.600')}>
             <CardBody>
               <Flex justifyContent={'space-between'}>
                 {/* <Text>{loggedInUserData.email}</Text> */}
@@ -451,7 +456,12 @@ const Dashboard = ({ children }) => {
         </SimpleGrid>
         <SimpleGrid spacing={4} mb={'2rem'} minChildWidth={'420px'}>
           {/* Montly Revenue Line Graph Card */}
-          <Card size="md" rounded="lg">
+          <Card
+            size="md"
+            rounded="lg"
+            shadow={'none'}
+            border={'1px'}
+            borderColor={useColorModeValue('gray.200', 'gray.600')}>
             <CardBody>
               <Flex alignItems={'center'} ml="8px" gap={3}>
                 <Icon as={FiBarChart2} boxSize={6} />
@@ -471,7 +481,12 @@ const Dashboard = ({ children }) => {
             </CardBody>
           </Card>
           {/* Recent Activity Card */}
-          <Card size="md" rounded="lg">
+          <Card
+            size="md"
+            rounded="lg"
+            shadow={'none'}
+            border={'1px'}
+            borderColor={useColorModeValue('gray.200', 'gray.600')}>
             <CardBody>
               <Flex alignItems={'center'} mb={'1rem'} ml="8px">
                 <Icon as={FiActivity} boxSize={6} />

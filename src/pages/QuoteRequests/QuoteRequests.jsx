@@ -23,7 +23,8 @@ import {
   NewEstimateRequestForm,
   QuoteRequestTable,
   ConnectedQRDeleteAlertDialog,
-  PageHeader
+  PageHeader,
+  LeadFilterBar
 } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
@@ -275,7 +276,7 @@ const QuoteRequests = () => {
         body={`Once you confirm there will be no way to restore the information. 🚨`}
       />
 
-      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }}>
+      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
@@ -283,10 +284,11 @@ const QuoteRequests = () => {
                 </Box> */}
         <PageHeader
           title={'Leads'}
-          subheading={'Manage your recent leads to convert to potential customers.'}
+          subheading={'Manage your recent leads to turn them into future customers.'}
           addItemButtonText={'Add lead'}
           onOpen={onNewOpen}
         />
+        <LeadFilterBar />
         <Card width="full" variant={'outline'} rounded={'lg'} size={{ base: 'md', md: 'md' }}>
           <CardBody>
             {/* Main Body for content */}

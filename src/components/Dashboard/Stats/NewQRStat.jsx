@@ -17,7 +17,12 @@ const NewQRStat = (props) => {
   const { newQRRequestCount } = props;
   return (
     <>
-      <Card size="md" rounded={'lg'}>
+      <Card
+        size="md"
+        rounded={'lg'}
+        shadow={'none'}
+        border={'1px'}
+        borderColor={useColorModeValue('gray.200', 'gray.600')}>
         {newQRRequestCount === 0 || newQRRequestCount ? (
           <>
             <CardBody>

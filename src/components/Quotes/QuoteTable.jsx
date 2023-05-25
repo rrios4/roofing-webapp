@@ -147,7 +147,7 @@ const QuoteTable = (props) => {
                     </Tooltip>
                     {/* Go to Customer Details Button */}
                     <Link to={`/quotes/${quote.quote_number}`}>
-                      <Tooltip label="Go to Estimate Details ">
+                      <Tooltip label="Go to quote details">
                         <IconButton
                           colorScheme={'gray'}
                           variant="solid"

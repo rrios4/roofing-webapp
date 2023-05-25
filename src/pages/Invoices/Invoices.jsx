@@ -31,7 +31,8 @@ import {
   InvoiceFilterSwitchPopover,
   InvoiceTable,
   ConnectedInvoiceDeleteAlertDialog,
-  PageHeader
+  PageHeader,
+  InvoiceFilterBar
 } from '../../components';
 import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
@@ -253,13 +254,14 @@ function Invoices() {
       />
 
       {/* Main Invoice Page Code */}
-      <VStack my={'4'} w={'full'} mx={'auto'} px={{ base: '4', lg: '8' }}>
+      <VStack my={'4'} w={'full'} mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
         <PageHeader
           title={'Invoices'}
-          subheading={'Manage your invoices to track company income.'}
+          subheading={'Manage your invoices to track income for projects.'}
           addItemButtonText={'Add invoice'}
           onOpen={onNewOpen}
         />
+        <InvoiceFilterBar />
         <Card
           variant={'outline'}
           width="full"

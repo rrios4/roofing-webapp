@@ -17,7 +17,12 @@ const TotalCustomersStat = (props) => {
   const { totalCustomersCount } = props;
   return (
     <>
-      <Card size="md" rounded={'lg'}>
+      <Card
+        size="md"
+        rounded={'lg'}
+        shadow={'none'}
+        border={'1px'}
+        borderColor={useColorModeValue('gray.200', 'gray.600')}>
         {totalCustomersCount === 0 || totalCustomersCount ? (
           <>
             <CardBody>

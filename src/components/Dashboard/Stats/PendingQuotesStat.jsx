@@ -17,7 +17,12 @@ const PendingQuotesStat = (props) => {
   const { pendingQuotesCount } = props;
   return (
     <>
-      <Card size="md" rounded={'lg'}>
+      <Card
+        size="md"
+        rounded={'lg'}
+        shadow={'none'}
+        border={'1px'}
+        borderColor={useColorModeValue('gray.200', 'gray.600')}>
         {pendingQuotesCount === 0 || pendingQuotesCount ? (
           <>
             <CardBody>

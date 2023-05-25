@@ -17,7 +17,12 @@ const OverdueInvoicesStat = (props) => {
   const { overdueInvoicesCount } = props;
   return (
     <>
-      <Card size="md" rounded={'lg'}>
+      <Card
+        size="md"
+        rounded={'lg'}
+        shadow={'none'}
+        border={'1px'}
+        borderColor={useColorModeValue('gray.200', 'gray.600')}>
         {overdueInvoicesCount === 0 || overdueInvoicesCount ? (
           <>
             <CardBody>
