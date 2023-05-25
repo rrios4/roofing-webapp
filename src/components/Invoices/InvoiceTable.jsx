@@ -29,10 +29,10 @@ const InvoiceTable = (props) => {
   return (
     <>
       <TableContainer>
-        <Table variant={'simple'} size="sm">
-          <TableCaption overflowX={'auto'}>
+        <Table size="sm">
+          {/* <TableCaption overflowX={'auto'}>
             Total of {data?.length} Invoices in our system ✌️
-          </TableCaption>
+          </TableCaption> */}
           <Thead>
             <Tr>
               <Th textAlign={'center'}>Invoice #</Th>

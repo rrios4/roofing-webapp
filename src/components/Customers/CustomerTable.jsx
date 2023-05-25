@@ -25,8 +25,8 @@ const CustomerTable = (props) => {
   return (
     <>
       <TableContainer overflow={'auto'}>
-        <Table variant="simple" size={'sm'}>
-          <TableCaption>Total of {data?.length} Customers registered in our system ✌️</TableCaption>
+        <Table size={'sm'}>
+          {/* <TableCaption>Total of {data?.length} Customers registered in our system ✌️</TableCaption> */}
           <Thead>
             <Tr>
               <Th>Customer</Th>

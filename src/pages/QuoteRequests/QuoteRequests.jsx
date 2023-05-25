@@ -14,13 +14,16 @@ import {
   Card,
   CardBody,
   Skeleton,
-  Box
+  Box,
+  Button,
+  Divider
 } from '@chakra-ui/react';
 import {
   EditEstimateRequestForm,
   NewEstimateRequestForm,
   QuoteRequestTable,
-  ConnectedQRDeleteAlertDialog
+  ConnectedQRDeleteAlertDialog,
+  PageHeader
 } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
@@ -29,6 +32,7 @@ import { useFetchAllQuoteRequests, useUpdateQRById } from '../../hooks/useAPI/us
 import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { Plus } from 'lucide-react';
 
 const QuoteRequests = () => {
   // React Hook for managing state of quotes request
@@ -271,76 +275,19 @@ const QuoteRequests = () => {
         body={`Once you confirm there will be no way to restore the information. 🚨`}
       />
 
-      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '4', lg: '4' }}>
+      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }}>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
                     </Link>
                 </Box> */}
-        <Box
-          display={'flex'}
-          flexDirection={{ base: 'column', lg: 'row' }}
-          marginBottom={'1rem'}
-          justifyContent={{ base: 'center', lg: 'flex-start' }}
-          w="full"
-          gap={'4'}
-          px={'2rem'}>
-          <Flex
-            mr={'auto'}
-            w={'full'}
-            justifyContent={{ base: 'center', lg: 'flex-start' }}
-            gap={'4'}>
-            <Icon as={FiInbox} boxSize={6} my={'auto'} />
-            <Text fontSize={'2xl'} fontWeight="semibold">
-              Leads
-            </Text>
-          </Flex>
-          <Flex gap={5} justify={'space-between'}>
-            <Flex>
-              {/* <form method="GET">
-                <FormControl display={'flex'}>
-                  <Input
-                    value={searchEstimateRequestsInput}
-                    onChange={({ target }) => setSearchEstimateRequestsInput(target.value)}
-                    placeholder="Search for Leads"
-                    colorScheme="blue"
-                    border="2px"
-                  />
-                  <Tooltip label="Search">
-                    <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
-                  </Tooltip>
-                </FormControl>
-              </form> */}
-            </Flex>
-            <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
-              {/* <Tooltip label={'Create New Customer'}>
-                <IconButton
-                  colorScheme="blue"
-                  variant="solid"
-                  onClick={onOpen}
-                  icon={<IoMdPersonAdd />}
-                />
-              </Tooltip> */}
-              <Flex gap={4}>
-                {/* <Tooltip label="Filter">
-                  <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
-                </Tooltip>
-                <Tooltip label="Sort">
-                  <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
-                </Tooltip> */}
-                <Tooltip label="Create New Lead">
-                  <IconButton
-                    colorScheme="blue"
-                    variant="solid"
-                    onClick={onNewOpen}
-                    icon={<MdPostAdd />}
-                  />
-                </Tooltip>
-              </Flex>
-            </Box>
-          </Flex>
-        </Box>
-        <Card width="full" rounded={'xl'} shadow={'sm'} size={{ base: 'md', md: 'lg' }}>
+        <PageHeader
+          title={'Leads'}
+          subheading={'Manage your recent leads to convert to potential customers.'}
+          addItemButtonText={'Add lead'}
+          onOpen={onNewOpen}
+        />
+        <Card width="full" variant={'outline'} rounded={'lg'} size={{ base: 'md', md: 'md' }}>
           <CardBody>
             {/* Main Body for content */}
             {/* Quote Request Table to display all requests from company website */}

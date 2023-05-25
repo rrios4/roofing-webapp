@@ -1,5 +1,6 @@
 export { default as Layout } from './common/Layout';
 export { default as Navbar } from './common/Navbar';
+export { default as PageHeader } from './common/PageHeader';
 export { default as Customer } from './Customers/Customer/Customer';
 export { default as Invoice } from './Invoices/Invoice/Invoice';
 export { default as Schedules } from './Schedules/Schedules';

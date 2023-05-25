@@ -26,8 +26,8 @@ const QuoteRequestTable = (props) => {
   return (
     <>
       <TableContainer overflow={'auto'}>
-        <Table variant="simple" size={'sm'}>
-          <TableCaption>Total of {data?.length} requests in our system ✌️</TableCaption>
+        <Table size={'sm'}>
+          {/* <TableCaption>Total of {data?.length} requests in our system ✌️</TableCaption> */}
           <Thead>
             <Tr>
               <Th>Lead #</Th>

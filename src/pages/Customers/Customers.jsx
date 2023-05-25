@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NewCustomerForm, CustomerTable } from '../../components';
+import { NewCustomerForm, CustomerTable, PageHeader } from '../../components';
 import {
   Flex,
   Box,
@@ -62,61 +62,15 @@ export default function Customers() {
         toast={toast}
         customerTypes={customerTypes}
       />
-      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '4', lg: '4' }}>
-        <Box
-          display={'flex'}
-          flexDirection={{ base: 'column', lg: 'row' }}
-          marginBottom={'1rem'}
-          justifyContent={{ base: 'center', lg: 'flex-start' }}
-          w="full"
-          gap={'4'}
-          px={'2rem'}>
-          <Flex mr={'auto'} w={'full'} justifyContent={{ base: 'center', lg: 'flex-start' }}>
-            <Icon as={FiUsers} boxSize={6} my={'auto'} />
-            <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
-              Customers
-            </Text>
-          </Flex>
-          <Flex gap={5} justifyContent={'center'}>
-            <Flex w={'full'}>
-              <form>
-                <FormControl>
-                  <Flex flexDir={'row'} w={'full'}>
-                    <Input
-                      variant={'outline'}
-                      borderColor={'gray.300'}
-                      value={searchCustomer}
-                      onChange={({ target }) => setSearchCustomer(target.value)}
-                      placeholder="Search for customer..."
-                      size={'md'}
-                      width={{ base: '300px', lg: '300px' }}
-                    />
-                    {/* <Tooltip label="Search">
-                          <IconButton
-                            ml={'1rem'}
-                            type="submit"
-                            icon={<MdSearch />}
-                            isLoading={isLoading || customerIsLoading}
-                          />
-                        </Tooltip> */}
-                  </Flex>
-                </FormControl>
-              </form>
-            </Flex>
-            <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
-              <Tooltip label={'Create New Customer'}>
-                <IconButton
-                  colorScheme="blue"
-                  variant="solid"
-                  onClick={onOpen}
-                  icon={<IoMdPersonAdd />}
-                />
-              </Tooltip>
-            </Box>
-          </Flex>
-        </Box>
+      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }}>
+        <PageHeader
+          title={'Customers'}
+          subheading={'Manage customers and view information focused on them.'}
+          addItemButtonText="Add customer"
+          onOpen={onOpen}
+        />
         {/* Card Element for display main data for page */}
-        <Card width="full" rounded={'xl'} shadow={'sm'} size={{ base: 'md', lg: 'lg' }}>
+        <Card width="full" variant={'outline'} rounded={'lg'} size={{ base: 'md', lg: 'md' }}>
           <CardBody>
             {/* Customer Table Component */}
             {/* Renders a table with all customers stored from database */}

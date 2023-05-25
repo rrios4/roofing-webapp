@@ -18,7 +18,8 @@ import {
   IconButton,
   Card,
   CardBody,
-  Skeleton
+  Skeleton,
+  Divider
 } from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient';
 import {
@@ -29,13 +30,15 @@ import {
   DeleteAlertDialog,
   InvoiceFilterSwitchPopover,
   InvoiceTable,
-  ConnectedInvoiceDeleteAlertDialog
+  ConnectedInvoiceDeleteAlertDialog,
+  PageHeader
 } from '../../components';
 import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
 import { useFetchAllInvoices, useUpdateInvoice } from '../../hooks/useAPI/useInvoices';
 import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { Plus } from 'lucide-react';
 
 function Invoices() {
   const initialRef = React.useRef();
@@ -250,121 +253,19 @@ function Invoices() {
       />
 
       {/* Main Invoice Page Code */}
-      <VStack my={'2rem'} w={'full'} mx={'auto'} px={{ base: '4', lg: '4' }}>
-        {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
-          <Link to={'/'}>
-            <Button
-              colorScheme={'gray'}
-              ml={'1rem'}
-              mb="1rem"
-              leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>
-              Back
-            </Button>
-          </Link>
-        </Box> */}
-        <Box
-          display={'flex'}
-          flexDirection={{ base: 'column', lg: 'row' }}
-          marginBottom={'1rem'}
-          justifyContent={{ base: 'center', lg: 'flex-start' }}
-          w="full"
-          gap={'4'}
-          px={'2rem'}>
-          <Flex
-            mr={'auto'}
-            w={'full'}
-            justifyContent={{ base: 'center', lg: 'flex-start' }}
-            gap={'4'}>
-            <Icon as={FiFileText} boxSize={6} my={'auto'} />
-            <Text fontSize={'2xl'} fontWeight="semibold">
-              Invoices
-            </Text>
-          </Flex>
-          <Flex gap={5} justify={'space-between'}>
-            <Flex>
-              {/* <form method="GET" onSubmit={searchEstimate}>
-                <FormControl display={'flex'}>
-                  <Input
-                    variant={'outline'}
-                    borderColor={'gray.300'}
-                    value={searchQuoteInput}
-                    onChange={({ target }) => setSearchQuoteInput(target.value)}
-                    placeholder="Search for quotes..."
-                    colorScheme="blue"
-                    size={'md'}
-                  />
-                  <Tooltip label="Search">
-                    <IconButton ml={'1rem'} type="submit" icon={<MdSearch />} />
-                  </Tooltip>
-                </FormControl>
-              </form> */}
-              {/* Search Input for Invoices */}
-              {/* <form method="GET" onSubmit={searchInvoice}>
-                <FormControl display={'flex'}>
-                  <Input
-                    value={searchInvoiceInput}
-                    onChange={({ target }) => setSearchInvoiceInput(target.value)}
-                    placeholder="Search for Invoice"
-                    colorScheme="blue"
-                    size={'md'}
-                  />
-                  <Tooltip label="Search">
-                    <IconButton mx={'1rem'} type="submit" icon={<MdSearch />} />
-                  </Tooltip>
-                </FormControl>
-              </form> */}
-            </Flex>
-            <Box display="flex" justifyContent={{ base: 'center', lg: 'normal' }}>
-              {/* <Tooltip label={'Create New Customer'}>
-                <IconButton
-                  colorScheme="blue"
-                  variant="solid"
-                  onClick={onOpen}
-                  icon={<IoMdPersonAdd />}
-                />
-              </Tooltip> */}
-              <Flex gap={4}>
-                {/* <Tooltip label="Filter">
-                  <IconButton colorScheme={'gray'} icon={<MdFilterAlt />} />
-                </Tooltip>
-                <Tooltip label="Sort">
-                  <IconButton colorScheme={'gray'} icon={<MdFilterList />} />
-                </Tooltip> */}
-                {/* Popover component to filter invoices by status */}
-                {/* <InvoiceFilterSwitchPopover
-                  handleSwitches={handleSwitchesStatusFilter}
-                  switchOne={filterSwitchStatus1IsOn}
-                  switchTwo={filterSwitchStatus2IsOn}
-                  switchThree={filterSwitchStatus3IsOn}
-                  switchFour={filterSwitchStatus4IsOn}
-                /> */}
-                {/* Sort Button */}
-                {/* <Tooltip label="Sort">
-                  <IconButton variant={'outline'} icon={<MdFilterList />} />
-                </Tooltip> */}
-                {/* Draft View Button */}
-                {/* <Tooltip
-                  variant={'outline'}
-                  label={
-                    draftInvoiceButtonSwitchIsOn === true
-                      ? 'Close View of Drafts'
-                      : 'Click to view all Draft Invoices'
-                  }>
-                  <IconButton
-                    variant={'outline'}
-                    icon={draftInvoiceButtonSwitchIsOn === true ? <FiX /> : <FiFolder />}
-                    onClick={handleDraftInvoiceView}
-                  />
-                </Tooltip> */}
-                {/* Create New Invoice Button */}
-                <Tooltip label="Create New Invoice">
-                  <IconButton icon={<MdPostAdd />} onClick={onNewOpen} colorScheme={'blue'} />
-                </Tooltip>
-              </Flex>
-            </Box>
-          </Flex>
-        </Box>
-        <Card width="full" rounded={'xl'} shadow={'sm'} size={{ base: 'md', md: 'lg' }}>
+      <VStack my={'4'} w={'full'} mx={'auto'} px={{ base: '4', lg: '8' }}>
+        <PageHeader
+          title={'Invoices'}
+          subheading={'Manage your invoices to track company income.'}
+          addItemButtonText={'Add invoice'}
+          onOpen={onNewOpen}
+        />
+        <Card
+          variant={'outline'}
+          width="full"
+          rounded={'lg'}
+          shadow={'sm'}
+          size={{ base: 'md', md: 'md' }}>
           <CardBody>
             {/* Table Component for Invoices Data */}
             {isInvoicesLoading === true ? (

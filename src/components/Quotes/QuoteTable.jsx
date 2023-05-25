@@ -27,8 +27,8 @@ const QuoteTable = (props) => {
   return (
     <>
       <TableContainer overflow={'auto'}>
-        <Table variant={'simple'} size="sm">
-          <TableCaption>Total of {data?.length} Quotes in our system ✌️</TableCaption>
+        <Table size="sm">
+          {/* <TableCaption>Total of {data?.length} Quotes in our system ✌️</TableCaption> */}
           <Thead>
             <Tr>
               <Th textAlign={'center'}>Quote#</Th>
