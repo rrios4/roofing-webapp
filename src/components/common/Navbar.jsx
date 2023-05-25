@@ -118,7 +118,7 @@ const Navbar = () => {
             CONTENT
           </Text>
           <Link to={'/qr'}>
-            <Tooltip label="Quote Requests" bg={tooltipBackground}>
+            <Tooltip label="Leads" bg={tooltipBackground}>
               <Box p={'1'} rounded="md" _hover={{ bg: buttonBackground }}>
                 {/* <MdScheduleSend size={'30px'}/> */}
                 {/* <AiFillSchedule color={iconColors} size={"28px"} /> */}
