@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF'
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     marginRight: 'auto',
     marginLeft: 'auto',
     padding: 4,
@@ -22,17 +22,25 @@ const styles = StyleSheet.create({
     borderRadius: 100
   },
   extraInfoText: {
-    marginTop: 12
+    marginTop: 10
   },
   serviceNoteContainer: {
     marginTop: 12,
     marginBottom: 6,
-    width: 300
+    width: '50%',
+    paddingHorizontal: '1rem',
+    marginHorizontal: '4'
   },
   serviceNoteTitleLabel: {
     marginTop: 6,
     marginBottom: 6,
-    fontWeight: 'bold'
+    fontWeight: 800
+  },
+  containerForNoteAndServiceContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    gap: '4'
   }
 });
 
@@ -45,20 +53,27 @@ const QuoteDocument = ({ quote }) => {
         <QuoteNo quote={quote} />
         <QuoteBillTo quote={quote} />
         <QuoteItemsTable quote={quote} />
-        {/* Service Note */}
-        <View style={styles.serviceNoteContainer}>
-          <Text style={styles.serviceNoteTitleLabel}>Note:</Text>
-          {/* <Text>{quote?.cust_note}</Text> */}
-          <Text>{quote?.services?.description}</Text>
-          {quote?.services?.name === 'Roof Installation' ? (
-            <Text style={styles.serviceNoteTitleLabel}>
-              In order to initiate the roofing process promptly, we kindly request a down payment of
-              50% of the total quoted amount, which will be allocated towards the procurement of
-              necessary materials.
-            </Text>
-          ) : (
-            <Text></Text>
-          )}
+        <View style={styles.containerForNoteAndServiceContainer}>
+          {/* Service Note */}
+          <View style={styles.serviceNoteContainer}>
+            <Text style={styles.serviceNoteTitleLabel}>Note:</Text>
+            {/* <Text>{quote?.cust_note}</Text> */}
+            <Text>{quote?.public_note}</Text>
+          </View>
+          <View style={styles.serviceNoteContainer}>
+            <Text style={styles.serviceNoteTitleLabel}>Service Includes:</Text>
+            {/* <Text>{quote?.cust_note}</Text> */}
+            <Text>{quote?.services?.description}</Text>
+            {quote?.services?.name === 'Roof Installation' ? (
+              <Text style={styles.serviceNoteTitleLabel}>
+                In order to initiate the roofing process promptly, we kindly request a down payment
+                of 50% of the total quoted amount, which will be allocated towards the procurement
+                of necessary materials.
+              </Text>
+            ) : (
+              <Text></Text>
+            )}
+          </View>
         </View>
         {/* Extra Info Component */}
         <View>

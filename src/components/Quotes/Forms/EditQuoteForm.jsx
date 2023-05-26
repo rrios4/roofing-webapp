@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Drawer,
   DrawerOverlay,
@@ -30,6 +30,10 @@ const EditQuoteForm = (props) => {
     handleEditSubmit,
     loadingState
   } = props;
+
+  useEffect(() => {
+    console.log(quote);
+  }, []);
 
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
@@ -91,8 +95,8 @@ const EditQuoteForm = (props) => {
                 <FormLabel>General Note</FormLabel>
                 <Textarea
                   h={'200px'}
-                  name="note"
-                  value={quote?.note}
+                  name="private_note"
+                  value={quote?.private_note}
                   onChange={handleEditOnChange}
                   placeholder="Here you enter notes regarding the quote that you want to remember..."
                 />
@@ -108,10 +112,11 @@ const EditQuoteForm = (props) => {
                 />
               </Box>
             </Flex>
-            <FormLabel mt={'1rem'}>Customer Message</FormLabel>
+            <FormLabel my={'1rem'}>Customer Note</FormLabel>
             <Textarea
-              name="cust_note"
-              value={quote?.cust_note}
+              h={'200px'}
+              name="public_note"
+              value={quote?.public_note}
               onChange={handleEditOnChange}
               placeholder="Here you enter customer message you want the customer to see..."
             />

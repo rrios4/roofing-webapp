@@ -10,7 +10,8 @@ import {
   Text,
   Skeleton,
   Divider,
-  useColorModeValue
+  useColorModeValue,
+  Textarea
 } from '@chakra-ui/react';
 import { FiPaperclip, FiUploadCloud } from 'react-icons/fi';
 import { formatMoneyValue, formatNumber } from '../../../utils';
@@ -170,9 +171,18 @@ const QuoteDetailsMain = (props) => {
                 />
               ) : (
                 <>
-                  <Text ml={'3rem'} maxW="500px">
-                    {quoteById?.cust_note}
-                  </Text>
+                  <Textarea
+                    readOnly
+                    bg={'gray.100'}
+                    border={'none'}
+                    ml={'3rem'}
+                    maxW="600px"
+                    value={
+                      quoteById?.public_note
+                        ? quoteById.public_note
+                        : 'There is no note for the customer to see for this quote... 🙅‍♂️'
+                    }
+                  />
                 </>
               )}
             </Flex>

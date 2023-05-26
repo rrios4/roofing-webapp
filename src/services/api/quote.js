@@ -55,9 +55,9 @@ export const updateQuoteById = async (quoteObject) => {
       quote_date: quoteObject.quote_date ? quoteObject.quote_date : null,
       issue_date: quoteObject.issue_date ? quoteObject.issue_date : null,
       expiration_date: quoteObject.expiration_date ? quoteObject.expiration_date : null,
-      note: quoteObject.note,
+      private_note: quoteObject.private_note,
       measurement_note: quoteObject.measurement_note,
-      cust_note: quoteObject.cust_note,
+      public_note: quoteObject.public_note,
       updated_at: new Date()
     })
     .eq('quote_number', quoteObject.quote_number);

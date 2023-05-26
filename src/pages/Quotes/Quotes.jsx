@@ -100,9 +100,9 @@ function Estimates() {
       quote_date: quote.quote_date ? quote.quote_date : '',
       issue_date: quote.issue_date ? quote.issue_date : '',
       expiration_date: quote.expiration_date ? quote.expiration_date : '',
-      note: quote.note,
+      private_note: quote.private_note,
       measurement_note: quote.measurement_note,
-      cust_note: quote.cust_note
+      public_note: quote.public_note
     });
     onEditOpen();
   };
@@ -123,9 +123,9 @@ function Estimates() {
       quote_date: '',
       issue_date: '',
       expiration_date: '',
-      note: '',
+      private_note: '',
       measurement_note: '',
-      cust_note: ''
+      public_note: ''
     });
   };
 

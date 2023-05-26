@@ -152,7 +152,7 @@ const QuoteDetailsPane = (props) => {
                   <StickyNote size={'15px'} />
                 </Box>
                 <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                  Note
+                  Private Note
                 </Text>
               </Flex>
               {!quoteById ? (
@@ -164,7 +164,11 @@ const QuoteDetailsPane = (props) => {
                       border="none"
                       h={'100px'}
                       isReadOnly
-                      value={!quoteById?.note ? 'No note for this quote... 🙅‍♂️' : quoteById?.note}
+                      value={
+                        !quoteById?.private_note
+                          ? 'No note for this quote... 🙅‍♂️'
+                          : quoteById?.private_note
+                      }
                     />
                     {/* {!quoteById?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
                   </Box>

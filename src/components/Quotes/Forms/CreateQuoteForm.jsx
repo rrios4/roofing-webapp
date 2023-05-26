@@ -112,9 +112,9 @@ const CreateQuoteForm = (props) => {
         expiration_date: expirationDateInput,
         subtotal: calculatedQuoteSubtotal,
         total: calculatedQuoteTotal,
-        note: noteInput ? noteInput : null,
+        private_note: noteInput ? noteInput : null,
         measurement_note: measurementNoteInput ? measurementNoteInput : null,
-        cust_note:
+        public_note:
           customerMessageSwitchIsOn === true
             ? customerMessageInput
             : `If you have any questions or concerns don't hesitate to reach us. 👋`,
@@ -564,10 +564,11 @@ const CreateQuoteForm = (props) => {
               <>
                 <Flex w={'full'}>
                   <FormControl>
-                    <FormLabel pt="1rem">Message to Customer</FormLabel>
+                    <FormLabel pt="1rem">Note to Customer</FormLabel>
                     <Textarea
+                      h={'200px'}
                       value={customerMessageInput}
-                      placeholder="Enter message to customer to see when we send this quote to them 🎉"
+                      placeholder="Enter note that you want the customer to see regarding this quote. 🎉"
                       onChange={({ target }) => setCustomerMessageInput(target.value)}
                     />
                   </FormControl>
@@ -689,10 +690,10 @@ const CreateQuoteForm = (props) => {
                     </Box>
                     <Box>
                       <Text fontSize={'sm'} fontWeight={'bold'}>
-                        Customer Message
+                        Customer Note
                       </Text>
                       <Text fontSize={'xs'} fontWeight={'normal'}>
-                        Write message to customer
+                        Write a note to customer
                       </Text>
                     </Box>
                   </Flex>
