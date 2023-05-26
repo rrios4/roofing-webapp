@@ -26,7 +26,8 @@ import {
   ConnectedQuoteDeleteAlertDialog,
   CreateQuoteForm,
   EditQuoteForm,
-  PageHeader
+  PageHeader,
+  QuoteStatCards
 } from '../../components';
 import { TbRuler } from 'react-icons/tb';
 import { useFetchQuotes, useSearchQuote, useUpdateQuote } from '../../hooks/useAPI/useQuotes';
@@ -167,6 +168,7 @@ function Estimates() {
           addItemButtonText={'Add quote'}
           onOpen={onNewOpen}
         />
+        <QuoteStatCards />
         <Box w={'full'}>
           <Flex
             w={'full'}

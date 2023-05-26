@@ -85,3 +85,7 @@ export { default as InvoiceFilterBar } from './Invoices/InvoiceFilterBar';
 export { default as LeadFilterBar } from './QuoteRequest/LeadFilterBar';
 export { default as CustomerFilterBar } from './Customers/CustomerFilterBar';
 export { default as ConnectedConvertQuoteToInvoice } from './ui/Alerts/ConnectedAlerts/ConnectedConvertQuoteToInvoice';
+export { default as CustomerStatsCards } from './Customers/CustomerStatsCards';
+export { default as InvoiceStatCards } from './Invoices/InvoiceStatCards';
+export { default as LeadStatCards } from './QuoteRequest/LeadStatCards';
+export { default as QuoteStatCards } from './Quotes/QuoteStatCards';

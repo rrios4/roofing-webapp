@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { NewCustomerForm, CustomerTable, PageHeader, CustomerFilterBar } from '../../components';
+import {
+  NewCustomerForm,
+  CustomerTable,
+  PageHeader,
+  CustomerFilterBar,
+  CustomerStatsCards
+} from '../../components';
 import {
   Flex,
   Box,
@@ -15,7 +21,11 @@ import {
   useToast,
   Skeleton,
   Card,
-  CardBody
+  CardBody,
+  useColorModeValue,
+  StatHelpText,
+  StatArrow,
+  Stat
 } from '@chakra-ui/react';
 import { IoMdPersonAdd } from 'react-icons/io';
 // import { MdSearch } from 'react-icons/md';
@@ -23,6 +33,7 @@ import { FiUsers } from 'react-icons/fi';
 import { useFetchCustomers, useSearchCustomers } from '../../hooks/useAPI/useCustomers';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import useDebounce from '../../hooks/useDebounce';
+import { Building, ChevronUp, MoreHorizontal, MoreVertical, Store, Users } from 'lucide-react';
 // import { Link } from 'react-router-dom';
 // import { MdArrowBack } from 'react-icons/md';
 
@@ -69,6 +80,7 @@ export default function Customers() {
           addItemButtonText="Add customer"
           onOpen={onOpen}
         />
+        <CustomerStatsCards />
         <CustomerFilterBar />
         {/* Card Element for display main data for page */}
         <Card width="full" rounded={'lg'} size={{ base: 'md', lg: 'md' }}>

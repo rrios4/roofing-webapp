@@ -27,7 +27,7 @@ const CustomerFilterBar = () => {
           flexDir={{ base: 'column', md: 'row' }}>
           <Box w={{ base: 'full', md: '40%' }}>
             <Text fontSize={'14px'} fontWeight={500} mb={'2'}>
-              Search for Lead
+              Search for Customer
             </Text>
             <InputGroup>
               <InputLeftElement>
@@ -42,15 +42,7 @@ const CustomerFilterBar = () => {
           </Box>
           <Box w={{ base: 'full', md: '20%' }}>
             <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
-              Status
-            </Text>
-            <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
-              <option>Accepted</option>
-            </Select>
-          </Box>
-          <Box w={{ base: 'full', md: '20%' }}>
-            <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
-              Service Type
+              Type
             </Text>
             <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
               <option>All</option>
@@ -58,7 +50,15 @@ const CustomerFilterBar = () => {
           </Box>
           <Box w={{ base: 'full', md: '20%' }}>
             <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
-              Customer
+              State
+            </Text>
+            <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
+              <option>All</option>
+            </Select>
+          </Box>
+          <Box w={{ base: 'full', md: '20%' }}>
+            <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
+              Zipcode
             </Text>
             <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
               <option>All</option>

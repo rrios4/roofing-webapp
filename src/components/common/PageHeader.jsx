@@ -1,6 +1,6 @@
 import React from 'react';
 import { Flex, Box, Text, Button, Divider } from '@chakra-ui/react';
-import { Plus } from 'lucide-react';
+import { Plus, PlusCircle } from 'lucide-react';
 
 const PageHeader = (props) => {
   const { title, subheading, addItemButtonText, onOpen } = props;
@@ -23,7 +23,8 @@ const PageHeader = (props) => {
           </Box>
           <Box>
             <Button colorScheme="blue" gap={'3'} fontSize={'14px'} onClick={onOpen}>
-              <Plus size={'15px'} />
+              <PlusCircle size={'20px'} />
+              {/* <Plus size={'15px'} /> */}
               {addItemButtonText}
             </Button>
           </Box>

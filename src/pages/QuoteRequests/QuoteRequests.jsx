@@ -24,7 +24,8 @@ import {
   QuoteRequestTable,
   ConnectedQRDeleteAlertDialog,
   PageHeader,
-  LeadFilterBar
+  LeadFilterBar,
+  LeadStatCards
 } from '../../components';
 import supabase from '../../utils/supabaseClient';
 import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
@@ -288,6 +289,7 @@ const QuoteRequests = () => {
           addItemButtonText={'Add lead'}
           onOpen={onNewOpen}
         />
+        <LeadStatCards />
         <LeadFilterBar />
         <Card width="full" variant={'outline'} rounded={'lg'} size={{ base: 'md', md: 'md' }}>
           <CardBody>

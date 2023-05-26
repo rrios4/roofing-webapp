@@ -32,7 +32,8 @@ import {
   InvoiceTable,
   ConnectedInvoiceDeleteAlertDialog,
   PageHeader,
-  InvoiceFilterBar
+  InvoiceFilterBar,
+  InvoiceStatCards
 } from '../../components';
 import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
@@ -261,6 +262,7 @@ function Invoices() {
           addItemButtonText={'Add invoice'}
           onOpen={onNewOpen}
         />
+        <InvoiceStatCards />
         <InvoiceFilterBar />
         <Card
           variant={'outline'}
