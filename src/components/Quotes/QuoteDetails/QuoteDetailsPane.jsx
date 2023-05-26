@@ -9,7 +9,8 @@ import {
   Textarea,
   Badge,
   Button,
-  Avatar
+  Avatar,
+  useColorModeValue
 } from '@chakra-ui/react';
 import { formatDate } from '../../../utils';
 import {
@@ -28,7 +29,13 @@ const QuoteDetailsPane = (props) => {
   const { quoteById, paymentCardBgColor, secondaryTextColor } = props;
   return (
     <>
-      <Card w={'full'} rounded={'xl'} size={'sm'}>
+      <Card
+        w={'full'}
+        size={'sm'}
+        rounded={'lg'}
+        shadow={'none'}
+        border={'1px'}
+        borderColor={useColorModeValue('gray.300', 'gray.700')}>
         <CardBody overflowY={'auto'}>
           {/* Invoice Extra Details */}
           <Box px={'1rem'} py={'8px'}>

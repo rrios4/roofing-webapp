@@ -83,7 +83,13 @@ export default function Customers() {
         <CustomerStatsCards />
         <CustomerFilterBar />
         {/* Card Element for display main data for page */}
-        <Card width="full" rounded={'lg'} size={{ base: 'md', lg: 'md' }}>
+        <Card
+          width="full"
+          size={{ base: 'md', lg: 'md' }}
+          rounded={'lg'}
+          shadow={'none'}
+          border={'1px'}
+          borderColor={useColorModeValue('gray.200', 'gray.700')}>
           <CardBody>
             {/* Customer Table Component */}
             {/* Renders a table with all customers stored from database */}

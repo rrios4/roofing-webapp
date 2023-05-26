@@ -9,7 +9,8 @@ import {
   Box,
   Text,
   Skeleton,
-  Divider
+  Divider,
+  useColorModeValue
 } from '@chakra-ui/react';
 import { FiPaperclip, FiUploadCloud } from 'react-icons/fi';
 import { formatMoneyValue, formatNumber } from '../../../utils';
@@ -26,7 +27,12 @@ const QuoteDetailsMain = (props) => {
   } = props;
   return (
     <>
-      <Card w={'full'} rounded={'xl'}>
+      <Card
+        w={'full'}
+        rounded={'lg'}
+        shadow={'none'}
+        border={'1px'}
+        borderColor={useColorModeValue('gray.300', 'gray.700')}>
         <CardBody>
           {/* Header with Buttons */}
           <Flex justifyContent={'flex-end'} pr={'1rem'}>

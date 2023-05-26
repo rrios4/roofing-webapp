@@ -11,7 +11,8 @@ import {
   Tooltip,
   Text,
   Button,
-  IconButton
+  IconButton,
+  useColorModeValue
 } from '@chakra-ui/react';
 import {
   ChevronDown,
@@ -37,7 +38,12 @@ const QuoteDetailsQuickAction = (props) => {
   } = props;
   return (
     <>
-      <Card rounded={'xl'} size={'sm'}>
+      <Card
+        size={'sm'}
+        rounded={'lg'}
+        shadow={'none'}
+        border={'1px'}
+        borderColor={useColorModeValue('gray.300', 'gray.700')}>
         <CardBody>
           <Flex px={'8px'} gap={2}>
             {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(quoteById?.amount_due)}</Text> */}

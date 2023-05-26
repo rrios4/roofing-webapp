@@ -228,7 +228,13 @@ function Estimates() {
             </Box>
           </>
         )}
-        <Card width="full" rounded={'lg'} size={{ base: 'md', md: 'md' }}>
+        <Card
+          width="full"
+          size={{ base: 'md', md: 'md' }}
+          rounded={'lg'}
+          shadow={'none'}
+          border={'1px'}
+          borderColor={useColorModeValue('gray.200', 'gray.700')}>
           <CardBody>
             {/* Table for all all quotes from DB */}
             {quotesLoadingStateIsOn === true ? (

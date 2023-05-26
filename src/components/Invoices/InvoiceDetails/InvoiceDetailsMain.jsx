@@ -17,7 +17,8 @@ import {
   Table,
   Tr,
   Thead,
-  IconButton
+  IconButton,
+  useColorModeValue
 } from '@chakra-ui/react';
 import { formatNumber, formatDate, formatMoneyValue } from '../../../utils';
 import { X } from 'lucide-react';
@@ -36,7 +37,12 @@ const InvoiceDetailsMain = (props) => {
     <>
       {/* Left Section */}
       <Flex w={{ base: 'full', lg: '60%' }}>
-        <Card w={'full'} rounded={'xl'}>
+        <Card
+          w={'full'}
+          rounded={'lg'}
+          shadow={'none'}
+          border={'1px'}
+          borderColor={useColorModeValue('gray.300', 'gray.700')}>
           <CardBody>
             {/* Header with Buttons */}
             <Flex justifyContent={'flex-end'} pr={'1rem'}>

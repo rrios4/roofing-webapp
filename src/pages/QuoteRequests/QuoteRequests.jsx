@@ -291,7 +291,12 @@ const QuoteRequests = () => {
         />
         <LeadStatCards />
         <LeadFilterBar />
-        <Card width="full" variant={'outline'} rounded={'lg'} size={{ base: 'md', md: 'md' }}>
+        <Card
+          width="full"
+          variant={'outline'}
+          shadow={'none'}
+          rounded={'lg'}
+          size={{ base: 'md', md: 'md' }}>
           <CardBody>
             {/* Main Body for content */}
             {/* Quote Request Table to display all requests from company website */}

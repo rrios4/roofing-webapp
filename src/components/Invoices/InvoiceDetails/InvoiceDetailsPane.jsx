@@ -39,7 +39,13 @@ const InvoiceDetailsPane = (props) => {
   } = props;
   return (
     <>
-      <Card w={'full'} rounded={'xl'} size="lg">
+      <Card
+        w={'full'}
+        size="lg"
+        rounded={'lg'}
+        shadow={'none'}
+        border={'1px'}
+        borderColor={useColorModeValue('gray.300', 'gray.700')}>
         <CardBody overflowY={'auto'}>
           {/* Invoice Extra Details */}
           <Box>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Box, Text, Button, Divider } from '@chakra-ui/react';
+import { Flex, Box, Text, Button, Divider, useColorModeValue } from '@chakra-ui/react';
 import { Plus, PlusCircle } from 'lucide-react';
 
 const PageHeader = (props) => {
@@ -30,7 +30,11 @@ const PageHeader = (props) => {
           </Box>
         </Flex>
         <Box w={'full'}>
-          <Divider mt={'2'} orientation="horizontal" />
+          <Divider
+            mt={'2'}
+            orientation="horizontal"
+            borderColor={useColorModeValue('gray.400', 'gray.600')}
+          />
         </Box>
       </Flex>
     </>
