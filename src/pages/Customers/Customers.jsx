@@ -87,7 +87,7 @@ export default function Customers() {
           width="full"
           size={{ base: 'md', lg: 'md' }}
           rounded={'lg'}
-          shadow={'none'}
+          shadow={'xs'}
           border={'1px'}
           borderColor={useColorModeValue('gray.200', 'gray.700')}>
           <CardBody>

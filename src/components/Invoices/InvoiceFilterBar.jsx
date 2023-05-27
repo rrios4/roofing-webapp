@@ -21,6 +21,7 @@ const InvoiceFilterBar = () => {
           bg={useColorModeValue('gray.50', 'gray.800')}
           border={'1px'}
           borderColor={useColorModeValue('gray.200', 'gray.700')}
+          shadow={'xs'}
           px={'1rem'}
           py={'6'}
           rounded={'lg'}

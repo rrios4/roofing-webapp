@@ -23,6 +23,7 @@ const LeadFilterBar = () => {
           borderColor={useColorModeValue('gray.200', 'gray.700')}
           px={'1rem'}
           py={'6'}
+          shadow={'xs'}
           rounded={'lg'}
           flexDir={{ base: 'column', md: 'row' }}>
           <Box w={{ base: 'full', md: '40%' }}>

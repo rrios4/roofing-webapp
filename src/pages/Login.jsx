@@ -76,10 +76,16 @@ function Login() {
             Sign in to your account
           </Heading>
           <Text fontSize={{ base: 'md', lg: 'md' }} color={'gray.600'} textAlign={'center'}>
-            Welcome to "The Roofing App" to empower your business 🚀
+            Welcome to "The Roofing App" to empower your roofing business. 🚀
           </Text>
         </Stack>
-        <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={4}>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'xs'}
+          border={'1px'}
+          borderColor={useColorModeValue('gray.200', 'gray.700')}
+          p={4}>
           <Stack spacing={4}>
             {/* <form onSubmit={handleSignIn}>
               <FormControl id="email">

@@ -330,9 +330,9 @@ const Dashboard = ({ children }) => {
           <Card
             size="sm"
             rounded="lg"
-            shadow={'none'}
+            shadow={'xs'}
             border={'1px'}
-            borderColor={useColorModeValue('gray.200', 'gray.600')}>
+            borderColor={useColorModeValue('gray.200', 'gray.700')}>
             <CardBody>
               <Flex justifyContent={'space-between'}>
                 {/* <Text>{loggedInUserData.email}</Text> */}
@@ -459,9 +459,9 @@ const Dashboard = ({ children }) => {
           <Card
             size="md"
             rounded="lg"
-            shadow={'none'}
+            shadow={'xs'}
             border={'1px'}
-            borderColor={useColorModeValue('gray.200', 'gray.600')}>
+            borderColor={useColorModeValue('gray.200', 'gray.700')}>
             <CardBody>
               <Flex alignItems={'center'} ml="8px" gap={3}>
                 <Icon as={FiBarChart2} boxSize={6} />
@@ -484,9 +484,9 @@ const Dashboard = ({ children }) => {
           <Card
             size="md"
             rounded="lg"
-            shadow={'none'}
+            shadow={'xs'}
             border={'1px'}
-            borderColor={useColorModeValue('gray.200', 'gray.600')}>
+            borderColor={useColorModeValue('gray.200', 'gray.700')}>
             <CardBody>
               <Flex alignItems={'center'} mb={'1rem'} ml="8px">
                 <Icon as={FiActivity} boxSize={6} />

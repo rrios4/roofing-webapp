@@ -16,6 +16,7 @@ const CustomerFilterBar = () => {
     <>
       <Box w={'full'}>
         <Flex
+          shadow={'xs'}
           w={'full'}
           gap={4}
           bg={useColorModeValue('gray.50', 'gray.800')}

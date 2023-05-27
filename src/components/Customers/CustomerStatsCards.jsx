@@ -7,6 +7,7 @@ const CustomerStatsCards = () => {
     <>
       <Flex w="full" gap={4} flexDir={{ base: 'column', md: 'row' }}>
         <Flex
+          shadow={'xs'}
           w={{ base: 'full', md: '35%' }}
           flexDir={'column'}
           border="1px"
@@ -45,6 +46,7 @@ const CustomerStatsCards = () => {
           </Flex>
         </Flex>
         <Flex
+          shadow={'xs'}
           w={{ base: 'full', md: '35%' }}
           flexDir={'column'}
           border="1px"
@@ -83,6 +85,7 @@ const CustomerStatsCards = () => {
           </Flex>
         </Flex>
         <Flex
+          shadow={'xs'}
           w={{ base: 'full', md: '35%' }}
           flexDir={'column'}
           border="1px"

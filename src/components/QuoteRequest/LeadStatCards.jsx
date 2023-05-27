@@ -11,6 +11,7 @@ const LeadStatCards = () => {
           flexDir={'column'}
           border="1px"
           p="6"
+          shadow={'xs'}
           bg={useColorModeValue('white', 'gray.700')}
           borderColor={useColorModeValue('gray.200', 'gray.700')}
           rounded={'lg'}>
@@ -51,6 +52,7 @@ const LeadStatCards = () => {
           flexDir={'column'}
           border="1px"
           p="6"
+          shadow={'xs'}
           bg={useColorModeValue('white', 'gray.700')}
           borderColor={useColorModeValue('gray.200', 'gray.700')}
           rounded={'lg'}>
@@ -91,6 +93,7 @@ const LeadStatCards = () => {
           flexDir={'column'}
           border="1px"
           p="6"
+          shadow={'xs'}
           bg={useColorModeValue('white', 'gray.700')}
           borderColor={useColorModeValue('gray.200', 'gray.700')}
           rounded={'lg'}>

@@ -33,7 +33,7 @@ const PageHeader = (props) => {
           <Divider
             mt={'2'}
             orientation="horizontal"
-            borderColor={useColorModeValue('gray.400', 'gray.600')}
+            borderColor={useColorModeValue('gray.300', 'gray.600')}
           />
         </Box>
       </Flex>

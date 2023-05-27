@@ -58,12 +58,12 @@ const Navbar = () => {
         roundedTopRight={{ base: '0', lg: '0' }}
         roundedBottomRight={{ base: '0', lg: '0' }}
         flexDir={{ base: 'row', lg: 'column' }}
-        shadow={'sm'}
+        shadow={'xs'}
         p="0"
         m="0"
         top={{ base: '0', lg: '0' }}
         borderRightWidth="1px"
-        borderRightColor={useColorModeValue('gray.200', 'gray.600')}>
+        borderRightColor={useColorModeValue('gray.200', 'gray.700')}>
         <Link to="/">
           <Box display={'flex'} p="1rem" justifyContent={'center'} h={{ base: 'full', lg: 'auto' }}>
             <Box

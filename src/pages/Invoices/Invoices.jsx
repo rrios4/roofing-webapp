@@ -268,7 +268,7 @@ function Invoices() {
           variant={'outline'}
           width="full"
           rounded={'lg'}
-          shadow={'none'}
+          shadow={'xs'}
           size={{ base: 'md', md: 'md' }}>
           <CardBody>
             {/* Table Component for Invoices Data */}

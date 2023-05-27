@@ -294,7 +294,7 @@ const QuoteRequests = () => {
         <Card
           width="full"
           variant={'outline'}
-          shadow={'none'}
+          shadow={'xs '}
           rounded={'lg'}
           size={{ base: 'md', md: 'md' }}>
           <CardBody>

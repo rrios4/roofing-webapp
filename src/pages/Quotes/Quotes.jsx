@@ -171,6 +171,7 @@ function Estimates() {
         <QuoteStatCards />
         <Box w={'full'}>
           <Flex
+            shadow={'xs'}
             w={'full'}
             gap={4}
             bg={useColorModeValue('gray.50', 'gray.800')}
@@ -232,7 +233,7 @@ function Estimates() {
           width="full"
           size={{ base: 'md', md: 'md' }}
           rounded={'lg'}
-          shadow={'none'}
+          shadow={'xs'}
           border={'1px'}
           borderColor={useColorModeValue('gray.200', 'gray.700')}>
           <CardBody>
