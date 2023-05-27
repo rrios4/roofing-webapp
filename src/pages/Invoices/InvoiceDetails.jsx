@@ -127,8 +127,8 @@ const InvoiceDetails = () => {
     issue_date: '',
     due_date: '',
     sqft_measurement: '',
-    note: '',
-    cust_note: ''
+    private_note: '',
+    public_note: ''
   });
 
   // React state toggles
@@ -251,25 +251,14 @@ const InvoiceDetails = () => {
       issue_date: invoice.issue_date,
       due_date: invoice.due_date,
       sqft_measurement: invoice.sqft_measurement,
-      note: invoice.note,
-      cust_note: invoice.cust_note
+      private_note: invoice.private_note,
+      public_note: invoice.public_note
     });
     onEditInvoiceOpen();
   };
 
   const handleEditInvoiceSubmit = async (e) => {
     e.preventDefault();
-    // const updateInvoiceObject = {
-    //   service_type_id: selectedEditInvoice.service_type_id,
-    //   invoice_status_id: selectedEditInvoice.invoice_status_id,
-    //   invoice_date: selectedEditInvoice.invoice_date,
-    //   issue_date: selectedEditInvoice.issue_date,
-    //   due_date: selectedEditInvoice.due_date,
-    //   sqft_measurement: selectedEditInvoice.sqft_measurement,
-    //   note: selectedEditInvoice.note,
-    //   cust_note: selectedEditInvoice.cust_note,
-    //   updated_at: new Date()
-    // };
     const updateInvoiceObjectArray = [
       {
         service_type_id: selectedEditInvoice.service_type_id,
@@ -278,8 +267,8 @@ const InvoiceDetails = () => {
         issue_date: selectedEditInvoice.issue_date,
         due_date: selectedEditInvoice.due_date,
         sqft_measurement: selectedEditInvoice.sqft_measurement,
-        note: selectedEditInvoice.note,
-        cust_note: selectedEditInvoice.cust_note,
+        private_note: selectedEditInvoice.private_note,
+        public_note: selectedEditInvoice.public_note,
         updated_at: new Date()
       },
       {
@@ -288,36 +277,6 @@ const InvoiceDetails = () => {
     ];
     mutateUpdateInvoice(updateInvoiceObjectArray);
     onEditInvoiceClose();
-    // setInvoiceLoadingState(true);
-    // const { data, error } = await supabase
-    //   .from('invoice')
-    //   .update(updateInvoiceObject)
-    //   .eq('invoice_number', selectedEditInvoice.invoice_number);
-
-    // if (error) {
-    //   toast({
-    //     position: 'top',
-    //     title: `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
-    //     description: `Error: ${error.message}`,
-    //     status: 'error',
-    //     duration: 5000,
-    //     isClosable: true
-    //   });
-    // }
-
-    // if (data) {
-    //   // await getInvoiceDetailsById();
-    //   setInvoiceLoadingState(false);
-    //   onEditInvoiceClose();
-    //   toast({
-    //     position: 'top',
-    //     title: `Successfully Updated Invoice!`,
-    //     description: `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`,
-    //     status: 'success',
-    //     duration: 5000,
-    //     isClosable: true
-    //   });
-    // }
 
     setSelectedEditInvoice({
       id: '',

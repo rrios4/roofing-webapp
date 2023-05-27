@@ -152,11 +152,11 @@ const EditInvoiceForm = (props) => {
             </Text>
             <Flex gap={4} w="full" mt={'1rem'}>
               <Box w={'50%'}>
-                <FormLabel>Note</FormLabel>
+                <FormLabel>Internal Note</FormLabel>
                 <Textarea
                   h={'200px'}
-                  name="note"
-                  value={invoice?.note}
+                  name="private_note"
+                  value={invoice?.private_note}
                   onChange={handleEditOnChange}
                   placeholder="Here you enter notes regarding the invoice that you want to remember..."
                 />
@@ -172,10 +172,10 @@ const EditInvoiceForm = (props) => {
                 />
               </Box>
             </Flex>
-            <FormLabel mt={'1rem'}>Customer Message</FormLabel>
+            <FormLabel mt={'1rem'}>Customer Note</FormLabel>
             <Textarea
-              name="cust_note"
-              value={invoice?.cust_note}
+              name="public_note"
+              value={invoice?.public_note}
               onChange={handleEditOnChange}
               placeholder="Here you enter customer message you want the customer to see..."
             />

@@ -14,7 +14,7 @@ const InvoiceDetailsHeader = (props) => {
       <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
         <Flex px={'1rem'} gap={4} mb={{ base: '0rem', lg: '0' }}>
           <Link to={`/invoices`}>
-            <Button variant={'outline'} border={'1px'} borderColor={'gray.300'}>
+            <Button bg={'white'} border={'1px'} shadow={'xs'} borderColor={'gray.300'}>
               <ChevronLeft size={'15px'} />
             </Button>
           </Link>
@@ -22,7 +22,12 @@ const InvoiceDetailsHeader = (props) => {
         </Flex>
         <Flex px={'1rem'} gap={4} ml={{ base: 'auto', lg: '0' }}>
           <Menu>
-            <MenuButton as={Button} variant={'outline'} border={'1px'} borderColor={'gray.300'}>
+            <MenuButton
+              as={Button}
+              bg={'white'}
+              border={'1px'}
+              shadow={'xs'}
+              borderColor={'gray.300'}>
               <MoreHorizontal size={'15px'} />
             </MenuButton>
             <MenuList>

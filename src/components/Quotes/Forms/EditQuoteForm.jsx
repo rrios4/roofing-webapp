@@ -92,7 +92,7 @@ const EditQuoteForm = (props) => {
             </Text>
             <Flex gap={4} w="full" mt={'1rem'}>
               <Box w={'50%'}>
-                <FormLabel>General Note</FormLabel>
+                <FormLabel>Internal Note</FormLabel>
                 <Textarea
                   h={'200px'}
                   name="private_note"

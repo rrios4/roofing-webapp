@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     color: '#3182CE',
     letterSpacing: 1,
     fontSize: 25,
-    fontWeight: 500,
+    fontWeight: 600,
     textAlign: 'center',
     textTransform: 'uppercase'
   }

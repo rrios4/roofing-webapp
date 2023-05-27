@@ -152,7 +152,7 @@ const QuoteDetailsPane = (props) => {
                   <StickyNote size={'15px'} />
                 </Box>
                 <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                  Private Note
+                  Internal Note
                 </Text>
               </Flex>
               {!quoteById ? (

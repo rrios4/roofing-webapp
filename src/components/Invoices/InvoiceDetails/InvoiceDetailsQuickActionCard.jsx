@@ -44,9 +44,9 @@ const InvoiceDetailsQuickActionCard = (props) => {
       <Card
         size="sm"
         rounded={'lg'}
-        shadow={'none'}
+        shadow={'xs'}
         border={'1px'}
-        borderColor={useColorModeValue('gray.300', 'gray.700')}>
+        borderColor={useColorModeValue('gray.200', 'gray.700')}>
         <CardBody>
           <Flex gap={2} justify={'center'}>
             {/* <Text fontSize={'2xl'} fontWeight={'bold'}>${formatMoneyValue(invoice?.amount_due)}</Text> */}

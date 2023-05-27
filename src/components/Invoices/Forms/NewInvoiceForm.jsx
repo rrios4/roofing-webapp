@@ -191,9 +191,9 @@ const NewInvoiceForm = (props) => {
       invoice_date: invoiceDateInput,
       due_date: invoiceDueDateInput,
       sqft_measurement: sqftInput ? sqftInput : null,
-      note: noteInput ? noteInput : null,
-      cust_note:
-        customerNoteSwitchIsOn === true ? customerNoteMessage : 'Thank you for your business! 🚀',
+      private_note: noteInput ? noteInput : null,
+      public_note: customerNoteSwitchIsOn === true ? customerNoteMessage : '',
+      cust_note: 'Thank you for your business! 🚀',
       bill_to_street_address: billToSwitchIsOn === true ? billToStreetAddressInput : null,
       bill_to_city: billToSwitchIsOn === true ? billToCityInput : null,
       bill_to_state: billToSwitchIsOn === true ? billToStateInput : null,
@@ -713,7 +713,7 @@ const NewInvoiceForm = (props) => {
                 <>
                   <Box w={{ base: 'full', lg: '50%' }}>
                     <FormControl>
-                      <FormLabel mt="1rem">General Note</FormLabel>
+                      <FormLabel mt="1rem">Internal Note</FormLabel>
                       <Textarea
                         height={'200px'}
                         value={noteInput}
@@ -748,9 +748,10 @@ const NewInvoiceForm = (props) => {
               <>
                 <Box>
                   <FormControl>
-                    <FormLabel mt={'2rem'}>Message to Customer</FormLabel>
+                    <FormLabel mt={'2rem'}>Customer Note</FormLabel>
                     <Textarea
-                      placeholder="Thank you for your business! 🚀"
+                      h={'200px'}
+                      placeholder="This is a public note that is meant to be seen by the customer over the project that is being worked on."
                       value={customerNoteMessage}
                       onChange={(e) => setCustomerNoteMessage(e.target.value)}
                     />
@@ -780,7 +781,7 @@ const NewInvoiceForm = (props) => {
                     </Box>
                     <Box>
                       <Text fontSize={'sm'} fontWeight={'bold'}>
-                        General Note
+                        Internal Note
                       </Text>
                       <Text fontSize={'xs'} fontWeight={'normal'}>
                         To jot down general info
@@ -875,10 +876,10 @@ const NewInvoiceForm = (props) => {
                     </Box>
                     <Box>
                       <Text fontSize={'sm'} fontWeight={'bold'}>
-                        Customer Message
+                        Customer Note
                       </Text>
                       <Text fontSize={'xs'} fontWeight={'normal'}>
-                        Write message to customer
+                        Write note to customer
                       </Text>
                     </Box>
                   </Flex>

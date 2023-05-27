@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF'
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     marginRight: 'auto',
     marginLeft: 'auto',
     padding: 4,
@@ -76,6 +76,17 @@ const styles = StyleSheet.create({
   },
   extraInfoText: {
     marginTop: 6
+  },
+  serviceNoteContainer: {
+    marginTop: 12,
+    marginBottom: 6,
+    width: '50%',
+    paddingHorizontal: '1rem',
+    marginHorizontal: '4'
+  },
+  label: {
+    fontWeight: 600,
+    paddingBottom: '4'
   }
 });
 
@@ -107,6 +118,12 @@ const InvoiceDocument = (props) => {
               $ {formatMoneyValue(invoice?.amount_due)}
             </Text>
           </View>
+        </View>
+        {/* Note */}
+        <View style={styles.serviceNoteContainer}>
+          <Text style={styles.label}>Note:</Text>
+          {/* <Text>{quote?.cust_note}</Text> */}
+          <Text>{invoice?.public_note}</Text>
         </View>
         {/* Extra Info Component */}
         <View>

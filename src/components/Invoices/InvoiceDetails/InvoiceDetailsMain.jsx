@@ -18,7 +18,8 @@ import {
   Tr,
   Thead,
   IconButton,
-  useColorModeValue
+  useColorModeValue,
+  Textarea
 } from '@chakra-ui/react';
 import { formatNumber, formatDate, formatMoneyValue } from '../../../utils';
 import { X } from 'lucide-react';
@@ -40,9 +41,9 @@ const InvoiceDetailsMain = (props) => {
         <Card
           w={'full'}
           rounded={'lg'}
-          shadow={'none'}
+          shadow={'xs'}
           border={'1px'}
-          borderColor={useColorModeValue('gray.300', 'gray.700')}>
+          borderColor={useColorModeValue('gray.200', 'gray.700')}>
           <CardBody>
             {/* Header with Buttons */}
             <Flex justifyContent={'flex-end'} pr={'1rem'}>
@@ -182,7 +183,18 @@ const InvoiceDetailsMain = (props) => {
                   />
                 ) : (
                   <>
-                    <Text ml={'3rem'}>{invoice?.cust_note}</Text>
+                    <Textarea
+                      readOnly
+                      bg={'gray.100'}
+                      border={'none'}
+                      ml={'3rem'}
+                      maxW="600px"
+                      value={
+                        invoice?.public_note
+                          ? invoice?.public_note
+                          : 'There is no note for the customer to see for this quote... 🙅‍♂️'
+                      }
+                    />
                   </>
                 )}
               </Flex>

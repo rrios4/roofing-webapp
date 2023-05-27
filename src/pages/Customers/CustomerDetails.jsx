@@ -181,9 +181,10 @@ const CustomerById = () => {
           <Box display={'flex'} justifyContent="start" w="full">
             <Link to={'/customers'}>
               <Button
-                variant={'outline'}
-                ml={'1rem'}
-                mb="1rem"
+                bg={'white'}
+                border={'1px'}
+                shadow={'xs'}
+                borderColor={'gray.300'}
                 leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>
                 Back
               </Button>

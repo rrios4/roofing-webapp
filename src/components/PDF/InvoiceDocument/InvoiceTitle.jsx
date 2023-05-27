@@ -9,8 +9,9 @@ const styles = StyleSheet.create({
   },
   reportTitle: {
     color: '#3182CE',
-    letterSpacing: 4,
+    letterSpacing: 1,
     fontSize: 25,
+    fontWeight: 600,
     textAlign: 'center',
     textTransform: 'uppercase'
   }

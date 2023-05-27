@@ -43,9 +43,9 @@ const InvoiceDetailsPane = (props) => {
         w={'full'}
         size="lg"
         rounded={'lg'}
-        shadow={'none'}
+        shadow={'xs'}
         border={'1px'}
-        borderColor={useColorModeValue('gray.300', 'gray.700')}>
+        borderColor={useColorModeValue('gray.200', 'gray.700')}>
         <CardBody overflowY={'auto'}>
           {/* Invoice Extra Details */}
           <Box>
@@ -224,7 +224,7 @@ const InvoiceDetailsPane = (props) => {
                   <StickyNote size={'15px'} />
                 </Box>
                 <Text fontWeight={'semibold'} textColor={secondaryTextColor}>
-                  Note
+                  Internal Note
                 </Text>
               </Flex>
               {!invoice ? (
@@ -236,7 +236,11 @@ const InvoiceDetailsPane = (props) => {
                       <Textarea
                         border="none"
                         isReadOnly
-                        value={!invoice?.note ? 'No note for this invoice... 🙅‍♂️' : invoice?.note}
+                        value={
+                          !invoice?.private_note
+                            ? 'No note for this invoice... 🙅‍♂️'
+                            : invoice?.private_note
+                        }
                       />
                       {/* {!invoice?.note ? '❌ No note for this invoice...' : <Text>{invoice.note}</Text>} */}
                     </Box>

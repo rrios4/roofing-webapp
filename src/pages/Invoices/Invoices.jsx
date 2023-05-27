@@ -85,8 +85,8 @@ function Invoices() {
     issue_date: '',
     due_date: '',
     sqft_measurement: '',
-    note: '',
-    cust_note: ''
+    private_note: '',
+    public_note: ''
   });
 
   const [selectedInvoiceId, setSelectedInvoiceId] = useState('');
@@ -117,8 +117,8 @@ function Invoices() {
       issue_date: invoice.issue_date,
       due_date: invoice.due_date,
       sqft_measurement: invoice.sqft_measurement,
-      note: invoice.note,
-      cust_note: invoice.cust_note
+      private_note: invoice.public_note,
+      public_note: invoice.private_note
     });
     onEditOpen();
   };
@@ -139,8 +139,8 @@ function Invoices() {
         issue_date: selectedEditInvoice.issue_date,
         due_date: selectedEditInvoice.due_date,
         sqft_measurement: selectedEditInvoice.sqft_measurement,
-        note: selectedEditInvoice.note,
-        cust_note: selectedEditInvoice.cust_note,
+        public_note: selectedEditInvoice.public_note,
+        private_note: selectedEditInvoice.private_note,
         updated_at: new Date()
       },
       {
