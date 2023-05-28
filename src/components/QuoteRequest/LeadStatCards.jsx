@@ -1,8 +1,16 @@
 import React from 'react';
 import { Flex, useColorModeValue, Text, Box } from '@chakra-ui/react';
 import { Archive, CalendarCheck, CheckCircle, ChevronUp, CircleDot, Inbox } from 'lucide-react';
+import {
+  useFetchTotalClosedLeads,
+  useFetchTotalNewLeads,
+  useFetchTotalScheduledLeads
+} from '../../hooks/useAPI/useReports';
 
 const LeadStatCards = () => {
+  const { data: totalNewLeads } = useFetchTotalNewLeads();
+  const { data: totalScheduledLeads } = useFetchTotalScheduledLeads();
+  const { data: totalClosedLeads } = useFetchTotalClosedLeads();
   return (
     <>
       <Flex w="full" gap={4} flexDir={{ base: 'column', md: 'row' }}>
@@ -24,7 +32,7 @@ const LeadStatCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              0
+              {totalNewLeads}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box
@@ -65,7 +73,7 @@ const LeadStatCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              4
+              {totalScheduledLeads}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box
@@ -106,7 +114,7 @@ const LeadStatCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              358
+              {totalClosedLeads}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box

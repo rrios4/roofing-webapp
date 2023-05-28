@@ -66,6 +66,12 @@ import { BsChevronDown } from 'react-icons/bs';
 import { faker } from '@faker-js/faker';
 import supabase from '../../utils/supabaseClient';
 import { LogOut, Settings, User } from 'lucide-react';
+import {
+  useFetchTotalCustomers,
+  useFetchTotalNewLeads,
+  useFetchTotalOverdueInvoices,
+  useFetchTotalPendingQuotes
+} from '../../hooks/useAPI/useReports';
 
 // export const data = {
 //   labels,
@@ -103,6 +109,11 @@ const Dashboard = ({ children }) => {
   const twoYearsAgo = currentYear - 2;
   const currentMonthAcronym = date.toFormat('MMM');
 
+  const { data: newQRRequestCount } = useFetchTotalNewLeads();
+  const { data: totalCustomersCount } = useFetchTotalCustomers();
+  const { data: pendingQuotesCount } = useFetchTotalPendingQuotes();
+  const { data: overdueInvoicesCount } = useFetchTotalOverdueInvoices();
+
   //React states
   const [monthlyGraphRevenueDataSet01, setMonthlyGraphRevenueDataSet01] = useState('');
   const [monthlyGraphRevenueDataSet02, setMonthlyGraphRevenueDataSet02] = useState('');
@@ -117,10 +128,6 @@ const Dashboard = ({ children }) => {
   const [quotesRecentData, setQuotesRecentData] = useState('');
   const [customerRecentData, setCustomerRecentData] = useState('');
   const [invoiceRecentData, setInvoiceRecentData] = useState('');
-  const [overdueInvoicesCount, setoverdueInvoicesCount] = useState('');
-  const [newQRRequestCount, setNewQRRequestCount] = useState('');
-  const [pendingQuotesCount, setPendingQuotesCount] = useState('');
-  const [totalCustomersCount, setTotalCustomersCount] = useState('');
 
   useEffect(() => {
     // if a user is logged in, their username will be in Local Storage as 'currentUser' until they log out.
@@ -130,10 +137,6 @@ const Dashboard = ({ children }) => {
     // console.log(localStorage.getItem('supabase.auth.token'))
     userData();
     getRecentQR();
-    invoicesOverDueCount();
-    qrRequestNewCount();
-    quotesPendingCount();
-    totalCustomers();
     getRecentQuotes();
     getRecentCustomer();
     getRecentInvoices();
@@ -156,48 +159,6 @@ const Dashboard = ({ children }) => {
     setloggedInUserData(auth.user.user_metadata);
     console.log(loggedInUserData);
     console.log(bg);
-  };
-
-  // Handles getting a count of all invoice with Overdue Status
-  const invoicesOverDueCount = async () => {
-    // const count = await supabase.sql`
-    //     SELECT COUNT(*)
-    //     FROM invoice
-    //     WHERE status = 1 AND created_at BETWEEN ${startOfWeek} AND ${endOfWeek}
-    // `
-    const { count } = await supabase
-      .from('invoice')
-      .select('*', { count: 'exact' })
-      .eq('invoice_status_id', 3);
-
-    setoverdueInvoicesCount(count);
-  };
-
-  // Handles getting a count of all quote requests with a New Status
-  const qrRequestNewCount = async () => {
-    const { count } = await supabase
-      .from('quote_request')
-      .select('*', { count: 'exact' })
-      .eq('est_request_status_id', 1);
-
-    setNewQRRequestCount(count);
-  };
-
-  // Handles getting a count of all quotes with a Pending Status
-  const quotesPendingCount = async () => {
-    const { count } = await supabase
-      .from('quote')
-      .select('*', { count: 'exact' })
-      .eq('status_id', 2);
-
-    setPendingQuotesCount(count);
-  };
-
-  // Handles getting a count of all customers registed in DB
-  const totalCustomers = async () => {
-    const { count } = await supabase.from('customer').select('*', { count: 'exact' });
-
-    setTotalCustomersCount(count);
   };
 
   // Handles getting the recent Quote Request from DB

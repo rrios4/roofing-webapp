@@ -1,8 +1,16 @@
 import React from 'react';
 import { Flex, useColorModeValue, Text, Box } from '@chakra-ui/react';
 import { Building, ChevronUp, Store, Users } from 'lucide-react';
+import {
+  useFetchTotalCommercialCustomers,
+  useFetchTotalCustomers,
+  useFetchTotalResidentialCustomers
+} from '../../hooks/useAPI/useReports';
 
 const CustomerStatsCards = () => {
+  const { data: totalCustomers } = useFetchTotalCustomers();
+  const { data: totalResidentialCustomers } = useFetchTotalResidentialCustomers();
+  const { data: totalCommercialCustomers } = useFetchTotalCommercialCustomers();
   return (
     <>
       <Flex w="full" gap={4} flexDir={{ base: 'column', md: 'row' }}>
@@ -22,7 +30,7 @@ const CustomerStatsCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              2,420
+              {totalCustomers}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box
@@ -38,7 +46,7 @@ const CustomerStatsCards = () => {
                     <ChevronUp size={'20px'} color="green" />
                   </Flex>
                   <Text fontSize={'14px'} fontWeight={'500'} my={'auto'} textColor={'green.500'}>
-                    5%
+                    0%
                   </Text>
                 </Flex>
               </Box>
@@ -61,7 +69,7 @@ const CustomerStatsCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              2,120
+              {totalResidentialCustomers}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box
@@ -77,7 +85,7 @@ const CustomerStatsCards = () => {
                     <ChevronUp size={'20px'} color="green" />
                   </Flex>
                   <Text fontSize={'14px'} fontWeight={'500'} my={'auto'} textColor={'green.500'}>
-                    10%
+                    0%
                   </Text>
                 </Flex>
               </Box>
@@ -100,7 +108,7 @@ const CustomerStatsCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              300
+              {totalCommercialCustomers}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box
@@ -116,7 +124,7 @@ const CustomerStatsCards = () => {
                     <ChevronUp size={'15px'} color="green" />
                   </Flex>
                   <Text fontSize={'14px'} fontWeight={'500'} my={'auto'} textColor={'green.500'}>
-                    2%
+                    0%
                   </Text>
                 </Flex>
               </Box>

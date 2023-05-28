@@ -1,8 +1,16 @@
 import React from 'react';
 import { Flex, useColorModeValue, Text, Box } from '@chakra-ui/react';
 import { CheckCircle, ChevronUp, CircleDot, MinusCircle } from 'lucide-react';
+import {
+  useFetchTotalOverdueInvoices,
+  useFetchTotalPaidInvoices,
+  useFetchTotalPendingInvoices
+} from '../../hooks/useAPI/useReports';
 
 const InvoiceStatCards = () => {
+  const { data: totalPendingInvoices } = useFetchTotalPendingInvoices();
+  const { data: totalPaidInvoices } = useFetchTotalPaidInvoices();
+  const { data: totalOverdueInvoices } = useFetchTotalOverdueInvoices();
   return (
     <>
       <Flex w="full" gap={4} flexDir={{ base: 'column', md: 'row' }}>
@@ -23,7 +31,7 @@ const InvoiceStatCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              0
+              {totalOverdueInvoices}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box
@@ -63,7 +71,7 @@ const InvoiceStatCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              4
+              {totalPendingInvoices}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box
@@ -103,7 +111,7 @@ const InvoiceStatCards = () => {
           </Flex>
           <Flex mt={'2'}>
             <Text fontSize={'36px'} fontWeight={'600'} w={'60%'}>
-              358
+              {totalPaidInvoices}
             </Text>
             <Flex w={'40%'} justify={'flex-end'}>
               <Box
@@ -119,7 +127,7 @@ const InvoiceStatCards = () => {
                     <ChevronUp size={'15px'} color="green" />
                   </Flex>
                   <Text fontSize={'14px'} fontWeight={'500'} my={'auto'} textColor={'green.500'}>
-                    2%
+                    0%
                   </Text>
                 </Flex>
               </Box>
