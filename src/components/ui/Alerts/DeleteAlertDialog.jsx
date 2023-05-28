@@ -29,26 +29,42 @@ const DeleteAlertDialog = (props) => {
     <Modal isOpen={isOpen} onClose={onClose} size={{ base: 'full', md: 'lg' }}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
-          <Flex gap={'2'}>
-            <Box my={'auto'}>
-              <Trash2 size={'20px'} />
-            </Box>
-            <Text>{header}</Text>
-          </Flex>
-          {/* Delete {tableName} */}
-        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Box fontWeight={'bold'} mb={'1rem'} textColor={useColorModeValue('red.500', 'red.400')}>
-            Are you sure you want to delete:{' '}
-            <Text as="span" textColor={useColorModeValue('gray.700', 'gray.300')}>
-              {entityDescription}{' '}
-            </Text>
-            ?{' '}
-          </Box>
-          {/* <Text>Once you confirm there will be no way to restore the information. 😢</Text> */}
-          <Text>{body}</Text>
+          <Flex mt={'4'} w={'full'}>
+            <Box w={'20%'} mx={'auto'}>
+              <Flex
+                w={'80px'}
+                h={'80px'}
+                mx={'auto'}
+                justifyContent={'center'}
+                p={'3'}
+                bg={'red.50'}
+                rounded={'full'}>
+                <Flex
+                  w={'full'}
+                  h={'full'}
+                  bg={'red.100'}
+                  rounded={'full'}
+                  justifyContent={'center'}>
+                  <Flex w={'full'} flexDir={'column'} justify={'center'} mx={'auto'}>
+                    <Flex w={'full'} justify={'center'}>
+                      <Trash2 size={'20px'} color="darkred" />
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Box>
+            <Box w={'80%'} mx={'2'} px={'2'}>
+              <Text fontSize={'18px'} fontWeight={'600'}>
+                Delete{' '}
+                <Text as={'span'} textTransform={'lowercase'}>
+                  {entityDescription}
+                </Text>
+              </Text>
+              <Text fontSize={'14px'}>{body}</Text>
+            </Box>
+          </Flex>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme={'red'} onClick={handleOnClick} isLoading={loadingState}>
