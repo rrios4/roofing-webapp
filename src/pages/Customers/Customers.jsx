@@ -1,38 +1,31 @@
 import React, { useState } from 'react';
-import {
-  NewCustomerForm,
-  PageHeader,
-  CustomerFilterBar,
-  CustomerStatsCards
-} from '../../components';
+import { NewCustomerForm, PageHeader, CustomerStatsCards } from '../../components';
 import { useDisclosure, VStack, useToast } from '@chakra-ui/react';
-import { useFetchCustomers, useSearchCustomers } from '../../hooks/useAPI/useCustomers';
+import { useFetchCustomers } from '../../hooks/useAPI/useCustomers';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import useDebounce from '../../hooks/useDebounce';
 import DataTable from '../../components/ui/DataTable';
 import customerColumns from '../../components/Customers/Tables/CustomerColumns';
 
 export default function Customers() {
-  // Custom React Hook to use Customers with useState
-  const { data: customerTypes } = useFetchAllCustomerTypes();
-
   // Chakra UI Hook toast
   const toast = useToast();
+  const initialRef = React.useRef();
+  //const finalRef = React.useRef();
+
+  // Custom React Hook to use Customers with useState
+  const { data: customerTypes } = useFetchAllCustomerTypes();
+  const { customers, isLoading } = useFetchCustomers();
 
   //For opening drawer components
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialRef = React.useRef();
-  //const finalRef = React.useRef();
 
   //GET data from API
   // const [customers, setCustomers] = useState(null);
   const [searchCustomer, setSearchCustomer] = useState('');
+  const [columnFilters, setColumnFilters] = React.useState([]);
+
   const debouncedCustomerSearchTerm = useDebounce(searchCustomer, 100);
-  const { customers, isLoading } = useFetchCustomers();
-  const { data: customerSearchResult, isLoading: customerIsLoading } = useSearchCustomers(
-    debouncedCustomerSearchTerm
-  );
-  const customerTableData = React.useMemo(async () => customers, []);
 
   return (
     <>
@@ -52,13 +45,14 @@ export default function Customers() {
           onOpen={onOpen}
         />
         <CustomerStatsCards />
-        <CustomerFilterBar />
         <DataTable
           data={customers}
           columns={customerColumns}
           entity={'customer'}
           isLoading={isLoading}
           activateModal={onOpen}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
         />
       </VStack>
     </>

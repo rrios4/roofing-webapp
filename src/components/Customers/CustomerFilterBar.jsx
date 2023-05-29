@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Search } from 'lucide-react';
 
-const CustomerFilterBar = () => {
+const CustomerFilterBar = ({ rootTable }) => {
   return (
     <>
       <Box w={'full'}>
@@ -35,9 +35,14 @@ const CustomerFilterBar = () => {
                 <Search size={'20px'} color="gray" />
               </InputLeftElement>
               <Input
+                name="search_customer"
                 type={'search'}
                 placeholder="Search"
                 bg={useColorModeValue('white', 'gray.800')}
+                onChange={(event) =>
+                  rootTable?.getColumn('first_name')?.setFilterValue(event.target.value)
+                }
+                value={rootTable?.getColumn('first_name')?.getFilterValue() ?? ''}
               />
             </InputGroup>
           </Box>

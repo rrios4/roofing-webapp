@@ -19,13 +19,17 @@ import {
   useReactTable,
   flexRender,
   getPaginationRowModel,
-  getSortedRowModel
+  getSortedRowModel,
+  getFilteredRowModel
 } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight, UserX } from 'lucide-react';
 import EmptyState from './EmptyState';
+import CustomerFilterBar from '../Customers/CustomerFilterBar';
 
 const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
   const [sorting, setSorting] = React.useState([]);
+  const [columnFilters, setColumnFilters] = React.useState([]);
+  const [globalFilter, setGlobalFilter] = React.useState('');
   const table = useReactTable({
     data,
     columns,
@@ -33,27 +37,45 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     state: {
-      sorting
+      sorting,
+      columnFilters,
+      globalFilter
     }
   });
 
   if (isLoading === true) {
-    return <Skeleton w={'full'} h={'200px'} rounded={'lg'} />;
+    return (
+      <>
+        <CustomerFilterBar />
+        <Skeleton w={'full'} h={'200px'} rounded={'lg'} />
+      </>
+    );
   }
 
   if (!data) {
     return (
-      <EmptyState
-        emptyStateIcon={<UserX size={'20px'} />}
-        entity={entity}
-        activateModal={activateModal}
-      />
+      <>
+        <CustomerFilterBar />
+        <EmptyState
+          emptyStateIcon={<UserX size={'20px'} />}
+          entity={entity}
+          activateModal={activateModal}
+        />
+      </>
     );
   }
 
   return (
     <>
+      <CustomerFilterBar
+        rootTable={table}
+        // globalFilter={globalFilter}
+        // setGlobalFilter={setGlobalFilter}
+      />
       <Box w={'full'}>
         <TableContainer
           roundedTop={'lg'}
@@ -136,47 +158,6 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
             </Button>
           </Flex>
         </Flex>
-        {/* <table>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            {table.getFooterGroups().map((footerGroup) => (
-              <tr key={footerGroup.id}>
-                {footerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.footer, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </tfoot>
-        </table> */}
-        {/* <div className="h-4" />
-        <button onClick={() => rerender()} className="border p-2">
-          Rerender
-        </button> */}
       </Box>
     </>
   );
