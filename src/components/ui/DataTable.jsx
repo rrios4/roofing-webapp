@@ -127,7 +127,7 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
             <Button
               gap={4}
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}>
+              isDisabled={!table.getCanPreviousPage()}>
               <ChevronLeft size={'15px'} />
               <Text fontSize={'14px'} fontWeight={600} display={{ base: 'none', md: 'flex' }}>
                 Previous
@@ -164,7 +164,7 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
             </Flex>
           </Flex>
           <Flex w={'25%'} justify={'flex-end'}>
-            <Button gap={4} onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+            <Button gap={4} onClick={() => table.nextPage()} isDisabled={!table.getCanNextPage()}>
               <Text fontSize={'14px'} fontWeight={600} display={{ base: 'none', md: 'flex' }}>
                 Next
               </Text>
