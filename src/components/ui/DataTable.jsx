@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Flex,
+  Select,
   Skeleton,
   Table,
   TableContainer,
@@ -84,7 +85,7 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
           <Table size={'md'}>
             <Thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <Tr key={headerGroup.id} bg={useColorModeValue('gray.100', 'gray.700')} h={'44px'}>
+                <Tr key={headerGroup.id} bg={useColorModeValue('gray.100', 'gray.700')}>
                   {headerGroup.headers.map((header) => (
                     <Th key={header.id}>
                       {header.isPlaceholder
@@ -133,20 +134,33 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
               </Text>
             </Button>
           </Box>
-          <Flex my={'auto'} w={'50%'} justify={'center'}>
-            <Flex gap={1}>
+          <Flex my={'auto'} w={'50%'} justify={'center'} gap={4}>
+            <Flex gap={1} my={'auto'}>
               <Text fontSize={'14px'} fontWeight={'400'}>
                 Page
               </Text>
               <Text fontSize={'14px'} fontWeight={'400'}>
-                1
+                {table.getState().pagination.pageIndex + 1}
               </Text>
               <Text fontSize={'14px'} fontWeight={'400'}>
                 of
               </Text>
               <Text fontSize={'14px'} fontWeight={'400'}>
-                10
+                {table.getPageCount()}
               </Text>
+            </Flex>
+            <Flex my={'auto'} gap={2}>
+              <Select
+                value={table.getState().pagination.pageSize}
+                onChange={(e) => {
+                  table.setPageSize(Number(e.target.value));
+                }}>
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <option key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                  </option>
+                ))}
+              </Select>
             </Flex>
           </Flex>
           <Flex w={'25%'} justify={'flex-end'}>
