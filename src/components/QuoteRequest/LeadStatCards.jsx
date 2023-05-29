@@ -130,7 +130,7 @@ const LeadStatCards = () => {
                     <ChevronUp size={'15px'} color="green" />
                   </Flex>
                   <Text fontSize={'14px'} fontWeight={'500'} my={'auto'} textColor={'green.500'}>
-                    2%
+                    0%
                   </Text>
                 </Flex>
               </Box>

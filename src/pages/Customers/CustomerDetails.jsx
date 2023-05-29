@@ -181,7 +181,7 @@ const CustomerById = () => {
           <Box display={'flex'} justifyContent="start" w="full">
             <Link to={'/customers'}>
               <Button
-                bg={'white'}
+                bg={useColorModeValue('white', '')}
                 border={'1px'}
                 shadow={'xs'}
                 borderColor={'gray.300'}

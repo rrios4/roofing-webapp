@@ -28,7 +28,7 @@ export { default as EditCustomerForm } from './Customers/Forms/EditCustomerForm'
 export { default as QuoteRequestStatusOptions } from './QuoteRequest/QuoteRequestsStatusOptions';
 export { default as InvoiceTable } from './Invoices/InvoiceTable';
 export { default as QuoteRequestTable } from './QuoteRequest/QuoteRequestTable.jsx';
-export { default as CustomerTable } from './Customers/CustomerTable.jsx';
+export { default as CustomerTable } from './Customers/Tables/CustomerTable.jsx';
 export { default as QuoteTable } from './Quotes/QuoteTable.jsx';
 export { default as InvoiceFilterSwitchPopover } from './Invoices/InvoiceFilterSwitchPopover';
 export { default as QuoteRequestRecentTable } from './Dashboard/Tables/QuoteRequestRecentTable';

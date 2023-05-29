@@ -1,41 +1,16 @@
 import React, { useState } from 'react';
 import {
   NewCustomerForm,
-  CustomerTable,
   PageHeader,
   CustomerFilterBar,
   CustomerStatsCards
 } from '../../components';
-import {
-  Flex,
-  Box,
-  Text,
-  Input,
-  useBreakpointValue,
-  Tooltip,
-  useDisclosure,
-  FormControl,
-  VStack,
-  Icon,
-  IconButton,
-  useToast,
-  Skeleton,
-  Card,
-  CardBody,
-  useColorModeValue,
-  StatHelpText,
-  StatArrow,
-  Stat
-} from '@chakra-ui/react';
-import { IoMdPersonAdd } from 'react-icons/io';
-// import { MdSearch } from 'react-icons/md';
-import { FiUsers } from 'react-icons/fi';
+import { useDisclosure, VStack, useToast } from '@chakra-ui/react';
 import { useFetchCustomers, useSearchCustomers } from '../../hooks/useAPI/useCustomers';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import useDebounce from '../../hooks/useDebounce';
-import { Building, ChevronUp, MoreHorizontal, MoreVertical, Store, Users } from 'lucide-react';
-// import { Link } from 'react-router-dom';
-// import { MdArrowBack } from 'react-icons/md';
+import DataTable from '../../components/ui/DataTable';
+import customerColumns from '../../components/Customers/Tables/CustomerColumns';
 
 export default function Customers() {
   // Custom React Hook to use Customers with useState
@@ -57,11 +32,7 @@ export default function Customers() {
   const { data: customerSearchResult, isLoading: customerIsLoading } = useSearchCustomers(
     debouncedCustomerSearchTerm
   );
-
-  const isWideVersion = useBreakpointValue({
-    base: false,
-    xl: true
-  });
+  const customerTableData = React.useMemo(async () => customers, []);
 
   return (
     <>
@@ -82,31 +53,13 @@ export default function Customers() {
         />
         <CustomerStatsCards />
         <CustomerFilterBar />
-        {/* Card Element for display main data for page */}
-        <Card
-          width="full"
-          size={{ base: 'md', lg: 'md' }}
-          rounded={'lg'}
-          shadow={'xs'}
-          border={'1px'}
-          borderColor={useColorModeValue('gray.200', 'gray.700')}>
-          <CardBody>
-            {/* Customer Table Component */}
-            {/* Renders a table with all customers stored from database */}
-            {isLoading || customerIsLoading === true ? (
-              <Box w={'full'} h={'200px'}>
-                <Skeleton w={'full'} h={'200px'} rounded={'xl'} />
-              </Box>
-            ) : (
-              <>
-                <CustomerTable
-                  data={!searchCustomer ? customers : customerSearchResult}
-                  isWideVersion={isWideVersion}
-                />
-              </>
-            )}
-          </CardBody>
-        </Card>
+        <DataTable
+          data={customers}
+          columns={customerColumns}
+          entity={'customer'}
+          isLoading={isLoading}
+          activateModal={onOpen}
+        />
       </VStack>
     </>
   );

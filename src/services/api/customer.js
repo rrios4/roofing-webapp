@@ -4,13 +4,12 @@ import supabase from '../../utils/supabaseClient';
 export const fetchCustomers = async () => {
   const { data, error } = await supabase
     .from('customer')
-    .select('*')
+    .select('*, customer_type:customer_type_id(*)')
     .order('created_at', { ascending: false });
 
   if (error) {
     console.log(error);
   }
-
   return data;
 };
 

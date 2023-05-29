@@ -41,10 +41,12 @@ const CustomerDetailsCard = (props) => {
             <Flex direction={'column'}>
               {/* Customer Header Section */}
               <Avatar
+                name={`${customer?.first_name} ${customer?.last_name}`}
+                bg={useColorModeValue('gray.200', 'gray.500')}
+                textColor={useColorModeValue('gray.700', 'gray.200')}
                 size={'2xl'}
                 mx={'auto'}
                 mb={'1rem'}
-                src="https://i.pinimg.com/originals/0b/3d/f1/0b3df19a63dfe264cfd984f6864a77b3.jpg"
               />
               <Text fontSize={'2xl'} fontWeight={'bold'} mx={'auto'}>
                 {customer?.first_name} {customer?.last_name}

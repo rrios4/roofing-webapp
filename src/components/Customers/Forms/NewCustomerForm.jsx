@@ -95,7 +95,7 @@ const NewCustomerForm = (props) => {
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>New Customer</DrawerHeader>
+          <DrawerHeader>Add Customer</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
               Create
@@ -206,7 +206,7 @@ const NewCustomerForm = (props) => {
           </DrawerBody>
           <DrawerFooter gap={4}>
             <Button colorScheme={'blue'} type="submit" isLoading={isLoading}>
-              Create Customer
+              Add customer
             </Button>
             <Button onClick={onClose} mr={'1rem'}>
               Cancel
