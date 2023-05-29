@@ -1,14 +1,14 @@
 import React from 'react';
 import { Avatar, Badge, Box, Button, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
-import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ArrowUpDown, MoreHorizontal, ChevronRight } from 'lucide-react';
 
 const columnHelper = createColumnHelper();
 const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
 
 export const customerColumns = [
-  columnHelper.accessor('customer', {
+  columnHelper.accessor('first_name', {
     cell: ({ row }) => {
       const customer = row.original;
       return (
@@ -29,9 +29,23 @@ export const customerColumns = [
           </Box>
         </Flex>
       );
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          py={0}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Customer
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      );
     }
   }),
-  columnHelper.accessor('customerType', {
+  columnHelper.accessor('customer_type_id', {
     cell: ({ row }) => {
       const customer = row.original;
       if (customer.customer_type.name === 'Residential') {
@@ -69,7 +83,18 @@ export const customerColumns = [
         );
       }
     },
-    header: () => <Text>Type</Text>
+    header: ({ column }) => (
+      <Button
+        py={0}
+        fontSize={'14px'}
+        variant={'ghost'}
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Type
+        <Box ml={2} h={4} w={4}>
+          <ArrowUpDown size={'15px'} />
+        </Box>
+      </Button>
+    )
   }),
   columnHelper.accessor('address', {
     cell: ({ row }) => {
@@ -105,12 +130,27 @@ export const customerColumns = [
     },
     header: () => <Text>Phone Number</Text>
   }),
-  columnHelper.accessor('createdAt', {
+  columnHelper.accessor('created_at', {
     cell: ({ row }) => {
       const customer = row.original;
-      return <Text>{new Date(customer.created_at).toLocaleDateString('en-us', options)}</Text>;
+      return (
+        <Text fontSize={'14px'}>
+          {new Date(customer.created_at).toLocaleDateString('en-us', options)}
+        </Text>
+      );
     },
-    header: () => <Text>Registered Since</Text>
+    header: ({ column }) => (
+      <Button
+        py={0}
+        fontSize={'14px'}
+        variant={'ghost'}
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Registered Since
+        <Box ml={2} h={4} w={4}>
+          <ArrowUpDown size={'15px'} />
+        </Box>
+      </Button>
+    )
   }),
   columnHelper.accessor('actions', {
     cell: ({ row }) => {

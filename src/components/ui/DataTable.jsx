@@ -18,17 +18,24 @@ import {
   getCoreRowModel,
   useReactTable,
   flexRender,
-  getPaginationRowModel
+  getPaginationRowModel,
+  getSortedRowModel
 } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight, UserX } from 'lucide-react';
 import EmptyState from './EmptyState';
 
 const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
+  const [sorting, setSorting] = React.useState([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel()
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting
+    }
   });
 
   if (isLoading === true) {
