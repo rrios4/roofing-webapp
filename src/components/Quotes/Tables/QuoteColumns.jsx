@@ -6,13 +6,18 @@ import {
   Button,
   Flex,
   Text,
+  Tooltip,
   useColorMode,
-  useColorModeValue
+  useColorModeValue,
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
-import { ArrowUpDown, ChevronRight } from 'lucide-react';
+import { ArrowUpDown, ChevronRight, Edit, Pencil, Trash } from 'lucide-react';
 import { formatDate, formatMoneyValue, formatNumber, monthDDYYYYFormat } from '../../../utils';
+import ConnectedQuoteDeleteAlertDialog from '../../ui/Alerts/ConnectedAlerts/ConnectedQuoteDeleteAlertDialog';
+import EditQuoteForm from '../Forms/EditQuoteForm';
 
 const columnHelper = createColumnHelper();
 // const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
@@ -161,13 +166,43 @@ export const quoteColumns = [
     header: () => <Text>Actions</Text>,
     cell: ({ row }) => {
       const quote = row.original;
+      const {
+        onOpen: onDeleteOpen,
+        onClose: onDeleteClose,
+        isOpen: isDeleteOpen
+      } = useDisclosure();
+      const { onOpen: onEditOpen, onClose: onEditClose, isOpen: isEditOpen } = useDisclosure();
+      const toast = useToast();
+
       return (
-        <Flex>
-          <Link to={`/quotes/${quote.quote_number}`}>
-            <Button px={0}>
-              <ChevronRight size={'15px'} />
+        <Flex gap={2}>
+          <ConnectedQuoteDeleteAlertDialog
+            isOpen={isDeleteOpen}
+            onClose={onDeleteClose}
+            itemNumber={quote.quote_number}
+            toast={toast}
+            header={`Delete Quote`}
+            entityDescription={`Quote #${formatNumber(quote.quote_number)}`}
+            body={`Once you confirm you can't undo this action afterwards. There will be no way to restore the information. 🚨`}
+          />
+          <EditQuoteForm isOpen={isEditOpen} onClose={onEditClose} quote={quote} />
+          <Tooltip label="Edit">
+            <Button p={0} onClick={onEditOpen}>
+              <Pencil size={'15px'} />
             </Button>
-          </Link>
+          </Tooltip>
+          <Tooltip label="Delete">
+            <Button p={0} onClick={onDeleteOpen}>
+              <Trash size={'15px'} />
+            </Button>
+          </Tooltip>
+          <Tooltip label="Quote Details">
+            <Link to={`/quotes/${quote.quote_number}`}>
+              <Button px={0}>
+                <ChevronRight size={'15px'} />
+              </Button>
+            </Link>
+          </Tooltip>
         </Flex>
       );
     }

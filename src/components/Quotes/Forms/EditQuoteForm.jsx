@@ -18,6 +18,7 @@ import {
   Avatar
 } from '@chakra-ui/react';
 import { MultiPurposeOptions } from '../..';
+import { formatNumber } from '../../../utils';
 
 const EditQuoteForm = (props) => {
   const {
@@ -30,18 +31,13 @@ const EditQuoteForm = (props) => {
     handleEditSubmit,
     loadingState
   } = props;
-
-  useEffect(() => {
-    console.log(quote);
-  }, []);
-
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
       <form method="PATCH" onSubmit={handleEditSubmit}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader shadow={'xs'}>Edit Quote - {quote?.quote_number}</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>Edit Quote #{formatNumber(quote?.quote_number)}</DrawerHeader>
           <DrawerBody>
             <Text fontWeight={'bold'} color={'blue.500'} mt={'0rem'} mb={'1rem'} fontSize={'md'}>
               General Info
