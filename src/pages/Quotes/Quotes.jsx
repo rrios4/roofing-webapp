@@ -36,6 +36,8 @@ import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses';
 import useDebounce from '../../hooks/useDebounce';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 import { Circle, Search } from 'lucide-react';
+import DataTable from '../../components/ui/DataTable';
+import quoteColumns from '../../components/Quotes/Tables/QuoteColumns';
 
 function Estimates() {
   // const queryClient = useQueryClient();
@@ -222,7 +224,14 @@ function Estimates() {
             </Box>
           </Flex>
         </Box>
-        {quotesLoadingStateIsOn === true && (
+        <DataTable
+          data={quotes}
+          columns={quoteColumns}
+          isLoading={quotesLoadingStateIsOn}
+          entity={'quote'}
+          activateModal={onNewOpen}
+        />
+        {/* {quotesLoadingStateIsOn === true && (
           <>
             <Box w={'full'} h={'200px'}>
               <Skeleton h={'200px'} rounded={'xl'} />
@@ -237,7 +246,6 @@ function Estimates() {
           border={'1px'}
           borderColor={useColorModeValue('gray.200', 'gray.700')}>
           <CardBody>
-            {/* Table for all all quotes from DB */}
             {quotesLoadingStateIsOn === true ? (
               <Box w={'full'} h={'200px'}>
                 <Skeleton h={'200px'} rounded={'xl'} />
@@ -252,7 +260,7 @@ function Estimates() {
               </>
             )}
           </CardBody>
-        </Card>
+        </Card> */}
       </VStack>
     </>
   );

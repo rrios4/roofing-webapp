@@ -23,7 +23,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel
 } from '@tanstack/react-table';
-import { ChevronLeft, ChevronRight, UserX } from 'lucide-react';
+import { ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
 import EmptyState from './EmptyState';
 import CustomerFilterBar from '../Customers/CustomerFilterBar';
 
@@ -62,7 +62,7 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
       <>
         <CustomerFilterBar />
         <EmptyState
-          emptyStateIcon={<UserX size={'20px'} />}
+          emptyStateIcon={<HelpCircle size={'20px'} />}
           entity={entity}
           activateModal={activateModal}
         />
