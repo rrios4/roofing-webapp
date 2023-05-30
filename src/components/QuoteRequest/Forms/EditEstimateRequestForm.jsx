@@ -38,7 +38,7 @@ const EditEstimateRequestForm = (props) => {
 
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
-      <DrawerOverlay />
+      <DrawerOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <form onSubmit={handleSubmit} method="PATCH">
         <DrawerContent>
           <DrawerCloseButton />

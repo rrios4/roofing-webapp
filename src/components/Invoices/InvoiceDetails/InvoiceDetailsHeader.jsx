@@ -1,5 +1,13 @@
 import React from 'react';
-import { Flex, Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useColorModeValue
+} from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { RefreshCcw, MoreHorizontal, Share, FileOutput, ChevronLeft } from 'lucide-react';
 import { FiEdit } from 'react-icons/fi';
@@ -14,7 +22,11 @@ const InvoiceDetailsHeader = (props) => {
       <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
         <Flex px={'1rem'} gap={4} mb={{ base: '0rem', lg: '0' }}>
           <Link to={`/invoices`}>
-            <Button bg={'white'} border={'1px'} shadow={'xs'} borderColor={'gray.300'}>
+            <Button
+              bg={useColorModeValue('white', 'gray.800')}
+              border={'1px'}
+              shadow={'xs'}
+              borderColor={'gray.300'}>
               <ChevronLeft size={'15px'} />
             </Button>
           </Link>
@@ -24,7 +36,7 @@ const InvoiceDetailsHeader = (props) => {
           <Menu>
             <MenuButton
               as={Button}
-              bg={'white'}
+              bg={useColorModeValue('white', 'gray.800')}
               border={'1px'}
               shadow={'xs'}
               borderColor={'gray.300'}>

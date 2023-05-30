@@ -261,11 +261,11 @@ const CreateQuoteForm = (props) => {
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement="right" size={{ base: 'full', md: 'lg' }}>
-      <DrawerOverlay />
+      <DrawerOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader shadow={'xs'}>New Quote</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>Add Quote</DrawerHeader>
           <DrawerBody>
             {/* General Quote Information */}
             <Text fontWeight={'bold'} color={'blue.500'} mt={'8px'} mb={'1rem'}>
@@ -709,7 +709,7 @@ const CreateQuoteForm = (props) => {
           </DrawerBody>
           <DrawerFooter gap={4}>
             <Button colorScheme="blue" type="submit">
-              Create Quote
+              Add Quote
             </Button>
             <Button onClick={onClose} mr="1rem">
               Cancel

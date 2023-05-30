@@ -26,7 +26,7 @@ const QuoteDetailsPdfPreviewModal = (props) => {
         size={{ base: 'full', md: 'md' }}
         isCentered
         motionPreset="scale">
-        <ModalOverlay />
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
         <ModalContent>
           <ModalCloseButton />
           <ModalHeader>

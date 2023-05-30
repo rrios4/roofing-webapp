@@ -91,7 +91,7 @@ const NewCustomerForm = (props) => {
       isOpen={isOpen}
       size={{ base: 'full', md: 'lg' }}
       initialFocusRef={initialRef}>
-      <DrawerOverlay />
+      <DrawerOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>
           <DrawerCloseButton />

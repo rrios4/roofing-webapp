@@ -39,8 +39,9 @@ const ActionModal = (props) => {
       finalFocusRef={finalRef}
       isOpen={isOpen}
       onClose={onClose}
+      isCentered
       size={{ base: 'full', md: 'xl' }}>
-      <ModalOverlay />
+      <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <ModalContent>
         <ModalHeader>
           <Flex gap={4}>

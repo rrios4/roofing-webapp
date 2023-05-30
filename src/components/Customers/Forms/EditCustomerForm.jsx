@@ -23,7 +23,7 @@ const EditCustomerForm = (props) => {
 
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
-      <DrawerOverlay />
+      <DrawerOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <form method="PATCH" onSubmit={handleEditSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
@@ -126,7 +126,7 @@ const EditCustomerForm = (props) => {
           </DrawerBody>
           <DrawerFooter>
             <Button colorScheme="blue" mr={'1rem'} type="submit">
-              Update Customer
+              Update
             </Button>
             <Button onClick={onClose}>Cancel</Button>
           </DrawerFooter>

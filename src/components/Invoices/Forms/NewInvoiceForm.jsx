@@ -362,11 +362,11 @@ const NewInvoiceForm = (props) => {
       onClose={onNewClose}
       isOpen={isNewOpen}
       size={{ base: 'full', md: 'lg' }}>
-      <DrawerOverlay />
+      <DrawerOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader shadow={'xs'}>New Invoice</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>Add Invoice</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'} mb={'1rem'}>
                   Create
@@ -895,7 +895,7 @@ const NewInvoiceForm = (props) => {
           </DrawerBody>
           <DrawerFooter gap={4}>
             <Button colorScheme="blue" type="submit" isLoading={loadingState}>
-              Create Invoice
+              Add Invoice
             </Button>
             <Button onClick={handleCancelButton}>Cancel</Button>
           </DrawerFooter>

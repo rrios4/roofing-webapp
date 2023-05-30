@@ -115,11 +115,11 @@ const NewEstimateRequestForm = (props) => {
 
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
-      <DrawerOverlay />
+      <DrawerOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <form method="POST" onSubmit={handleSubmit}>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader shadow={'xs'}>Create Lead</DrawerHeader>
+          <DrawerHeader shadow={'xs'}>Add Lead</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
               Create
@@ -254,7 +254,7 @@ const NewEstimateRequestForm = (props) => {
           </DrawerBody>
           <DrawerFooter gap={4}>
             <Button type="submit" colorScheme={'blue'} isLoading={isLoading}>
-              Create Lead
+              Add Lead
             </Button>
             <Button onClick={handleCancel} mr="1rem">
               Cancel

@@ -38,7 +38,7 @@ const InvoiceDetailsAddPaymenyModal = (props) => {
         size={'xl'}
         isCentered
         motionPreset="scale">
-        <ModalOverlay />
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
         <form method="POST" onSubmit={handleAddPaymentSubmit}>
           <ModalContent>
             <ModalHeader shadow={'xs'}>

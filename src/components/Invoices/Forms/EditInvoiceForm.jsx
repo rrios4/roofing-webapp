@@ -18,6 +18,7 @@ import {
   DrawerHeader,
   DrawerBody
 } from '@chakra-ui/react';
+import { formatNumber } from '../../../utils';
 
 const EditInvoiceForm = (props) => {
   const {
@@ -39,10 +40,10 @@ const EditInvoiceForm = (props) => {
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
       <form method="PATCH" onSubmit={handleEditSubmit}>
-        <DrawerOverlay />
+        <DrawerOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Edit INV-{invoice?.invoice_number}</DrawerHeader>
+          <DrawerHeader>Edit Invoice #{formatNumber(invoice?.invoice_number)}</DrawerHeader>
           <DrawerBody>
             {/* <Text fontSize={'25px'} fontWeight={'bold'}>
               Edit

@@ -26,8 +26,8 @@ const DeleteAlertDialog = (props) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={{ base: 'full', md: 'lg' }}>
-      <ModalOverlay />
+    <Modal isOpen={isOpen} onClose={onClose} size={{ base: 'full', md: 'lg' }} isCentered>
+      <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <ModalContent>
         <ModalCloseButton />
         <ModalBody>
@@ -39,12 +39,12 @@ const DeleteAlertDialog = (props) => {
                 mx={'auto'}
                 justifyContent={'center'}
                 p={'3'}
-                bg={'red.50'}
+                bg={useColorModeValue('red.50', 'red.200')}
                 rounded={'full'}>
                 <Flex
                   w={'full'}
                   h={'full'}
-                  bg={'red.100'}
+                  bg={useColorModeValue('red.100', 'red.300')}
                   rounded={'full'}
                   justifyContent={'center'}>
                   <Flex w={'full'} flexDir={'column'} justify={'center'} mx={'auto'}>

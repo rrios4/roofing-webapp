@@ -173,7 +173,7 @@ const QuoteDetailsMain = (props) => {
                 <>
                   <Textarea
                     readOnly
-                    bg={'gray.100'}
+                    bg={useColorModeValue('gray.100', 'gray.600')}
                     border={'none'}
                     ml={'3rem'}
                     maxW="600px"

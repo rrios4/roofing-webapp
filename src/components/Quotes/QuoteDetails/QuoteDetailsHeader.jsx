@@ -1,5 +1,14 @@
 import React from 'react';
-import { Flex, Button, Menu, MenuButton, MenuList, MenuItem, Tooltip } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Tooltip,
+  useColorModeValue
+} from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { FiEdit } from 'react-icons/fi';
 import { MdOutlinePayments, MdTransform } from 'react-icons/md';
@@ -14,7 +23,11 @@ const QuoteDetailsHeader = (props) => {
       <Flex justify={'space-between'} mb={'1rem'} flexDir={{ base: 'row', lg: 'row' }}>
         <Flex mx={'1rem'} gap={4} mb={{ base: '0rem', lg: '0' }}>
           <Link to={`/quotes`}>
-            <Button bg={'white'} border={'1px'} shadow={'xs'} borderColor={'gray.300'}>
+            <Button
+              bg={useColorModeValue('white', 'gray.800')}
+              border={'1px'}
+              shadow={'xs'}
+              borderColor={'gray.300'}>
               <ChevronLeft size={'15px'} />
             </Button>
           </Link>
@@ -24,7 +37,7 @@ const QuoteDetailsHeader = (props) => {
           <Menu>
             <MenuButton
               as={Button}
-              bg={'white'}
+              bg={useColorModeValue('white', 'gray.800')}
               border={'1px'}
               shadow={'xs'}
               borderColor={'gray.300'}>
@@ -40,7 +53,7 @@ const QuoteDetailsHeader = (props) => {
           </Menu>
           <Tooltip hasArrow label="Convert Quote to Invoice">
             <Button
-              bg={'white'}
+              bg={useColorModeValue('white', 'gray.800')}
               border={'1px'}
               shadow={'xs'}
               borderColor={'gray.300'}

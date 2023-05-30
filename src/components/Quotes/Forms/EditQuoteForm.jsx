@@ -34,7 +34,7 @@ const EditQuoteForm = (props) => {
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen} size={{ base: 'full', md: 'lg' }}>
       <form method="PATCH" onSubmit={handleEditSubmit}>
-        <DrawerOverlay />
+        <DrawerOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader shadow={'xs'}>Edit Quote #{formatNumber(quote?.quote_number)}</DrawerHeader>
