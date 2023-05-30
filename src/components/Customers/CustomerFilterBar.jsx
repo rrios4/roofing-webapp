@@ -40,9 +40,9 @@ const CustomerFilterBar = ({ rootTable }) => {
                 placeholder="Search"
                 bg={useColorModeValue('white', 'gray.800')}
                 onChange={(event) =>
-                  rootTable?.getColumn('first_name')?.setFilterValue(event.target.value)
+                  rootTable?.getColumn('customer')?.setFilterValue(event.target.value)
                 }
-                value={rootTable?.getColumn('first_name')?.getFilterValue() ?? ''}
+                value={rootTable?.getColumn('customer')?.getFilterValue() ?? ''}
               />
             </InputGroup>
           </Box>

@@ -2,49 +2,54 @@ import React from 'react';
 import { Avatar, Badge, Box, Button, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
-import { ArrowUpDown, MoreHorizontal, ChevronRight } from 'lucide-react';
+import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
 const columnHelper = createColumnHelper();
 const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
 
 export const customerColumns = [
-  columnHelper.accessor('first_name', {
-    cell: ({ row }) => {
-      const customer = row.original;
-      return (
-        <Flex gap={4}>
-          <Avatar
-            name={`${customer.first_name} ${customer.last_name}`}
-            w={'40px'}
-            h={'40px'}
-            bg={useColorModeValue('gray.200', 'gray.600')}
-            textColor={useColorModeValue('gray.700', 'gray.200')}
-          />
-          <Box fontSize={'14px'}>
-            <Flex gap={2} fontWeight={'500'}>
-              <Text>{customer.first_name}</Text>
-              <Text>{customer.last_name}</Text>
-            </Flex>
-            <Text fontWeight={400}>{customer.email}</Text>
-          </Box>
-        </Flex>
-      );
-    },
-    header: ({ column }) => {
-      return (
-        <Button
-          py={0}
-          fontSize={'14px'}
-          variant={'ghost'}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Customer
-          <Box ml={2} h={4} w={4}>
-            <ArrowUpDown size={'15px'} />
-          </Box>
-        </Button>
-      );
+  columnHelper.accessor(
+    (row) =>
+      `${row.first_name} ${row.last_name} ${row.email} ${row.street_address} ${row.city} ${row.zipcode} ${row.phone_number}`,
+    {
+      id: 'customer',
+      cell: ({ row }) => {
+        const customer = row.original;
+        return (
+          <Flex gap={4}>
+            <Avatar
+              name={`${customer.first_name} ${customer.last_name}`}
+              w={'40px'}
+              h={'40px'}
+              bg={useColorModeValue('gray.200', 'gray.600')}
+              textColor={useColorModeValue('gray.700', 'gray.200')}
+            />
+            <Box fontSize={'14px'}>
+              <Flex gap={2} fontWeight={'500'}>
+                <Text>{customer.first_name}</Text>
+                <Text>{customer.last_name}</Text>
+              </Flex>
+              <Text fontWeight={400}>{customer.email}</Text>
+            </Box>
+          </Flex>
+        );
+      },
+      header: ({ column }) => {
+        return (
+          <Button
+            py={0}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Customer
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        );
+      }
     }
-  }),
+  ),
   columnHelper.accessor('customer_type_id', {
     cell: ({ row }) => {
       const customer = row.original;
