@@ -18,6 +18,9 @@ import { ArrowUpDown, ChevronRight, Edit, Pencil, Trash } from 'lucide-react';
 import { formatDate, formatMoneyValue, formatNumber, monthDDYYYYFormat } from '../../../utils';
 import ConnectedQuoteDeleteAlertDialog from '../../ui/Alerts/ConnectedAlerts/ConnectedQuoteDeleteAlertDialog';
 import EditQuoteForm from '../Forms/EditQuoteForm';
+import { useFetchAllServices } from '../../../hooks/useAPI/useServices';
+import { useQuoteStatuses } from '../../../hooks/useAPI/useQuoteStatuses';
+import { useUpdateQuote } from '../../../hooks/useAPI/useQuotes';
 
 const columnHelper = createColumnHelper();
 // const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
@@ -173,6 +176,59 @@ export const quoteColumns = [
       } = useDisclosure();
       const { onOpen: onEditOpen, onClose: onEditClose, isOpen: isEditOpen } = useDisclosure();
       const toast = useToast();
+      const { data: serviceOptions } = useFetchAllServices();
+      const { quoteStatuses } = useQuoteStatuses();
+      const [selectedEditQuote, setSelectedEditQuote] = React.useState({
+        id: '',
+        quote_number: '',
+        status_id: '',
+        service_id: '',
+        quote_date: '',
+        issue_date: '',
+        expiration_date: '',
+        private_note: '',
+        measurement_note: '',
+        public_note: ''
+      });
+
+      const handleEditDrawer = (quote) => {
+        setSelectedEditQuote({
+          id: quote.id,
+          quote_number: quote.quote_number,
+          status_id: quote.status_id,
+          service_id: quote.service_id,
+          quote_date: quote.quote_date ? quote.quote_date : '',
+          issue_date: quote.issue_date ? quote.issue_date : '',
+          expiration_date: quote.expiration_date ? quote.expiration_date : '',
+          private_note: quote.private_note,
+          measurement_note: quote.measurement_note,
+          public_note: quote.public_note
+        });
+        onEditOpen();
+      };
+
+      const handleEditOnChange = (e) => {
+        setSelectedEditQuote({ ...selectedEditQuote, [e.target.name]: e.target.value });
+      };
+      const { mutate: mutateUpdateQuote, isUpdateMutationLoading } = useUpdateQuote(toast);
+
+      const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        mutateUpdateQuote(selectedEditQuote);
+        onEditClose();
+        setSelectedEditQuote({
+          id: '',
+          quote_number: '',
+          status_id: '',
+          service_id: '',
+          quote_date: '',
+          issue_date: '',
+          expiration_date: '',
+          private_note: '',
+          measurement_note: '',
+          public_note: ''
+        });
+      };
 
       return (
         <Flex gap={2}>
@@ -185,9 +241,18 @@ export const quoteColumns = [
             entityDescription={`Quote #${formatNumber(quote.quote_number)}`}
             body={`Once you confirm you can't undo this action afterwards. There will be no way to restore the information. 🚨`}
           />
-          <EditQuoteForm isOpen={isEditOpen} onClose={onEditClose} quote={quote} />
+          <EditQuoteForm
+            isOpen={isEditOpen}
+            onClose={onEditClose}
+            quote={selectedEditQuote}
+            services={serviceOptions}
+            quoteStatuses={quoteStatuses}
+            handleEditOnChange={handleEditOnChange}
+            handleEditSubmit={handleEditSubmit}
+            loadingState={isUpdateMutationLoading}
+          />
           <Tooltip label="Edit">
-            <Button p={0} onClick={onEditOpen}>
+            <Button p={0} onClick={() => handleEditDrawer(quote)}>
               <Pencil size={'15px'} />
             </Button>
           </Tooltip>
