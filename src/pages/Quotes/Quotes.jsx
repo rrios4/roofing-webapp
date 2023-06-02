@@ -4,13 +4,9 @@ import {
   Flex,
   useToast,
   Tooltip,
-  Input,
   Text,
   useDisclosure,
   VStack,
-  InputGroup,
-  InputLeftElement,
-  Select,
   useColorModeValue,
   Badge,
   Button,
@@ -26,11 +22,12 @@ import {
 import { useFetchQuotes, useUpdateQuote } from '../../hooks/useAPI/useQuotes';
 import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
-import { ChevronRight, Pencil, Trash, Search } from 'lucide-react';
+import { ArrowUpDown, ChevronRight, Pencil, Trash } from 'lucide-react';
 import DataTable from '../../components/ui/DataTable';
 import { createColumnHelper } from '@tanstack/react-table';
 import { formatMoneyValue, monthDDYYYYFormat, formatNumber } from '../../utils';
 import { Link } from 'react-router-dom';
+import QuoteFilterBar from '../../components/Quotes/QuoteFilterBar';
 
 function Estimates() {
   // const queryClient = useQueryClient();
@@ -79,7 +76,18 @@ function Estimates() {
           </Text>
         );
       },
-      header: () => <Text>Quote</Text>
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Quote
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor('quote_date', {
       cell: ({ row }) => {
@@ -90,10 +98,32 @@ function Estimates() {
           </Text>
         );
       },
-      header: () => <Text>Date</Text>
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Date
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor('status_id', {
-      header: () => <Text>Status</Text>,
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Status
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      ),
       cell: ({ row }) => {
         const quote = row.original;
         if (quote.quote_status.name === 'Accepted') {
@@ -145,7 +175,18 @@ function Estimates() {
     }),
     columnHelper.accessor('service', {
       id: 'service',
-      header: () => <Text>Service</Text>,
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Service
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      ),
       cell: ({ row }) => {
         const quote = row.original;
         return (
@@ -156,7 +197,18 @@ function Estimates() {
       }
     }),
     columnHelper.accessor('expiration_date', {
-      header: () => <Text>Expiration</Text>,
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Expiration
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      ),
       cell: ({ row }) => {
         const quote = row.original;
         return (
@@ -166,36 +218,52 @@ function Estimates() {
         );
       }
     }),
-    columnHelper.accessor((row) => `${row.customer.first_name}`, {
-      id: 'customer',
-      cell: ({ row }) => {
-        const quote = row.original;
-        return (
-          <Link
-            to={`/customers/${quote.customer.id}`}
-            _hover={{ bg: useColorModeValue('gray.200', 'gray.600') }}>
-            <Button variant={'ghost'}>
-              <Flex gap={3}>
-                <Avatar
-                  my={'auto'}
-                  size={'sm'}
-                  name={`${quote.customer.first_name} ${quote.customer.last_name}`}
-                  bg={useColorModeValue('gray.200', 'gray.600')}
-                  textColor={useColorModeValue('gray.700', 'gray.200')}
-                />
-                <Box fontSize={'14px'}>
-                  <Flex gap={1} fontWeight={500}>
-                    <Text>{quote.customer.first_name}</Text>
-                    <Text>{quote.customer.last_name}</Text>
-                  </Flex>
-                  <Text fontWeight={400}>{quote.customer.email}</Text>
-                </Box>
-              </Flex>
-            </Button>
-          </Link>
-        );
+    columnHelper.accessor(
+      (row) =>
+        `${row.customer.first_name} ${row.customer.last_name} ${row.customer.email} ${row.quote_number} ${row.quote_status.name} ${row.services.name}`,
+      {
+        id: 'customer',
+        cell: ({ row }) => {
+          const quote = row.original;
+          return (
+            <Link
+              to={`/customers/${quote.customer.id}`}
+              _hover={{ bg: useColorModeValue('gray.200', 'gray.600') }}>
+              <Button variant={'ghost'} px={1}>
+                <Flex gap={3}>
+                  <Avatar
+                    my={'auto'}
+                    size={'sm'}
+                    name={`${quote.customer.first_name} ${quote.customer.last_name}`}
+                    bg={useColorModeValue('gray.200', 'gray.600')}
+                    textColor={useColorModeValue('gray.700', 'gray.200')}
+                  />
+                  <Box fontSize={'14px'}>
+                    <Flex gap={1} fontWeight={500}>
+                      <Text>{quote.customer.first_name}</Text>
+                      <Text>{quote.customer.last_name}</Text>
+                    </Flex>
+                    <Text fontWeight={400}>{quote.customer.email}</Text>
+                  </Box>
+                </Flex>
+              </Button>
+            </Link>
+          );
+        },
+        header: ({ column }) => (
+          <Button
+            px={1}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Customer
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        )
       }
-    }),
+    ),
     columnHelper.accessor('total', {
       cell: ({ row }) => {
         const quote = row.original;
@@ -204,7 +272,19 @@ function Estimates() {
             ${formatMoneyValue(quote.total)}
           </Text>
         );
-      }
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Total
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor('actions', {
       header: () => <Text>Actions</Text>,
@@ -318,96 +398,14 @@ function Estimates() {
           onOpen={onNewOpen}
         />
         <QuoteStatCards />
-        <Box w={'full'}>
-          <Flex
-            shadow={'xs'}
-            w={'full'}
-            gap={4}
-            bg={useColorModeValue('gray.50', 'gray.800')}
-            border={'1px'}
-            borderColor={useColorModeValue('gray.200', 'gray.700')}
-            px={'1rem'}
-            py={'6'}
-            rounded={'lg'}
-            flexDir={{ base: 'column', md: 'row' }}>
-            <Box w={{ base: 'full', md: '40%' }}>
-              <Text fontSize={'14px'} fontWeight={500} mb={'2'}>
-                Search for Quote
-              </Text>
-              <InputGroup>
-                <InputLeftElement>
-                  <Search size={'20px'} color="gray" />
-                </InputLeftElement>
-                <Input
-                  type={'search'}
-                  placeholder="Search"
-                  bg={useColorModeValue('white', 'gray.800')}
-                />
-              </InputGroup>
-            </Box>
-            <Box w={{ base: 'full', md: '20%' }}>
-              <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
-                Status
-              </Text>
-              <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
-                <option>Accepted</option>
-              </Select>
-            </Box>
-            <Box w={{ base: 'full', md: '20%' }}>
-              <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
-                Service Type
-              </Text>
-              <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
-                <option>All</option>
-              </Select>
-            </Box>
-            <Box w={{ base: 'full', md: '20%' }}>
-              <Text fontSize={'14px'} fontWeight={500} placeholder="Select country" mb={'2'}>
-                Customer
-              </Text>
-              <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
-                <option>All</option>
-              </Select>
-            </Box>
-          </Flex>
-        </Box>
         <DataTable
           data={quotes}
           columns={quoteColumns}
           isLoading={quotesLoadingStateIsOn}
           entity={'quote'}
           activateModal={onNewOpen}
+          EntityFilterBar={QuoteFilterBar}
         />
-        {/* {quotesLoadingStateIsOn === true && (
-          <>
-            <Box w={'full'} h={'200px'}>
-              <Skeleton h={'200px'} rounded={'xl'} />
-            </Box>
-          </>
-        )}
-        <Card
-          width="full"
-          size={{ base: 'md', md: 'md' }}
-          rounded={'lg'}
-          shadow={'xs'}
-          border={'1px'}
-          borderColor={useColorModeValue('gray.200', 'gray.700')}>
-          <CardBody>
-            {quotesLoadingStateIsOn === true ? (
-              <Box w={'full'} h={'200px'}>
-                <Skeleton h={'200px'} rounded={'xl'} />
-              </Box>
-            ) : (
-              <>
-                <QuoteTable
-                  data={!searchQuoteInput ? quotes : quoteSearchResult}
-                  handleDelete={handleDelete}
-                  handleEditDrawer={handleEditDrawer}
-                />
-              </>
-            )}
-          </CardBody>
-        </Card> */}
       </VStack>
     </>
   );

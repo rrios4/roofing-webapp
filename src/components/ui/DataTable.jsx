@@ -25,12 +25,13 @@ import {
 } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
 import EmptyState from './EmptyState';
-import CustomerFilterBar from '../Customers/CustomerFilterBar';
 
-const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
+const DataTable = ({ data, isLoading, entity, activateModal, columns, EntityFilterBar }) => {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
+  const tableBorderColors = useColorModeValue('gray.200', 'gray.700');
+  const tableBgHeaderColor = useColorModeValue('gray.100', 'gray.700');
   const table = useReactTable({
     data,
     columns,
@@ -51,7 +52,6 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
   if (isLoading === true) {
     return (
       <>
-        <CustomerFilterBar />
         <Skeleton w={'full'} h={'200px'} rounded={'lg'} />
       </>
     );
@@ -60,7 +60,6 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
   if (!data) {
     return (
       <>
-        <CustomerFilterBar />
         <EmptyState
           emptyStateIcon={<HelpCircle size={'20px'} />}
           entity={entity}
@@ -72,20 +71,13 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
 
   return (
     <>
-      <CustomerFilterBar
-        rootTable={table}
-        // globalFilter={globalFilter}
-        // setGlobalFilter={setGlobalFilter}
-      />
+      <EntityFilterBar rootTable={table} />
       <Box w={'full'}>
-        <TableContainer
-          roundedTop={'lg'}
-          border={'1px'}
-          borderColor={useColorModeValue('gray.200', 'gray.700')}>
-          <Table size={'md'}>
+        <TableContainer roundedTop={'lg'} border={'1px'} borderColor={tableBorderColors}>
+          <Table size={'sm'}>
             <Thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <Tr key={headerGroup.id} bg={useColorModeValue('gray.100', 'gray.700')}>
+                <Tr key={headerGroup.id} bg={tableBgHeaderColor}>
                   {headerGroup.headers.map((header) => (
                     <Th key={header.id}>
                       {header.isPlaceholder
@@ -95,9 +87,6 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
                   ))}
                 </Tr>
               ))}
-              {/* <Tr bg={useColorModeValue('gray.100', 'gray.700')} h={'44px'}>
-
-              </Tr> */}
             </Thead>
             <Tbody>
               {table.getRowModel().rows.map((row) => (
@@ -122,7 +111,7 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns }) => {
           borderBottom={'1px'}
           roundedBottom={'lg'}
           shadow={'sm'}
-          borderColor={useColorModeValue('gray.200', 'gray.700')}>
+          borderColor={tableBorderColors}>
           <Box w={'25%'}>
             <Button
               gap={4}

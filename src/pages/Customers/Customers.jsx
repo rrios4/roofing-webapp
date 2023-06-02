@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { NewCustomerForm, PageHeader, CustomerStatsCards } from '../../components';
+import {
+  NewCustomerForm,
+  PageHeader,
+  CustomerStatsCards,
+  CustomerFilterBar
+} from '../../components';
 import { useDisclosure, VStack, useToast } from '@chakra-ui/react';
 import { useFetchCustomers } from '../../hooks/useAPI/useCustomers';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
@@ -53,6 +58,7 @@ export default function Customers() {
           activateModal={onOpen}
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
+          EntityFilterBar={CustomerFilterBar}
         />
       </VStack>
     </>
