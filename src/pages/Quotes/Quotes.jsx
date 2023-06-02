@@ -69,6 +69,7 @@ function Estimates() {
         const quote = row.original;
         return (
           <Text
+            align={'center'}
             fontWeight={500}
             fontSize={'14px'}
             textColor={useColorModeValue('gray.900', 'gray.200')}>
@@ -77,16 +78,18 @@ function Estimates() {
         );
       },
       header: ({ column }) => (
-        <Button
-          px={0}
-          fontSize={'14px'}
-          variant={'ghost'}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Quote
-          <Box ml={2} h={4} w={4}>
-            <ArrowUpDown size={'15px'} />
-          </Box>
-        </Button>
+        <Flex w={'full'} justify={'center'}>
+          <Button
+            px={0}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Quote
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        </Flex>
       )
     }),
     columnHelper.accessor('quote_date', {

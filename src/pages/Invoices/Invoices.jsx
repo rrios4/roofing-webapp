@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import { useHistory } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   useColorModeValue,
   useToast,
@@ -12,6 +12,7 @@ import {
   Text,
   useDisclosure,
   VStack,
+  Avatar,
   Tooltip,
   HStack,
   Icon,
@@ -40,8 +41,11 @@ import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
 import { useFetchAllInvoices, useUpdateInvoice } from '../../hooks/useAPI/useInvoices';
 import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
-import { Plus } from 'lucide-react';
+import { ArrowUpDown, ChevronRight, Pencil, Plus, Trash } from 'lucide-react';
 import { createColumnHelper } from '@tanstack/react-table';
+import DataTable from '../../components/ui/DataTable';
+import StatusBadge from '../../components/ui/StatusBadge';
+import { formatDate, formatMoneyValue, formatNumber, monthDDYYYYFormat } from '../../utils';
 
 function Invoices() {
   const columnHelper = createColumnHelper();
@@ -219,7 +223,203 @@ function Invoices() {
 
   // Handles the cancel button in the modal form for editing invoices
 
-  const invoiceTableColumns = [columnHelper.accessor('invoice_number', {})];
+  const invoiceTableColumns = [
+    columnHelper.accessor('invoice_number', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return (
+          <Text align={'center'} fontWeight={500} fontSize={'14px'}>
+            #{formatNumber(invoice.invoice_number)}
+          </Text>
+        );
+      },
+      header: ({ column }) => (
+        <Flex justify={'center'} w={'full'}>
+          <Button
+            px={1}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Invoice
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        </Flex>
+      )
+    }),
+    columnHelper.accessor('invoice_date', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return (
+          <Text fontSize={'14px'} fontWeight={400}>
+            {monthDDYYYYFormat(invoice.invoice_date)}
+          </Text>
+        );
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Date
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
+    }),
+    columnHelper.accessor('invoice_status_id', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        if (invoice.invoice_status.name === 'Paid') {
+          return <StatusBadge badgeText={invoice.invoice_status.name} colorScheme={'green'} />;
+        } else if (invoice.invoice_status.name === 'Overdue') {
+          return <StatusBadge badgeText={invoice.invoice_status.name} colorScheme={'red'} />;
+        } else if (invoice.invoice_status.name === 'Pending') {
+          return <StatusBadge badgeText={invoice.invoice_status.name} colorScheme={'yellow'} />;
+        } else {
+          return <StatusBadge badgeText={invoice.invoice_status.name} colorScheme={'gray'} />;
+        }
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Status
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
+    }),
+    columnHelper.accessor('service_type_id', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return <Text>{invoice.services.name}</Text>;
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Service
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
+    }),
+    columnHelper.accessor('due_date', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return <Text>{monthDDYYYYFormat(invoice.due_date)}</Text>;
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Due Date
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
+    }),
+    columnHelper.accessor(
+      (row) =>
+        `${row.customer.first_name} ${row.customer.last_name} ${row.customer.email} ${row.invoice_number} ${row.invoice_status.name} ${row.services.name}`,
+      {
+        id: 'customer',
+        cell: ({ row }) => {
+          const invoice = row.original;
+          return (
+            <Link
+              to={`/customers/${invoice.customer.id}`}
+              _hover={{ bg: useColorModeValue('gray.200', 'gray.600') }}>
+              <Button variant={'ghost'} px={1}>
+                <Flex gap={3}>
+                  <Avatar
+                    my={'auto'}
+                    size={'sm'}
+                    name={`${invoice.customer.first_name} ${invoice.customer.last_name}`}
+                    bg={useColorModeValue('gray.200', 'gray.600')}
+                    textColor={useColorModeValue('gray.700', 'gray.200')}
+                  />
+                  <Box fontSize={'14px'}>
+                    <Flex gap={1} fontWeight={500}>
+                      <Text>{invoice.customer.first_name}</Text>
+                      <Text>{invoice.customer.last_name}</Text>
+                    </Flex>
+                    <Text fontWeight={400}>{invoice.customer.email}</Text>
+                  </Box>
+                </Flex>
+              </Button>
+            </Link>
+          );
+        },
+        header: ({ column }) => (
+          <Button
+            px={1}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Customer
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        )
+      }
+    ),
+    columnHelper.accessor('amount_due', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return <Text>${formatMoneyValue(invoice.amount_due)}</Text>;
+      },
+      header: ({ column }) => {
+        return (
+          <Button
+            px={1}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Balance
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        );
+      }
+    }),
+    columnHelper.accessor('actions', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return (
+          <Flex gap={2}>
+            <Button px={0} onClick={() => handleEditModal(invoice)}>
+              <Pencil size={'15px'} />
+            </Button>
+            <Button px={0} onClick={() => handleDeleteAlert(invoice.id, invoice.invoice_number)}>
+              <Trash size={'15px'} />
+            </Button>
+            <Link to={`/invoices/${invoice.invoice_number}`}>
+              <Button px={0}>
+                <ChevronRight size={'15px'} />
+              </Button>
+            </Link>
+          </Flex>
+        );
+      },
+      header: () => <Text>Actions</Text>
+    })
+  ];
 
   return (
     <>
@@ -259,7 +459,7 @@ function Invoices() {
       />
 
       {/* Main Invoice Page Code */}
-      <VStack my={'4'} w={'full'} mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
+      <VStack mt={'4'} mb={10} w={'full'} mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
         <PageHeader
           title={'Invoices'}
           subheading={'Manage your invoices to track income for projects.'}
@@ -267,30 +467,15 @@ function Invoices() {
           onOpen={onNewOpen}
         />
         <InvoiceStatCards />
-        <InvoiceFilterBar />
-        <Card
-          variant={'outline'}
-          width="full"
-          rounded={'lg'}
-          shadow={'xs'}
-          size={{ base: 'md', md: 'md' }}>
-          <CardBody>
-            {/* Table Component for Invoices Data */}
-            {isInvoicesLoading === true ? (
-              <Box w={'full'} h={'200px'}>
-                <Skeleton w={'full'} h={'200px'} rounded={'xl'} />
-              </Box>
-            ) : (
-              <>
-                <InvoiceTable
-                  data={invoices}
-                  editModal={handleEditModal}
-                  deleteAlert={handleDeleteAlert}
-                />
-              </>
-            )}
-          </CardBody>
-        </Card>
+        {/* <InvoiceFilterBar /> */}
+        <DataTable
+          data={invoices}
+          columns={invoiceTableColumns}
+          EntityFilterBar={InvoiceFilterBar}
+          isLoading={isInvoicesLoading}
+          entity={'invoice'}
+          activateModal={onNewOpen}
+        />
       </VStack>
     </>
   );
