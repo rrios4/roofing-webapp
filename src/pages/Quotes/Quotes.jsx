@@ -357,7 +357,13 @@ function Estimates() {
         handleEditSubmit={handleEditSubmit}
         loadingState={quoteUpdateIsLoading}
       />
-      <VStack mt={'4'} mb={10} w="full" mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
+      <VStack
+        mt={{ base: '0', lg: '4' }}
+        mb={8}
+        w="full"
+        mx={'auto'}
+        px={{ base: '4', lg: '8' }}
+        gap={4}>
         <PageHeader
           title={'Quotes'}
           subheading={'Manage your quotes to send out to your customers.'}

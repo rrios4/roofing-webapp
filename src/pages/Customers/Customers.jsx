@@ -42,7 +42,13 @@ export default function Customers() {
         toast={toast}
         customerTypes={customerTypes}
       />
-      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
+      <VStack
+        mt={{ base: '0', lg: '4' }}
+        mb={8}
+        w="100%"
+        mx={'auto'}
+        px={{ base: '4', lg: '8' }}
+        gap={4}>
         <PageHeader
           title={'Customers'}
           subheading={'Manage customers and view information focused on them.'}

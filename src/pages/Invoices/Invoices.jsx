@@ -459,7 +459,13 @@ function Invoices() {
       />
 
       {/* Main Invoice Page Code */}
-      <VStack mt={'4'} mb={10} w={'full'} mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
+      <VStack
+        mt={{ base: '0', lg: '4' }}
+        mb={8}
+        w={'full'}
+        mx={'auto'}
+        px={{ base: '4', lg: '8' }}
+        gap={4}>
         <PageHeader
           title={'Invoices'}
           subheading={'Manage your invoices to track income for projects.'}

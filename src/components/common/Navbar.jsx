@@ -20,7 +20,8 @@ import {
   MenuItem,
   MenuDivider,
   CloseButton,
-  Icon
+  Icon,
+  MenuGroup
 } from '@chakra-ui/react';
 import Toggle from './Toggle';
 import { Link, useNavigate } from 'react-router-dom';
@@ -28,6 +29,7 @@ import { FiUsers, FiInbox, FiGrid, FiFileText, FiMenu } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { useAuth } from '../../hooks/useAuth';
 import swal from 'sweetalert';
+import { LogIn, LogOut, Settings, User } from 'lucide-react';
 
 const Navbar = () => {
   const auth = useAuth();
@@ -184,74 +186,104 @@ const Navbar = () => {
         px="4"
         bg={bg}
         position="fixed"
-        h="5rem"
+        h="4rem"
         zIndex={'1'}
         justifyContent="space-between"
         borderBottomWidth="1px"
         borderBottomColor={useColorModeValue('gray.200', 'gray.600')}
         backdropBlur={'md'}>
         <Flex alignItems={'center'}>
-          <IconButton
-            onClick={onNavOpen}
-            variant="solid"
-            aria-label="open menu"
-            icon={<FiMenu />}
-          />
-
           <Link to={'/'}>
-            <Box bg={'blue.500'} rounded="18" _hover={{ bg: 'blue.600' }} shadow="sm" mx={'1rem'}>
+            <Box bg={'blue.500'} rounded="xl" _hover={{ bg: 'blue.500' }} shadow="sm" mx={'1rem'}>
               <Image
                 p={{ base: '2px', lg: '4px' }}
-                boxSize={{ base: '50px', lg: '90px' }}
+                boxSize={{ base: '40px', lg: '90px' }}
                 src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
               />
             </Box>
           </Link>
         </Flex>
 
-        <HStack spacing={'0'} gap={2}>
+        <HStack spacing={'0'} gap={1}>
           <Toggle />
-          <Flex alignItems={'center'}>
+          <Flex alignItems={'center'} pr={4}>
             <Menu>
               <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
                 <HStack>
                   <Avatar
+                    w={'32px'}
+                    h={'32px'}
                     bg={'gray.400'}
-                    size={'sm'}
                     src={auth.user ? auth.user.user_metadata.avatar_url : ''}
                   />
                 </HStack>
               </MenuButton>
               {auth.user ? (
                 <MenuList>
-                  <MenuItem>Profile</MenuItem>
-                  <MenuItem>Settings</MenuItem>
+                  <MenuGroup title="My Account" icon={<User />}>
+                    <MenuItem flexDir={'row'} gap={'2'}>
+                      <User size={'15px'} />
+                      <Text>Profile</Text>
+                    </MenuItem>
+                    <MenuItem flexDir={'row'} gap={'2'}>
+                      <Settings size={'15px'} />
+                      <Text>Settings</Text>
+                    </MenuItem>
+                  </MenuGroup>
                   <MenuDivider />
-                  <MenuItem onClick={logout}>Sign out</MenuItem>
+                  <MenuGroup>
+                    <MenuItem onClick={logout} flexDir={'row'} gap={'2'}>
+                      <LogOut size={'15px'} />
+                      <Text>Sign Out</Text>
+                    </MenuItem>
+                  </MenuGroup>
                 </MenuList>
               ) : (
-                <MenuList bg={bg}>
-                  <Link to={'/login'}>
-                    <MenuItem>Sign In</MenuItem>
-                  </Link>
+                <MenuList>
+                  <MenuGroup title="My Account" icon={<User size={'15px'} />}>
+                    <Link to={'/login'}>
+                      <MenuItem flexDir={'row'} gap={'2'}>
+                        <LogIn size={'15px'} />
+                        {/* <LogOut size={'15px'} /> */}
+                        <Text>Login</Text>
+                      </MenuItem>
+                    </Link>
+                  </MenuGroup>
                 </MenuList>
               )}
             </Menu>
           </Flex>
+          <IconButton
+            size={'md'}
+            onClick={onNavOpen}
+            variant="solid"
+            aria-label="open menu"
+            icon={<FiMenu />}
+          />
         </HStack>
       </Flex>
-      <Drawer placement="left" size={'full'} isOpen={isNavOpen} onClose={onNavClose}>
+      <Drawer placement="right" size={'full'} isOpen={isNavOpen} onClose={onNavClose}>
         <DrawerOverlay />
         <DrawerContent>
           <Box transition={'3s ease'} bg={bg} w={'full'} pos={'fixed'} h="full" pt={'1rem'}>
             <Flex h={20} alignItems="center" mx={8} justifyContent={'space-between'}>
-              <Box bg={'blue.500'} rounded="18" _hover={{ bg: 'blue.600' }} shadow="sm" mx={'1rem'}>
-                <Image
-                  p={{ base: '2px', lg: '4px' }}
-                  boxSize={{ base: '50px', lg: '90px' }}
-                  src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
-                />
-              </Box>
+              <Flex>
+                <Box
+                  bg={'blue.500'}
+                  rounded="xl"
+                  _hover={{ bg: 'blue.600' }}
+                  shadow="sm"
+                  mx={'1rem'}>
+                  <Image
+                    p={{ base: '2px', lg: '4px' }}
+                    boxSize={{ base: '50px', lg: '90px' }}
+                    src="public/LogoRR.png"
+                  />
+                </Box>
+                <Text my={'auto'} fontSize={'xl'} fontWeight={600}>
+                  The Roofing App
+                </Text>
+              </Flex>
               <CloseButton display={'flex'} onClick={onNavClose} />
             </Flex>
             <Flex mx={8}>

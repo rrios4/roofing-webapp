@@ -285,7 +285,11 @@ const Dashboard = ({ children }) => {
 
   return (
     <>
-      <Flex flexDir="column" px={{ base: '1rem', lg: '1rem' }} w={'full'} mt={'1rem'}>
+      <Flex
+        flexDir="column"
+        px={{ base: '1rem', lg: '1rem' }}
+        w={'full'}
+        mt={{ base: '0rem', lg: '1rem' }}>
         {/*  */}
         <Box display={{ base: 'none', lg: 'block' }}>
           <Card

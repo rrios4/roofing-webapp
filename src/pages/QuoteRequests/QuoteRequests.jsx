@@ -277,7 +277,13 @@ const QuoteRequests = () => {
         body={`Once you confirm there will be no way to restore the information. 🚨`}
       />
 
-      <VStack my={'4'} w="100%" mx={'auto'} px={{ base: '4', lg: '8' }} gap={4}>
+      <VStack
+        mt={{ base: '0', lg: '4' }}
+        mb={8}
+        w="100%"
+        mx={'auto'}
+        px={{ base: '4', lg: '8' }}
+        gap={4}>
         {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
                     <Link to={'/'}>
                         <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
