@@ -1,8 +1,9 @@
 import React from 'react';
-import { Avatar, Badge, Box, Button, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Avatar, Box, Button, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
+import StatusBadge from '../../ui/StatusBadge';
 
 const columnHelper = createColumnHelper();
 const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
@@ -54,38 +55,11 @@ export const customerColumns = [
     cell: ({ row }) => {
       const customer = row.original;
       if (customer.customer_type.name === 'Residential') {
-        return (
-          <Badge rounded={'full'} py={1} px={2} colorScheme="blue">
-            <Flex gap={2}>
-              <Box w={1} h={1} p={1} bg={'blue.500'} rounded={'full'} my={'auto'}></Box>
-              <Text textTransform={'initial'} fontSize={'12px'} fontWeight={500}>
-                {customer.customer_type.name}
-              </Text>
-            </Flex>
-          </Badge>
-        );
+        return <StatusBadge badgeText={customer.customer_type.name} colorScheme={'blue'} />;
       } else if (customer.customer_type.name === 'Commercial') {
-        return (
-          <Badge rounded={'full'} py={1} px={2} colorScheme="green">
-            <Flex gap={2}>
-              <Box w={1} h={1} p={1} bg={'green.500'} rounded={'full'} my={'auto'}></Box>
-              <Text textTransform={'initial'} fontSize={'12px'} fontWeight={500}>
-                {customer.customer_type.name}
-              </Text>
-            </Flex>
-          </Badge>
-        );
+        return <StatusBadge badgeText={customer.customer_type.name} colorScheme={'green'} />;
       } else {
-        return (
-          <Badge rounded={'full'} py={1} px={2} colorScheme="gray">
-            <Flex gap={2}>
-              <Box w={1} h={1} p={1} bg={'gray.500'} rounded={'full'} my={'auto'}></Box>
-              <Text textTransform={'initial'} fontSize={'12px'} fontWeight={500}>
-                {customer.customer_type.name}
-              </Text>
-            </Flex>
-          </Badge>
-        );
+        return <StatusBadge badgeText={customer.customer_type.name} colorScheme={'gray'} />;
       }
     },
     header: ({ column }) => (

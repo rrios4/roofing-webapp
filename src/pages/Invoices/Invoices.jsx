@@ -41,8 +41,10 @@ import { useFetchAllInvoices, useUpdateInvoice } from '../../hooks/useAPI/useInv
 import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
 import { Plus } from 'lucide-react';
+import { createColumnHelper } from '@tanstack/react-table';
 
 function Invoices() {
+  const columnHelper = createColumnHelper();
   const initialRef = React.useRef();
   const toast = useToast();
   // Hooks
@@ -216,6 +218,8 @@ function Invoices() {
   // Handle edit data
 
   // Handles the cancel button in the modal form for editing invoices
+
+  const invoiceTableColumns = [columnHelper.accessor('invoice_number', {})];
 
   return (
     <>

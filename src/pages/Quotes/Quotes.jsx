@@ -8,7 +8,6 @@ import {
   useDisclosure,
   VStack,
   useColorModeValue,
-  Badge,
   Button,
   Avatar
 } from '@chakra-ui/react';
@@ -28,6 +27,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { formatMoneyValue, monthDDYYYYFormat, formatNumber } from '../../utils';
 import { Link } from 'react-router-dom';
 import QuoteFilterBar from '../../components/Quotes/QuoteFilterBar';
+import StatusBadge from '../../components/ui/StatusBadge';
 
 function Estimates() {
   // const queryClient = useQueryClient();
@@ -78,7 +78,7 @@ function Estimates() {
       },
       header: ({ column }) => (
         <Button
-          px={1}
+          px={0}
           fontSize={'14px'}
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -127,49 +127,13 @@ function Estimates() {
       cell: ({ row }) => {
         const quote = row.original;
         if (quote.quote_status.name === 'Accepted') {
-          return (
-            <Badge rounded={'full'} py={1} px={2} colorScheme="green">
-              <Flex gap={2}>
-                <Box w={1} h={1} p={1} bg={'green.500'} rounded={'full'} my={'auto'}></Box>
-                <Text textTransform={'initial'} fontSize={'12px'} fontWeight={500}>
-                  {quote.quote_status.name}
-                </Text>
-              </Flex>
-            </Badge>
-          );
+          return <StatusBadge badgeText={quote.quote_status.name} colorScheme={'green'} />;
         } else if (quote.quote_status.name === 'Pending') {
-          return (
-            <Badge rounded={'full'} py={1} px={2} colorScheme="yellow">
-              <Flex gap={2}>
-                <Box w={1} h={1} p={1} bg={'yellow.500'} rounded={'full'} my={'auto'}></Box>
-                <Text textTransform={'initial'} fontSize={'12px'} fontWeight={500}>
-                  {quote.quote_status.name}
-                </Text>
-              </Flex>
-            </Badge>
-          );
+          return <StatusBadge badgeText={quote.quote_status.name} colorScheme={'yellow'} />;
         } else if (quote.quote_status.name === 'Rejected') {
-          return (
-            <Badge rounded={'full'} py={1} px={2} colorScheme="red">
-              <Flex gap={2}>
-                <Box w={1} h={1} p={1} bg={'red.500'} rounded={'full'} my={'auto'}></Box>
-                <Text textTransform={'initial'} fontSize={'12px'} fontWeight={500}>
-                  {quote.quote_status.name}
-                </Text>
-              </Flex>
-            </Badge>
-          );
+          return <StatusBadge badgeText={quote.quote_status.name} colorScheme={'red'} />;
         } else {
-          return (
-            <Badge rounded={'full'} py={1} px={2} colorScheme="gray">
-              <Flex gap={2}>
-                <Box w={1} h={1} p={1} bg={'gray.500'} rounded={'full'} my={'auto'}></Box>
-                <Text textTransform={'initial'} fontSize={'12px'} fontWeight={500}>
-                  {quote.quote_status.name}
-                </Text>
-              </Flex>
-            </Badge>
-          );
+          return <StatusBadge badgeText={quote.quote_status.name} colorScheme={'gray'} />;
         }
       }
     }),
