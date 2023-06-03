@@ -94,17 +94,7 @@ const Navbar = () => {
             color="white"
             justifyContent="center"
             paddingTop="10px"
-            paddingBottom="0px">
-            {/* <Tooltip label="SimplyNex" bg="gray.500">
-              <Avatar
-                shadow="sm"
-                size="md"
-                src={
-                  "https://64.media.tumblr.com/073578da50f557bd56caef112e255950/b754da231bb4bd69-34/s640x960/4f8c9cf93d4f03c42d448eba0dac2a9cbb2a69e2.jpg"
-                }
-              />
-            </Tooltip> */}
-          </Box>
+            paddingBottom="0px"></Box>
           <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>
             ANALYTICS
           </Text>
@@ -198,7 +188,7 @@ const Navbar = () => {
               <Image
                 p={{ base: '2px', lg: '4px' }}
                 boxSize={{ base: '40px', lg: '90px' }}
-                src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
+                src="/LogoRR.png"
               />
             </Box>
           </Link>
@@ -277,7 +267,7 @@ const Navbar = () => {
                   <Image
                     p={{ base: '2px', lg: '4px' }}
                     boxSize={{ base: '50px', lg: '90px' }}
-                    src="public/LogoRR.png"
+                    src="/LogoRR.png"
                   />
                 </Box>
                 <Text my={'auto'} fontSize={'xl'} fontWeight={600}>
