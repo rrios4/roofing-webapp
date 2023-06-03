@@ -11,12 +11,14 @@ import {
   HStack,
   Tooltip,
   Icon,
+  Avatar,
   Card,
   CardBody,
   Skeleton,
   Box,
   Button,
-  Divider
+  Divider,
+  useColorModeValue
 } from '@chakra-ui/react';
 import {
   EditEstimateRequestForm,
@@ -34,12 +36,17 @@ import { useFetchAllQuoteRequests, useUpdateQRById } from '../../hooks/useAPI/us
 import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
-import { Plus } from 'lucide-react';
+import { Pencil, Plus, Trash, UserPlus } from 'lucide-react';
+import DataTable from '../../components/ui/DataTable';
+import { createColumnHelper } from '@tanstack/react-table';
+import { formatNumber, monthDDYYYYFormat } from '../../utils';
+import StatusBadge from '../../components/ui/StatusBadge';
 
 const QuoteRequests = () => {
   // React Hook for managing state of quotes request
   // Chakra UI Reacr hook for toasts
   const toast = useToast();
+  const columnHelper = createColumnHelper();
   const { data: quoteRequests, isLoading: isQRLoading } = useFetchAllQuoteRequests();
   const { data: services } = useFetchAllServices();
   const { data: qrStatuses } = useFetchAllQRStatuses();
@@ -52,6 +59,9 @@ const QuoteRequests = () => {
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
   const initialRef = React.useRef();
+
+  const avatarBgColor = useColorModeValue('gray.200', 'gray.600');
+  const avatarTextColor = useColorModeValue('gray.700', 'gray.200');
 
   // React Use State to store data from API requests
   // const [quoteRequests, setQuoteRequests] = useState(null);
@@ -244,6 +254,131 @@ const QuoteRequests = () => {
     onDeleteOpen();
   };
 
+  const leadsTableColumns = [
+    columnHelper.accessor('id', {
+      cell: ({ row }) => (
+        <Text fontSize={'14px'} fontWeight={500}>
+          #{formatNumber(row.getValue('id'))}
+        </Text>
+      ),
+      header: () => <Text>Lead</Text>
+    }),
+    columnHelper.accessor('requested_date', {
+      cell: ({ row }) => {
+        return <Text>{monthDDYYYYFormat(row.getValue('requested_date'))}</Text>;
+      },
+      header: 'Desired Date'
+    }),
+    columnHelper.accessor('est_request_status_id', {
+      cell: ({ row }) => {
+        const lead = row.original;
+        if (lead.estimate_request_status.name === 'New') {
+          return (
+            <StatusBadge badgeText={lead.estimate_request_status.name} colorScheme={'green'} />
+          );
+        } else if (lead.estimate_request_status.name === 'Scheduled') {
+          return (
+            <StatusBadge badgeText={lead.estimate_request_status.name} colorScheme={'orange'} />
+          );
+        } else if (lead.estimate_request_status.name === 'Pending') {
+          return (
+            <StatusBadge badgeText={lead.estimate_request_status.name} colorScheme={'yellow'} />
+          );
+        } else if (lead.estimate_request_status.name === 'Closed') {
+          return <StatusBadge badgeText={lead.estimate_request_status.name} colorScheme={'red'} />;
+        }
+      },
+      header: 'Status'
+    }),
+    columnHelper.accessor(
+      (row) =>
+        `${row.firstName} ${row.lastName} ${row.streetAddress} ${row.city} ${row.zipcode} ${row.state} ${row.email} ${row.phone_number}`,
+      {
+        id: 'requestor',
+        cell: ({ row }) => {
+          const lead = row.original;
+          return (
+            <Flex gap={3}>
+              <Avatar
+                my={'auto'}
+                size={'sm'}
+                name={`${lead.firstName} ${lead.lastName}`}
+                bg={avatarBgColor}
+                textColor={avatarTextColor}
+              />
+              <Flex flexDir={'column'} gap={1} fontSize={'14px'}>
+                <Flex gap={1} fontWeight={500} fontSize={'xs'}>
+                  <Text>{lead.firstName}</Text>
+                  <Text>{lead.lastName}</Text>
+                </Flex>
+                <Text fontWeight={400} fontSize={'xs'}>
+                  {lead.email}
+                </Text>
+                <Flex fontWeight={400} gap={1} fontSize={'xs'}>
+                  <Text>{lead.streetAddress}</Text>
+                  <Text>{lead.city},</Text>
+                  <Text>{lead.state}</Text>
+                  <Text>{lead.zipcode}</Text>
+                </Flex>
+                <Text fontSize={'xs'}>{lead.phone_number}</Text>
+              </Flex>
+            </Flex>
+          );
+        }
+      }
+    ),
+    columnHelper.accessor('service_type_id', {
+      cell: ({ row }) => {
+        const lead = row.original;
+        return <Text>{lead.services.name}</Text>;
+      },
+      header: 'Service'
+    }),
+    columnHelper.accessor('customer_typeID', {
+      cell: ({ row }) => {
+        const lead = row.original;
+        if (lead.customer_type.name === 'Residential') {
+          return <StatusBadge badgeText={lead.customer_type.name} colorScheme={'blue'} />;
+        } else if (lead.customer_type.name === 'Commercial') {
+          return <StatusBadge badgeText={lead.customer_type.name} colorScheme={'green'} />;
+        } else {
+          return <StatusBadge badgeText={lead.customer_type.name} colorScheme={'gray'} />;
+        }
+      },
+      header: 'Type'
+    }),
+    columnHelper.accessor('created_at', {
+      cell: ({ row }) => {
+        return <Text>{new Date(row.getValue('created_at')).toLocaleString()}</Text>;
+      },
+      header: 'Entry Date'
+    }),
+    columnHelper.accessor('actions', {
+      cell: ({ row }) => {
+        const lead = row.original;
+        return (
+          <Flex gap={2}>
+            <Tooltip label={'Edit'}>
+              <Button px={0} onClick={() => handleEdit(lead)}>
+                <Pencil size={'15px'} />
+              </Button>
+            </Tooltip>
+            <Tooltip label={'Delete'}>
+              <Button px={0} onClick={() => handleDeleteAlert(lead.id)}>
+                <Trash size={'15px'} />
+              </Button>
+            </Tooltip>
+            <Tooltip label={'Register as customer'}>
+              <Button px={0} onClick={() => handleEmailValidation(lead)}>
+                <UserPlus size={'15px'} />
+              </Button>
+            </Tooltip>
+          </Flex>
+        );
+      }
+    })
+  ];
+
   return (
     <>
       <NewEstimateRequestForm
@@ -284,11 +419,6 @@ const QuoteRequests = () => {
         mx={'auto'}
         px={{ base: '4', lg: '8' }}
         gap={4}>
-        {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent='start' w='full'>
-                    <Link to={'/'}>
-                        <Button shadow={'sm'} colorScheme={buttonColorScheme} ml={'1rem'} mb='1rem' leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>Back</Button>
-                    </Link>
-                </Box> */}
         <PageHeader
           title={'Leads'}
           subheading={'Manage your recent leads to turn them into future customers.'}
@@ -296,32 +426,14 @@ const QuoteRequests = () => {
           onOpen={onNewOpen}
         />
         <LeadStatCards />
-        <LeadFilterBar />
-        <Card
-          width="full"
-          variant={'outline'}
-          shadow={'xs '}
-          rounded={'lg'}
-          size={{ base: 'md', md: 'md' }}>
-          <CardBody>
-            {/* Main Body for content */}
-            {/* Quote Request Table to display all requests from company website */}
-            {isQRLoading === true ? (
-              <Box w={'full'} height={'200px'}>
-                <Skeleton height={'200px'} rounded={'xl'} />
-              </Box>
-            ) : (
-              <>
-                <QuoteRequestTable
-                  data={quoteRequests}
-                  emailValidation={handleEmailValidation}
-                  handleEdit={handleEdit}
-                  handleDeleteAlert={handleDeleteAlert}
-                />
-              </>
-            )}
-          </CardBody>
-        </Card>
+        {/* <LeadFilterBar /> */}
+        <DataTable
+          EntityFilterBar={LeadFilterBar}
+          entity={'lead'}
+          activateModal={onNewOpen}
+          data={quoteRequests}
+          columns={leadsTableColumns}
+        />
       </VStack>
     </>
   );
