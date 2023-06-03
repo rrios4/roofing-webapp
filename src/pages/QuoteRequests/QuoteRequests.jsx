@@ -36,7 +36,7 @@ import { useFetchAllQuoteRequests, useUpdateQRById } from '../../hooks/useAPI/us
 import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
-import { Pencil, Plus, Trash, UserPlus } from 'lucide-react';
+import { ArrowDownUp, ArrowUpDown, Pencil, Plus, Trash, UserPlus } from 'lucide-react';
 import DataTable from '../../components/ui/DataTable';
 import { createColumnHelper } from '@tanstack/react-table';
 import { formatNumber, monthDDYYYYFormat } from '../../utils';
@@ -261,13 +261,35 @@ const QuoteRequests = () => {
           #{formatNumber(row.getValue('id'))}
         </Text>
       ),
-      header: () => <Text>Lead</Text>
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Lead
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor('requested_date', {
       cell: ({ row }) => {
         return <Text>{monthDDYYYYFormat(row.getValue('requested_date'))}</Text>;
       },
-      header: 'Desired Date'
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Desired Date
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor('est_request_status_id', {
       cell: ({ row }) => {
@@ -288,7 +310,18 @@ const QuoteRequests = () => {
           return <StatusBadge badgeText={lead.estimate_request_status.name} colorScheme={'red'} />;
         }
       },
-      header: 'Status'
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Status
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor(
       (row) =>
@@ -314,7 +347,17 @@ const QuoteRequests = () => {
                 <Text fontWeight={400} fontSize={'xs'}>
                   {lead.email}
                 </Text>
-                <Flex fontWeight={400} gap={1} fontSize={'xs'}>
+                <Flex
+                  fontWeight={400}
+                  gap={1}
+                  fontSize={'xs'}
+                  onClick={() =>
+                    window.open(
+                      `https://www.google.com/maps/search/?api=1&query=${lead.streetAddress}+${lead.city}+${lead.state}+${lead.zipcode}`
+                    )
+                  }
+                  cursor={'pointer'}
+                  _hover={{ textColor: 'blue.500' }}>
                   <Text>{lead.streetAddress}</Text>
                   <Text>{lead.city},</Text>
                   <Text>{lead.state}</Text>
@@ -324,7 +367,19 @@ const QuoteRequests = () => {
               </Flex>
             </Flex>
           );
-        }
+        },
+        header: ({ column }) => (
+          <Button
+            px={1}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Requestor
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        )
       }
     ),
     columnHelper.accessor('service_type_id', {
@@ -332,7 +387,18 @@ const QuoteRequests = () => {
         const lead = row.original;
         return <Text>{lead.services.name}</Text>;
       },
-      header: 'Service'
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Service
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor('customer_typeID', {
       cell: ({ row }) => {
@@ -345,13 +411,35 @@ const QuoteRequests = () => {
           return <StatusBadge badgeText={lead.customer_type.name} colorScheme={'gray'} />;
         }
       },
-      header: 'Type'
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Type
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor('created_at', {
       cell: ({ row }) => {
         return <Text>{new Date(row.getValue('created_at')).toLocaleString()}</Text>;
       },
-      header: 'Entry Date'
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Entry Date
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
     }),
     columnHelper.accessor('actions', {
       cell: ({ row }) => {
@@ -433,6 +521,7 @@ const QuoteRequests = () => {
           activateModal={onNewOpen}
           data={quoteRequests}
           columns={leadsTableColumns}
+          isLoading={isQRLoading}
         />
       </VStack>
     </>

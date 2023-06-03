@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Search } from 'lucide-react';
 
-const LeadFilterBar = () => {
+const LeadFilterBar = ({ rootTable }) => {
   return (
     <>
       <Box w={'full'}>
@@ -38,6 +38,10 @@ const LeadFilterBar = () => {
                 type={'search'}
                 placeholder="Search"
                 bg={useColorModeValue('white', 'gray.800')}
+                onChange={(event) =>
+                  rootTable?.getColumn('requestor')?.setFilterValue(event.target.value)
+                }
+                value={rootTable?.getColumn('requestor')?.getFilterValue() ?? ''}
               />
             </InputGroup>
           </Box>
@@ -46,7 +50,7 @@ const LeadFilterBar = () => {
               Status
             </Text>
             <Select fontWeight={500} bg={useColorModeValue('white', 'gray.800')}>
-              <option>Accepted</option>
+              <option>All</option>
             </Select>
           </Box>
           <Box w={{ base: 'full', md: '20%' }}>
