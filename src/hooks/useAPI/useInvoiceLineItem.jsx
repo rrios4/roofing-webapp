@@ -3,7 +3,7 @@ import {
   createInvoiceLineItem,
   deleteAllInvoiceLineItemsByInvoiceNumber,
   deleteInvoiceLineItemById
-} from '../../services/api/invoice_lineItem';
+} from '../../services/api/invoiceLineitem';
 import { formatMoneyValue } from '../../utils';
 import { useDeleteInvoiceById } from './useInvoices';
 

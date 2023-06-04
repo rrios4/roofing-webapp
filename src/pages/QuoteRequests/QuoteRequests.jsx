@@ -1,42 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  IconButton,
   Flex,
   Text,
   useToast,
-  Input,
   useDisclosure,
-  FormControl,
   VStack,
-  HStack,
   Tooltip,
-  Icon,
   Avatar,
-  Card,
-  CardBody,
-  Skeleton,
   Box,
   Button,
-  Divider,
   useColorModeValue
 } from '@chakra-ui/react';
 import {
   EditEstimateRequestForm,
   NewEstimateRequestForm,
-  QuoteRequestTable,
   ConnectedQRDeleteAlertDialog,
   PageHeader,
   LeadFilterBar,
   LeadStatCards
 } from '../../components';
 import supabase from '../../utils/supabaseClient';
-import { MdSearch, MdPostAdd, MdFilterAlt, MdFilterList } from 'react-icons/md';
-import { FiInbox } from 'react-icons/fi';
 import { useFetchAllQuoteRequests, useUpdateQRById } from '../../hooks/useAPI/useQuoteRequests';
 import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
-import { ArrowDownUp, ArrowUpDown, Pencil, Plus, Trash, UserPlus } from 'lucide-react';
+import { ArrowUpDown, Pencil, Trash, UserPlus } from 'lucide-react';
 import DataTable from '../../components/ui/DataTable';
 import { createColumnHelper } from '@tanstack/react-table';
 import { formatNumber, monthDDYYYYFormat } from '../../utils';
@@ -82,30 +70,6 @@ const QuoteRequests = () => {
     phone_number: ''
   });
   const [selectedEstimateRequestId, setSelectedEstimateRequestId] = useState('');
-
-  // Search for customer quote request
-  // const searchEstimateRequest = async (event) => {
-  //   event.preventDefault();
-
-  //   if (searchEstimateRequestsInput === '') {
-  //     fetchQuoteRequests();
-  //   } else {
-  //     let { data: qrSearchResult, error } = await supabase
-  //       .from('quote_request')
-  //       .select(
-  //         '*, services:service_type_id(*), customer_type:customer_typeID(*), estimate_request_status:est_request_status_id(*)'
-  //       )
-  //       .or(
-  //         `firstName.ilike.%${searchEstimateRequestsInput}%,lastName.ilike.%${searchEstimateRequestsInput}%,email.ilike.%${searchEstimateRequestsInput}%,phone_number.ilike.%${searchEstimateRequestsInput}%`
-  //       );
-
-  //     if (error) {
-  //       console.log(error);
-  //     }
-  //     // console.log(qrSearchResult);
-  //     setQuoteRequests(qrSearchResult);
-  //   }
-  // };
 
   //Handles edit data
   const handleEdit = (estimate_request) => {
