@@ -26,14 +26,11 @@ const QuoteDetailsMain = (props) => {
     editSwitchIsOn,
     bgColorMode
   } = props;
+  const cardBorderColor = useColorModeValue('gray.300', 'gray.700');
+  const textAreaColor = useColorModeValue('gray.100', 'gray.600');
   return (
     <>
-      <Card
-        w={'full'}
-        rounded={'lg'}
-        shadow={'none'}
-        border={'1px'}
-        borderColor={useColorModeValue('gray.300', 'gray.700')}>
+      <Card w={'full'} rounded={'lg'} shadow={'none'} border={'1px'} borderColor={cardBorderColor}>
         <CardBody>
           {/* Header with Buttons */}
           <Flex justifyContent={'flex-end'} pr={'1rem'}>
@@ -173,7 +170,7 @@ const QuoteDetailsMain = (props) => {
                 <>
                   <Textarea
                     readOnly
-                    bg={useColorModeValue('gray.100', 'gray.600')}
+                    bg={textAreaColor}
                     border={'none'}
                     ml={'3rem'}
                     maxW="600px"
