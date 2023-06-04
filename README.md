@@ -2,7 +2,7 @@
   <img src="public/LogoRR-blue-circle.png" width="40%" height="60%" alt="The Roofing App Logo"><br>
   <!-- <img src="https://github.com/rrios4/portfolio-v2/blob/master/assets/projects/roofingv2-webapp-poster.png?raw=true"/> -->
 </p>
-<h1 align="center"> Roofing Web App v2.0 </h1>
+<h1 align="center">The Roofing App</h1>
 <p align="center">
   <b>Introducing a high-performance, visually-stunning web application for Rios Roofing Company, built from the ground up using React.js and Supabase technology. 🚀</b>
   <br><br>
@@ -20,7 +20,7 @@
 </p>
 
 ## Overview
-#### My web application is designed to help roofing companies streamline their data management and improve customer communication. It allows businesses to store, manage and access key information such as invoices, quotes, customer details and quote requests, reducing the time and effort required to create and send invoices and quotes to customers. The application also features a dashboard to easily track company progress and manage quote requests received through the company website, resulting in more efficient and effective business operations.
+#### My web application is designed to help roofing companies streamline their data management and improve customer communication. It allows businesses to store, manage and access key information such as invoices, quotes, customer details and leads, reducing the time and effort required to create and send invoices and quotes to customers. The application also features a dashboard to easily track company progress and manage leads received through the company website, resulting in more efficient and effective business operations.
 </br>
 
 ## Usage
@@ -108,7 +108,7 @@ Tables currently under review for v2.2 and greater:
 
 ![The Roofing App v2.2 Schema](public/images/app-v2.2-erd-sketch.png)
 
-These tables will play in a role of gathering the invoices, quotes, quote request, images, documents into one place. This way we can created multiple invoices for one project and later down the line we can track expense based by a project instead of just using the invoice for the hub for a job.
+These tables will play in a role of gathering the invoices, quotes, quote request, images, documents into one place. This way we can create multiple invoices for one project and later down the line we can track expense based by a project instead of just using the invoice for the hub for a job.
 
 Below is the code that you must run in the "SQL Editor" section in you project in [Supabase](https://app.supabase.com) by copying it and running that code. 
 (Note that this also includes triggers and functions that have been creating during the development of the app.)
@@ -1946,8 +1946,8 @@ COPY public.quote_request_status (id, name, description, updated_at, created_at)
 
 ## Roadmap
 - [x] Initial release, version 1.0, of the Roofing web application, featuring the ability to effectively store and manage invoices, estimates, and customer information..
-- [x] Introduce version 2.0 of the Rios Roofing Company web application, featuring a complete rewrite of the React codebase, a redesigned user experience for optimized data management, the ability to handle quote requests, a replacement of Node.js backend with Supabase technology, enhanced customer, invoice, quote and dashboard views for improved reporting capabilities, the ability to generate PDF documents for invoices and quotes and much more. [Full changelog here](https://github.com/rrios4/roofing-webapp/releases/tag/v2.0.0)
-- [ ] Introduce version 2.5 of the Roofing Company web application, featuring a variety of improvements such as the implementation of react-tables for all current basic tables within the app, the option to send email directly to customers with just one click, a global search function across quote requests, quotes, invoices, and customers, a customer details page that lists all associated invoices, quotes, and requests, google maps integration for address fields, and the capability to upload images and documents for each quote and invoice.
+- [x] Introduce version 2.0 of the Rios Roofing Company web application, featuring a complete rewrite of the React codebase, a redesigned user experience for optimized data management, the ability to handle leads, a replacement of Node.js backend with Supabase technology, enhanced customer, invoice, quote and dashboard views for improved reporting capabilities, the ability to generate PDF documents for invoices and quotes and much more. [Full changelog here](https://github.com/rrios4/roofing-webapp/releases/tag/v2.0.0)
+- [ ] Introduce version 2.5 of the Roofing Company web application, featuring a variety of improvements such as the implementation of react-tables for all current basic tables within the app, the option to send email directly to customers with just one click, a global search function across leads, quotes, invoices, and customers, a customer details page that lists all associated invoices, quotes, and requests, google maps integration for address fields, and the capability to upload images and documents for each quote and invoice.
 
 ## Package List
 
