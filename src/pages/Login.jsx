@@ -57,22 +57,35 @@ function Login() {
 
   return (
     <Flex>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6} mt="6rem">
+      <Stack
+        spacing={8}
+        mx={'auto'}
+        maxW={'lg'}
+        px={6}
+        pb={'16rem'}
+        minH={'100vh'}
+        justify={'center'}>
         <Stack align={'center'}>
           <Image
             w={{ base: '80px', lg: '100px' }}
             rounded="30"
             bg="blue.500"
-            src="https://github.com/rrios4/roofing-webapp/blob/main/src/assets/LogoRR.png?raw=true"
+            src="/assets/LogoRR.png"
           />
           <Heading pt="1" fontSize={{ base: '3xl', lg: '4xl' }}>
             Sign in to your account
           </Heading>
-          <Text fontSize={{ base: 'md', lg: 'lg' }} color={'gray.600'} textAlign={'center'}>
-            Welcome to "The Roofing App" to empower your business 🚀
+          <Text fontSize={{ base: 'md', lg: 'md' }} color={'gray.600'} textAlign={'center'}>
+            Welcome to "The Roofing App" to empower your roofing business. 🚀
           </Text>
         </Stack>
-        <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={4}>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'xs'}
+          border={'1px'}
+          borderColor={useColorModeValue('gray.200', 'gray.700')}
+          p={4}>
           <Stack spacing={4}>
             {/* <form onSubmit={handleSignIn}>
               <FormControl id="email">

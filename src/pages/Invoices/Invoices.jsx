@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // import { useHistory } from "react-router-dom";
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   useColorModeValue,
   useToast,
@@ -12,13 +12,15 @@ import {
   Text,
   useDisclosure,
   VStack,
+  Avatar,
   Tooltip,
   HStack,
   Icon,
   IconButton,
   Card,
   CardBody,
-  Skeleton
+  Skeleton,
+  Divider
 } from '@chakra-ui/react';
 import supabase from '../../utils/supabaseClient';
 import {
@@ -29,34 +31,52 @@ import {
   DeleteAlertDialog,
   InvoiceFilterSwitchPopover,
   InvoiceTable,
-  ConnectedInvoiceDeleteAlertDialog
+  ConnectedInvoiceDeleteAlertDialog,
+  PageHeader,
+  InvoiceFilterBar,
+  InvoiceStatCards
 } from '../../components';
-import { MdKeyboardArrowLeft, MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
+import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
-import { useInvoices } from '../../hooks/useInvoices';
-import { useServices } from '../../hooks/useServices';
-import { useInvoiceStatuses } from '../../hooks/useInvoiceStatuses';
+import { useFetchAllInvoices, useUpdateInvoice } from '../../hooks/useAPI/useInvoices';
+import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { ArrowUpDown, ChevronRight, Pencil, Plus, Trash } from 'lucide-react';
+import { createColumnHelper } from '@tanstack/react-table';
+import DataTable from '../../components/ui/DataTable';
+import StatusBadge from '../../components/ui/StatusBadge';
+import { formatDate, formatMoneyValue, formatNumber, monthDDYYYYFormat } from '../../utils';
 
 function Invoices() {
+  const columnHelper = createColumnHelper();
+  const initialRef = React.useRef();
+  const toast = useToast();
   // Hooks
-  const { invoices, fetchInvoices, setInvoices, invoicesLoadingStateIsOn } = useInvoices();
-  const { services } = useServices();
-  const { invoiceStatuses } = useInvoiceStatuses();
+  const {
+    data: invoices,
+    isLoading: isInvoicesLoading,
+    isError: isInvoicesError
+  } = useFetchAllInvoices();
+  const {
+    data: services,
+    isRoofingServicesLoading,
+    isRoofingServicesError
+  } = useFetchAllServices();
+  const {
+    data: invoiceStatuses,
+    isLoading: isInvoiceStatuses,
+    isError: isInvoicesStatusesError
+  } = useFetchAllInvoiceStatuses();
+  const {
+    mutate: mutateUpdateInvoice,
+    isLoading: isUpdateInvoiceLoading,
+    isError: isUpdateInvoiceError
+  } = useUpdateInvoice(toast);
 
   // Use Disclosured used for opening drawers where forms are at
   const { isOpen: isNewOpen, onOpen: onNewOpen, onClose: onNewClose } = useDisclosure();
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
-
-  // Ref for to focus cursor or field for elements
-  const initialRef = React.useRef();
-  let navigate = useNavigate();
-  const toast = useToast();
-
-  //Style for Card component
-  const bg = useColorModeValue('white', 'gray.700');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const buttonColorScheme = useColorModeValue('gray', 'gray');
 
   //React States to manage data
   // const [invoices, getInvoices] = useState();
@@ -71,8 +91,8 @@ function Invoices() {
     issue_date: '',
     due_date: '',
     sqft_measurement: '',
-    note: '',
-    cust_note: ''
+    private_note: '',
+    public_note: ''
   });
 
   const [selectedInvoiceId, setSelectedInvoiceId] = useState('');
@@ -86,32 +106,8 @@ function Invoices() {
   const [draftInvoiceButtonSwitchIsOn, setDraftInvoiceButtonSwitchIsOn] = useState(false);
 
   // Invoice React State Array filtered
-  const filteredInvoiceDraftArray = () =>
-    setInvoices((invoices) => invoices.filter((invoice) => invoice.invoice_status_id === 4));
-
-  // Functions to program events or actions
-  useEffect(() => {
-    // getAllInvoices();
-    // getCustomers();
-  }, []);
-
-  //   Handles getting a list of all invoices from DB
-  // const getAllInvoices = async () => {
-  //   const { data: allInvoices, error } = await supabase
-  //     .from('invoice')
-  //     .select(
-  //       '*, customer:customer_id(*), invoice_status:invoice_status_id(*), service_type:service_type_id(*)'
-  //     )
-  //     // .neq('invoice_status_id', 4)
-  //     .order('invoice_status_id', { ascending: false })
-  //     .order('updated_at', { ascending: false });
-
-  //   if (error) {
-  //     console.log(error);
-  //   }
-  //   // getInvoices(allInvoices);
-  //   console.log(allInvoices);
-  // };
+  // const filteredInvoiceDraftArray = () =>
+  //   setInvoices((invoices) => invoices.filter((invoice) => invoice.invoice_status_id === 4));
 
   // Function to handle the search through all invoices
   const searchInvoice = async () => {};
@@ -127,8 +123,8 @@ function Invoices() {
       issue_date: invoice.issue_date,
       due_date: invoice.due_date,
       sqft_measurement: invoice.sqft_measurement,
-      note: invoice.note,
-      cust_note: invoice.cust_note
+      private_note: invoice.public_note,
+      public_note: invoice.private_note
     });
     onEditOpen();
   };
@@ -141,46 +137,23 @@ function Invoices() {
   // Handles the submitting of edited information from drawer form
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    console.log(selectedEditInvoice);
-    const { data, error } = await supabase
-      .from('invoice')
-      .update({
+    const updateInvoiceObject = [
+      {
         service_type_id: selectedEditInvoice.service_type_id,
         invoice_status_id: selectedEditInvoice.invoice_status_id,
         invoice_date: selectedEditInvoice.invoice_date,
         issue_date: selectedEditInvoice.issue_date,
         due_date: selectedEditInvoice.due_date,
         sqft_measurement: selectedEditInvoice.sqft_measurement,
-        note: selectedEditInvoice.note,
-        cust_note: selectedEditInvoice.cust_note,
+        public_note: selectedEditInvoice.public_note,
+        private_note: selectedEditInvoice.private_note,
         updated_at: new Date()
-      })
-      .eq('invoice_number', selectedEditInvoice.invoice_number);
-
-    if (error) {
-      // Toast to give feedback when error happens updating invoice
-      toast({
-        position: 'top',
-        title: `Error Updating Invoice Number ${selectedEditInvoice.invoice_number}`,
-        description: `Error: ${error.message}`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-
-    if (data) {
-      await fetchInvoices();
-      // Toast to give feedback when success happens updating invoice
-      toast({
-        position: 'top',
-        title: `Successfully Updated Invoice!`,
-        description: `We've updated INV# ${selectedEditInvoice.invoice_number} for you 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    }
+      },
+      {
+        invoice_number: selectedEditInvoice.invoice_number
+      }
+    ];
+    mutateUpdateInvoice(updateInvoiceObject);
     onEditClose();
     setSelectedEditInvoice({
       id: '',
@@ -201,9 +174,9 @@ function Invoices() {
     const newSwitchValue = !draftInvoiceButtonSwitchIsOn;
     setDraftInvoiceButtonSwitchIsOn(newSwitchValue);
     if (newSwitchValue === true) {
-      filteredInvoiceDraftArray();
+      // filteredInvoiceDraftArray();
     } else {
-      fetchInvoices();
+      // fetchInvoices();
     }
     console.log(invoices);
   };
@@ -222,18 +195,6 @@ function Invoices() {
     filterSwitchStatus4IsOn === true
       ? setFilterSwitchStatus4IsOn(false)
       : setFilterSwitchStatus4IsOn(switchFour);
-  };
-
-  // Handles the toast to give feedback to the user
-  const handleToastMessage = (status, position, invoice_numer, title, description) => {
-    toast({
-      position: position,
-      title: title,
-      description: description,
-      status: status,
-      duration: 5000,
-      isClosable: true
-    });
   };
 
   // Handles the opening of the alert
@@ -262,18 +223,216 @@ function Invoices() {
 
   // Handles the cancel button in the modal form for editing invoices
 
+  const invoiceTableColumns = [
+    columnHelper.accessor('invoice_number', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return (
+          <Text align={'center'} fontWeight={500} fontSize={'14px'}>
+            #{formatNumber(invoice.invoice_number)}
+          </Text>
+        );
+      },
+      header: ({ column }) => (
+        <Flex justify={'center'} w={'full'}>
+          <Button
+            px={1}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Invoice
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        </Flex>
+      )
+    }),
+    columnHelper.accessor('invoice_date', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return (
+          <Text fontSize={'14px'} fontWeight={400}>
+            {monthDDYYYYFormat(invoice.invoice_date)}
+          </Text>
+        );
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Date
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
+    }),
+    columnHelper.accessor('invoice_status_id', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        if (invoice.invoice_status.name === 'Paid') {
+          return <StatusBadge badgeText={invoice.invoice_status.name} colorScheme={'green'} />;
+        } else if (invoice.invoice_status.name === 'Overdue') {
+          return <StatusBadge badgeText={invoice.invoice_status.name} colorScheme={'red'} />;
+        } else if (invoice.invoice_status.name === 'Pending') {
+          return <StatusBadge badgeText={invoice.invoice_status.name} colorScheme={'yellow'} />;
+        } else {
+          return <StatusBadge badgeText={invoice.invoice_status.name} colorScheme={'gray'} />;
+        }
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Status
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
+    }),
+    columnHelper.accessor('service_type_id', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return <Text>{invoice.services.name}</Text>;
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Service
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
+    }),
+    columnHelper.accessor('due_date', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return <Text>{monthDDYYYYFormat(invoice.due_date)}</Text>;
+      },
+      header: ({ column }) => (
+        <Button
+          px={1}
+          fontSize={'14px'}
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Due Date
+          <Box ml={2} h={4} w={4}>
+            <ArrowUpDown size={'15px'} />
+          </Box>
+        </Button>
+      )
+    }),
+    columnHelper.accessor(
+      (row) =>
+        `${row.customer.first_name} ${row.customer.last_name} ${row.customer.email} ${row.invoice_number} ${row.invoice_status.name} ${row.services.name}`,
+      {
+        id: 'customer',
+        cell: ({ row }) => {
+          const invoice = row.original;
+          return (
+            <Link
+              to={`/customers/${invoice.customer.id}`}
+              _hover={{ bg: useColorModeValue('gray.200', 'gray.600') }}>
+              <Button variant={'ghost'} px={1}>
+                <Flex gap={3}>
+                  <Avatar
+                    my={'auto'}
+                    size={'sm'}
+                    name={`${invoice.customer.first_name} ${invoice.customer.last_name}`}
+                    bg={useColorModeValue('gray.200', 'gray.600')}
+                    textColor={useColorModeValue('gray.700', 'gray.200')}
+                  />
+                  <Box fontSize={'14px'}>
+                    <Flex gap={1} fontWeight={500}>
+                      <Text>{invoice.customer.first_name}</Text>
+                      <Text>{invoice.customer.last_name}</Text>
+                    </Flex>
+                    <Text fontWeight={400}>{invoice.customer.email}</Text>
+                  </Box>
+                </Flex>
+              </Button>
+            </Link>
+          );
+        },
+        header: ({ column }) => (
+          <Button
+            px={1}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Customer
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        )
+      }
+    ),
+    columnHelper.accessor('amount_due', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return <Text>${formatMoneyValue(invoice.amount_due)}</Text>;
+      },
+      header: ({ column }) => {
+        return (
+          <Button
+            px={1}
+            fontSize={'14px'}
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Balance
+            <Box ml={2} h={4} w={4}>
+              <ArrowUpDown size={'15px'} />
+            </Box>
+          </Button>
+        );
+      }
+    }),
+    columnHelper.accessor('actions', {
+      cell: ({ row }) => {
+        const invoice = row.original;
+        return (
+          <Flex gap={2}>
+            <Button px={0} onClick={() => handleEditModal(invoice)}>
+              <Pencil size={'15px'} />
+            </Button>
+            <Button px={0} onClick={() => handleDeleteAlert(invoice.id, invoice.invoice_number)}>
+              <Trash size={'15px'} />
+            </Button>
+            <Link to={`/invoices/${invoice.invoice_number}`}>
+              <Button px={0}>
+                <ChevronRight size={'15px'} />
+              </Button>
+            </Link>
+          </Flex>
+        );
+      },
+      header: () => <Text>Actions</Text>
+    })
+  ];
+
   return (
     <>
       {/* Drawer Component Forms */}
       <NewInvoiceForm
+        initialRef={initialRef}
         isNewOpen={isNewOpen}
         onNewClose={onNewClose}
         onNewOpen={onNewOpen}
-        updateParentData={fetchInvoices}
         toast={toast}
         data={invoices}
         nextInvoiceNumberValue={nextInvoiceNumber}
-        loadingState={invoicesLoadingStateIsOn}
+        loadingState={isInvoicesLoading}
         services={services}
         invoiceStatuses={invoiceStatuses}
       />
@@ -284,7 +443,7 @@ function Invoices() {
         invoice={selectedEditInvoice}
         handleEditOnChange={handleEditChange}
         handleEditSubmit={handleEditSubmit}
-        loadingState={invoicesLoadingStateIsOn}
+        loadingState={isInvoicesLoading}
         services={services}
         invoiceStatuses={invoiceStatuses}
       />
@@ -293,7 +452,6 @@ function Invoices() {
         onClose={onDeleteClose}
         onOpen={onDeleteOpen}
         toast={toast}
-        updateParentState={fetchInvoices}
         header={'Delete Invoice'}
         entityDescription={`INVOICE # ${selectedInvoiceNumber}`}
         body={`You can't undo this action afterwards. This will delete associated payments and line-items that depend on this invoice. 🚨`}
@@ -301,101 +459,29 @@ function Invoices() {
       />
 
       {/* Main Invoice Page Code */}
-      <VStack my={'2rem'} w="100%" mx={'auto'} px={{ base: '1rem', lg: '2rem' }}>
-        {/* <Alert status='success' mb={'1rem'} flexDir={'column'} alignItems={'center'} justifyContent={'center'} textAlign={'center'} height={'200px'} rounded={'8'}>
-                <AlertIcon boxSize='40px' mr={0} />
-                <AlertTitle mt={4} mb={1} fontSize='lg'>Invoice Submitted!</AlertTitle>
-                <AlertDescription maxWidth='sm'>New invoice saved to the server. Fire on! 👋</AlertDescription>
-            </Alert> */}
-        {/* <Box display={'flex'} marginBottom={'0rem'} justifyContent="start" w="full">
-          <Link to={'/'}>
-            <Button
-              colorScheme={'gray'}
-              ml={'1rem'}
-              mb="1rem"
-              leftIcon={<MdKeyboardArrowLeft size={'20px'} />}>
-              Back
-            </Button>
-          </Link>
-        </Box> */}
-        <Card variant={'outline'} width="full" rounded={'xl'} shadow={'sm'} size={'lg'}>
-          <CardBody>
-            {/* Header Page info & Actions */}
-            <HStack mb={'24px'} mx={'1rem'}>
-              <Flex display={'flex'} mr={'auto'} alignItems={'center'} gap={8}>
-                <Flex>
-                  <Icon as={FiFileText} boxSize={'6'} my={'auto'} />
-                  <Text fontSize={'2xl'} fontWeight="semibold" mx="14px">
-                    Invoices
-                  </Text>
-                </Flex>
-                <Flex>
-                  {/* Search Input for Invoices */}
-                  <form method="GET" onSubmit={searchInvoice}>
-                    <FormControl display={'flex'}>
-                      <Input
-                        value={searchInvoiceInput}
-                        onChange={({ target }) => setSearchInvoiceInput(target.value)}
-                        placeholder="Search for Invoice"
-                        colorScheme="blue"
-                        size={'md'}
-                      />
-                      <Tooltip label="Search">
-                        <IconButton mx={'1rem'} type="submit" icon={<MdSearch />} />
-                      </Tooltip>
-                    </FormControl>
-                  </form>
-                </Flex>
-              </Flex>
-              <Flex mr={'1rem'} justifyContent={'end'} gap={10}>
-                <Flex gap={4}>
-                  {/* Popover component to filter invoices by status */}
-                  <InvoiceFilterSwitchPopover
-                    handleSwitches={handleSwitchesStatusFilter}
-                    switchOne={filterSwitchStatus1IsOn}
-                    switchTwo={filterSwitchStatus2IsOn}
-                    switchThree={filterSwitchStatus3IsOn}
-                    switchFour={filterSwitchStatus4IsOn}
-                  />
-                  {/* Sort Button */}
-                  <Tooltip label="Sort">
-                    <IconButton icon={<MdFilterList />} />
-                  </Tooltip>
-                  {/* Draft View Button */}
-                  <Tooltip
-                    label={
-                      draftInvoiceButtonSwitchIsOn === true
-                        ? 'Close View of Drafts'
-                        : 'Click to view all Draft Invoices'
-                    }>
-                    <IconButton
-                      icon={draftInvoiceButtonSwitchIsOn === true ? <FiX /> : <FiFolder />}
-                      onClick={handleDraftInvoiceView}
-                    />
-                  </Tooltip>
-                  {/* Create New Invoice Button */}
-                  <Tooltip label="Create New Invoice">
-                    <IconButton icon={<MdPostAdd />} onClick={onNewOpen} colorScheme={'blue'} />
-                  </Tooltip>
-                </Flex>
-              </Flex>
-            </HStack>
-            {/* Table Component for Invoices Data */}
-            {invoicesLoadingStateIsOn === true ? (
-              <Box w={'full'} h={'200px'}>
-                <Skeleton w={'full'} h={'200px'} rounded={'xl'} />
-              </Box>
-            ) : (
-              <>
-                <InvoiceTable
-                  data={invoices}
-                  editModal={handleEditModal}
-                  deleteAlert={handleDeleteAlert}
-                />
-              </>
-            )}
-          </CardBody>
-        </Card>
+      <VStack
+        mt={{ base: '0', lg: '4' }}
+        mb={8}
+        w={'full'}
+        mx={'auto'}
+        px={{ base: '4', lg: '8' }}
+        gap={4}>
+        <PageHeader
+          title={'Invoices'}
+          subheading={'Manage your invoices to track income for projects.'}
+          addItemButtonText={'Add invoice'}
+          onOpen={onNewOpen}
+        />
+        <InvoiceStatCards />
+        {/* <InvoiceFilterBar /> */}
+        <DataTable
+          data={invoices}
+          columns={invoiceTableColumns}
+          EntityFilterBar={InvoiceFilterBar}
+          isLoading={isInvoicesLoading}
+          entity={'invoice'}
+          activateModal={onNewOpen}
+        />
       </VStack>
     </>
   );

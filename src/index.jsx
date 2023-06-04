@@ -10,14 +10,14 @@ import {
   Signup,
   Dashboard,
   Customers,
-  EstimateRequests,
+  QuoteRequests,
   Invoices,
-  Estimates,
-  CustomerDetails,
+  Quotes,
+  CustomerById,
   InvoiceDetails,
-  EstimateDetails
+  QuoteById
 } from './pages';
-import { Layout, ProtectedRoute, EmployeeEdit, Employees } from './components';
+import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
 
 const container = document.getElementById('app');
@@ -46,10 +46,10 @@ root.render(
                 <Route path="/login" element={<Login />} />
                 {/* <Route path="/signup" element={<Signup />} /> */}
                 <Route
-                  path="/estimate-requests"
+                  path="/qr"
                   element={
                     <ProtectedRoute>
-                      <EstimateRequests />
+                      <QuoteRequests />
                     </ProtectedRoute>
                   }
                 />
@@ -70,31 +70,23 @@ root.render(
                   }
                 />
                 <Route
-                  path="/estimates"
+                  path="/quotes"
                   element={
                     <ProtectedRoute>
-                      <Estimates />
+                      <Quotes />
                     </ProtectedRoute>
                   }
                 />
                 <Route
-                  path="/employees"
+                  path="/customers/:id"
                   element={
                     <ProtectedRoute>
-                      <Employees />
+                      <CustomerById />
                     </ProtectedRoute>
                   }
                 />
                 <Route
-                  path="/editcustomer/:id"
-                  element={
-                    <ProtectedRoute>
-                      <CustomerDetails />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/editinvoice/:id"
+                  path="/invoices/:id"
                   element={
                     <ProtectedRoute>
                       <InvoiceDetails />
@@ -102,18 +94,10 @@ root.render(
                   }
                 />
                 <Route
-                  path="/editestimate/:id"
+                  path="/quotes/:id"
                   element={
                     <ProtectedRoute>
-                      <EstimateDetails />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/editemployee/:id"
-                  element={
-                    <ProtectedRoute>
-                      <EmployeeEdit />
+                      <QuoteById />
                     </ProtectedRoute>
                   }
                 />
