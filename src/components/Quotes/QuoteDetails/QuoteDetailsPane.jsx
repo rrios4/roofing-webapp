@@ -12,7 +12,7 @@ import {
   Avatar,
   useColorModeValue
 } from '@chakra-ui/react';
-import { formatDate } from '../../../utils';
+import { formatDate, monthDDYYYYFormat } from '../../../utils';
 import {
   AlignLeft,
   Radio,
@@ -101,7 +101,7 @@ const QuoteDetailsPane = (props) => {
                 <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
               ) : (
                 <>
-                  <Text mr={'1rem'}>{quoteById?.quote_date}</Text>
+                  <Text mr={'1rem'}>{monthDDYYYYFormat(quoteById?.quote_date)}</Text>
                 </>
               )}
             </Flex>
@@ -117,7 +117,7 @@ const QuoteDetailsPane = (props) => {
               ) : (
                 <>
                   <Text mr={'1rem'}>
-                    {!quoteById.issue_date ? 'Not issued yet... 🙅‍♂️' : formatDate(quote.issue_date)}
+                    {!quoteById.issue_date ? 'Not issued yet... 🙅‍♂️' : monthDDYYYYFormat(quoteById?.issue_date)}
                   </Text>
                 </>
               )}

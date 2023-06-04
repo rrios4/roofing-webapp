@@ -13,7 +13,7 @@ import {
   IconButton,
   useColorModeValue
 } from '@chakra-ui/react';
-import { formatDate, formatMoneyValue } from '../../../utils';
+import { formatDate, formatMoneyValue, monthDDYYYYFormat } from '../../../utils';
 import {
   AlignLeft,
   Radio,
@@ -113,7 +113,7 @@ const InvoiceDetailsPane = (props) => {
                 <Skeleton bg={paymentCardBgColor} height={'20px'} rounded={'xl'} w={'full'} />
               ) : (
                 <>
-                  <Text mr={'1rem'}>{formatDate(invoice?.invoice_date)}</Text>
+                  <Text mr={'1rem'}>{monthDDYYYYFormat(invoice?.invoice_date)}</Text>
                 </>
               )}
             </Flex>
@@ -131,7 +131,7 @@ const InvoiceDetailsPane = (props) => {
                   <Text mr={'1rem'}>
                     {!invoice?.issue_date
                       ? 'Not Issued yet... 🙅‍♂️'
-                      : formatDate(invoice?.issue_date)}
+                      : monthDDYYYYFormat(invoice?.issue_date)}
                   </Text>
                 </>
               )}
