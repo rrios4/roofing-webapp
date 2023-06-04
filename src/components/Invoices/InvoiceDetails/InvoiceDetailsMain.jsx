@@ -34,6 +34,8 @@ const InvoiceDetailsMain = (props) => {
     bgColorMode,
     secondaryTextColor
   } = props;
+  const cardBorderColor = useColorModeValue('gray.200', 'gray.700');
+  const textAreaColor = useColorModeValue('gray.100', 'gray.600');
   return (
     <>
       {/* Left Section */}
@@ -43,7 +45,7 @@ const InvoiceDetailsMain = (props) => {
           rounded={'lg'}
           shadow={'xs'}
           border={'1px'}
-          borderColor={useColorModeValue('gray.200', 'gray.700')}>
+          borderColor={cardBorderColor}>
           <CardBody>
             {/* Header with Buttons */}
             <Flex justifyContent={'flex-end'} pr={'1rem'}>
@@ -185,7 +187,7 @@ const InvoiceDetailsMain = (props) => {
                   <>
                     <Textarea
                       readOnly
-                      bg={useColorModeValue('gray.100', 'gray.600')}
+                      bg={textAreaColor}
                       border={'none'}
                       ml={'3rem'}
                       maxW="600px"

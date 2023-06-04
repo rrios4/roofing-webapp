@@ -37,6 +37,8 @@ const InvoiceDetailsPane = (props) => {
     loadingState,
     editSwitchIsOn
   } = props;
+  const cardBorderColor = useColorModeValue('gray.200', 'gray.700');
+  const textAreaColor = useColorModeValue('gray.100', 'gray.600');
   return (
     <>
       <Card
@@ -45,7 +47,7 @@ const InvoiceDetailsPane = (props) => {
         rounded={'lg'}
         shadow={'xs'}
         border={'1px'}
-        borderColor={useColorModeValue('gray.200', 'gray.700')}>
+        borderColor={cardBorderColor}>
         <CardBody overflowY={'auto'}>
           {/* Invoice Extra Details */}
           <Box>
@@ -170,11 +172,11 @@ const InvoiceDetailsPane = (props) => {
               <Flex w="full" px={6} mb={6} gap="4">
                 <Flex direction="column" gap="2" w="full">
                   {invoice?.invoice_payment?.map((item, index) => (
-                    <>
+                    <React.Fragment key={index}>
                       <Flex
                         key={index}
                         gap="6"
-                        bg={useColorModeValue('gray.100', 'gray.600')}
+                        bg={textAreaColor}
                         py="2"
                         px="6"
                         rounded="xl"
@@ -213,7 +215,7 @@ const InvoiceDetailsPane = (props) => {
                           <></>
                         )}
                       </Flex>
-                    </>
+                    </React.Fragment>
                   ))}
                 </Flex>
               </Flex>
