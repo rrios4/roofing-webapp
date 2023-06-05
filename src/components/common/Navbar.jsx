@@ -109,7 +109,7 @@ const Navbar = () => {
           <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>
             CONTENT
           </Text>
-          <Link to={'/qr'}>
+          <Link to={'/leads'}>
             <Tooltip label="Leads" bg={tooltipBackground}>
               <Box p={'1'} rounded="md" _hover={{ bg: buttonBackground }}>
                 {/* <MdScheduleSend size={'30px'}/> */}
@@ -176,7 +176,7 @@ const Navbar = () => {
         px="4"
         bg={bg}
         position="fixed"
-        h="4rem"
+        h="5rem"
         zIndex={'1'}
         justifyContent="space-between"
         borderBottomWidth="1px"
@@ -187,7 +187,7 @@ const Navbar = () => {
             <Box bg={'blue.500'} rounded="xl" _hover={{ bg: 'blue.500' }} shadow="sm" mx={'1rem'}>
               <Image
                 p={{ base: '2px', lg: '4px' }}
-                boxSize={{ base: '40px', lg: '90px' }}
+                boxSize={{ base: '45px', lg: '90px' }}
                 src="/LogoRR.png"
               />
             </Box>
@@ -291,7 +291,7 @@ const Navbar = () => {
                     Dashboard
                   </Flex>
                 </Link>
-                <Link to={'/qr'}>
+                <Link to={'/leads'}>
                   <Flex
                     align={'center'}
                     p="4"
@@ -301,7 +301,7 @@ const Navbar = () => {
                     _hover={{ bg: 'blue.400', color: 'white' }}
                     onClick={onNavClose}>
                     <Icon mr={4} fontSize="20" _groupHover={{ color: 'white' }} as={FiInbox} />
-                    Quote Requests
+                    Leads
                   </Flex>
                 </Link>
                 <Link to={'/invoices'}>

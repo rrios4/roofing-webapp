@@ -33,7 +33,7 @@ const NewQRStat = (props) => {
                     New
                   </StatLabel>
                   <StatLabel fontWeight={'semibold'}>
-                    Quote Request
+                    Leads
                     {/* <Flex bg={'green.400'} rounded="full" w={'1px'} p="1" my={2} ml="10px"></Flex> */}
                   </StatLabel>
                 </Flex>

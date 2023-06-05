@@ -39,7 +39,8 @@ import {
   PopoverBody,
   MenuGroup,
   Card,
-  CardBody
+  CardBody,
+  Skeleton
 } from '@chakra-ui/react';
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -344,19 +345,20 @@ const Dashboard = ({ children }) => {
                             <AvatarBadge boxSize="1.25em" bg="green.500" />
                           </Avatar>
                         ) : (
-                          <SkeletonCircle size="10" />
+                          // <SkeletonCircle w={'32px'} height={'32px'} />
+                          <Skeleton w={'40px'} h={'30px'} rounded={'full'} />
                         )}
                         <Box w={'full'}>
                           {/* <Text ml={'10px'} fontSize={'16px'}>
                           Hi,
                         </Text> */}
-                          <Text ml={'4px'} fontWeight={'medium'} fontSize={'12px'}>
+                          <Flex ml={'4px'} fontWeight={'medium'} fontSize={'12px'}>
                             {loggedInUserData ? (
                               loggedInUserData.full_name
                             ) : (
                               <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
                             )}
-                          </Text>
+                          </Flex>
                           <Text fontSize={'12px'} fontWeight="light">
                             {loggedInUserData.email}
                           </Text>
@@ -462,7 +464,7 @@ const Dashboard = ({ children }) => {
               {/* Tabs */}
               <Tabs variant={'line'}>
                 <TabList>
-                  <Tab>Quote Requests</Tab>
+                  <Tab>Leads</Tab>
                   <Tab>Quotes</Tab>
                   <Tab>Invoices</Tab>
                   <Tab>Customers</Tab>
