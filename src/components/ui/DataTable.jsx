@@ -57,7 +57,7 @@ const DataTable = ({ data, isLoading, entity, activateModal, columns, EntityFilt
     );
   }
 
-  if (!data) {
+  if (data.length === 0) {
     return (
       <>
         <EmptyState
