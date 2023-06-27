@@ -21,7 +21,10 @@ import {
   MenuDivider,
   CloseButton,
   Icon,
-  MenuGroup
+  MenuGroup,
+  PopoverTrigger,
+  PopoverArrow,
+  PopoverBody
 } from '@chakra-ui/react';
 import Toggle from './Toggle';
 import { Link, useNavigate } from 'react-router-dom';
@@ -29,7 +32,7 @@ import { FiUsers, FiInbox, FiGrid, FiFileText, FiMenu } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { useAuth } from '../../hooks/useAuth';
 import swal from 'sweetalert';
-import { LogIn, LogOut, Settings, User } from 'lucide-react';
+import { LogIn, LogOut, PlusSquare, Settings, User } from 'lucide-react';
 
 const Navbar = () => {
   const auth = useAuth();
@@ -142,6 +145,9 @@ const Navbar = () => {
               </Box>
             </Tooltip>
           </Link>
+          <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>
+            SHORTCUT
+          </Text>
         </VStack>
         <Box
           display={{ base: 'none', lg: 'flex' }}
