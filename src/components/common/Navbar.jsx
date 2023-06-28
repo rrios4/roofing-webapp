@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import {NewCustomerForm} from '../index'
 import {
   Box,
   Text,
@@ -22,9 +23,16 @@ import {
   CloseButton,
   Icon,
   MenuGroup,
+  Grid,
+  GridItem,
+  Popover,
   PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
   PopoverArrow,
-  PopoverBody
+  PopoverBody,
+  PopoverCloseButton,
+  Button
 } from '@chakra-ui/react';
 import Toggle from './Toggle';
 import { Link, useNavigate } from 'react-router-dom';
@@ -32,7 +40,7 @@ import { FiUsers, FiInbox, FiGrid, FiFileText, FiMenu } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { useAuth } from '../../hooks/useAuth';
 import swal from 'sweetalert';
-import { LogIn, LogOut, PlusSquare, Settings, User } from 'lucide-react';
+import { LeafyGreen, LogIn, LogOut, PlusSquare, Settings, User } from 'lucide-react';
 
 const Navbar = () => {
   const auth = useAuth();
@@ -68,7 +76,7 @@ const Navbar = () => {
         m="0"
         top={{ base: '0', lg: '0' }}
         borderRightWidth="1px"
-        borderRightColor={useColorModeValue('gray.200', 'gray.700')}>
+        borderRightColor={useColorModeValue('gray.200', 'gray.700')}>  
         <Link to="/">
           <Box display={'flex'} p="1rem" justifyContent={'center'} h={{ base: 'full', lg: 'auto' }}>
             <Box
@@ -145,9 +153,6 @@ const Navbar = () => {
               </Box>
             </Tooltip>
           </Link>
-          <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>
-            SHORTCUT
-          </Text>
         </VStack>
         <Box
           display={{ base: 'none', lg: 'flex' }}
@@ -171,6 +176,77 @@ const Navbar = () => {
             paddingBottom="1rem">
             <Toggle />
           </Box>
+        </Box>
+        <Box 
+          justifyContent={"center"}
+          display={{ base: 'none', lg: 'flex' }}
+          marginBottom={"1rem"} position="relative">
+          <Popover placement='top-start'>
+            <Tooltip label="New" bg={tooltipBackground}>
+              <PopoverTrigger>
+                <Box /* circle */
+                  positon="absolute"
+                  top="50%" 
+                  left="50%"
+                  transform="translate (-50%, -50%)"
+                  width="40px"
+                  height="40px" 
+                  borderRadius="50%" 
+                  bg="blue.500"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  _hover={{ bg: "blue.600" }}
+                  >
+                  <Box rounded="md">
+                    <PlusSquare color={"white"} size={"25px"} />
+                  </Box>
+                </Box>
+              </PopoverTrigger>
+            </Tooltip>
+            <PopoverContent w="full" _focus={{ outline: "none" , boxShadow: 'none'}}>                  
+              <PopoverBody>
+                <Grid templateColumns={"repeat(2, 1fr)"} gap={"3"}>
+                  <GridItem>
+                    <Link to="/leads">
+                      <Box p={'5'} rounded="md" _hover={{ bg: buttonBackground }}>
+                        <FiInbox color={iconColors} size="25px" />
+                        <Text fontWeight="bold"> Lead </Text>
+                        <Text> Add new lead. </Text>
+                      </Box>
+                    </Link>
+                  </GridItem>
+                  <GridItem>
+                    <Link to="/invoices">
+                      <Box p={'5'} rounded="md" _hover={{ bg: buttonBackground }}>
+                        <FiFileText color={iconColors} size={'25px'} />
+                        <Text fontWeight="bold"> Invoice </Text>
+                        <Text> Add new invoice. </Text>
+                      </Box>
+                    </Link>
+                  </GridItem>
+                  <GridItem>
+                    <Link to="/quotes">
+                      <Box p={'5'} rounded="md" _hover={{ bg: buttonBackground }}>
+                        <TbRuler color={iconColors} size={'25px'} />
+                        <Text fontWeight="bold"> Quote </Text>
+                        <Text> Add new quote. </Text>
+                      </Box>
+                    </Link>
+                  </GridItem>
+                  <GridItem> 
+                    <Link to="/customers">
+                      <Box p={'5'} rounded="md" _hover={{ bg: buttonBackground }}>
+                        <FiUsers color={iconColors} size={'25px'} />
+                        <Text fontWeight="bold"> Customer </Text>
+                        <Text> Add new customer. </Text>
+                      </Box>
+                    </Link>
+                  </GridItem>
+                </Grid>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         </Box>
       </Flex>
 
