@@ -1,5 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import {NewCustomerForm} from '../index'
+import { NewEstimateRequestForm, NewInvoiceForm, CreateQuoteForm, NewCustomerForm } from '../index.js'
+import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses.jsx';
+import { useFetchQuotes } from '../../hooks/useAPI/useQuotes.jsx';
+import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses.jsx';
+import { useFetchAllInvoices } from '../../hooks/useAPI/useInvoices.jsx';
+import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses.jsx';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices.jsx';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes.jsx';
 import {
   Box,
   Text,
@@ -26,6 +33,7 @@ import {
   Grid,
   GridItem,
   Popover,
+  useToast,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
@@ -40,7 +48,7 @@ import { FiUsers, FiInbox, FiGrid, FiFileText, FiMenu } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { useAuth } from '../../hooks/useAuth';
 import swal from 'sweetalert';
-import { LeafyGreen, LogIn, LogOut, PlusSquare, Settings, User } from 'lucide-react';
+import { LeafyGreen, LogIn, LogOut, Plus, Settings, User } from 'lucide-react';
 
 const Navbar = () => {
   const auth = useAuth();
@@ -51,6 +59,30 @@ const Navbar = () => {
   const tooltipBackground = useColorModeValue('gray.700', 'gray.100');
   const iconColors = useColorModeValue('#454947', 'white');
   const { isOpen: isNavOpen, onOpen: onNavOpen, onClose: onNavClose } = useDisclosure();
+
+  const toast = useToast();
+  const initialRef = React.useRef();
+
+  const { isOpen: leadIsNewOpen, onOpen: leadOnNewOpen, onClose: leadOnNewClose } = useDisclosure();
+  const { isOpen: invoiceIsNewOpen, onOpen: invoiceOnNewOpen, onClose: invoiceOnNewClose } = useDisclosure();
+  const { isOpen: quoteIsNewOpen, onOpen: quoteOnNewOpen, onClose: quoteOnNewClose } = useDisclosure();
+  const { isOpen: customerIsNewOpen, onOpen: customerOnNewOpen, onClose: customerOnNewClose } = useDisclosure();
+  
+  // leads
+  const { data: qrStatuses } = useFetchAllQRStatuses();
+
+  //invoices
+  const {data: invoices, isLoading: isInvoicesLoading, isError: isInvoicesError} = useFetchAllInvoices();
+  const {data: invoiceStatuses, isLoading: isInvoiceStatuses, isError: isInvoicesStatusesError} = useFetchAllInvoiceStatuses();
+  const [nextInvoiceNumber, setNextInvoiceNumber] = useState('');
+  
+  //quotes
+  const { quotes, isLoading: quotesLoadingStateIsOn, isError } = useFetchQuotes();
+  const { data: services, isLoading: isRoofingServicesLoading } = useFetchAllServices();
+  const { quoteStatuses } = useQuoteStatuses();
+
+  //customers
+  const { data: customerTypes } = useFetchAllCustomerTypes();
 
   const logout = () => {
     auth.signOut();
@@ -199,7 +231,7 @@ const Navbar = () => {
                   _hover={{ bg: "blue.600" }}
                   >
                   <Box rounded="md">
-                    <PlusSquare color={"white"} size={"25px"} />
+                    <Plus color={"white"} size={"20px"} />
                   </Box>
                 </Box>
               </PopoverTrigger>
@@ -208,40 +240,109 @@ const Navbar = () => {
               <PopoverBody>
                 <Grid templateColumns={"repeat(2, 1fr)"} gap={"3"}>
                   <GridItem>
-                    <Link to="/leads">
-                      <Box p={'5'} rounded="md" _hover={{ bg: buttonBackground }}>
-                        <FiInbox color={iconColors} size="25px" />
-                        <Text fontWeight="bold"> Lead </Text>
-                        <Text> Add new lead. </Text>
-                      </Box>
-                    </Link>
+                    <Button
+                      onClick={leadOnNewOpen}
+                      p='4'
+                      rounded='md'
+                      width='100%'
+                      height="100%"
+                      bg="bg"
+                      _hover={{ bg: buttonBackground }}
+                      >
+                        <Box width="100%" height="100%" align={'left'} rounded="md" >
+                          <FiInbox color={iconColors} size={'25px'} />
+                          <Text fontWeight="bold"> Lead </Text>
+                          <Text> Add new lead. </Text>
+                        </Box>
+                    </Button>
+                    <NewEstimateRequestForm
+                      isOpen={leadIsNewOpen}               
+                      onClose={leadOnNewClose}
+                      initialRef={initialRef}
+                      toast={toast}
+                      services={services}
+                      qrStatuses={qrStatuses}
+                      customerTypes={customerTypes}
+                      />
                   </GridItem>
                   <GridItem>
-                    <Link to="/invoices">
-                      <Box p={'5'} rounded="md" _hover={{ bg: buttonBackground }}>
-                        <FiFileText color={iconColors} size={'25px'} />
-                        <Text fontWeight="bold"> Invoice </Text>
-                        <Text> Add new invoice. </Text>
-                      </Box>
-                    </Link>
+                    <Button
+                      onClick={invoiceOnNewOpen}
+                      p='4'
+                      rounded='md'
+                      width='100%'
+                      height="100%"
+                      bg="bg"
+                      _hover={{ bg: buttonBackground }}
+                      >
+                        <Box width="100%" height="100%" align={'left'} rounded="md" >
+                          <FiFileText color={iconColors} size={'25px'} />
+                          <Text fontWeight="bold"> Invoice </Text>
+                          <Text> Add new invoice. </Text>
+                        </Box>
+                    </Button>
+                    <NewInvoiceForm
+                      initialRef={initialRef}
+                      isOpen={invoiceIsNewOpen}
+                      onNewClose={invoiceOnNewClose}
+                      onNewOpen={invoiceOnNewOpen}     
+                      toast={toast}          
+                      data={invoices}
+                      nextInvoiceNumberValue={nextInvoiceNumber}
+                      loadingState={isInvoicesLoading}
+                      services={services}
+                      invoiceStatuses={invoiceStatuses}
+                      />
                   </GridItem>
                   <GridItem>
-                    <Link to="/quotes">
-                      <Box p={'5'} rounded="md" _hover={{ bg: buttonBackground }}>
-                        <TbRuler color={iconColors} size={'25px'} />
-                        <Text fontWeight="bold"> Quote </Text>
-                        <Text> Add new quote. </Text>
-                      </Box>
-                    </Link>
+                    <Button
+                      onClick={quoteOnNewOpen}
+                      p='4'
+                      rounded='md'
+                      width='100%'
+                      height="100%"
+                      bg="bg"
+                      _hover={{ bg: buttonBackground }}
+                      >
+                        <Box width="100%" height="100%" align={'left'} rounded="md" >                        
+                          <TbRuler color={iconColors} size={'25px'} />
+                          <Text fontWeight="bold"> Quote </Text>
+                          <Text> Add new quote. </Text>
+                        </Box>
+                    </Button>
+                    <CreateQuoteForm
+                      isOpen={quoteIsNewOpen}               
+                      onClose={quoteOnNewClose}
+                      initialRef={initialRef}
+                      services={services}
+                      quoteStatuses={quoteStatuses}
+                      toast={toast}
+                      data={quotes}
+                      />
                   </GridItem>
-                  <GridItem> 
-                    <Link to="/customers">
-                      <Box p={'5'} rounded="md" _hover={{ bg: buttonBackground }}>
-                        <FiUsers color={iconColors} size={'25px'} />
-                        <Text fontWeight="bold"> Customer </Text>
-                        <Text> Add new customer. </Text>
-                      </Box>
-                    </Link>
+                  <GridItem>
+                    <Button
+                      onClick={customerOnNewOpen}
+                      p='4'
+                      rounded='md'
+                      width='100%'
+                      height="100%"
+                      bg="bg"
+                      _hover={{ bg: buttonBackground }}
+                      >
+                        <Box align={'left'} rounded="md" >                     
+                          <FiUsers color={iconColors} size={'25px'} />
+                          <Text fontWeight="bold"> Customer </Text>
+                          <Text> Add new customer. </Text>
+                        </Box>
+                    </Button>
+                    <NewCustomerForm
+                      isOpen={customerIsNewOpen}               
+                      onClose={customerOnNewClose}
+                      initialRef={initialRef}
+                      toast={toast}
+                      customerTypes={customerTypes}
+                    />
                   </GridItem>
                 </Grid>
               </PopoverBody>
@@ -249,6 +350,17 @@ const Navbar = () => {
           </Popover>
         </Box>
       </Flex>
+                
+      {/*
+      {isFormOpen && (
+        <NewCustomerForm               
+          onClose={toggleFormVisibility}
+          initialRef={initialRef}
+          toast={toast}
+          customerTypes={customerTypes}
+        />)}
+      */}
+
 
       {/* Mobile Navbar */}
       <Flex
