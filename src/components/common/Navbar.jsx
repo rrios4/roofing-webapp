@@ -214,28 +214,28 @@ const Navbar = () => {
           display={{ base: 'none', lg: 'flex' }}
           marginBottom={"1rem"} position="relative">
           <Popover placement='top-start'>
-            <Tooltip label="New" bg={tooltipBackground}>
-              <PopoverTrigger>
-                <Box /* circle */
-                  positon="absolute"
-                  top="50%" 
-                  left="50%"
-                  transform="translate (-50%, -50%)"
-                  width="40px"
-                  height="40px" 
-                  borderRadius="50%" 
-                  bg="blue.500"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  _hover={{ bg: "blue.600" }}
-                  >
+            <PopoverTrigger>
+              <Box /* circle */
+                positon="absolute"
+                top="50%" 
+                left="50%"
+                transform="translate (-50%, -50%)"
+                width="40px"
+                height="40px" 
+                borderRadius="50%" 
+                bg="blue.500"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                _hover={{ bg: "blue.600" }}
+                >
+                <Tooltip placement='right' label="New" bg={tooltipBackground} offset={[0, 15]}>
                   <Box rounded="md">
                     <Plus color={"white"} size={"20px"} />
                   </Box>
-                </Box>
-              </PopoverTrigger>
-            </Tooltip>
+                </Tooltip>
+              </Box>
+            </PopoverTrigger>
             <PopoverContent w="full" _focus={{ outline: "none" , boxShadow: 'none'}}>                  
               <PopoverBody>
                 <Grid templateColumns={"repeat(2, 1fr)"} gap={"3"}>
@@ -283,7 +283,7 @@ const Navbar = () => {
                     </Button>
                     <NewInvoiceForm
                       initialRef={initialRef}
-                      isOpen={invoiceIsNewOpen}
+                      isNewOpen={invoiceIsNewOpen}
                       onNewClose={invoiceOnNewClose}
                       onNewOpen={invoiceOnNewOpen}     
                       toast={toast}          
@@ -389,7 +389,151 @@ const Navbar = () => {
         </Flex>
 
         <HStack spacing={'0'} gap={1}>
-          <Toggle />
+          {/*add plus symbol*/}
+          <Flex pr={2}>
+            <Popover placement='bottom-start'>
+              <PopoverTrigger>
+                <Box /* circle */
+                  positon="absolute"
+                  top="50%" 
+                  left="50%"
+                  transform="translate (-50%, -50%)"
+                  width="32px"
+                  height="32px" 
+                  borderRadius="50%" 
+                  bg="blue.500"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  _hover={{ bg: "blue.600" }}
+                  >
+                    <Box rounded="md">
+                      <Plus color={"white"} size={"20px"} />
+                    </Box>
+                </Box>
+              </PopoverTrigger>
+              <PopoverContent position="relative" top="5px" left="-7.5%" w="100%" _focus={{ outline: "none" , boxShadow: 'none'}}>                  
+                <PopoverBody>
+                  <Grid templateColumns={"repeat(2, 1fr)"} gap={"1.5"}>
+                    <GridItem minWidth={0}>
+                      <Button
+                        onClick={leadOnNewOpen}
+                        p='3'
+                        rounded='md'
+                        width='100%'
+                        height="100%"
+                        bg="bg"
+                        _hover={{ bg: buttonBackground }}
+                        >
+                          <Box width="100%" height="100%" align={'left'} rounded="md" >
+                            <FiInbox color={iconColors} size={'20px'} />
+                            <Box marginTop="1.5">
+                              <Text fontWeight="bold"> Lead </Text>
+                              <Text fontSize={"14"}> Add new lead. </Text>
+                            </Box>
+                          </Box>
+                      </Button>
+                      <NewEstimateRequestForm
+                        isOpen={leadIsNewOpen}               
+                        onClose={leadOnNewClose}
+                        initialRef={initialRef}
+                        toast={toast}
+                        services={services}
+                        qrStatuses={qrStatuses}
+                        customerTypes={customerTypes}
+                        />
+                    </GridItem>
+                    <GridItem minWidth={0}>
+                      <Button
+                        onClick={invoiceOnNewOpen}
+                        p='3'
+                        rounded='md'
+                        width='100%'
+                        height="100%"
+                        bg="bg"
+                        _hover={{ bg: buttonBackground }}
+                        >
+                          <Box width="100%" height="100%" align={'left'} rounded="md" >
+                            <FiFileText color={iconColors} size={'20px'} />
+                            <Box marginTop="1.5">
+                              <Text fontWeight="bold"> Invoice </Text>
+                              <Text fontSize={"14"}> Add new invoice. </Text>
+                            </Box>
+                          </Box>
+                      </Button>
+                      <NewInvoiceForm
+                        initialRef={initialRef}
+                        isNewOpen={invoiceIsNewOpen}
+                        onNewClose={invoiceOnNewClose}
+                        onNewOpen={invoiceOnNewOpen}     
+                        toast={toast}          
+                        data={invoices}
+                        nextInvoiceNumberValue={nextInvoiceNumber}
+                        loadingState={isInvoicesLoading}
+                        services={services}
+                        invoiceStatuses={invoiceStatuses}
+                        />
+                    </GridItem>
+                    <GridItem minWidth={0}>
+                      <Button
+                        onClick={quoteOnNewOpen}
+                        p='3'
+                        rounded='md'
+                        width='100%'
+                        height="100%"
+                        bg="bg"
+                        _hover={{ bg: buttonBackground }}
+                        >
+                          <Box width="100%" height="100%" align={'left'} rounded="md" >  
+                            <TbRuler color={iconColors} size={'20px'} />  
+                            <Box marginTop="1.5">                    
+                              <Text fontWeight="bold"> Quote </Text>
+                              <Text fontSize={"14"}> Add new quote. </Text>
+                            </Box>
+                          </Box>
+                      </Button>
+                      <CreateQuoteForm
+                        isOpen={quoteIsNewOpen}               
+                        onClose={quoteOnNewClose}
+                        initialRef={initialRef}
+                        services={services}
+                        quoteStatuses={quoteStatuses}
+                        toast={toast}
+                        data={quotes}
+                        />
+                    </GridItem>
+                    <GridItem minWidth={0}>
+                      <Button
+                        onClick={customerOnNewOpen}
+                        p='3'
+                        rounded='md'
+                        width='100%'
+                        height="100%"
+                        bg="bg"
+                        _hover={{ bg: buttonBackground }}
+                        >
+                          <Box width="100%" height="100%" align={'left'} rounded="md" >                     
+                            <FiUsers color={iconColors} size={'20px'} />
+                            <Box marginTop="1.5">
+                              <Text fontWeight="bold"> Customer </Text>
+                              <Text fontSize={"14"}> Add new customer. </Text>
+                            </Box>
+                          </Box>
+                      </Button>
+                      <NewCustomerForm
+                        isOpen={customerIsNewOpen}               
+                        onClose={customerOnNewClose}
+                        initialRef={initialRef}
+                        toast={toast}
+                        customerTypes={customerTypes}
+                      />
+                    </GridItem>
+                  </Grid>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Flex>
+
           <Flex alignItems={'center'} pr={4}>
             <Menu>
               <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
@@ -467,6 +611,9 @@ const Navbar = () => {
                 <Text my={'auto'} fontSize={'xl'} fontWeight={600}>
                   The Roofing App
                 </Text>
+                <Box>
+                  <Toggle />
+                </Box>
               </Flex>
               <CloseButton display={'flex'} onClick={onNavClose} />
             </Flex>
