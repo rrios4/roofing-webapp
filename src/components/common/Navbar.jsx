@@ -611,9 +611,6 @@ const Navbar = () => {
                 <Text my={'auto'} fontSize={'xl'} fontWeight={600}>
                   The Roofing App
                 </Text>
-                <Box>
-                  <Toggle />
-                </Box>
               </Flex>
               <CloseButton display={'flex'} onClick={onNavClose} />
             </Flex>
@@ -684,6 +681,10 @@ const Navbar = () => {
                     Customers
                   </Flex>
                 </Link>
+                <Flex mx={'3'} >
+                  <Toggle /> 
+                  {/*<Text align="center" p="3" mx='-3'> Toggle Dark Mode </Text>*/}
+                </Flex>      
               </Box>
             </Flex>
           </Box>
