@@ -408,7 +408,7 @@ const Navbar = () => {
                   _hover={{ bg: "blue.600" }}
                   >
                     <Box rounded="md">
-                      <Plus color={"white"} size={"20px"} />
+                      <Plus color={"white"} size={"16px"} />
                     </Box>
                 </Box>
               </PopoverTrigger>
