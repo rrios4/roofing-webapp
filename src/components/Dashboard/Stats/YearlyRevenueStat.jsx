@@ -20,6 +20,7 @@ const YearlyRevenueStat = (props) => {
   return (
     <>
       <Card
+        w={'full'}
         size="md"
         rounded={'lg'}
         shadow={'xs'}
@@ -38,7 +39,7 @@ const YearlyRevenueStat = (props) => {
                 <Icon as={FiDollarSign} boxSize={'6'} />
                 <StatLabel display={'flex'} fontWeight={'bold'}>
                   Total Revenue for {currentYear}
-                  <Flex bg={'green.400'} rounded="full" w={'1px'} p="1" my={2} ml="10px"></Flex>
+                  {/* <Flex bg={'green.400'} rounded="full" w={'1px'} p="1" my={2} ml="10px"></Flex> */}
                 </StatLabel>
                 <StatNumber>
                   $

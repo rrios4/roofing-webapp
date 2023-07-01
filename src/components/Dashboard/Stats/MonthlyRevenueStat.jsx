@@ -20,6 +20,7 @@ const MonthlyRevenueStat = (props) => {
   return (
     <>
       <Card
+        w={'full'}
         size="md"
         rounded={'lg'}
         shadow={'xs'}
@@ -37,7 +38,7 @@ const MonthlyRevenueStat = (props) => {
               <Icon as={FiCreditCard} boxSize={'6'} />
               <StatLabel display={'flex'} fontWeight={'bold'}>
                 {currentMonthAcronym} {currentYear} Revenue
-                <Flex bg={'green.400'} rounded="full" w={'1px'} p="1" my={2} ml="10px"></Flex>
+                {/* <Flex bg={'green.400'} rounded="full" w={'1px'} p="1" my={2} ml="10px"></Flex> */}
               </StatLabel>
               <StatNumber>
                 ${formatMoneyValue(currentMonthRevenuesWithPercentageChange?.monthly_revenue)}

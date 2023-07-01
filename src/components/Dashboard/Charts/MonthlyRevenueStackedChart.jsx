@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Flex, useColorModeValue } from '@chakra-ui/react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,27 +10,22 @@ import {
   Legend
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import formatMoneyValue from '../../../utils/formatMoneyValue';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export const options2 = {
-  plugins: {
-    title: {
-      display: false,
-      text: 'Monthly Revenue'
-    },
-    legend: {
-      position: 'bottom'
-    }
-  },
-  responsive: true,
-  scales: {
-    x: {
-      stacked: true
-    },
-    y: {
-      stacked: true
-    }
+const image = new Image();
+image.src = 'https://www.chartjs.org/img/chartjs-logo.svg';
+
+const plugin = {
+  id: 'customCanvasBackgroundColor',
+  beforeDraw: (chart, args, options) => {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = options.color || '#99ffff';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
   }
 };
 
@@ -43,6 +38,44 @@ const MonthlyRevenueStackedChart = (props) => {
     monthlyGraphRevenueDataSet02,
     monthlyGraphRevenueDataSet03
   } = props;
+
+  const gridColors = useColorModeValue('#F5F5F5', '#616161');
+
+  const options = {
+    plugins: {
+      title: {
+        display: false,
+        text: 'Monthly Revenue'
+      },
+      legend: {
+        position: 'bottom'
+      },
+      customCanvasBackgroundColor: {
+        color: 'lightgreen'
+      }
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        stacked: true,
+        grid: {
+          display: true,
+          color: gridColors
+        },
+        ticks: {
+          callback: function (value, index, ticks) {
+            return '$' + value;
+          }
+        }
+      }
+    }
+  };
 
   const labels = [
     'Jan',
@@ -68,7 +101,8 @@ const MonthlyRevenueStackedChart = (props) => {
           monthlyGraphRevenueDataSet01 ? monthlyGraphRevenueDataSet01[index]?.month_total : 0
         ),
         borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.3)'
+        backgroundColor: 'rgba(53, 162, 235, 0.8)',
+        borderRadius: 5
       },
       {
         label: lastYear,
@@ -76,7 +110,8 @@ const MonthlyRevenueStackedChart = (props) => {
           monthlyGraphRevenueDataSet02 ? monthlyGraphRevenueDataSet02[index]?.month_total : 0
         ),
         borderColor: 'rgba(255, 99, 132, .7)',
-        backgroundColor: 'rgba(255, 99, 132, 0.3'
+        backgroundColor: 'rgba(255, 99, 132, 0.8',
+        borderRadius: 5
       },
       {
         label: twoYearsAgo,
@@ -84,15 +119,16 @@ const MonthlyRevenueStackedChart = (props) => {
           monthlyGraphRevenueDataSet03 ? monthlyGraphRevenueDataSet03[index]?.month_total : 0
         ),
         borderColor: 'rgba(43, 166, 37, 0.7)',
-        backgroundColor: 'rgba(59, 225, 51, 0.3)'
+        backgroundColor: 'rgba(59, 225, 51, 0.8)',
+        borderRadius: 5
       }
     ]
   };
 
   return (
     <>
-      <Flex w={'full'} justifyContent={'center'} my={'auto'} px={'2'}>
-        <Bar data={data} options={options2} />
+      <Flex w={'full'} justifyContent={'center'} my={'auto'}>
+        <Bar data={data} options={options} />
       </Flex>
     </>
   );

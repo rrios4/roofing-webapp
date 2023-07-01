@@ -7,6 +7,7 @@ import {
   Text,
   Image,
   Badge,
+  Button,
   Grid,
   useColorModeValue,
   Input,
@@ -85,7 +86,9 @@ import {
   Users,
   BarChart2,
   Zap,
-  CalendarRange
+  CalendarRange,
+  Activity,
+  ChevronRight
 } from 'lucide-react';
 import MonthlyRevenueStackedChart from '../../components/Dashboard/Charts/MonthlyRevenueStackedChart';
 import StatusBadge from '../../components/ui/StatusBadge';
@@ -305,8 +308,8 @@ const Dashboard = ({ children }) => {
         flexDir="column"
         px={{ base: '1rem', lg: '1rem' }}
         w={'full'}
-        mt={{ base: '0rem', lg: '1rem' }}>
-        {/*  */}
+        mt={{ base: '0rem', lg: '1rem' }}
+        gap="4">
         <Box display={{ base: 'none', lg: 'block' }}>
           <Card
             size="sm"
@@ -406,188 +409,37 @@ const Dashboard = ({ children }) => {
             </CardBody>
           </Card>
         </Box>
-        <Flex
-          w={'full'}
-          bg={useColorModeValue('white', 'gray.900')}
-          my={4}
-          border={'1px'}
-          borderColor={useColorModeValue('gray.200', 'gray.700')}
-          rounded={'lg'}
-          shadow={'sm'}
-          px={6}
-          py={8}>
-          <Grid templateColumns={{ base: 'repeat(3, 3fr)', md: 'repeat(5, 1fr)' }} gap={4} w="full">
-            <GridItem>
-              <Flex gap={6}>
-                <Box>
-                  <BadgeDollarSign style={{ color: 'black' }} />
-                </Box>
-                <Flex flexDir={'column'}>
-                  <Text fontWeight={600} textColor={useColorModeValue('gray.500', 'gray.200')}>
-                    Total Revenues
-                  </Text>
-                  <Flex gap={4}>
-                    <Text fontSize={'2xl'} fontWeight={600}>
-                      $ 216k
-                    </Text>
-                    {/* <Text my={'auto'}>Badge</Text> */}
-                    <Badge
-                      colorScheme={'green'}
-                      my={'auto'}
-                      px={'2'}
-                      py={'1'}
-                      rounded={'xl'}
-                      fontSize={'10px'}>
-                      <Flex>
-                        <Text>10%</Text>
-                        <ArrowUpRight size={'12px'} />
-                      </Flex>
-                    </Badge>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </GridItem>
-            <GridItem>
-              <Flex gap={6}>
-                <Box>
-                  <Inbox style={{ color: 'black' }} />
-                </Box>
-                <Flex flexDir={'column'}>
-                  <Text fontWeight={600} textColor={useColorModeValue('gray.500', 'gray.200')}>
-                    Leads
-                  </Text>
-                  <Flex gap={4}>
-                    <Text fontSize={'2xl'} fontWeight={600}>
-                      {newQRRequestCount}
-                    </Text>
-                    {/* <Text my={'auto'}>Badge</Text> */}
-                    <Badge
-                      colorScheme={'green'}
-                      my={'auto'}
-                      px={'2'}
-                      py={'1'}
-                      rounded={'xl'}
-                      fontSize={'10px'}>
-                      <Flex>
-                        <Text>10%</Text>
-                        <ArrowUpRight size={'12px'} />
-                      </Flex>
-                    </Badge>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </GridItem>
-            <GridItem>
-              <Flex gap={6}>
-                <Box>
-                  <FileText style={{ color: 'black' }} />
-                </Box>
-                <Flex flexDir={'column'}>
-                  <Text fontWeight={600} textColor={useColorModeValue('gray.500', 'gray.200')}>
-                    Invoices
-                  </Text>
-                  <Flex gap={4}>
-                    <Text fontSize={'2xl'} fontWeight={600}>
-                      {overdueInvoicesCount}
-                    </Text>
-                    <Badge
-                      colorScheme={'green'}
-                      my={'auto'}
-                      px={'2'}
-                      py={'1'}
-                      rounded={'xl'}
-                      fontSize={'10px'}>
-                      <Flex>
-                        <Text>10%</Text>
-                        <ArrowUpRight size={'12px'} />
-                      </Flex>
-                    </Badge>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </GridItem>
-            <GridItem>
-              <Flex gap={6}>
-                <Box>
-                  <Ruler style={{ color: 'black' }} />
-                </Box>
-                <Flex flexDir={'column'}>
-                  <Text fontWeight={600} textColor={useColorModeValue('gray.500', 'gray.200')}>
-                    Quotes
-                  </Text>
-                  <Flex gap={4}>
-                    <Text fontSize={'2xl'} fontWeight={600}>
-                      {pendingQuotesCount}
-                    </Text>
-                    <Badge
-                      colorScheme={'green'}
-                      my={'auto'}
-                      px={'2'}
-                      py={'1'}
-                      rounded={'xl'}
-                      fontSize={'10px'}>
-                      <Flex>
-                        <Text>10%</Text>
-                        <ArrowUpRight size={'12px'} />
-                      </Flex>
-                    </Badge>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </GridItem>
-            <GridItem>
-              <Flex gap={6}>
-                <Box>
-                  <Users style={{ color: 'black' }} />
-                </Box>
-                <Flex flexDir={'column'}>
-                  <Text fontWeight={600} textColor={useColorModeValue('gray.500', 'gray.200')}>
-                    Customers
-                  </Text>
-                  <Flex gap={4}>
-                    <Text fontSize={'2xl'} fontWeight={600}>
-                      {totalCustomersCount}
-                    </Text>
-                    <Badge
-                      colorScheme={'green'}
-                      my={'auto'}
-                      px={'2'}
-                      py={'1'}
-                      rounded={'xl'}
-                      fontSize={'10px'}>
-                      <Flex>
-                        <Text>10%</Text>
-                        <ArrowUpRight size={'12px'} />
-                      </Flex>
-                    </Badge>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </GridItem>
-          </Grid>
-        </Flex>
-        <Grid templateColumns={{ base: 'repeat(1, 2fr)', md: 'repeat(3, 1fr)' }} gap={6}>
-          <GridItem colSpan={2}>
+        <SimpleGrid spacing={4} minChildWidth="170px">
+          {/* Total New QR's Stat Card */}
+          <NewQRStat newQRRequestCount={newQRRequestCount} />
+          {/* Total Overdue Invoices Stat Card */}
+          <OverdueInvoicesStat overdueInvoicesCount={overdueInvoicesCount} />
+          {/* Total Pending Quotes Stat */}
+          <PendingQuotesStat pendingQuotesCount={pendingQuotesCount} />
+          {/* Total Customers Stat Card */}
+          <TotalCustomersStat totalCustomersCount={totalCustomersCount} />
+        </SimpleGrid>
+        <Grid templateColumns={{ base: 'repeat(1, 2fr)', md: 'repeat(10, 1fr)' }} gap={4}>
+          <GridItem colSpan={4}>
             <Flex
               flexDir={'column'}
               w={'full'}
               bg={useColorModeValue('white', 'gray.900')}
-              my={2}
               justifyContent={'center'}
               border={'1px'}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
               rounded={'lg'}
               shadow={'sm'}
-              p={6}>
-              <Box mb={6}>
-                <Flex gap={2} mb={2}>
-                  <BarChart2 />
-                  <Text fontSize={'18px'} fontWeight={'600'}>
-                    Monthly Revenue
-                  </Text>
-                </Flex>
-                {/* <Divider /> */}
-              </Box>
+              p={4}>
+              <Flex gap={2}>
+                <Box my={'auto'}>
+                  <BarChart2 size={'20px'} />
+                </Box>
+                <Text fontSize={'18px'} fontWeight={'600'}>
+                  Monthly Revenue
+                </Text>
+              </Flex>
+              <Divider my={4} />
               <MonthlyRevenueStackedChart
                 currentYear={currentYear}
                 lastYear={lastYear}
@@ -596,28 +448,52 @@ const Dashboard = ({ children }) => {
                 monthlyGraphRevenueDataSet02={monthlyGraphRevenueDataSet02}
                 monthlyGraphRevenueDataSet03={monthlyGraphRevenueDataSet03}
               />
+              <Flex mt={4} w={'full'} gap={'4'}>
+                <MonthlyRevenueStat
+                  currentMonthRevenuesWithPercentageChange={
+                    currentMonthRevenuesWithPercentageChange
+                  }
+                  currentMonthAcronym={currentMonthAcronym}
+                  currentYear={currentYear}
+                />
+                <YearlyRevenueStat
+                  currentYearTotalRevenueWithPercentageChange={
+                    currentYearTotalRevenueWithPercentageChange
+                  }
+                  currentYear={currentYear}
+                />
+              </Flex>
             </Flex>
           </GridItem>
-          <GridItem>
+          <GridItem colSpan={3}>
             <Flex
               flexDir={'column'}
               w={'full'}
               bg={useColorModeValue('white', 'gray.900')}
-              my={2}
-              justifyContent={'center'}
               border={'1px'}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
               rounded={'lg'}
               shadow={'sm'}
-              p={4}>
+              p={4}
+              h={'full'}>
               <Box mb={6}>
-                <Flex gap={2}>
-                  <Box my={'auto'}>
-                    <Zap size={'20px'} />
-                  </Box>
-                  <Text fontSize={'18px'} fontWeight={'600'}>
-                    Current Project
-                  </Text>
+                <Flex gap={2} justifyContent={'space-between'}>
+                  <Flex gap={2}>
+                    <Box my={'auto'}>
+                      <Zap size={'18px'} />
+                    </Box>
+                    <Text fontSize={'18px'} fontWeight={'600'} my={'auto'}>
+                      Current Project
+                    </Text>
+                  </Flex>
+                  <Button variant={'outline'} size={'sm'}>
+                    <Flex gap={2}>
+                      <Text>Sell All</Text>
+                      <Box my={'auto'}>
+                        <ChevronRight size={'15px'} />
+                      </Box>
+                    </Flex>
+                  </Button>
                 </Flex>
                 <Divider my={4} />
                 <Flex flexDir={'column'} gap={2}>
@@ -654,71 +530,43 @@ const Dashboard = ({ children }) => {
               </Box>
             </Flex>
           </GridItem>
+          <GridItem colSpan={3}>
+            <Flex
+              flexDir={'column'}
+              w={'full'}
+              h={'full'}
+              bg={useColorModeValue('white', 'gray.900')}
+              border={'1px'}
+              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              rounded={'lg'}
+              shadow={'sm'}
+              p={4}>
+              <Box mb={6}>
+                <Flex gap={2} justifyContent={'space-between'}>
+                  <Flex gap={2}>
+                    <Box my={'auto'}>
+                      <CalendarRange size={'18px'} />
+                    </Box>
+                    <Text fontSize={'18px'} fontWeight={'600'} my={'auto'}>
+                      Schedule
+                    </Text>
+                  </Flex>
+                  <Button variant={'outline'} size={'sm'}>
+                    <Flex gap={2}>
+                      <Text>Sell All</Text>
+                      <Box my={'auto'}>
+                        <ChevronRight size={'15px'} />
+                      </Box>
+                    </Flex>
+                  </Button>
+                </Flex>
+                <Divider my={4} />
+                <Flex flexDir={'column'} gap={2}></Flex>
+              </Box>
+            </Flex>
+          </GridItem>
         </Grid>
-        <SimpleGrid
-          spacing={4}
-          columns={2}
-          minChildWidth="170px"
-          pb={'0rem'}
-          pt={{ base: '2rem', lg: '1rem' }}>
-          {/* Total New QR's Stat Card */}
-          <NewQRStat newQRRequestCount={newQRRequestCount} />
-          {/* Total Overdue Invoices Stat Card */}
-          <OverdueInvoicesStat overdueInvoicesCount={overdueInvoicesCount} />
-          {/* Total Pending Quotes Stat */}
-          <PendingQuotesStat pendingQuotesCount={pendingQuotesCount} />
-          {/* Total Customers Stat Card */}
-          <TotalCustomersStat totalCustomersCount={totalCustomersCount} />
-        </SimpleGrid>
-        <SimpleGrid spacing={4} minChildWidth="170px" pb={'1rem'} pt={{ base: '2rem', lg: '1rem' }}>
-          {/* Monthly Revenue Stat Card */}
-          <MonthlyRevenueStat
-            currentMonthRevenuesWithPercentageChange={currentMonthRevenuesWithPercentageChange}
-            currentMonthAcronym={currentMonthAcronym}
-            currentYear={currentYear}
-          />
-          {/* Yearly Revenue Stat Card */}
-          <YearlyRevenueStat
-            currentYearTotalRevenueWithPercentageChange={
-              currentYearTotalRevenueWithPercentageChange
-            }
-            currentYear={currentYear}
-          />
-        </SimpleGrid>
         <SimpleGrid spacing={4} mb={'2rem'} minChildWidth={'420px'}>
-          {/* Montly Revenue Line Graph Card */}
-          <Card
-            size="md"
-            rounded="lg"
-            shadow={'xs'}
-            border={'1px'}
-            borderColor={useColorModeValue('gray.200', 'gray.700')}>
-            <CardBody>
-              <Flex alignItems={'center'} ml="8px" gap={3}>
-                <Icon as={FiBarChart2} boxSize={6} />
-                <Text fontSize="2xl" fontWeight={'bold'}>
-                  Monthly Revenue
-                </Text>
-              </Flex>
-              {/* Line Graph Component */}
-              <MonthlyRevenueLineGraph
-                currentYear={currentYear}
-                lastYear={lastYear}
-                twoYearsAgo={twoYearsAgo}
-                monthlyGraphRevenueDataSet01={monthlyGraphRevenueDataSet01}
-                monthlyGraphRevenueDataSet02={monthlyGraphRevenueDataSet02}
-                monthlyGraphRevenueDataSet03={monthlyGraphRevenueDataSet03}
-              />
-              {/* <MonthlyRevenueStackedChart
-                currentYear={currentYear}
-                lastYear={lastYear}
-                twoYearsAgo={twoYearsAgo}
-                monthlyGraphRevenueDataSet01={monthlyGraphRevenueDataSet01}
-                monthlyGraphRevenueDataSet02={monthlyGraphRevenueDataSet02}
-                monthlyGraphRevenueDataSet03={monthlyGraphRevenueDataSet03}
-              /> */}
-            </CardBody>
-          </Card>
           {/* Recent Activity Card */}
           <Card
             size="md"
