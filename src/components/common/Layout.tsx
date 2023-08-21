@@ -12,8 +12,8 @@ const Layout = (props: Props) => {
       <header>
         <SideNavbar />
       </header>
-      <div className="flex justify-center lg:ml-[5rem] p-4">
-        <div className="flex w-full min-h-screen lg:mt-[0rem] justify-center max-w-screen">
+      <div className="flex justify-center lg:ml-[5rem] py-2 px-6">
+        <div className="flex w-full lg:mt-[0rem] justify-center max-w-screen">
           {props.children}
         </div>
       </div>
