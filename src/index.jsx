@@ -17,6 +17,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //   InvoiceDetails,
 //   QuoteById
 // } from './pages';
+import { LoginPage } from './pages';
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
 
@@ -32,6 +33,7 @@ root.render(
         <AuthProvider>
           <Layout>
             <Routes>
+              <Route path="/" element={<LoginPage />} />
               {/* <Route
               path="/"
               element={

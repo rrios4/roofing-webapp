@@ -61,7 +61,7 @@ export default function SideNavbar({}: Props) {
   return (
     <>
       {/* Desktop */}
-      <div className="hidden z-40 sticky left-0 px-2 border-r-1 lg:w-[80px] lg:h-screen lg:flex lg:flex-col bg-white border-r border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
+      <div className="hidden z-40 fixed px-2 border-r-1 lg:w-[80px] lg:h-screen lg:flex lg:flex-col bg-white border-r border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
         <div className="flex flex-col mx-auto w-full my-4 h-full gap-10">
           <div className="mx-auto">
             <div className="w-[50px] bg-blue-600 rounded-2xl">
