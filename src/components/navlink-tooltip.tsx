@@ -5,16 +5,17 @@ import { Link } from 'react-router-dom';
 type Props = {
   icon: any;
   title: string;
+  path: string;
 };
 
-export default function NavLinkTooltip({icon, title}: Props) {
+export default function NavLinkTooltip({icon, title, path}: Props) {
   return (
     <>
-      <Link to={'/'}>
+      <Link to={path} className=''>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <div className="">{icon}</div>
+              <div className="p-2 rounded-lg border border-white dark:border-zinc-900 hover:border-zinc-200 dark:hover:border-zinc-800">{icon}</div>
             </TooltipTrigger>
             <TooltipContent>
               {title}

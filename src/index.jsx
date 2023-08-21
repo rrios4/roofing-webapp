@@ -2,6 +2,7 @@ import './index.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { ThemeProvider } from './components/common/theme-provider';
 // import App from './App';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import {
@@ -25,12 +26,13 @@ const root = createRoot(container); // createRoot(container!) if you use TypeScr
 const queryClient = new QueryClient();
 
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <AuthProvider>
-        <Layout>
-          <Routes>
-            {/* <Route
+  <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthProvider>
+          <Layout>
+            <Routes>
+              {/* <Route
               path="/"
               element={
                 <ProtectedRoute>
@@ -38,9 +40,9 @@ root.render(
                 </ProtectedRoute>
               }
             /> */}
-            {/* <Route path="/login" element={<Login />} /> */}
-            {/* <Route path="/signup" element={<Signup />} /> */}
-            {/* <Route
+              {/* <Route path="/login" element={<Login />} /> */}
+              {/* <Route path="/signup" element={<Signup />} /> */}
+              {/* <Route
               path="/leads"
               element={
                 <ProtectedRoute>
@@ -96,9 +98,10 @@ root.render(
                 </ProtectedRoute>
               }
             /> */}
-          </Routes>
-        </Layout>
-      </AuthProvider>
-    </BrowserRouter>
-  </QueryClientProvider>
+            </Routes>
+          </Layout>
+        </AuthProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
