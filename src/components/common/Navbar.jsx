@@ -12,13 +12,14 @@ import { useFetchAllInvoices } from '../../hooks/useAPI/useInvoices.jsx';
 import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses.jsx';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices.jsx';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes.jsx';
+import { AspectRatio } from '../ui/aspect-ratio.tsx';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip.tsx';
 import {
   Box,
   Text,
   Flex,
   Image,
   Avatar,
-  Tooltip,
   VStack,
   useColorModeValue,
   Drawer,
@@ -118,6 +119,33 @@ const Navbar = () => {
   return (
     <>
       {/* Desktop Navbar */}
+      <div className="hidden z-1 fixed w-full h-[5rem] rounded-tr-none rounded-br-none shadow-xs p-0 m-0 t-0 border-r-1 lg:w-[6rem] lg:h-screen lg:flex lg:flex-col">
+        <Link to={'/'}>
+          <div className="flex p-1rem justify-center h-full lg:h-auto">
+            <div className="flex flex-col h-full lg:h-[4rem] bg-blue-500 shadow-sm rounded-xl justify-center px-0">
+              <AspectRatio>
+                <img
+                  src="/assets/LogoRR.png"
+                  className="p-[3px] mx-auto ml-0 w-[50px] lg:w-[90px] lg:p-[4px]"
+                />
+              </AspectRatio>
+            </div>
+          </div>
+        </Link>
+        <div className="hidden gap-6 text-white lg:flex lg:flex-col">
+          <div className="flex text-white justify-center pt-[10px]"></div>
+          <p className="text-gray text-[10px] font-bold">ANALYTICS</p>
+          <Link to={'/'}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className=''></div>
+                </TooltipTrigger>
+              </Tooltip>
+            </TooltipProvider>
+          </Link>
+        </div>
+      </div>
       <Flex
         display={{ base: 'none', lg: 'flex' }}
         zIndex={'1'}
@@ -134,28 +162,6 @@ const Navbar = () => {
         top={{ base: '0', lg: '0' }}
         borderRightWidth="1px"
         borderRightColor={useColorModeValue('gray.200', 'gray.700')}>
-        <Link to="/">
-          <Box display={'flex'} p="1rem" justifyContent={'center'} h={{ base: 'full', lg: 'auto' }}>
-            <Box
-              display="flex"
-              flexDir={{ base: 'column', lg: 'column' }}
-              h={{ base: 'full', lg: '4rem' }}
-              bg={'blue.500'}
-              shadow="sm"
-              rounded="18"
-              justifyContent={{ base: 'center', lg: 'center' }}
-              px={{ base: '0px', lg: '0rem' }}
-              _hover={{ bg: 'blue.600' }}>
-              <Image
-                p={{ base: '3px', lg: '4px' }}
-                mx={{ base: 'auto', lg: 'auto' }}
-                marginLeft={{ base: '0px', lg: '0' }}
-                boxSize={{ base: '50px', lg: '90px' }}
-                src="/assets/LogoRR.png"
-              />
-            </Box>
-          </Box>
-        </Link>
         <VStack display={{ base: 'none', lg: 'flex' }} spacing="6" color={'white'}>
           <Box
             display="flex"
@@ -166,6 +172,7 @@ const Navbar = () => {
           <Text color={'GrayText'} fontSize={'10px'} fontWeight={'bold'}>
             ANALYTICS
           </Text>
+
           <Link to={'/'}>
             <Tooltip label="Dashboard" bg={tooltipBackground}>
               <Box p={'1'} rounded="md" _hover={{ bg: buttonBackground }}>

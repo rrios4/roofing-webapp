@@ -1,25 +1,18 @@
 import React from 'react';
-import { Navbar } from '..';
-import { Flex } from '@chakra-ui/react';
-import { useColorModeValue } from '@chakra-ui/react';
+import SideNavbar from './side-navbar.tsx';
 
 const Layout = (props) => {
-  const bg = useColorModeValue('#fcfcfd', 'gray.800');
+  // const bg = useColorModeValue('#fcfcfd', 'gray.800');
   return (
     <>
       <header>
-        <Navbar />
+        <SideNavbar />
       </header>
-      <Flex bg={bg} justifyContent={'center'} pl={{ base: '0rem', lg: '6rem' }}>
-        <Flex
-          w={'full'}
-          minH={'100vh'}
-          mt={{ base: '4rem', lg: '0rem' }}
-          justifyContent="center"
-          maxW={'1440px'}>
+      <div className="flex justify-center lg:pl-[6rem]">
+        <div className="flex w-full min-h-screen mt-[4rem] lg:mt-[0rem] justify-center max-w-2xl">
           {props.children}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </>
   );
 };
