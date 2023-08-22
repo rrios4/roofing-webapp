@@ -4,7 +4,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
-import { abbreviateName } from '../../../lib/utils';
+import { abbreviateName, arrayOfMemojiFileNames } from '../../../lib/utils';
 import { Button } from '../../ui/button';
 import DefaultStatusBadge from '../../status-badges.tsx';
 
@@ -21,8 +21,14 @@ export const customerColumns = [
         const customer = row.original;
         return (
           <div className="flex gap-4">
-            <Avatar>
-              {/* <AvatarImage/> */}
+            <div></div>
+            <Avatar className="border">
+              <AvatarImage
+                className="p-[0px]"
+                src={`https://raw.githubusercontent.com/alohe/memojis/main/png/${
+                  arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
+                }`}
+              />
               <AvatarFallback className="w-[60px] h-[60px]">
                 {`${customer.first_name.substring(0, 1)}${customer.last_name.substring(0, 1)}`}
               </AvatarFallback>
