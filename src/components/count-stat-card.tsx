@@ -15,7 +15,7 @@ export default function CountStatCard({ title, totalCount, icon, isLoading }: Pr
   }
 
   return (
-    <div className="flex flex-col border p-6 rounded-lg shadow-xs w-full md:w-[35%] md:h-[140px] justify-center bg-secondary">
+    <div className="flex flex-col border p-6 rounded-lg shadow-xs w-full md:w-[35%] md:h-[140px] justify-center bg-zinc-50 dark:bg-zinc-800">
       <div className="flex w-full justify-between">
         <p className="font-[500]">{title}</p>
         {/* <UsersIcon size={'20px'} /> */}

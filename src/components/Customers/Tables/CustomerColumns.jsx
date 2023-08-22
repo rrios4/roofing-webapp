@@ -1,9 +1,12 @@
 import React from 'react';
-import { Avatar, Box, Button, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+// import { Avatar, Box, Button, div, Text, useColorModeValue } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
-import StatusBadge from '../../ui/StatusBadge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { abbreviateName } from '../../../lib/utils';
+import { Button } from '../../ui/button';
+import DefaultStatusBadge from '../../status-badges.tsx';
 
 const columnHelper = createColumnHelper();
 const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
@@ -17,35 +20,30 @@ export const customerColumns = [
       cell: ({ row }) => {
         const customer = row.original;
         return (
-          <Flex gap={4}>
-            <Avatar
-              name={`${customer.first_name} ${customer.last_name}`}
-              w={'40px'}
-              h={'40px'}
-              bg={useColorModeValue('gray.200', 'gray.600')}
-              textColor={useColorModeValue('gray.700', 'gray.200')}
-            />
-            <Box fontSize={'14px'}>
-              <Flex gap={2} fontWeight={'500'}>
-                <Text>{customer.first_name}</Text>
-                <Text>{customer.last_name}</Text>
-              </Flex>
-              <Text fontWeight={400}>{customer.email}</Text>
-            </Box>
-          </Flex>
+          <div className="flex gap-4">
+            <Avatar>
+              {/* <AvatarImage/> */}
+              <AvatarFallback className="w-[60px] h-[60px]">
+                {`${customer.first_name.substring(0, 1)}${customer.last_name.substring(0, 1)}`}
+              </AvatarFallback>
+            </Avatar>
+            <div className="text-[14px]">
+              <div className="flex gap-1 font-[600]">
+                <p>{customer.first_name}</p>
+                <p>{customer.last_name}</p>
+              </div>
+              <p className="font-[300]">{customer.email}</p>
+            </div>
+          </div>
         );
       },
       header: ({ column }) => {
         return (
           <Button
-            py={0}
-            fontSize={'14px'}
+            className="py-0"
             variant={'ghost'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Customer
-            <Box ml={2} h={4} w={4}>
-              <ArrowUpDown size={'15px'} />
-            </Box>
+            Customer <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       }
@@ -55,23 +53,19 @@ export const customerColumns = [
     cell: ({ row }) => {
       const customer = row.original;
       if (customer.customer_type.name === 'Residential') {
-        return <StatusBadge badgeText={customer.customer_type.name} colorScheme={'blue'} />;
+        return <DefaultStatusBadge title={customer.customer_type.name} variant="blue" />;
       } else if (customer.customer_type.name === 'Commercial') {
-        return <StatusBadge badgeText={customer.customer_type.name} colorScheme={'green'} />;
+        return <DefaultStatusBadge title={customer.customer_type.name} variant="green" />;
       } else {
-        return <StatusBadge badgeText={customer.customer_type.name} colorScheme={'gray'} />;
+        return <DefaultStatusBadge title={customer.customer_type.name} variant="secondary" />;
       }
     },
     header: ({ column }) => (
       <Button
-        py={0}
-        fontSize={'14px'}
         variant={'ghost'}
+        className="py-0"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Type
-        <Box ml={2} h={4} w={4}>
-          <ArrowUpDown size={'15px'} />
-        </Box>
+        Type <ArrowUpDown size={'15px'} className="ml-2 h-4 w-4" />
       </Button>
     )
   }),
@@ -79,55 +73,43 @@ export const customerColumns = [
     cell: ({ row }) => {
       const customer = row.original;
       return (
-        <Flex
-          gap={1}
-          fontWeight={400}
-          fontSize={'14px'}
+        <div
+          className="flex gap-1 font-[400] text-[14px] cursor-pointer hover:text-blue-500"
           onClick={() =>
             window.open(
               `https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`
             )
-          }
-          cursor={'pointer'}
-          _hover={{ textColor: 'blue.500' }}>
-          <Text>{customer.street_address}</Text>
-          <Text>{customer.city},</Text>
-          <Text>{customer.state}</Text>
-          <Text>{customer.zipcode}</Text>
-        </Flex>
+          }>
+          <p>{customer.street_address}</p>
+          <p>{customer.city},</p>
+          <p>{customer.state}</p>
+          <p>{customer.zipcode}</p>
+        </div>
       );
-    }
+    },
+    header: () => <p>Address</p>
   }),
   columnHelper.accessor('phone_number', {
     cell: ({ row }) => {
       const customer = row.original;
-      return (
-        <Text fontWeight={400} fontSize={'14px'}>
-          {customer.phone_number}
-        </Text>
-      );
+      return <p className="font-[400] text-[14px]">{customer.phone_number}</p>;
     },
-    header: () => <Text>Phone Number</Text>
+    header: () => <p>Phone Number</p>
   }),
   columnHelper.accessor('created_at', {
     cell: ({ row }) => {
       const customer = row.original;
       return (
-        <Text fontSize={'14px'}>
+        <p className="text-[14px]">
           {new Date(customer.created_at).toLocaleDateString('en-us', options)}
-        </Text>
+        </p>
       );
     },
     header: ({ column }) => (
       <Button
-        py={0}
-        fontSize={'14px'}
         variant={'ghost'}
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Registered Since
-        <Box ml={2} h={4} w={4}>
-          <ArrowUpDown size={'15px'} />
-        </Box>
+        Registered Since <ArrowUpDown className="ml-2 h-4 w-4" size={'15px'} />
       </Button>
     )
   }),
@@ -136,12 +118,13 @@ export const customerColumns = [
       const customer = row.original;
       return (
         <Link to={`/customers/${customer.id}`}>
-          <Button px={0}>
+          <Button variant={'secondary'}>
             <ChevronRight size={'15px'} />
           </Button>
         </Link>
       );
-    }
+    },
+    header: () => <p>Actions</p>
   })
 ];
 

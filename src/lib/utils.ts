@@ -15,6 +15,8 @@ export function abbreviateName(name:string){
   
         .join("")
     )
+  } else if(name === undefined) {
+    return("NA")
   } else {
     return (
       "NA"

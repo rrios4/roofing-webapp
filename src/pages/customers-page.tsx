@@ -5,12 +5,17 @@ import {
   useFetchTotalResidentialCustomers,
   useFetchTotalCommercialCustomers
 } from '../hooks/useAPI/useReports.jsx';
-import { BuildingIcon, StoreIcon, UserIcon } from 'lucide-react';
+import { useFetchCustomers } from '../hooks/useAPI/useCustomers.jsx';
+import { BuildingIcon, StoreIcon, UserIcon, UsersIcon } from 'lucide-react';
 import CountStatCard from '../components/count-stat-card';
+import DataTable from '../components/data-table';
+import customerColumns from '../components/Customers/Tables/CustomerColumns.jsx';
+import DataTableFilterCard from '../components/data-table-filter-card';
 
 type Props = {};
 
 export default function CustomersPage({}: Props) {
+  const { customers, isLoading } = useFetchCustomers();
   const { data: totalCustomersCount, isLoading: isTotalCustomerCountLoading } =
     useFetchTotalCustomers();
   const { data: totalResidentialCustomers, isLoading: isTotalResidentialCustomersLoading } =
@@ -22,7 +27,7 @@ export default function CustomersPage({}: Props) {
   }, []);
 
   return (
-    <div className="flex flex-col w-full gap-4">
+    <div className="flex flex-col w-full gap-4 mb-4">
       <DefaultPageHeader
         title="Customers"
         subheading="Manage customers and view information focused on them."
@@ -48,6 +53,17 @@ export default function CustomersPage({}: Props) {
           isLoading={isTotalCommercialCustomersLoading}
         />
       </div>
+      <DataTable
+        data={customers}
+        isLoading={isLoading}
+        columns={customerColumns}
+        entity={'customer'}
+        EntityFilterBar={DataTableFilterCard}
+        activateModal={false}
+        firstSelectName="Type"
+        secondSelectName="State"
+        thirdSelectName="Zipcode"
+      />
     </div>
   );
 }
