@@ -21,7 +21,7 @@ export default function DefaultPageHeader({ title, subheading, addItemTextButton
           <p className="text-[14px] font-[400] text-muted-foreground">{subheading}</p>
         </div>
         <div>
-          <Button variant={'primary'} className="">
+          <Button variant={'primary'} className="" size={'sm'}>
             <PlusCircleIcon className="mr-2 h-4 w-4" /> {addItemTextButton}
           </Button>
         </div>

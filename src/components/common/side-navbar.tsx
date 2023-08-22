@@ -91,11 +91,13 @@ export default function SideNavbar({ userData }: Props) {
             ))}
           </div>
           <div className="flex flex-col mt-auto gap-2 mx-auto">
-            <div>
-              <Button variant={'primary'} className="rounded-full" size={'icon'}>
-                <PlusIcon size={'18px'} />
-              </Button>
-            </div>
+            {auth?.user && (
+              <div>
+                <Button variant={'primary'} className="rounded-full" size={'icon'}>
+                  <PlusIcon size={'18px'} />
+                </Button>
+              </div>
+            )}
             <div className="flex justify-center w-full">
               <ModeToggle />
             </div>
