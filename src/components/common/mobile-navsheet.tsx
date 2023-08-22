@@ -15,10 +15,15 @@ import { ModeToggle } from './mode-toggle';
 import { navLinks } from './nav-links';
 import NavLinkTooltip from '../navlink-tooltip';
 import { Link } from 'react-router-dom';
+import { IGoogleUser } from '../../types/global_types';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { abbreviateName } from '../../lib/utils';
 
-type Props = {};
+type Props = {
+  userData: IGoogleUser;
+};
 
-export default function MobileNavSheet({}: Props) {
+export default function MobileNavSheet({userData}: Props) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -55,6 +60,16 @@ export default function MobileNavSheet({}: Props) {
                     </Link>
                 </React.Fragment>
             ))}
+          </div>
+          <div className='flex px-2 gap-4 pb-6'>
+            <Avatar>
+              <AvatarImage src={userData.avatar_url} alt={userData.full_name}/>
+              <AvatarFallback>{abbreviateName(userData.full_name)}</AvatarFallback>
+            </Avatar>
+            <div className='flex flex-col'>
+              <p className='font-[700] text-[14px]'>{userData.full_name}</p>
+              <p className='font-[400] text-[14px]'>{userData.email}</p>
+            </div>
           </div>
           <div className='px-2'>
             <ModeToggle />

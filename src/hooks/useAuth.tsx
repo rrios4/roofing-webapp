@@ -1,10 +1,15 @@
+import React from 'react';
 import { useContext, useState, useEffect, createContext } from 'react';
-import supabase from '../utils/supabaseClient';
+import supabase from '../lib/supabase-client';
+
+type Props = {
+  children: React.ReactNode;
+}
 
 // create a context for authentication
 const AuthContext = createContext({ session: null, user: null, signOut: () => {} });
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }:Props) => {
   const [user, setUser] = useState();
   const [session, setSession] = useState();
   const [loading, setLoading] = useState(true);

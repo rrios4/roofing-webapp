@@ -2,10 +2,13 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { MenuIcon } from 'lucide-react';
 import MobileNavSheet from './mobile-navsheet';
+import { IGoogleUser } from '../../types/global_types';
 
-type Props = {};
+type Props = {
+  userData: IGoogleUser;
+};
 
-export default function MobileNavbar({}: Props) {
+export default function MobileNavbar({userData}: Props) {
   return (
     <div className="w-full border border-b lg:hidden">
       <div className="max-w-screen px-6 flex my-2 justify-between">
@@ -20,7 +23,7 @@ export default function MobileNavbar({}: Props) {
           </div>
         </div>
         <div className="">
-          <MobileNavSheet/>
+          <MobileNavSheet userData={userData}/>
         </div>
       </div>
     </div>

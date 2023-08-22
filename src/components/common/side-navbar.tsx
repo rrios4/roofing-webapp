@@ -7,10 +7,13 @@ import { ModeToggle } from './mode-toggle';
 import { Button } from '../ui/button';
 import MobileNavbar from './mobile-navbar';
 import { navLinks } from './nav-links';
+import { IGoogleUser } from '../../types/global_types';
 
-type Props = {};
+type Props = {
+  userData: IGoogleUser;
+};
 
-export default function SideNavbar({}: Props) {
+export default function SideNavbar({userData}: Props) {
   return (
     <>
       {/* Desktop */}
@@ -23,10 +26,10 @@ export default function SideNavbar({}: Props) {
           </div>
           <div className="flex flex-col mx-auto gap-2">
             {navLinks.map((item, index) => (
-              <>
+              <React.Fragment key={index}>
                 <NavLinkTooltip title={item.title} icon={item.icon} path={item.path} />
                 {item.lastOfGroup === true && <Separator className='mb-2' />}
-              </>
+              </React.Fragment>
             ))}
           </div>
           <div className="flex flex-col mt-auto gap-2 mx-auto">
@@ -35,7 +38,7 @@ export default function SideNavbar({}: Props) {
           </div>
         </div>
       </div>
-      <MobileNavbar/>
+      <MobileNavbar userData={userData}/>
     </>
   );
 }
