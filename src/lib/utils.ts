@@ -17,7 +17,7 @@ export function abbreviateName(name:string){
     )
   } else {
     return (
-      "N.A"
+      "NA"
     )
   }
 }

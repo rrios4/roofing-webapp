@@ -17,7 +17,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //   InvoiceDetails,
 //   QuoteById
 // } from './pages';
-import { LoginPage } from './pages';
+import {
+  CustomerPage,
+  DashboardPage,
+  InvoicesPage,
+  JobsPage,
+  LoginPage,
+  QuotesPage,
+  InboxPage
+} from './pages';
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
 
@@ -33,7 +41,55 @@ root.render(
         <AuthProvider>
           <Layout>
             <Routes>
-              <Route path="/" element={<LoginPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/customers"
+                element={
+                  <ProtectedRoute>
+                    <CustomerPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/jobs"
+                element={
+                  <ProtectedRoute>
+                    <JobsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/quotes"
+                element={
+                  <ProtectedRoute>
+                    <QuotesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/invoices"
+                element={
+                  <ProtectedRoute>
+                    <InvoicesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/inbox"
+                element={
+                  <ProtectedRoute>
+                    <InboxPage />
+                  </ProtectedRoute>
+                }
+              />
               {/* <Route
               path="/"
               element={

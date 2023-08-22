@@ -1,4 +1,5 @@
 export { default as Layout } from './common/layout';
+export { default as ProtectedRoute } from './common/protected-route';
 // export { default as Navbar } from './common/Navbar';
 // export { default as PageHeader } from './ui/PageHeader';
 // export { default as Customer } from './Customers/Customer/Customer';
@@ -10,7 +11,6 @@ export { default as Layout } from './common/layout';
 // export { default as MonthlyRevenueCard } from './Dashboard/StatCards/MonthlyRevenueCard';
 // export { default as EstimateCountCard } from './Dashboard/StatCards/EstimateCountCard';
 // export { default as CustomerOptions } from './Customers/Customer/customerOptions';
-export { default as ProtectedRoute } from './common/ProtectedRoute';
 // export { default as StateOptions } from './ui/StateOptions';
 // export { default as CustomerTypeOptions } from './Customers/Customer/CustomerTypeOptions';
 // export { default as CustomerDetailsCard } from './Customers/Customer/CustomerDetailsCard';
