@@ -10,20 +10,23 @@ import {
   SheetTrigger
 } from '../ui/sheet';
 import { Button } from '../ui/button';
-import { MenuIcon } from 'lucide-react';
+import { LogInIcon, LogOutIcon, MenuIcon } from 'lucide-react';
 import { ModeToggle } from './mode-toggle';
 import { navLinks } from './nav-links';
 import NavLinkTooltip from '../navlink-tooltip';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IGoogleUser } from '../../types/global_types';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { abbreviateName } from '../../lib/utils';
+import { useAuth } from '../../hooks/useAuth';
 
 type Props = {
   userData: IGoogleUser;
 };
 
-export default function MobileNavSheet({userData}: Props) {
+export default function MobileNavSheet({ userData }: Props) {
+  const navigate = useNavigate();
+  const auth = useAuth();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -48,32 +51,57 @@ export default function MobileNavSheet({userData}: Props) {
           <SheetDescription></SheetDescription>
         </SheetHeader>
         <div className="my-4">
-          <div className='grid grid-flow-row grid-cols-1 gap-2 pb-6'>
+          <div className="grid grid-flow-row grid-cols-1 gap-2 pb-6">
             {navLinks.map((item, index) => (
-                <React.Fragment key={index}>
-                    {/* <NavLinkTooltip title={item.title} path={item.path} icon={item.icon}/> */}
-                    <Link to={item.path}>
-                        <div className='flex gap-4 py-4 px-4 hover:bg-secondary rounded-lg'>
-                            {item.icon}
-                            <p className='font-[500]'>{item.title}</p>
-                        </div>
-                    </Link>
-                </React.Fragment>
+              <React.Fragment key={index}>
+                {/* <NavLinkTooltip title={item.title} path={item.path} icon={item.icon}/> */}
+                <SheetClose asChild>
+                  <Link to={item.path}>
+                    <div className="flex gap-4 py-4 px-4 hover:bg-secondary rounded-lg">
+                      {item.icon}
+                      <p className="font-[500]">{item.title}</p>
+                    </div>
+                  </Link>
+                </SheetClose>
+              </React.Fragment>
             ))}
           </div>
-          <div className='flex px-2 gap-4 pb-6'>
-            <Avatar>
-              <AvatarImage src={userData.avatar_url} alt={userData.full_name}/>
-              <AvatarFallback>{abbreviateName(userData.full_name)}</AvatarFallback>
-            </Avatar>
-            <div className='flex flex-col'>
-              <p className='font-[700] text-[14px]'>{userData.full_name}</p>
-              <p className='font-[400] text-[14px]'>{userData.email}</p>
+          {auth?.user && (
+            <>
+              <div className="flex px-2 gap-4 pb-6">
+                <Avatar>
+                  <AvatarImage src={userData.avatar_url} alt={userData.full_name} />
+                  <AvatarFallback>{abbreviateName(userData.full_name)}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <p className="font-[700] text-[14px]">{userData.full_name}</p>
+                  <p className="font-[400] text-[14px]">{userData.email}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <SheetClose asChild>
+                  <Button onClick={() => auth.signOut()}>
+                    <LogOutIcon className="mr-2 h-4 w-4" /> SignOut
+                  </Button>
+                </SheetClose>
+                <div className="px-2">
+                  <ModeToggle />
+                </div>
+              </div>
+            </>
+          )}
+          {!auth.user && (
+            <div className="flex px-2 gap-4 pb-6">
+              <SheetClose asChild>
+                <Button variant={'primary'} onClick={() => navigate('/login')}>
+                  <LogInIcon className="mr-2 h-4 w-4" /> Login
+                </Button>
+              </SheetClose>
+              <div className="px-2">
+                <ModeToggle />
+              </div>
             </div>
-          </div>
-          <div className='px-2'>
-            <ModeToggle />
-          </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>
