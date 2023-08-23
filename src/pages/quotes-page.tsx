@@ -6,6 +6,8 @@ import {
   CheckCircleIcon,
   ChevronRightIcon,
   CircleDotIcon,
+  MailIcon,
+  MapPinIcon,
   MinusCircleIcon,
   PencilIcon,
   TrashIcon
@@ -30,6 +32,8 @@ import DefaultStatusBadge from '../components/status-badges';
 import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
+import CustomerPreviewPopover from '../components/customer-preview-popover';
 
 type Props = {};
 const columnHelper = createColumnHelper();
@@ -85,13 +89,9 @@ export default function QuotesPage({}: Props) {
   );
 }
 
-const deleteModalHandler = () => {
+const deleteModalHandler = () => {};
 
-}
-
-const handleEditDrawer = () => {
-
-}
+const handleEditDrawer = () => {};
 
 export const quoteColumns = [
   columnHelper.accessor('quote_number', {
@@ -115,23 +115,64 @@ export const quoteColumns = [
       </div>
     )
   }),
-  columnHelper.accessor('quote_date', {
-    cell: ({ row }: any) => {
-      const quote = row.original;
-      return (
-        <p className="font-[400] text-[14px]">{formatDateWithAbbreviatedMonth(quote.quote_date)}</p>
-      );
-    },
-    header: ({ column }) => (
-      <Button
-        className="px-1"
-        variant={'ghost'}
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Date
-        <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
-      </Button>
-    )
-  }),
+  columnHelper.accessor(
+    (row: any) =>
+      `${row.customer.first_name} ${row.customer.last_name} ${row.customer.email} ${row.quote_number} ${row.quote_status.name} ${row.services.name}`,
+    {
+      id: 'customer',
+      cell: ({ row }: any) => {
+        const quote = row.original;
+        const memojiUrl = `https://raw.githubusercontent.com/alohe/memojis/main/png/${
+          arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
+        }`;
+        return (
+          // <Link to={`/customers/${quote.customer.id}`} className="">
+          //   <Button className="px-1 py-6" variant={'ghost'}>
+          //     <div className="flex gap-3">
+          //       <Avatar className="border">
+          //         <AvatarImage src={memojiUrl} />
+          //         <AvatarFallback>
+          //           {`${quote.customer.first_name.substring(
+          //             0,
+          //             1
+          //           )}${quote.customer.last_name.substring(0, 1)}`}
+          //         </AvatarFallback>
+          //       </Avatar>
+          //       <div className="font-[14px] pr-2">
+          //         <div className="flex gap-1 font-[500]">
+          //           <p>{quote.customer.first_name}</p>
+          //           <p>{quote.customer.last_name}</p>
+          //         </div>
+          //         <p className="font-[400]">{quote.customer.email}</p>
+          //       </div>
+          //     </div>
+          //   </Button>
+          // </Link>
+          <CustomerPreviewPopover
+            avatarUrl={memojiUrl}
+            firstName={quote.customer.first_name}
+            lastName={quote.customer.last_name}
+            email={quote.customer.email}
+            phoneNumber={quote.customer.phone_number}
+            streetAddress={quote.customer.street_address}
+            city={quote.customer.city}
+            state={quote.customer.state}
+            zipcode={quote.customer.zipcode}
+            customerId={quote.customer.id}
+          />
+        );
+      },
+      header: ({ column }) => (
+        <Button
+          className="px-1"
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Customer
+          <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
+        </Button>
+      )
+    }
+  ),
   columnHelper.accessor('status_id', {
     header: ({ column }) => (
       <Button
@@ -154,6 +195,23 @@ export const quoteColumns = [
         return <DefaultStatusBadge title={quote.quote_status.name} variant={'gray'} />;
       }
     }
+  }),
+  columnHelper.accessor('quote_date', {
+    cell: ({ row }: any) => {
+      const quote = row.original;
+      return (
+        <p className="font-[400] text-[14px]">{formatDateWithAbbreviatedMonth(quote.quote_date)}</p>
+      );
+    },
+    header: ({ column }) => (
+      <Button
+        className="px-1"
+        variant={'ghost'}
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Date
+        <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
+      </Button>
+    )
   }),
   columnHelper.accessor('service', {
     id: 'service',
@@ -190,55 +248,6 @@ export const quoteColumns = [
       );
     }
   }),
-  columnHelper.accessor(
-    (row: any) =>
-      `${row.customer.first_name} ${row.customer.last_name} ${row.customer.email} ${row.quote_number} ${row.quote_status.name} ${row.services.name}`,
-    {
-      id: 'customer',
-      cell: ({ row }: any) => {
-        const quote = row.original;
-        return (
-          <Link to={`/customers/${quote.customer.id}`} className=''>
-            <Button className="px-1 py-6" variant={'ghost'}>
-              <div className="flex gap-3">
-                <Avatar className='border'>
-                  <AvatarImage
-                    src={`https://raw.githubusercontent.com/alohe/memojis/main/png/${
-                      arrayOfMemojiFileNames[
-                        Math.floor(Math.random() * arrayOfMemojiFileNames.length)
-                      ]
-                    }`}
-                  />
-                  <AvatarFallback>
-                    {`${quote.customer.first_name.substring(
-                      0,
-                      1
-                    )}${quote.customer.last_name.substring(0, 1)}`}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="font-[14px] pr-2">
-                  <div className="flex gap-1 font-[500]">
-                    <p>{quote.customer.first_name}</p>
-                    <p>{quote.customer.last_name}</p>
-                  </div>
-                  <p className="font-[400]">{quote.customer.email}</p>
-                </div>
-              </div>
-            </Button>
-          </Link>
-        );
-      },
-      header: ({ column }) => (
-        <Button
-          className="px-1"
-          variant={'ghost'}
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Customer
-          <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
-        </Button>
-      )
-    }
-  ),
   columnHelper.accessor('total', {
     cell: ({ row }: any) => {
       const quote = row.original;
@@ -263,7 +272,10 @@ export const quoteColumns = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant={'secondary'} className="px-3" onClick={() => handleEditDrawer(quote)}>
+                <Button
+                  variant={'secondary'}
+                  className="px-3"
+                  onClick={() => handleEditDrawer(quote)}>
                   <PencilIcon size={'15px'} />
                 </Button>
               </TooltipTrigger>
@@ -272,8 +284,11 @@ export const quoteColumns = [
           </TooltipProvider>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger >
-                <Button variant={'secondary'} className="px-3" onClick={() => deleteModalHandler(quote.quote_number)}>
+              <TooltipTrigger>
+                <Button
+                  variant={'secondary'}
+                  className="px-3"
+                  onClick={() => deleteModalHandler(quote.quote_number)}>
                   <TrashIcon size={'15px'} />
                 </Button>
               </TooltipTrigger>

@@ -69,7 +69,7 @@ export const customerColumns = [
       } else if (customer.customer_type.name === 'Commercial') {
         return <DefaultStatusBadge title={customer.customer_type.name} variant="green" />;
       } else {
-        return <DefaultStatusBadge title={customer.customer_type.name} variant="secondary" />;
+        return <DefaultStatusBadge title={customer.customer_type.name} variant="gray" />;
       }
     },
     header: ({ column }) => (
@@ -95,7 +95,7 @@ export const customerColumns = [
         />
       );
     },
-    header: () => <p className='min-w-[300px]'>Address</p>
+    header: () => <p className="min-w-[300px]">Address</p>
   }),
   columnHelper.accessor('phone_number', {
     cell: ({ row }) => {

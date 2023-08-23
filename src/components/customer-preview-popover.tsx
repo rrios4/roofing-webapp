@@ -1,0 +1,92 @@
+import React from 'react';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Button } from './ui/button';
+import { ChevronRightIcon, MailIcon, MapPinIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+type Props = {
+  avatarUrl: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  customerId: number;
+};
+
+export default function CustomerPreviewPopover({
+  avatarUrl,
+  firstName,
+  lastName,
+  email,
+  phoneNumber,
+  streetAddress,
+  city,
+  state,
+  zipcode,
+  customerId
+}: Props) {
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <div className="flex gap-3">
+          <Avatar className="border">
+            <AvatarImage src={avatarUrl} />
+            <AvatarFallback>
+              {`${firstName.substring(0, 1)}${lastName.substring(0, 1)}`}
+            </AvatarFallback>
+          </Avatar>
+          <div className="font-[14px] pr-2">
+            <div className="flex gap-1 font-[500]">
+              <p>{firstName}</p>
+              <p>{lastName}</p>
+            </div>
+            <p className="font-[400]">{email}</p>
+          </div>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-[300px] h-[400px] p-6">
+        <div className="w-full h-full">
+          <div className="w-full">
+            <Avatar className="border w-[120px] h-[120px] mx-auto">
+              <AvatarImage src={avatarUrl} sizes="xl" className="mx-auto" />
+            </Avatar>
+          </div>
+          <p className="mx-auto text-center mt-4 font-[600] text-[24px] mb-2">
+            {firstName} {lastName}
+          </p>
+          <p className="text-center font-[400] text-muted-foreground">{email}</p>
+          <p className="text-center font-[400] text-muted-foreground mb-2">{phoneNumber}</p>
+          <p className="text-center font-[400] text-muted-foreground">{streetAddress}</p>
+          <p className="text-center font-[400] text-muted-foreground">
+            {city}, {state} {zipcode}
+          </p>
+          <div className="grid w-full grid-flow-row grid-cols-3 mt-6 gap-4">
+            <Button asChild>
+              <a href={`mailto:${email}`} target="_blank">
+                <MailIcon size={'18px'} />
+              </a>
+            </Button>
+            <Button
+              onClick={() =>
+                window.open(
+                  `https://www.google.com/maps/search/?api=1&query=${streetAddress}+${city}+${state}+${zipcode}`
+                )
+              }>
+              <MapPinIcon size={'18px'} />
+            </Button>
+            <Button asChild>
+              <Link to={`/customers/${customerId}`}>
+                <ChevronRightIcon size={'18px'} />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
