@@ -45,14 +45,16 @@ export default function SideNavbar({ userData }: Props) {
       <div className="hidden z-40 fixed px-2 border-r-1 lg:w-[80px] lg:h-screen lg:flex lg:flex-col bg-white border-r border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800">
         <div className="flex flex-col mx-auto w-full my-4 h-full gap-6">
           <div className="mx-auto">
-            <div className="w-[50px] bg-blue-600 rounded-2xl">
-              <img src="/assets/LogoRR.png" className="shadow-xs p-[2px]" />
+            <div className="w-[50px] bg-blue-600 rounded-2xl transition ease-in-out duration-300 hover:scale-105">
+              <Link to={'/'}>
+                <img src="/assets/LogoRR.png" className="shadow-xs p-[2px]" />
+              </Link>
             </div>
             {auth?.user && (
               <div className="w-full flex justify-center mt-6">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Avatar className="cursor-pointer">
+                    <Avatar className="cursor-pointer hover:border-2 hover:border-blue-500 transition ease-in-out duration-300 hover:scale-110">
                       <AvatarImage src={auth.user.user_metadata.avatar_url} />
                       <AvatarFallback>
                         {abbreviateName(auth?.user?.user_metadata?.full_name)}

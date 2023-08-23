@@ -15,7 +15,7 @@ export default function DataTableFilterCard({ rootTable, entity, columnEntity, f
   return (
     <>
       <div className="w-full">
-        <div className="flex w-full shadow-xs gap-4 border px-[1rem] py-6 rounded-lg flex-col md:flex-row">
+        <div className="flex w-full shadow-xs gap-4 border px-[1rem] py-6 rounded-lg flex-col md:flex-row bg-zinc-50 dark:bg-zinc-800">
           <div className="w-full md:w-[40%]">
             <p className="mb-1 text-muted-foreground text-[14px]">Search for {entity}</p>
             <Input
