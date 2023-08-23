@@ -63,6 +63,7 @@ export default function CustomersPage({}: Props) {
         firstSelectName="Type"
         secondSelectName="State"
         thirdSelectName="Zipcode"
+        filterBarEntity='customer'
       />
     </div>
   );

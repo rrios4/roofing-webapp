@@ -30,6 +30,28 @@ export function getRandomIntBetweenInclusive(min:number, max:number){
   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
 
+export function formatNumber(value:number) {
+  return value?.toLocaleString('en-US', {
+    minimumIntegerDigits: 3,
+    useGrouping: true
+  });
+}
+
+export function formatMoneyValue(input:any) {
+  return input?.toLocaleString(undefined, {
+    minimumFractionDigits: 2
+  });
+}
+
+export function formatDateWithAbbreviatedMonth(date:any) {
+  let parsedDate = new Date(Date.parse(date));
+  let dateString = parsedDate.toLocaleDateString(
+    {},
+    { timeZone: 'UTC', month: 'long', day: '2-digit', year: 'numeric' }
+  );
+  return dateString;
+}
+
 // util for storing memoji file names
 export const arrayOfMemojiFileNames = [
   '1627.png',

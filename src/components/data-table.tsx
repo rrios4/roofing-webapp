@@ -24,6 +24,7 @@ type Props = {
   firstSelectName: string;
   secondSelectName: string;
   thirdSelectName: string;
+  filterBarEntity: string;
 };
 
 export default function DataTable({
@@ -35,7 +36,8 @@ export default function DataTable({
   EntityFilterBar,
   firstSelectName,
   secondSelectName,
-  thirdSelectName
+  thirdSelectName,
+  filterBarEntity
 }: Props) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -77,8 +79,8 @@ export default function DataTable({
     <>
       <EntityFilterBar
         rootTable={table}
-        entity={entity}
-        columnEntity={entity}
+        entity={filterBarEntity}
+        columnEntity={filterBarEntity}
         firstSelectName={firstSelectName}
         secondSelectName={secondSelectName}
         thirdSelectName={thirdSelectName}
