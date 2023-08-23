@@ -126,28 +126,6 @@ export const quoteColumns = [
           arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
         }`;
         return (
-          // <Link to={`/customers/${quote.customer.id}`} className="">
-          //   <Button className="px-1 py-6" variant={'ghost'}>
-          //     <div className="flex gap-3">
-          //       <Avatar className="border">
-          //         <AvatarImage src={memojiUrl} />
-          //         <AvatarFallback>
-          //           {`${quote.customer.first_name.substring(
-          //             0,
-          //             1
-          //           )}${quote.customer.last_name.substring(0, 1)}`}
-          //         </AvatarFallback>
-          //       </Avatar>
-          //       <div className="font-[14px] pr-2">
-          //         <div className="flex gap-1 font-[500]">
-          //           <p>{quote.customer.first_name}</p>
-          //           <p>{quote.customer.last_name}</p>
-          //         </div>
-          //         <p className="font-[400]">{quote.customer.email}</p>
-          //       </div>
-          //     </div>
-          //   </Button>
-          // </Link>
           <CustomerPreviewPopover
             avatarUrl={memojiUrl}
             firstName={quote.customer.first_name}
@@ -298,10 +276,11 @@ export const quoteColumns = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Link to={`/quotes/${quote.quote_number}`}></Link>
-                <Button className="px-3" variant={'secondary'}>
-                  <ChevronRightIcon size={'15px'} />
-                </Button>
+                <Link to={`/quotes/${quote.quote_number}`}>
+                  <Button className="px-3" variant={'secondary'}>
+                    <ChevronRightIcon size={'15px'} />
+                  </Button>
+                </Link>
               </TooltipTrigger>
               <TooltipContent>Go to see details</TooltipContent>
             </Tooltip>

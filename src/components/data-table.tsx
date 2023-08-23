@@ -63,7 +63,12 @@ export default function DataTable({
   const [tableSize, setTableSize] = React.useState('10');
 
   if (isLoading) {
-    return <Skeleton className="w-full h-[200px] rounded-lg" />;
+    return (
+      <div className="flex flex-col w-full gap-6">
+        <Skeleton className="w-full h-[115px] rounded-lg" />
+        <Skeleton className="w-full h-[400px] rounded-lg" />
+      </div>
+    );
   }
 
   if (data.length === 0) {
