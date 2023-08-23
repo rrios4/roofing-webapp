@@ -15,3 +15,4 @@ export { default as JobsPage } from './jobs-page';
 export { default as QuotesPage } from './quotes-page';
 export { default as InvoicesPage } from './invoices-page';
 export { default as InboxPage } from './inbox-page';
+export { default as PageNotFound } from './page-not-found';

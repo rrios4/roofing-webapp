@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ThemeProvider } from './components/common/theme-provider';
 // import App from './App';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 // import {
 //   Login,
 //   Signup,
@@ -24,7 +24,8 @@ import {
   JobsPage,
   LoginPage,
   QuotesPage,
-  InboxPage
+  InboxPage,
+  PageNotFound
 } from './pages';
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
@@ -90,6 +91,8 @@ root.render(
                   </ProtectedRoute>
                 }
               />
+              <Route path="/404" element={<PageNotFound />} />
+              <Route path="*" element={<Navigate to={'/404'} />} />
               {/* <Route
               path="/"
               element={
