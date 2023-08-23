@@ -4,12 +4,12 @@ import {
   useFetchTotalCustomers,
   useFetchTotalResidentialCustomers,
   useFetchTotalCommercialCustomers
-} from '../hooks/useAPI/useReports.jsx';
-import { useFetchCustomers } from '../hooks/useAPI/useCustomers.jsx';
+} from '../hooks/useAPI/useReports';
+import { useFetchCustomers } from '../hooks/useAPI/useCustomers';
 import { BuildingIcon, StoreIcon, UserIcon, UsersIcon } from 'lucide-react';
 import CountStatCard from '../components/count-stat-card';
 import DataTable from '../components/data-table';
-import customerColumns from '../components/Customers/Tables/CustomerColumns.jsx';
+import customerColumns from '../components/Customers/customer-table-columns.js';
 import DataTableFilterCard from '../components/data-table-filter-card';
 
 type Props = {};
@@ -22,9 +22,9 @@ export default function CustomersPage({}: Props) {
     useFetchTotalResidentialCustomers();
   const { data: totalCommercialCustomers, isLoading: isTotalCommercialCustomersLoading } =
     useFetchTotalCommercialCustomers();
-  React.useEffect(() => {
-    console.log(totalCustomersCount);
-  }, []);
+  // React.useEffect(() => {
+  //   console.log(customers);
+  // }, []);
 
   return (
     <div className="flex flex-col w-full gap-4 mb-4">

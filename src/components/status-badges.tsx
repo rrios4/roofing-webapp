@@ -3,7 +3,7 @@ import { Badge } from './ui/badge';
 
 type Props = {
   title: string;
-  colorScheme: string;
+  colorScheme?: string;
   variant: 'blue' | 'default' | 'outline' | 'green' | 'gray' | 'secondary';
 };
 

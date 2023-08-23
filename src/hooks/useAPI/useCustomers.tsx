@@ -28,7 +28,7 @@ export const useFetchCustomers = () => {
 };
 
 // Custom hook to search for customers
-export const useSearchCustomers = (query) => {
+export const useSearchCustomers = (query: any) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['customerSearch', query],
     queryFn: () => fetchSearchCustomers(query)
@@ -38,7 +38,7 @@ export const useSearchCustomers = (query) => {
 };
 
 // Custom hook to get a customer's information by id
-export const useFetchCustomerByID = (id) => {
+export const useFetchCustomerByID = (id: any) => {
   // React-Query
   const {
     data: customerById,
@@ -53,7 +53,7 @@ export const useFetchCustomerByID = (id) => {
 };
 
 // Custom hook to GET all of the customer's invoices
-export const useFetchCustomerInvoices = (customerId) => {
+export const useFetchCustomerInvoices = (customerId: any) => {
   // React-Query
   const {
     data: customerInvoices,
@@ -67,7 +67,7 @@ export const useFetchCustomerInvoices = (customerId) => {
   return { customerInvoices, isLoading, isError };
 };
 // Custom hook to GET all of the customer's quotes
-export const useFetchCustomerQuotes = (customerId) => {
+export const useFetchCustomerQuotes = (customerId: any) => {
   // React-Query
   const {
     data: customerQuotes,
@@ -82,11 +82,11 @@ export const useFetchCustomerQuotes = (customerId) => {
 };
 
 // Custom hook to delete a customer
-export const useDeleteCustomer = (toast) => {
+export const useDeleteCustomer = (toast: any) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   return useMutation((itemNumber) => deleteCustomer(itemNumber), {
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: 'Error Deleting Customer!',
@@ -112,10 +112,10 @@ export const useDeleteCustomer = (toast) => {
 };
 
 // Custom hook to create a new customer
-export const useCreateCustomer = (toast, handleResettingUseState) => {
+export const useCreateCustomer = (toast: any, handleResettingUseState: any) => {
   const queryClient = useQueryClient();
   return useMutation((newCustomerObject) => createCustomer(newCustomerObject), {
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: `Error Occured Creating Customer`,
@@ -142,10 +142,14 @@ export const useCreateCustomer = (toast, handleResettingUseState) => {
 };
 
 // Custom hook to update a existing customer's information
-export const useUpdateCustomer = (toast, handleResetUpdateCustomerState, customerId) => {
+export const useUpdateCustomer = (
+  toast: any,
+  handleResetUpdateCustomerState: any,
+  customerId: any
+) => {
   const queryClient = useQueryClient();
   return useMutation((selectedCustomerObject) => updateCustomerById(selectedCustomerObject), {
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: 'Error Occured!',

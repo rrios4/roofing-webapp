@@ -1,23 +1,26 @@
 import React from 'react';
-// import { Avatar, Box, Button, div, Text, useColorModeValue } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
-import { abbreviateName, arrayOfMemojiFileNames } from '../../../lib/utils';
-import { Button } from '../../ui/button';
-import DefaultStatusBadge from '../../status-badges.tsx';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { arrayOfMemojiFileNames } from '../../lib/utils';
+import { Button } from '../ui/button';
+import DefaultStatusBadge from '../status-badges';
+
+type Props = {
+  row: any;
+};
 
 const columnHelper = createColumnHelper();
 const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
 
 export const customerColumns = [
   columnHelper.accessor(
-    (row) =>
+    (row: any) =>
       `${row.first_name} ${row.last_name} ${row.email} ${row.street_address} ${row.city} ${row.zipcode} ${row.phone_number}`,
     {
       id: 'customer',
-      cell: ({ row }) => {
+      cell: ({ row }: Props) => {
         const customer = row.original;
         return (
           <div className="flex gap-4">
@@ -46,7 +49,7 @@ export const customerColumns = [
       header: ({ column }) => {
         return (
           <Button
-            className="py-0"
+            className="py-0 gap-2"
             variant={'ghost'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Customer <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -56,7 +59,7 @@ export const customerColumns = [
     }
   ),
   columnHelper.accessor('customer_type_id', {
-    cell: ({ row }) => {
+    cell: ({ row }: Props) => {
       const customer = row.original;
       if (customer.customer_type.name === 'Residential') {
         return <DefaultStatusBadge title={customer.customer_type.name} variant="blue" />;
@@ -69,14 +72,14 @@ export const customerColumns = [
     header: ({ column }) => (
       <Button
         variant={'ghost'}
-        className="py-0"
+        className="px-0 gap-2"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Type <ArrowUpDown size={'15px'} className="ml-2 h-4 w-4" />
       </Button>
     )
   }),
   columnHelper.accessor('address', {
-    cell: ({ row }) => {
+    cell: ({ row }: Props) => {
       const customer = row.original;
       return (
         <div
@@ -103,7 +106,7 @@ export const customerColumns = [
     header: () => <p>Phone Number</p>
   }),
   columnHelper.accessor('created_at', {
-    cell: ({ row }) => {
+    cell: ({ row }: Props) => {
       const customer = row.original;
       return (
         <p className="text-[14px]">
@@ -112,15 +115,18 @@ export const customerColumns = [
       );
     },
     header: ({ column }) => (
-      <Button
-        variant={'ghost'}
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Registered Since <ArrowUpDown className="ml-2 h-4 w-4" size={'15px'} />
-      </Button>
+      <div className="flex gap-4">
+        <Button
+          className="gap-2 px-0"
+          variant={'ghost'}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Registered Since <ArrowUpDown className="ml-2 h-4 w-4" size={'15px'} />
+        </Button>
+      </div>
     )
   }),
   columnHelper.accessor('actions', {
-    cell: ({ row }) => {
+    cell: ({ row }: Props) => {
       const customer = row.original;
       return (
         <Link to={`/customers/${customer.id}`}>
