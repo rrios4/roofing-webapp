@@ -95,12 +95,12 @@ export const customerColumns = [
         />
       );
     },
-    header: () => <p>Address</p>
+    header: () => <p className='min-w-[300px]'>Address</p>
   }),
   columnHelper.accessor('phone_number', {
     cell: ({ row }) => {
       const customer = row.original;
-      return <p className="font-[400] text-[14px]">{customer.phone_number}</p>;
+      return <p className="font-[400] text-[14px] min-w-[150px]">{customer.phone_number}</p>;
     },
     header: () => <p>Phone Number</p>
   }),
@@ -114,7 +114,7 @@ export const customerColumns = [
       );
     },
     header: ({ column }) => (
-      <div className="flex gap-4">
+      <div className="flex gap-4 min-w-[180px]">
         <Button
           className="gap-2 px-0"
           variant={'ghost'}

@@ -38,21 +38,20 @@ export default function GoogleMapsAddressPreviewPopover({
       <PopoverContent className="w-full h-full px-6 py-6">
         <iframe
           src={`https://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q='${addressQuery}'&z=14&output=embed`}
-          width="600"
-          height="320"
-          className="border mx-auto my-auto rounded-lg bg-secondary"
+          className="border mx-auto my-auto rounded-lg bg-secondary w-[300px] h-[200px] md:w-[600px] md:h-[320px]"
           allowFullScreen={true}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"></iframe>
-        <div className="flex justify-between pt-6">
-          <div>
+        <div className="flex justify-between pt-6 flex-col md:flex-row gap-4">
+          <div className='w-full'>
             <p className="text-[20px] font-[600]">{streetAddress}</p>
             <p className="font-[400]">
               {city}, {state} {zipcode}
             </p>
           </div>
-          <div>
+          <div className='w-full md:w-[300px]'>
             <Button
+              className='w-full'
               variant={'primary'}
               onClick={() =>
                 window.open(`https://www.google.com/maps/search/?api=1&query=${addressQuery}`)
