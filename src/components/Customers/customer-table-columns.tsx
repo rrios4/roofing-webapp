@@ -1,11 +1,14 @@
 import React from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
-import { ArrowUpDown, ChevronRight } from 'lucide-react';
+import { ArrowUpDown, ChevronRight, CompassIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { arrayOfMemojiFileNames } from '../../lib/utils';
 import { Button } from '../ui/button';
 import DefaultStatusBadge from '../status-badges';
+import { Dialog, DialogTrigger } from '../ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import GoogleMapsAddressPreviewPopover from '../google-maps-preview';
 
 type Props = {
   row: any;
@@ -81,19 +84,15 @@ export const customerColumns = [
   columnHelper.accessor('address', {
     cell: ({ row }: Props) => {
       const customer = row.original;
+      const customerAddress = `${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`;
       return (
-        <div
-          className="flex gap-1 font-[400] text-[14px] cursor-pointer hover:text-blue-500"
-          onClick={() =>
-            window.open(
-              `https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`
-            )
-          }>
-          <p>{customer.street_address}</p>
-          <p>{customer.city},</p>
-          <p>{customer.state}</p>
-          <p>{customer.zipcode}</p>
-        </div>
+        <GoogleMapsAddressPreviewPopover
+          streetAddress={customer.street_address}
+          city={customer.city}
+          state={customer.state}
+          zipcode={customer.zipcode}
+          addressQuery={customerAddress}
+        />
       );
     },
     header: () => <p>Address</p>

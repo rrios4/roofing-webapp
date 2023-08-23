@@ -17,7 +17,7 @@ export default function InboxPage({}: Props) {
   const { data: totalClosedLeadsCount, isLoading: isTotalClosedLeadsLoading } =
     useFetchTotalClosedLeads();
   return (
-    <div className="flex flex-col w-full gap-4 mb-4">
+    <div className="flex flex-col w-full gap-6 mb-6">
       <DefaultPageHeader
         title="Inbox"
         subheading="Manage and view all lead requests from website here."

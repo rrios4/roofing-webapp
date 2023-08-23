@@ -15,7 +15,7 @@ export default function InvoicesPage({}: Props) {
   const { data: totalPaidInvoicesCount, isLoading: isTotalPaidInvoicesLoading } = useFetchTotalPaidInvoices();
   const { data: totalPendingInvoicesCount, isLoading: isTotalPendingInvoicesLoading } = useFetchTotalPendingInvoices();
   return (
-    <div className="flex flex-col w-full gap-4 mb-4">
+    <div className="flex flex-col w-full gap-6 mb-6">
       <DefaultPageHeader
         title="Invoices"
         subheading="Manage invoices and view information focused on them."

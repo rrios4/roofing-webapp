@@ -27,7 +27,7 @@ export default function CustomersPage({}: Props) {
   // }, []);
 
   return (
-    <div className="flex flex-col w-full gap-4 mb-4">
+    <div className="flex flex-col w-full gap-6 mb-6">
       <DefaultPageHeader
         title="Customers"
         subheading="Manage customers and view information focused on them."

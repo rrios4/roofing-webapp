@@ -18,7 +18,7 @@ export default function QuotesPage({}: Props) {
   const { data: totalRejectedQuotesCount, isLoading: isTotalRejectedQuoteCountLoading } =
     useFetchTotalRejectedQuotes();
   return (
-    <div className="flex flex-col w-full gap-4 mb-4">
+    <div className="flex flex-col w-full gap-6 mb-6">
       <DefaultPageHeader
         title="Quotes"
         subheading="Manage quotes and view information focused on them."
