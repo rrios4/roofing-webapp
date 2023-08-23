@@ -34,7 +34,7 @@ export default function CustomerPreviewPopover({
     <Popover>
       <PopoverTrigger>
         <div className="flex gap-3">
-          <Avatar className="border">
+          <Avatar className="border w-[45px] h-[45px] bg-blue-100 dark:bg-blue-700/30">
             <AvatarImage src={avatarUrl} />
             <AvatarFallback>
               {`${firstName.substring(0, 1)}${lastName.substring(0, 1)}`}
@@ -52,7 +52,7 @@ export default function CustomerPreviewPopover({
       <PopoverContent className="w-[300px] h-[400px] p-6">
         <div className="w-full h-full">
           <div className="w-full">
-            <Avatar className="border w-[120px] h-[120px] mx-auto">
+            <Avatar className="border w-[120px] h-[120px] mx-auto bg-blue-100 dark:bg-blue-700/30">
               <AvatarImage src={avatarUrl} sizes="xl" className="mx-auto" />
             </Avatar>
           </div>

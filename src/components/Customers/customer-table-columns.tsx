@@ -28,14 +28,13 @@ export const customerColumns = [
         return (
           <div className="flex gap-4">
             <div></div>
-            <Avatar className="border">
+            <Avatar className="border w-[45px] h-[45px] bg-blue-100 dark:bg-blue-700/30">
               <AvatarImage
-                className="p-[0px]"
                 src={`https://raw.githubusercontent.com/alohe/memojis/main/png/${
                   arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
                 }`}
               />
-              <AvatarFallback className="w-[60px] h-[60px]">
+              <AvatarFallback>
                 {`${customer.first_name.substring(0, 1)}${customer.last_name.substring(0, 1)}`}
               </AvatarFallback>
             </Avatar>
