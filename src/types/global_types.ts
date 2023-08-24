@@ -34,3 +34,15 @@ export type IDbCustomerType = {
     updated_at: string | null;
     created_at: string;
 }
+
+export type IFormAddCustomer = {
+    first_name: string;
+    last_name:string;
+    customer_tpye: string;
+    email: string;
+    phone_number: string;
+    street_address: string;
+    city: string;
+    state:string; 
+    zipcode: string;
+}

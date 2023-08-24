@@ -28,7 +28,7 @@ export default function DataTableFilterCard({ rootTable, entity, columnEntity, f
               value={rootTable?.getColumn(columnEntity)?.getFilterValue() ?? ''}
             />
           </div>
-          <div className="grid grid-flow-row grid-cols-3 gap-4 w-full md:w-[60%]">
+          <div className="grid grid-flow-row grid-cols-1 gap-4 w-full md:w-[60%] md:grid-cols-3">
             <div className="text-[14px] font-[500]">
               <p className="mb-1 text-muted-foreground text-[14px]">{firstSelectName}</p>
               <Select>

@@ -35,7 +35,7 @@ export default function CustomersPage({}: Props) {
         addItemTextButton="Add customer"
         sheetTitle='Add customer'
         sheetDescription='Create a new customer to track their content.'
-        sheetContent={<AddCustomerForm/>}
+        SheetContentBody={AddCustomerForm}
       />
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard

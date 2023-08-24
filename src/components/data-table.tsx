@@ -117,8 +117,8 @@ export default function DataTable({
             ))}
           </TableBody>
         </Table>
-        <div className="flex gap-4 justify-center w-full p-4 border-t rounded-b-lg ">
-          <div className="w-[25%]">
+        <div className="grid grid-flow-row grid-cols-3 gap-4 w-full p-4 border-t rounded-b-lg ">
+          <div className="">
             <Button
               variant={'secondary'}
               disabled={!table.getCanPreviousPage()}
@@ -127,12 +127,12 @@ export default function DataTable({
               <p className="font-[500] hidden md:flex">Previous</p>
             </Button>
           </div>
-          <div className="flex my-auto w-[50%] justify-center gap-4">
-            <div className="flex gap-1 my-auto text-[14px] font-[400]">
+          <div className="flex my-auto w-full justify-center gap-4 md:flex-row flex-col-reverse">
+            <div className="flex gap-1 my-auto text-[14px] font-[400] mx-auto md:mx-0">
               <p>Page</p>
-              <p>{table.getState().pagination.pageIndex + 1}</p>
+              <p className='text-blue-600 font-[700]'>{table.getState().pagination.pageIndex + 1}</p>
               <p>of</p>
-              <p>{table.getPageCount()}</p>
+              <p className='font-[700]'>{table.getPageCount()}</p>
             </div>
             <div className="flex my-auto gap-2">
               <Select onValueChange={(e) => table.setPageSize(Number(e))}>
@@ -140,7 +140,7 @@ export default function DataTable({
                   <SelectValue placeholder={'Select page size'} />
                 </SelectTrigger>
                 <SelectContent>
-                  {['10', '20', '30', '40', '50'].map((pageSize, index) => (
+                  {['10', '20', '30', '40', '50', '100'].map((pageSize, index) => (
                     <SelectItem key={index} value={pageSize}>
                       Show {pageSize}
                     </SelectItem>
@@ -149,7 +149,7 @@ export default function DataTable({
               </Select>
             </div>
           </div>
-          <div className="flex w-[25%] justify-end">
+          <div className="flex justify-end">
             <Button
               variant={'secondary'}
               onClick={() => table.nextPage()}

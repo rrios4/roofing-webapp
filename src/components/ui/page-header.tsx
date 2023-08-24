@@ -23,7 +23,10 @@ type Props = {
   sheetTitle?: string;
   sheetDescription?: string;
   sheetContent?: React.ReactNode;
+  SheetContentBody?: any;
 };
+
+const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
 export default function DefaultPageHeader({
   title,
@@ -31,8 +34,10 @@ export default function DefaultPageHeader({
   addItemTextButton,
   sheetTitle,
   sheetDescription,
-  sheetContent
+  sheetContent,
+  SheetContentBody
 }: Props) {
+  const [open, setOpen] = React.useState(false);
   return (
     <div className="flex flex-col w-full gap-4">
       <div className="flex flex-col w-full justify-between mt-4 md:mt-4 md:flex-row gap-4">
@@ -41,18 +46,21 @@ export default function DefaultPageHeader({
           <p className="text-[14px] font-[400] text-muted-foreground">{subheading}</p>
         </div>
         <div>
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant={'primary'} className="" size={'sm'}>
                 <PlusCircleIcon className="mr-2 h-4 w-4" /> {addItemTextButton}
               </Button>
             </SheetTrigger>
-            <SheetContent className='w-full sm:max-w-xl'>
+            <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
               <SheetHeader>
                 <SheetTitle>{sheetTitle}</SheetTitle>
                 <SheetDescription>{sheetDescription}</SheetDescription>
               </SheetHeader>
-              <div className="w-full pt-6 pb-8 h-full overflow-scroll px-1">{sheetContent}</div>
+              {/* <div className="w-full pt-6 pb-8 h-full overflow-auto px-2">
+                <SheetContentBody />
+              </div> */}
+              <SheetContentBody setOpen={setOpen}/>
             </SheetContent>
           </Sheet>
         </div>

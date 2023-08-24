@@ -30,7 +30,7 @@ export default function LoginPage({}: Props) {
   return (
     <div className="flex flex-col w-full">
       {/* <DefaultPageHeader title='Customers' subheading='Manage all customers for you company' addItemTextButton='Add login item'/> */}
-      <div className="flex justify-center w-screen-xl mx-auto mt-[180px]">
+      <div className="flex justify-center w-screen-xl mx-auto mt-[100px] sm:mt-[180px]">
         <div className="text-center">
           <div className="flex">
             <div className="w-[60px] shadow-md bg-blue-600 rounded-2xl mx-auto mb-4">

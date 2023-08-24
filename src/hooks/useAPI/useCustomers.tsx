@@ -112,31 +112,48 @@ export const useDeleteCustomer = (toast: any) => {
 };
 
 // Custom hook to create a new customer
-export const useCreateCustomer = (toast: any, handleResettingUseState: any) => {
+export const useCreateCustomer = (toast?: any, setOpen?: any) => {
   const queryClient = useQueryClient();
   return useMutation((newCustomerObject) => createCustomer(newCustomerObject), {
     onError: (error: any) => {
+      // toast({
+      //   position: 'top',
+      //   title: `Error Occured Creating Customer`,
+      //   description: `Error: ${error.details}`,
+      //   status: 'error',
+      //   duration: 5000,
+      //   isClosable: true
+      // });
       toast({
-        position: 'top',
-        title: `Error Occured Creating Customer`,
-        description: `Error: ${error.details}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: <p>There was a problem with adding new customer to our system</p>
       });
-      handleResettingUseState();
+      setOpen(true)
+      // handleResettingUseState();
     },
     onSuccess: () => {
-      handleResettingUseState();
+      // handleResettingUseState();
       queryClient.invalidateQueries({ queryKey: ['customers'] });
+      setOpen(false)
       toast({
-        position: 'top',
-        title: `New Customer Created`,
-        description: `Customer has been created succesfully 🎉`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
+        variant: 'success',
+        title: 'Added customer successfully! 🎉',
+        description: (
+          // <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          //   <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+          // </pre>
+          <p>Successfully added new customer to our system.</p>
+        )
       });
+      // toast({
+      //   position: 'top',
+      //   title: `New Customer Created`,
+      //   description: `Customer has been created succesfully 🎉`,
+      //   status: 'success',
+      //   duration: 5000,
+      //   isClosable: true
+      // });
     }
   });
 };

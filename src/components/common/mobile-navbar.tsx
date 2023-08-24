@@ -10,8 +10,8 @@ type Props = {
 
 export default function MobileNavbar({userData}: Props) {
   return (
-    <div className="w-full border border-b lg:hidden">
-      <div className="max-w-screen px-6 flex my-2 justify-between">
+    <div className="fixed z-50 border-b-2 w-full  lg:hidden bg-white dark:bg-zinc-900">
+      <div className="max-w-screen px-6 flex my-3 justify-between">
         <div className="flex gap-2">
           <div className="w-[40px] bg-blue-600 rounded-xl">
             <img src="/assets/LogoRR.png" className="shadow-xs p-[1px]" />
