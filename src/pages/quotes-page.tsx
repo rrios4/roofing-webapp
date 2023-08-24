@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
+import AddQuoteForm from '../components/quote-forms';
 
 type Props = {};
 const columnHelper = createColumnHelper();
@@ -52,6 +53,9 @@ export default function QuotesPage({}: Props) {
         title="Quotes"
         subheading="Manage quotes and view information focused on them."
         addItemTextButton="Add quote"
+        sheetTitle="Add quote"
+        sheetDescription="Create a new quote that will help track potential new work."
+        sheetContent={<AddQuoteForm />}
       />
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard

@@ -5,14 +5,34 @@ import { Separator } from './separator';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import { useAuth } from '../../hooks/useAuth';
 import { abbreviateName } from '../../lib/utils';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from './sheet';
 
 type Props = {
   title: string;
   subheading: string;
   addItemTextButton: string;
+  sheetTitle?: string;
+  sheetDescription?: string;
+  sheetContent?: React.ReactNode;
 };
 
-export default function DefaultPageHeader({ title, subheading, addItemTextButton }: Props) {
+export default function DefaultPageHeader({
+  title,
+  subheading,
+  addItemTextButton,
+  sheetTitle,
+  sheetDescription,
+  sheetContent
+}: Props) {
   return (
     <div className="flex flex-col w-full gap-4">
       <div className="flex flex-col w-full justify-between mt-4 md:mt-4 md:flex-row gap-4">
@@ -21,9 +41,28 @@ export default function DefaultPageHeader({ title, subheading, addItemTextButton
           <p className="text-[14px] font-[400] text-muted-foreground">{subheading}</p>
         </div>
         <div>
-          <Button variant={'primary'} className="" size={'sm'}>
-            <PlusCircleIcon className="mr-2 h-4 w-4" /> {addItemTextButton}
-          </Button>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant={'primary'} className="" size={'sm'}>
+                <PlusCircleIcon className="mr-2 h-4 w-4" /> {addItemTextButton}
+              </Button>
+            </SheetTrigger>
+            <SheetContent className='w-full sm:max-w-xl'>
+              <SheetHeader>
+                <SheetTitle>{sheetTitle}</SheetTitle>
+                <SheetDescription>{sheetDescription}</SheetDescription>
+              </SheetHeader>
+              <div className="w-full pt-6 pb-8">{sheetContent}</div>
+              <SheetFooter>
+                <SheetClose>
+                  <Button variant={'secondary'}>Cancel</Button>
+                </SheetClose>
+                <SheetClose>
+                  <Button variant={'primary'}>Save changes</Button>
+                </SheetClose>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
       <div className="w-full">
@@ -55,8 +94,10 @@ export function DashboardPageHeader() {
           <p className='text-[12px] font-[400]'>User</p>
         </div>
       </div> */}
-      <div className='mt-auto'>
-        <Button variant={'outline'}><GithubIcon className="mr-2 h-4 w-4"/> Open issue</Button>
+      <div className="mt-auto">
+        <Button variant={'outline'}>
+          <GithubIcon className="mr-2 h-4 w-4" /> Open issue
+        </Button>
       </div>
     </div>
   );

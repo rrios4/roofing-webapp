@@ -31,6 +31,7 @@ import { Link } from 'react-router-dom';
 import { Avatar, AvatarImage } from '../components/ui/avatar';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
+import AddInvoiceForm from '../components/invoice-forms';
 
 type Props = {};
 const columnHelper = createColumnHelper();
@@ -49,6 +50,9 @@ export default function InvoicesPage({}: Props) {
         title="Invoices"
         subheading="Manage invoices and view information focused on them."
         addItemTextButton="Add invoice"
+        sheetContent={<AddInvoiceForm/>}
+        sheetTitle='Add invoice'
+        sheetDescription='Create a new invoice to track income.'
       />
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard

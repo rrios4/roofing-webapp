@@ -11,6 +11,7 @@ import CountStatCard from '../components/count-stat-card';
 import DataTable from '../components/data-table';
 import customerColumns from '../components/Customers/customer-table-columns.js';
 import DataTableFilterCard from '../components/data-table-filter-card';
+import AddCustomerForm from '../components/customer-forms';
 
 type Props = {};
 
@@ -32,6 +33,9 @@ export default function CustomersPage({}: Props) {
         title="Customers"
         subheading="Manage customers and view information focused on them."
         addItemTextButton="Add customer"
+        sheetTitle='Add customer'
+        sheetDescription='Create a new customer to track their content.'
+        sheetContent={<AddCustomerForm/>}
       />
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard
