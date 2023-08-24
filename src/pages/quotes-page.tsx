@@ -55,7 +55,7 @@ export default function QuotesPage({}: Props) {
         addItemTextButton="Add quote"
         sheetTitle="Add quote"
         sheetDescription="Create a new quote that will help track potential new work."
-        sheetContent={<AddQuoteForm />}
+        SheetContentBody={AddQuoteForm}
       />
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard

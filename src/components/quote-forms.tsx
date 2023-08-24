@@ -1,7 +1,9 @@
 import React from 'react';
 
-type Props = {};
+type Props = {
+  setOpen: any;
+};
 
-export default function AddQuoteForm({}: Props) {
+export default function AddQuoteForm({ setOpen }: Props) {
   return <div>AddQuoteForm</div>;
 }

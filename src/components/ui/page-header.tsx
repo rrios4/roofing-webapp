@@ -54,7 +54,7 @@ export default function DefaultPageHeader({
             </SheetTrigger>
             <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
               <SheetHeader>
-                <SheetTitle>{sheetTitle}</SheetTitle>
+                <SheetTitle className='text-[18px]'>{sheetTitle}</SheetTitle>
                 <SheetDescription>{sheetDescription}</SheetDescription>
               </SheetHeader>
               {/* <div className="w-full pt-6 pb-8 h-full overflow-auto px-2">

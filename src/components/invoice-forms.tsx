@@ -1,7 +1,9 @@
 import React from 'react';
 
-type Props = {};
+type Props = {
+  setOpen: any;
+};
 
-export default function AddInvoiceForm({}: Props) {
+export default function AddInvoiceForm({setOpen}: Props) {
   return <div>AddInvoiceForm</div>;
 }

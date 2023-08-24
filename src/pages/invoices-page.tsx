@@ -50,7 +50,7 @@ export default function InvoicesPage({}: Props) {
         title="Invoices"
         subheading="Manage invoices and view information focused on them."
         addItemTextButton="Add invoice"
-        sheetContent={<AddInvoiceForm />}
+        SheetContentBody={AddInvoiceForm}
         sheetTitle="Add invoice"
         sheetDescription="Create a new invoice to track income."
       />

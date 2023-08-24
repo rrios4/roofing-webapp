@@ -1,12 +1,20 @@
-import React from 'react'
-import DefaultPageHeader from '../components/ui/page-header'
+import React from 'react';
+import DefaultPageHeader from '../components/ui/page-header';
+import AddJobForm from '../components/job-forms';
 
-type Props = {}
+type Props = {};
 
 export default function JobsPage({}: Props) {
   return (
-    <div className='w-full'>
-        <DefaultPageHeader title='Jobs' subheading='Manage multiple jobs at the same time to quickly glance all active jobs.' addItemTextButton='Add job'/>
+    <div className="w-full">
+      <DefaultPageHeader
+        title="Jobs"
+        subheading="Manage multiple jobs at the same time to quickly glance all active jobs."
+        addItemTextButton="Add job"
+        sheetTitle='Add job'
+        sheetDescription='Create a new job to start managing a new job within the company.'
+        SheetContentBody={AddJobForm}
+      />
     </div>
-  )
+  );
 }
