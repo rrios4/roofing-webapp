@@ -71,6 +71,7 @@ export function formatMoneyValue(input:any) {
 export function formatDateWithAbbreviatedMonth(date:any) {
   let parsedDate = new Date(Date.parse(date));
   let dateString = parsedDate.toLocaleDateString(
+    // @ts-ignore
     {},
     { timeZone: 'UTC', month: 'long', day: '2-digit', year: 'numeric' }
   );

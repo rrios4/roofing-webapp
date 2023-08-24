@@ -10,6 +10,7 @@ import {
   fetchCustomerInvoices,
   fetchCustomerQuotes,
   fetchSearchCustomers
+  // @ts-ignore
 } from '../../services/api/customer';
 
 // Custom hook to get all customers from db

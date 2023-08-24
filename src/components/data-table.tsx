@@ -48,8 +48,10 @@ export default function DataTable({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    // @ts-ignore
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    // @ts-ignore
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,

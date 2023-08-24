@@ -34,7 +34,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../com
 import AddInvoiceForm from '../components/invoice-forms';
 
 type Props = {};
-const columnHelper = createColumnHelper();
+const columnHelper = createColumnHelper<any>();
 
 export default function InvoicesPage({}: Props) {
   const { data: invoices, isLoading: isInvoicesLoading } = useFetchAllInvoices();
@@ -50,9 +50,9 @@ export default function InvoicesPage({}: Props) {
         title="Invoices"
         subheading="Manage invoices and view information focused on them."
         addItemTextButton="Add invoice"
-        sheetContent={<AddInvoiceForm/>}
-        sheetTitle='Add invoice'
-        sheetDescription='Create a new invoice to track income.'
+        sheetContent={<AddInvoiceForm />}
+        sheetTitle="Add invoice"
+        sheetDescription="Create a new invoice to track income."
       />
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard
@@ -90,8 +90,8 @@ export default function InvoicesPage({}: Props) {
   );
 }
 
-const handleEditDrawer = () => {};
-const deleteModalHandler = () => {};
+const handleEditDrawer = (item: any) => {};
+const deleteModalHandler = (itemId: any, itemNumber: any) => {};
 
 export const invoiceTableColumns = [
   columnHelper.accessor('invoice_number', {

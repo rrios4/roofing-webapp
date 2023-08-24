@@ -14,7 +14,7 @@ type Props = {
   row: any;
 };
 
-const columnHelper = createColumnHelper();
+const columnHelper = createColumnHelper<any>();
 const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
 
 export const customerColumns = [
@@ -108,6 +108,7 @@ export const customerColumns = [
       const customer = row.original;
       return (
         <p className="text-[14px]">
+          {/* @ts-ignore */}
           {new Date(customer.created_at).toLocaleDateString('en-us', options)}
         </p>
       );

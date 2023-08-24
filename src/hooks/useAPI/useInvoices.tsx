@@ -6,6 +6,7 @@ import {
   fetchInvoiceById,
   updateInvoice,
   updateInvoiceStatusById
+  // @ts-ignore
 } from '../../services/api/invoice';
 
 // Custom hook that get all invoices
@@ -20,7 +21,7 @@ export const useFetchAllInvoices = () => {
 };
 
 // Custom hook that get a invoice by id
-export const useFetchInvoiceById = (invoice_number:any) => {
+export const useFetchInvoiceById = (invoice_number: any) => {
   // react-query
   const { data, isError, isLoading } = useQuery({
     queryKey: ['invoiceById', invoice_number],
@@ -31,9 +32,9 @@ export const useFetchInvoiceById = (invoice_number:any) => {
 };
 
 // Custom hook to create a new invoice
-export const useCreateInvoice = (toast:any) => {
+export const useCreateInvoice = (toast: any) => {
   return useMutation((newInvoiceObject) => createNewInvoice(newInvoiceObject), {
-    onError: (error:any) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: `Error Occured Creating New Invoice`,
@@ -59,10 +60,10 @@ export const useCreateInvoice = (toast:any) => {
 };
 
 // Custom hook to delete invoice by id
-export const useDeleteInvoiceById = (toast:any) => {
+export const useDeleteInvoiceById = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation((invoiceNumber) => deleteInvoiceById(invoiceNumber), {
-    onError: (error:any) => {
+    onError: (error: any) => {
       toast({
         position: `top`,
         title: `Error occured deleting Invoice!`,
@@ -87,10 +88,10 @@ export const useDeleteInvoiceById = (toast:any) => {
 };
 
 // Custom hook to update invoice
-export const useUpdateInvoice = (toast:any) => {
+export const useUpdateInvoice = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation((updateInvoiceObject) => updateInvoice(updateInvoiceObject), {
-    onError: (error:any) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: `Error Updating Invoice`,
@@ -100,7 +101,7 @@ export const useUpdateInvoice = (toast:any) => {
         isClosable: true
       });
     },
-    onSuccess: async (data:any) => {
+    onSuccess: async (data: any) => {
       await queryClient.invalidateQueries({
         queryKey: ['invoiceById', data.toString()]
       });
@@ -118,12 +119,12 @@ export const useUpdateInvoice = (toast:any) => {
 };
 
 // Custom hook that updates the status of an invoice
-export const useUpdateInvoiceStatusById = (toast:any) => {
+export const useUpdateInvoiceStatusById = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation(
     (updateInvoiceStatusObject) => updateInvoiceStatusById(updateInvoiceStatusObject),
     {
-      onError: (error:any) => {
+      onError: (error: any) => {
         console.log(error);
         toast({
           position: `top`,
@@ -134,7 +135,7 @@ export const useUpdateInvoiceStatusById = (toast:any) => {
           isClosable: true
         });
       },
-      onSuccess: (data:any) => {
+      onSuccess: (data: any) => {
         queryClient.invalidateQueries({ queryKey: ['invoiceById', data.toString()] });
         toast({
           position: `top`,

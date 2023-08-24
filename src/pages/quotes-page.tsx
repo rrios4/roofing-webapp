@@ -37,7 +37,7 @@ import CustomerPreviewPopover from '../components/customer-preview-popover';
 import AddQuoteForm from '../components/quote-forms';
 
 type Props = {};
-const columnHelper = createColumnHelper();
+const columnHelper = createColumnHelper<any>();
 
 export default function QuotesPage({}: Props) {
   const { quotes, isLoading: isQuotesLoading } = useFetchQuotes();
@@ -93,9 +93,9 @@ export default function QuotesPage({}: Props) {
   );
 }
 
-const deleteModalHandler = () => {};
+const deleteModalHandler = (item:any) => {};
 
-const handleEditDrawer = () => {};
+const handleEditDrawer = (itemNumber:any) => {};
 
 export const quoteColumns = [
   columnHelper.accessor('quote_number', {

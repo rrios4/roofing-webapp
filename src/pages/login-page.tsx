@@ -14,6 +14,7 @@ export default function LoginPage({}: Props) {
 
   const handleGoogleSignin = async (e: any) => {
     e.preventDefault();
+    // @ts-ignore
     const loginWithGoogle = await auth.googleLogin();
 
     if (loginWithGoogle.error) {

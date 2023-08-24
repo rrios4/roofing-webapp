@@ -6,6 +6,7 @@ import {
   fetchSearchQuotes,
   updateQuoteById,
   updateQuoteStatusById
+  // @ts-ignore
 } from '../../services/api/quote';
 
 // Custom hook to get all quotes
@@ -21,7 +22,7 @@ export const useFetchQuotes = () => {
 };
 
 // Custom hook to get quote by id
-export const useFetchQuoteById = (quote_number:any) => {
+export const useFetchQuoteById = (quote_number: any) => {
   const {
     data: quoteById,
     isLoading,
@@ -34,7 +35,7 @@ export const useFetchQuoteById = (quote_number:any) => {
 };
 
 // Custom hook to search for customer
-export const useSearchQuote = (query:any) => {
+export const useSearchQuote = (query: any) => {
   // React-Query
   const {
     data: quoteSearchResult,
@@ -50,10 +51,10 @@ export const useSearchQuote = (query:any) => {
 // Custom hook to create quote
 
 // Custom hook to delete a quote
-export const useDeleteQuote = (toast:any) => {
+export const useDeleteQuote = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation((quoteNumber) => deleteQuoteById(quoteNumber), {
-    onError: (error:any) => {
+    onError: (error: any) => {
       toast({
         position: `top`,
         title: `Error occured deleting Quote!`,
@@ -64,6 +65,7 @@ export const useDeleteQuote = (toast:any) => {
       });
     },
     onSuccess: () => {
+      // @ts-ignore
       queryClient.invalidateQueries({ queryKey: 'quotes' });
       toast({
         position: `top`,
@@ -78,10 +80,10 @@ export const useDeleteQuote = (toast:any) => {
 };
 
 // Custom hook to update a quote
-export const useUpdateQuote = (toast:any) => {
+export const useUpdateQuote = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation((quoteObject) => updateQuoteById(quoteObject), {
-    onError: (error:any) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: `Error Updating Quote`,
@@ -107,10 +109,10 @@ export const useUpdateQuote = (toast:any) => {
 };
 
 // Custom hook to update a status for a quote
-export const useUpdateQuoteStatusById = (toast:any, quote_number:any) => {
+export const useUpdateQuoteStatusById = (toast: any, quote_number: any) => {
   const queryClient = useQueryClient();
   return useMutation((status_id) => updateQuoteStatusById(status_id, quote_number), {
-    onError: (error) => {
+    onError: (error:any) => {
       toast({
         position: 'top',
         title: `Error Updating Quote Status`,

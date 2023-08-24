@@ -27,6 +27,7 @@ const Layout = ({children}: Props) => {
   // const bg = useColorModeValue('#fcfcfd', 'gray.800');
   const fetchLoggedInUserData = async() => {
     if(auth.user){
+      // @ts-ignore
       setLoggedInUserData(auth.user.user_metadata);
       // console.log(loggedInUserData)
     }

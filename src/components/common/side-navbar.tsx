@@ -55,8 +55,10 @@ export default function SideNavbar({ userData }: Props) {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar className="cursor-pointer hover:border-2 hover:border-blue-500 transition ease-in-out duration-300 hover:scale-110">
+                      {/* @ts-ignore */}
                       <AvatarImage src={auth.user.user_metadata.avatar_url} />
                       <AvatarFallback>
+                        {/* @ts-ignore */}
                         {abbreviateName(auth?.user?.user_metadata?.full_name)}
                       </AvatarFallback>
                     </Avatar>

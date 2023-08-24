@@ -12,6 +12,7 @@ import {
   fetchTotalRejectedQuotes,
   fetchTotalResidentialCustomers,
   fetchTotalScheduledLeads
+  // @ts-ignore
 } from '../../services/api/report_services';
 
 // Custom hook that use react query to fetch total new leads count

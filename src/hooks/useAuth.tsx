@@ -4,15 +4,22 @@ import supabase from '../lib/supabase-client';
 
 type Props = {
   children: React.ReactNode;
-}
+};
+
+export type AuthValueTypes = {
+  session: any;
+  user: any;
+  signOut: any;
+  googleLogin: any;
+};
 
 // create a context for authentication
 const AuthContext = createContext({ session: null, user: null, signOut: () => {} });
 
-export const AuthProvider = ({ children }:Props) => {
+export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState();
-  const [session, setSession] = useState();
-  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>();
+  const [loading, setLoading] = useState<any>(true);
 
   const googleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -34,12 +41,14 @@ export const AuthProvider = ({ children }:Props) => {
       } = await supabase.auth.getSession();
       if (error) throw error;
       setSession(session);
+      // @ts-ignore
       setUser(session?.user);
       setLoading(false);
     };
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      // @ts-ignore
       setUser(session?.user);
       setLoading(false);
     });
@@ -51,7 +60,7 @@ export const AuthProvider = ({ children }:Props) => {
     };
   }, []);
 
-  const value = {
+  const value: AuthValueTypes = {
     session,
     user,
     signOut: () => supabase.auth.signOut(),
