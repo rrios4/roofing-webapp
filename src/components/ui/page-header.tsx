@@ -52,15 +52,7 @@ export default function DefaultPageHeader({
                 <SheetTitle>{sheetTitle}</SheetTitle>
                 <SheetDescription>{sheetDescription}</SheetDescription>
               </SheetHeader>
-              <div className="w-full pt-6 pb-8">{sheetContent}</div>
-              <SheetFooter>
-                <SheetClose>
-                  <Button variant={'secondary'}>Cancel</Button>
-                </SheetClose>
-                <SheetClose>
-                  <Button variant={'primary'}>Save changes</Button>
-                </SheetClose>
-              </SheetFooter>
+              <div className="w-full pt-6 pb-8 h-full overflow-scroll px-1">{sheetContent}</div>
             </SheetContent>
           </Sheet>
         </div>
