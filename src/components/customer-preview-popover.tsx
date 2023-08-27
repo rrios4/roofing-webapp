@@ -66,12 +66,13 @@ export default function CustomerPreviewPopover({
             {city}, {state} {zipcode}
           </p>
           <div className="grid w-full grid-flow-row grid-cols-3 mt-6 gap-4">
-            <Button asChild>
+            <Button asChild variant={'primary'}>
               <a href={`mailto:${email}`} target="_blank">
                 <MailIcon size={'18px'} />
               </a>
             </Button>
             <Button
+              variant={'primary'}
               onClick={() =>
                 window.open(
                   `https://www.google.com/maps/search/?api=1&query=${streetAddress}+${city}+${state}+${zipcode}`
@@ -79,7 +80,7 @@ export default function CustomerPreviewPopover({
               }>
               <MapPinIcon size={'18px'} />
             </Button>
-            <Button asChild>
+            <Button asChild variant={'primary'}>
               <Link to={`/customers/${customerId}`}>
                 <ChevronRightIcon size={'18px'} />
               </Link>

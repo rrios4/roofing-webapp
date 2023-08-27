@@ -17,10 +17,10 @@ export const useFetchAllQuoteRequests = () => {
 };
 
 // Custom react-query hook to create a new quote request
-export const useCreateNewQuoteRequest = (toast) => {
+export const useCreateNewQuoteRequest = (toast:any) => {
   const queryClient = useQueryClient();
   return useMutation((newQuoteRequestObject) => createNewQuoteRequest(newQuoteRequestObject), {
-    onError: (error) => {
+    onError: (error:any) => {
       toast({
         position: 'top',
         title: `Error Occured Creating New QR`,
@@ -30,7 +30,7 @@ export const useCreateNewQuoteRequest = (toast) => {
         isClosable: true
       });
     },
-    onSuccess: (data) => {
+    onSuccess: (data:any) => {
       queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
       toast({
         position: 'top',
@@ -45,10 +45,10 @@ export const useCreateNewQuoteRequest = (toast) => {
 };
 
 // Custom react-query hook for deleting a qr by id
-export const useDeleteQRById = (toast) => {
+export const useDeleteQRById = (toast:any) => {
   const queryClient = useQueryClient();
   return useMutation((itemId) => deleteQuoteRequestById(itemId), {
-    onError: (error) => {
+    onError: (error:any) => {
       toast({
         position: `top`,
         title: `Error occured deleting QR!`,
@@ -73,10 +73,10 @@ export const useDeleteQRById = (toast) => {
 };
 
 // Custom react-query hook for updating a qr by id
-export const useUpdateQRById = (toast) => {
+export const useUpdateQRById = (toast:any) => {
   const queryClient = useQueryClient();
   return useMutation((updatedQRObject) => updateQuoteRequestById(updatedQRObject), {
-    onError: (error) => {
+    onError: (error:any) => {
       toast({
         position: 'top',
         title: 'Error Occured Updating Request',
