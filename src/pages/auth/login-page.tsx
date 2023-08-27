@@ -1,8 +1,8 @@
 import React from 'react';
-import DefaultPageHeader from '../components/ui/page-header';
-import { Button } from '../components/ui/button';
-import { useAuth } from '../hooks/useAuth';
-import { useToast } from '../components/ui/use-toast';
+import DefaultPageHeader from '../../components/ui/page-header';
+import { Button } from '../../components/ui/button';
+import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../components/ui/use-toast';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {};

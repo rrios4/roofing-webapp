@@ -24,9 +24,9 @@ export default function AddCustomerForm({ setOpen }: Props) {
   const { mutate: addCustomerMutation, isLoading: isAddCustomerMutationLoading } =
     useCreateCustomer(toast, setOpen);
 
-  React.useEffect(() => {
-    console.log(customerTypes);
-  }, []);
+  // React.useEffect(() => {
+  //   console.log(customerTypes);
+  // }, []);
 
   // Define form
   const form = useForm<z.infer<typeof addCustomerFormSchema>>({
@@ -61,10 +61,10 @@ export default function AddCustomerForm({ setOpen }: Props) {
     addCustomerMutation(structuredData);
   }
   return (
-    <div className="w-full">
+    <div className="w-full my-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-2 my-4">
+          <div className="space-y-2">
             <FormField
               control={form.control}
               name="customer_type"

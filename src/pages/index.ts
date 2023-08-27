@@ -8,7 +8,7 @@
 // export { default as QuoteById } from './Quotes/QuoteDetails';
 // export { default as Customers } from './Customers/Customers';
 // export { default as CustomerById } from './Customers/CustomerDetails';
-export { default as LoginPage } from './login-page';
+export { default as LoginPage } from './auth/login-page';
 export { default as DashboardPage } from './dashboard-page';
 export { default as CustomerPage } from './customers-page';
 export { default as JobsPage } from './jobs-page';
