@@ -14,7 +14,7 @@ export default function MobileNavbar({userData}: Props) {
       <div className="max-w-screen px-6 flex my-3 justify-between">
         <div className="flex gap-2">
           <div className="w-[40px] bg-blue-600 rounded-xl">
-            <img src="/assets/LogoRR.png" className="shadow-xs p-[1px]" />
+            <img src="/assets/TRA-logo.png" className="shadow-xs p-[0px]" />
           </div>
           <div className='flex flex-col -space-y-2 my-auto'>
             <p className='my-auto text-[8px] mb-[-0px] text-left font-[400] uppercase'>The</p>

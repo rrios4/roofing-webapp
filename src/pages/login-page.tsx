@@ -35,7 +35,7 @@ export default function LoginPage({}: Props) {
         <div className="text-center">
           <div className="flex">
             <div className="w-[60px] shadow-md bg-blue-600 rounded-2xl mx-auto mb-4">
-              <img src="/assets/LogoRR.png" className="shadow-xs p-[2px]" />
+              <img src="/assets/TRA-logo.png" className="shadow-xs p-[2px]" />
             </div>
           </div>
           <p className="font-[600] text-[30px] mb-2">Log in to your account</p>

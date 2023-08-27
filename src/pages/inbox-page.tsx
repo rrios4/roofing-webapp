@@ -8,6 +8,7 @@ import {
 import CountStatCard from '../components/count-stat-card';
 import { ArchiveIcon, CalendarIcon, InboxIcon } from 'lucide-react';
 import AddLeadRequestForm from '../components/inbox-forms';
+import DataTable from '../components/data-table';
 
 type Props = {};
 
@@ -32,6 +33,7 @@ export default function InboxPage({}: Props) {
         <CountStatCard title='Scheduled' totalCount={totalScheduledLeadsCount} isLoading={isTotalScheduledLeadsLoading} icon={<CalendarIcon size={'25px'}/>}/>
         <CountStatCard title='Closed' totalCount={totalClosedLeadsCount} isLoading={isTotalClosedLeadsLoading} icon={<ArchiveIcon size={'25px'}/>}/>
       </div>
+      {/* <DataTable entity='lead'/> */}
     </div>
   );
 }

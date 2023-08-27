@@ -39,7 +39,7 @@ export default function MobileNavSheet({ userData }: Props) {
           <SheetTitle>
             <div className="flex gap-2 h-[50px]">
               <div className="w-[50px] h-[50px] bg-blue-600 rounded-2xl">
-                <img src="/assets/LogoRR.png" className="shadow-xs p-[1px]" />
+                <img src="/assets/TRA-logo.png" className="shadow-xs p-[0px]" />
               </div>
               <div className="flex flex-col -space-y-4 my-auto">
                 <p className="text-[8px] text-left font-[400] uppercase">The</p>
