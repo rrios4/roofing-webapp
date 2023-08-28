@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+// @ts-ignore
 import { fetchAllQuoteRequestStatuses } from '../../services/api/quote_request_status';
 
 // Custom hook to fetch all quote request statuses from database

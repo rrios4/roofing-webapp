@@ -8,12 +8,10 @@ import {
 import CountStatCard from '../components/count-stat-card';
 import {
   ArchiveIcon,
-  ArrowUpDown,
   ArrowUpDownIcon,
   CalendarIcon,
   InboxIcon,
   PencilIcon,
-  TrashIcon,
   UserPlusIcon
 } from 'lucide-react';
 import AddLeadRequestForm from '../components/inbox-forms';
@@ -26,18 +24,6 @@ import { Button } from '../components/ui/button';
 import DefaultStatusBadge from '../components/status-badges';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '../components/ui/alert-dialog';
-import DefaultDeleteAlertDialog from '../components/alert-delete-dialog';
 import ConnectedDeleteQRequestAlertDialog from '../components/connected-delete-dialogs';
 
 type Props = {};
@@ -98,7 +84,6 @@ export default function InboxPage({}: Props) {
 }
 
 const handleEdit = (object: any) => {};
-const handleDeleteAlert = (itemId: any) => {};
 const handleEmailValidation = (object: any) => {};
 
 const leadsTableColumns = [
@@ -113,9 +98,7 @@ const leadsTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Request
-          <div className="h-4 w-4 ml-2">
-            <ArrowUpDownIcon size={'15px'} />
-          </div>
+          <ArrowUpDownIcon className={'h-4 w-4 ml-2'} />
         </Button>
       </div>
     )
@@ -124,7 +107,7 @@ const leadsTableColumns = [
     (row) =>
       `${row.firstName} ${row.lastName} ${row.streetAddress} ${row.city} ${row.zipcode} ${row.state} ${row.email} ${row.phone_number}`,
     {
-      id: 'requestor',
+      id: 'customer',
       cell: ({ row }) => {
         const lead = row.original;
         const memojiUrl = `https://raw.githubusercontent.com/alohe/memojis/main/png/${
@@ -188,9 +171,7 @@ const leadsTableColumns = [
             variant={'ghost'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Requestor
-            <div className="h-4 w-4 ml-2">
-              <ArrowUpDownIcon size={'15px'} />
-            </div>
+            <ArrowUpDownIcon className="h-4 w-4 ml-2" />
           </Button>
         </div>
       )
@@ -312,47 +293,25 @@ const leadsTableColumns = [
         <div className="flex gap-2">
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={'secondary'} className="px-3" onClick={() => handleEdit(lead)}>
-                  <PencilIcon size={'15px'} />
-                </Button>
+              <TooltipTrigger
+                className="p-3 rounded-md bg-secondary"
+                onClick={() => handleEdit(lead)}>
+                <PencilIcon className="w-4 h-4" />
               </TooltipTrigger>
               <TooltipContent>Edit</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          {/* <DefaultDeleteAlertDialog
-            title="Are you absolutely sure?"
-            description="This action cannot be undone. This will permanently delete lead request and remove
-  data from our servers."
-            itemId={lead.id}
-          /> */}
           <ConnectedDeleteQRequestAlertDialog
             title="Are you absolutely sure?"
             description="This action cannot be undone. This will permanently delete lead request and remove data from out servers."
             itemId={lead.id}
           />
-          {/* <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant={'secondary'}
-                  className="px-3"
-                  onClick={() => handleDeleteAlert(lead.id)}>
-                  <TrashIcon size={'15px'} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Delete</TooltipContent>
-            </Tooltip>
-          </TooltipProvider> */}
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  className="px-3"
-                  variant={'secondary'}
-                  onClick={() => handleEmailValidation(lead)}>
-                  <UserPlusIcon size={'15px'} />
-                </Button>
+              <TooltipTrigger
+                className="p-3 rounded-md bg-secondary h-full"
+                onClick={() => handleEmailValidation(lead)}>
+                <UserPlusIcon className="w-4 h-4" />
               </TooltipTrigger>
               <TooltipContent>Add as a customer</TooltipContent>
             </Tooltip>

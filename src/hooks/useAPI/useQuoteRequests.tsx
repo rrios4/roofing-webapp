@@ -4,6 +4,7 @@ import {
   deleteQuoteRequestById,
   fetchAllQuoteRequests,
   updateQuoteRequestById
+  // @ts-ignore
 } from '../../services/api/quote_request';
 import { IDbQRequest } from '../../types/global_types';
 
