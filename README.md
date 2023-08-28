@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="public/LogoRR-blue-circle.png" width="40%" height="60%" alt="The Roofing App Logo"><br>
+  <img style="border-radius: 20px" src="https://kcasqwspojmlwabzxloe.supabase.co/storage/v1/object/public/nextjs-website-public/The%20Roofing%20App/THR%20Typography%20Logo%20with%20Icon%20(white)%20cropped.png" width="40%" height="30%" alt="The Roofing App Logo"><br>
   <!-- <img src="https://github.com/rrios4/portfolio-v2/blob/master/assets/projects/roofingv2-webapp-poster.png?raw=true"/> -->
 </p>
-<h1 align="center">The Roofing App</h1>
+<!-- <h1 align="center">The Roofing App</h1> -->
 <p align="center">
   <b>Introducing a high-performance, visually-stunning web application for Rios Roofing Company, built from the ground up using React.js and Supabase technology. 🚀</b>
   <br><br>
