@@ -37,14 +37,6 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
   function onSubmit(values: z.infer<typeof addRequestFormSchema>) {
     console.log(values);
     addNewRequestMutation(values);
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // })
   }
   return (
     <div className="w-full my-4">

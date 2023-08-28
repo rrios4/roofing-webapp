@@ -35,6 +35,21 @@ export type IDbCustomerType = {
     created_at: string;
 }
 
+export type IDbQRequest = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone_number: string;
+    customer_typeID: string;
+    est_request_status_id: string;
+    requested_date: Date;
+    service_type_id: string;
+    streetAddress: string;
+    city: string;
+    state: string;
+    zipcode: string;
+}
+
 export type IFormAddCustomer = {
     first_name: string;
     last_name:string;

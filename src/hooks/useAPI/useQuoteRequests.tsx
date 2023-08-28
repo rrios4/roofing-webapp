@@ -5,6 +5,7 @@ import {
   fetchAllQuoteRequests,
   updateQuoteRequestById
 } from '../../services/api/quote_request';
+import { IDbQRequest } from '../../types/global_types';
 
 // Custom react-query hook for quote requests
 export const useFetchAllQuoteRequests = () => {
@@ -19,16 +20,8 @@ export const useFetchAllQuoteRequests = () => {
 // Custom react-query hook to create a new quote request
 export const useCreateNewQuoteRequest = (toast:any, setOpen:any) => {
   const queryClient = useQueryClient();
-  return useMutation((newQuoteRequestObject) => createNewQuoteRequest(newQuoteRequestObject), {
+  return useMutation((newQuoteRequestObject:IDbQRequest) => createNewQuoteRequest(newQuoteRequestObject), {
     onError: (error:any) => {
-      // toast({
-      //   position: 'top',
-      //   title: `Error Occured Creating New QR`,
-      //   description: `Error: ${error.message}`,
-      //   status: 'error',
-      //   duration: 5000,
-      //   isClosable: true
-      // });
       setOpen(true)
       toast({
         title: "Uh oh! Something went wrong.",
@@ -38,23 +31,12 @@ export const useCreateNewQuoteRequest = (toast:any, setOpen:any) => {
     },
     onSuccess: (data:any) => {
       queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
-      // toast({
-      //   position: 'top',
-      //   title: `Quote Request created!`,
-      //   description: `We've created a new quote request for ${data.firstName} ${data.lastName} with email ${data.email} 🚀`,
-      //   status: 'success',
-      //   duration: 5000,
-      //   isClosable: true
-      // });
       console.log(data)
       setOpen(false)
       toast({
         variant: 'success',
         title: 'Added request successfully! 🎉',
         description: (
-          // <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          //   <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-          // </pre>
           <p>Successfully added new request to our system.</p>
         )
       })
