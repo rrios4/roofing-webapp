@@ -18,65 +18,78 @@ export const useFetchAllQuoteRequests = () => {
 };
 
 // Custom react-query hook to create a new quote request
-export const useCreateNewQuoteRequest = (toast:any, setOpen:any) => {
+export const useCreateNewQuoteRequest = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
-  return useMutation((newQuoteRequestObject:IDbQRequest) => createNewQuoteRequest(newQuoteRequestObject), {
-    onError: (error:any) => {
-      setOpen(true)
-      toast({
-        title: "Uh oh! Something went wrong.",
-        description: `There was a problem with adding a new request to our system.\n Message: ${error.message}`,
-        variant: "destructive"
-      })
-    },
-    onSuccess: (data:any) => {
-      queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
-      console.log(data)
-      setOpen(false)
-      toast({
-        variant: 'success',
-        title: 'Added request successfully! 🎉',
-        description: (
-          <p>Successfully added new request to our system.</p>
-        )
-      })
+  return useMutation(
+    (newQuoteRequestObject: IDbQRequest) => createNewQuoteRequest(newQuoteRequestObject),
+    {
+      onError: (error: any) => {
+        setOpen(true);
+        toast({
+          title: 'Uh oh! Something went wrong.',
+          description: `There was a problem with adding a new request to our system.\n Message: ${error.message}`,
+          variant: 'destructive'
+        });
+      },
+      onSuccess: (data: any) => {
+        queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
+        console.log(data);
+        setOpen(false);
+        toast({
+          variant: 'success',
+          title: 'Added request successfully! 🎉',
+          description: <p>Successfully added new request to our system.</p>
+        });
+      }
     }
-  });
+  );
 };
 
 // Custom react-query hook for deleting a qr by id
-export const useDeleteQRById = (toast:any) => {
+export const useDeleteQRById = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
   return useMutation((itemId) => deleteQuoteRequestById(itemId), {
-    onError: (error:any) => {
+    onError: (error: any) => {
+      // toast({
+      //   position: `top`,
+      //   title: `Error occured deleting QR!`,
+      //   description: `Error: ${error.message}`,
+      //   status: 'error',
+      //   duration: 5000,
+      //   isClosable: true
+      // });
+      setOpen(false);
       toast({
-        position: `top`,
-        title: `Error occured deleting QR!`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
+        title: 'Uh oh! Something went wrong.',
+        description: `There was a problem with adding a new request to our system.\n Message: ${error.message}`,
+        variant: 'destructive'
       });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
+      // toast({
+      //   position: `top`,
+      //   title: `QR #${data} deleted!`,
+      //   description: `We've deleted QR #${data} for you succesfully! 🚀`,
+      //   status: 'success',
+      //   duration: 5000,
+      //   isClosable: true
+      // });
+      setOpen(false);
       toast({
-        position: `top`,
-        title: `QR #${data} deleted!`,
-        description: `We've deleted QR #${data} for you succesfully! 🚀`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
+        variant: 'success',
+        title: 'Deleted request successfully! 🎉',
+        description: <p>Successfully deleted request from our system.</p>
       });
     }
   });
 };
 
 // Custom react-query hook for updating a qr by id
-export const useUpdateQRById = (toast:any) => {
+export const useUpdateQRById = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation((updatedQRObject) => updateQuoteRequestById(updatedQRObject), {
-    onError: (error:any) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: 'Error Occured Updating Request',

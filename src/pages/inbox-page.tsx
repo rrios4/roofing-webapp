@@ -26,6 +26,19 @@ import { Button } from '../components/ui/button';
 import DefaultStatusBadge from '../components/status-badges';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '../components/ui/alert-dialog';
+import DefaultDeleteAlertDialog from '../components/alert-delete-dialog';
+import ConnectedDeleteQRequestAlertDialog from '../components/connected-delete-dialogs';
 
 type Props = {};
 
@@ -307,7 +320,18 @@ const leadsTableColumns = [
               <TooltipContent>Edit</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <TooltipProvider>
+          {/* <DefaultDeleteAlertDialog
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete lead request and remove
+  data from our servers."
+            itemId={lead.id}
+          /> */}
+          <ConnectedDeleteQRequestAlertDialog
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete lead request and remove data from out servers."
+            itemId={lead.id}
+          />
+          {/* <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
                 <Button
@@ -319,7 +343,7 @@ const leadsTableColumns = [
               </TooltipTrigger>
               <TooltipContent>Delete</TooltipContent>
             </Tooltip>
-          </TooltipProvider>
+          </TooltipProvider> */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
