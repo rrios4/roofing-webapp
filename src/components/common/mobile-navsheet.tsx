@@ -67,29 +67,32 @@ export default function MobileNavSheet({ userData }: Props) {
             ))}
           </div>
           {auth?.user && (
-            <>
-              <div className="flex px-2 gap-4 pb-6">
-                <Avatar>
-                  <AvatarImage src={userData.avatar_url} alt={userData.full_name} />
-                  <AvatarFallback>{abbreviateName(userData.full_name)}</AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <p className="font-[700] text-[14px]">{userData.full_name}</p>
-                  <p className="font-[400] text-[14px]">{userData.email}</p>
+            <div>
+              <div className="grid grid-flow-row grid-cols-2 w-full">
+                <div className="flex px-2 gap-4 pb-6 w-full">
+                  <Avatar>
+                    <AvatarImage src={userData.avatar_url} alt={userData.full_name} />
+                    <AvatarFallback>{abbreviateName(userData.full_name)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <p className="font-[700] text-[14px]">{userData.full_name}</p>
+                    <p className="font-[400] text-[14px]">{userData.email}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 w-full">
+                  <SheetClose asChild>
+                    <Button className='ml-auto' variant={'primary'} onClick={() => auth.signOut()}>
+                      <LogOutIcon className="mr-2 h-4 w-4" /> SignOut
+                    </Button>
+                  </SheetClose>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <SheetClose asChild>
-                  <Button onClick={() => auth.signOut()}>
-                    <LogOutIcon className="mr-2 h-4 w-4" /> SignOut
-                  </Button>
-                </SheetClose>
-                <div className="px-2">
-                  <ModeToggle />
-                </div>
-              </div>
-            </>
+              <div className="px-2">
+                <ModeToggle />
+              </div>  
+            </div>
           )}
+
           {!auth.user && (
             <div className="flex px-2 gap-4 pb-6">
               <SheetClose asChild>

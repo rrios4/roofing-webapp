@@ -2,15 +2,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
 export const addRequestFormSchema = z.object({
-    first_name: z.string(),
-    last_name: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
     email: z.string().email(),
     phone_number: z.string(),
-    customer_type: z.string(),
-    status: z.string(),
-    desired_date: z.date(),
-    service: z.string(),
-    street_address: z.string(),
+    customer_typeID: z.string(),
+    est_request_status_id: z.string(),
+    requested_date: z.date(),
+    service_type_id: z.string(),
+    streetAddress: z.string(),
     city: z.string(),
     state: z.string(),
     zipcode: z.string()

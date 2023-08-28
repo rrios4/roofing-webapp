@@ -7,27 +7,44 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Button } from './ui/button';
-import { cn } from '../lib/utils';
+import { cn, formatPhoneNumber } from '../lib/utils';
 import { format } from 'date-fns';
-import { CalendarIcon, ClipboardTypeIcon, FormInput, UserIcon } from 'lucide-react';
+import { CalendarIcon, ClipboardTypeIcon, FormInput, MapPinIcon, UserIcon } from 'lucide-react';
 import { Calendar } from './ui/calendar';
 import { useFetchAllQRStatuses } from '../hooks/useAPI/useQRStatuses';
 import { useFetchAllCustomerTypes } from '../hooks/useAPI/useCustomerTypes';
 import { useFetchAllServices } from '../hooks/useAPI/useServices';
 import { Input } from './ui/input';
+import listOfUSStates from '../data/state_titlecase.json';
+import { SheetClose, SheetFooter } from './ui/sheet';
+import { toast } from './ui/use-toast';
+import { useCreateNewQuoteRequest } from '../hooks/useAPI/useQuoteRequests';
 
-type Props = {};
+type Props = {
+  setOpen: any;
+};
 
-export default function AddLeadRequestForm({}: Props) {
+export default function AddLeadRequestForm({ setOpen }: Props) {
   const { data: qrStatuses, isLoading: isQRStatusesLoading } = useFetchAllQRStatuses();
   const { data: customerTypes, isLoading: isCustomerTypesLoading } = useFetchAllCustomerTypes();
   const { data: servicesData, isLoading: isServicesDataLoading } = useFetchAllServices();
+  const { mutate: addNewRequestMutation, isLoading: isAddNewRequestLoading } =
+    useCreateNewQuoteRequest(toast, setOpen);
   const form = useForm<z.infer<typeof addRequestFormSchema>>({
     resolver: zodResolver(addRequestFormSchema)
   });
 
   function onSubmit(values: z.infer<typeof addRequestFormSchema>) {
     console.log(values);
+    addNewRequestMutation(values);
+    // toast({
+    //   title: "You submitted the following values:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // })
   }
   return (
     <div className="w-full my-4">
@@ -35,14 +52,14 @@ export default function AddLeadRequestForm({}: Props) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div className="flex gap-2">
-              <ClipboardTypeIcon className="w-4 h-4 my-auto"/>
-              {/* <UserIcon className="w-4 h-4 my-auto" /> */}
-              <p className="font-[700]">Request</p>
+              <ClipboardTypeIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
+              {/* <UserIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" /> */}
+              <p className="font-[600] text-blue-500 dark:text-blue-300">Request</p>
             </div>
             <div className="flex gap-6 w-full">
               <FormField
                 control={form.control}
-                name="status"
+                name="est_request_status_id"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Status</FormLabel>
@@ -68,12 +85,12 @@ export default function AddLeadRequestForm({}: Props) {
               />
               <FormField
                 control={form.control}
-                name="desired_date"
+                name="requested_date"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Desired date</FormLabel>
                     <Popover>
-                      <PopoverTrigger>
+                      <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant={'outline'}
@@ -92,7 +109,6 @@ export default function AddLeadRequestForm({}: Props) {
                           selected={field.value}
                           onSelect={field.onChange}
                           disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
-                          initialFocus
                         />
                       </PopoverContent>
                     </Popover>
@@ -104,7 +120,7 @@ export default function AddLeadRequestForm({}: Props) {
             <div className="flex gap-6 w-full">
               <FormField
                 control={form.control}
-                name="customer_type"
+                name="customer_typeID"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Type of Customer</FormLabel>
@@ -130,7 +146,7 @@ export default function AddLeadRequestForm({}: Props) {
               />
               <FormField
                 control={form.control}
-                name="service"
+                name="service_type_id"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Service</FormLabel>
@@ -156,13 +172,13 @@ export default function AddLeadRequestForm({}: Props) {
               />
             </div>
             <div className="flex gap-2">
-              <UserIcon className="w-4 h-4 my-auto" />
-              <p className="font-[700]">Client</p>
+              <UserIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
+              <p className="font-[600] text-blue-500 dark:text-blue-300">Client</p>
             </div>
             <div className="flex gap-6 w-full">
               <FormField
                 control={form.control}
-                name="first_name"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>First Name</FormLabel>
@@ -175,7 +191,7 @@ export default function AddLeadRequestForm({}: Props) {
               />
               <FormField
                 control={form.control}
-                name="last_name"
+                name="lastName"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Last Name</FormLabel>
@@ -186,6 +202,115 @@ export default function AddLeadRequestForm({}: Props) {
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="email" className="w-full" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone_number"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="tel"
+                      className="w-full"
+                      onChange={(e) => field.onChange(formatPhoneNumber(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex gap-2">
+              <MapPinIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
+              <p className="font-[600] text-blue-500 dark:text-blue-300">Location</p>
+            </div>
+            <FormField
+              control={form.control}
+              name="streetAddress"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Street Address</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="w-full" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex gap-6 w-full">
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-full" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>State</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select US state" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="">
+                        {listOfUSStates?.map((item: any, index: number) => (
+                          <React.Fragment key={index}>
+                            <SelectItem value={item.abbreviation} className="hover:cursor-pointer">
+                              {item.name}
+                            </SelectItem>
+                          </React.Fragment>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="zipcode"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Zipcode</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="numeric" pattern="[0-9]*" inputMode="numeric" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <SheetFooter className="pt-8 gap-2">
+              <SheetClose asChild>
+                <Button variant={'secondary'}>Cancel</Button>
+              </SheetClose>
+              <Button variant={'primary'} type="submit">
+                Save changes
+              </Button>
+            </SheetFooter>
           </div>
         </form>
       </Form>

@@ -44,7 +44,7 @@ export default function InboxPage({}: Props) {
         title="Inbox"
         subheading="Manage and view all lead requests from website here."
         addItemTextButton="Add request"
-        sheetTitle="Add lead request"
+        sheetTitle="Add request"
         sheetDescription="Manually create a new lead when getting a new potential customer."
         SheetContentBody={AddLeadRequestForm}
       />

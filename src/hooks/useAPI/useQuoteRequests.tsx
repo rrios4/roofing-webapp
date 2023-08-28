@@ -17,29 +17,47 @@ export const useFetchAllQuoteRequests = () => {
 };
 
 // Custom react-query hook to create a new quote request
-export const useCreateNewQuoteRequest = (toast:any) => {
+export const useCreateNewQuoteRequest = (toast:any, setOpen:any) => {
   const queryClient = useQueryClient();
   return useMutation((newQuoteRequestObject) => createNewQuoteRequest(newQuoteRequestObject), {
     onError: (error:any) => {
+      // toast({
+      //   position: 'top',
+      //   title: `Error Occured Creating New QR`,
+      //   description: `Error: ${error.message}`,
+      //   status: 'error',
+      //   duration: 5000,
+      //   isClosable: true
+      // });
+      setOpen(true)
       toast({
-        position: 'top',
-        title: `Error Occured Creating New QR`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
+        title: "Uh oh! Something went wrong.",
+        description: `There was a problem with adding a new request to our system.\n Message: ${error.message}`,
+        variant: "destructive"
+      })
     },
     onSuccess: (data:any) => {
       queryClient.invalidateQueries({ queryKey: ['quoteRequests'] });
+      // toast({
+      //   position: 'top',
+      //   title: `Quote Request created!`,
+      //   description: `We've created a new quote request for ${data.firstName} ${data.lastName} with email ${data.email} 🚀`,
+      //   status: 'success',
+      //   duration: 5000,
+      //   isClosable: true
+      // });
+      console.log(data)
+      setOpen(false)
       toast({
-        position: 'top',
-        title: `Quote Request created!`,
-        description: `We've created a new quote request for ${data.firstName} ${data.lastName} with email ${data.email} 🚀`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
+        variant: 'success',
+        title: 'Added request successfully! 🎉',
+        description: (
+          // <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          //   <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+          // </pre>
+          <p>Successfully added new request to our system.</p>
+        )
+      })
     }
   });
 };
