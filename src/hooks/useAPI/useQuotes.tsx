@@ -51,29 +51,25 @@ export const useSearchQuote = (query: any) => {
 // Custom hook to create quote
 
 // Custom hook to delete a quote
-export const useDeleteQuote = (toast: any) => {
+export const useDeleteQuote = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
   return useMutation((quoteNumber) => deleteQuoteById(quoteNumber), {
     onError: (error: any) => {
+      setOpen(false);
       toast({
-        position: `top`,
-        title: `Error occured deleting Quote!`,
-        description: `Error: ${error.details}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
+        title: 'Uh oh! Something went wrong.',
+        description: `There was a problem with deleting quote from our system.\n Message: ${error.message}`,
+        variant: 'destructive'
       });
     },
     onSuccess: () => {
       // @ts-ignore
       queryClient.invalidateQueries({ queryKey: 'quotes' });
+      setOpen(false);
       toast({
-        position: `top`,
-        title: `Quote deleted!`,
-        description: `We've deleted Quote with line-items for you succesfully! 🚀`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
+        variant: 'success',
+        title: 'Deleted invoice successfully! 🎉',
+        description: <p>Successfully deleted invoice from our system.</p>
       });
     }
   });
@@ -112,7 +108,7 @@ export const useUpdateQuote = (toast: any) => {
 export const useUpdateQuoteStatusById = (toast: any, quote_number: any) => {
   const queryClient = useQueryClient();
   return useMutation((status_id) => updateQuoteStatusById(status_id, quote_number), {
-    onError: (error:any) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: `Error Updating Quote Status`,

@@ -3,21 +3,20 @@ import {
   createQuoteLineItem,
   deleteQuoteLineItemById,
   deleteQuoteLineItems
+  // @ts-ignore
 } from '../../services/api/quoteLineItem';
 import { useDeleteQuote } from './useQuotes';
 
 // Custom hook to delete all line items for a given quote number with quote also
-export const useDeleteAllQuoteLineItemsWithQuote = (toast, itemNumber) => {
-  const { mutate: mutateDeleteQuote } = useDeleteQuote(toast);
+export const useDeleteAllQuoteLineItemsWithQuote = (toast: any, itemNumber: any, setOpen: any) => {
+  const { mutate: mutateDeleteQuote } = useDeleteQuote(toast, setOpen);
   return useMutation((quoteNumber) => deleteQuoteLineItems(quoteNumber), {
-    onError: (error) => {
+    onError: (error: any) => {
+      setOpen(false);
       toast({
-        position: `top`,
-        title: `Error occured deleting line-item for Quote`,
-        description: `Error: ${error.details}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
+        title: 'Uh oh! Something went wrong.',
+        description: `There was a problem with deleting quote line items from our system.\n Message: ${error.message}`,
+        variant: 'destructive'
       });
     },
     onSuccess: () => mutateDeleteQuote(itemNumber)
@@ -25,10 +24,10 @@ export const useDeleteAllQuoteLineItemsWithQuote = (toast, itemNumber) => {
 };
 
 // Custom hook to add a line item for a given quote number
-export const useCreateQuoteLineItem = (toast, quote_number) => {
+export const useCreateQuoteLineItem = (toast: any, quote_number: any) => {
   const queryClient = useQueryClient();
   return useMutation((lineItemObject) => createQuoteLineItem(lineItemObject), {
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         position: `top`,
         title: `Error occured creating line-item for Quote`,
@@ -52,10 +51,10 @@ export const useCreateQuoteLineItem = (toast, quote_number) => {
   });
 };
 
-export const useDeleteQuoteLineItemById = (toast, quoteNumber) => {
+export const useDeleteQuoteLineItemById = (toast: any, quoteNumber: any) => {
   const queryClient = useQueryClient();
   return useMutation((item) => deleteQuoteLineItemById(item), {
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         position: `top`,
         title: `Error occured deleting line-item for Quote`,

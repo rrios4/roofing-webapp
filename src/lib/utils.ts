@@ -30,6 +30,15 @@ export function getRandomIntBetweenInclusive(min:number, max:number){
   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
 
+export function formatDate(date:any) {
+  let parsedDate = new Date(Date.parse(date));
+  let options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' };
+  // @ts-ignore
+  let dateString = parsedDate.toLocaleDateString('en-US', options);
+  return dateString;
+}
+
+
 export function formatPhoneNumber(value:any) {
   //if value is falsy eg if the user deletes the input, then just return
   if (!value) return value;

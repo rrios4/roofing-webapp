@@ -60,28 +60,24 @@ export const useCreateInvoice = (toast: any) => {
 };
 
 // Custom hook to delete invoice by id
-export const useDeleteInvoiceById = (toast: any) => {
+export const useDeleteInvoiceById = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
   return useMutation((invoiceNumber) => deleteInvoiceById(invoiceNumber), {
     onError: (error: any) => {
+      setOpen(false);
       toast({
-        position: `top`,
-        title: `Error occured deleting Invoice!`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
+        title: 'Uh oh! Something went wrong.',
+        description: `There was a problem with adding a new request to our system.\n Message: ${error.message}`,
+        variant: 'destructive'
       });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      setOpen(false);
       toast({
-        position: `top`,
-        title: `Invoice #${data} deleted!`,
-        description: `We've deleted all invoice's payments & line-items associated with invoice #${data} for you succesfully! 🚀`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
+        variant: 'success',
+        title: 'Deleted invoice successfully! 🎉',
+        description: <p>Successfully deleted invoice from our system.</p>
       });
     }
   });

@@ -35,6 +35,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../com
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
 import AddQuoteForm from '../components/quote-forms';
+import { ConnectedDeleteQuoteAlertDialog } from '../components/connected-delete-dialogs';
 
 type Props = {};
 const columnHelper = createColumnHelper<any>();
@@ -88,14 +89,15 @@ export default function QuotesPage({}: Props) {
         EntityFilterBar={DataTableFilterCard}
         filterBarEntity={'customer'}
         columns={quoteColumns}
+        emptyStateSheetTitle='Add quote'
+        emptyStateSheetDescription='Create a new quote to keep track of estimates customers request.'
+        EmptyStateSheetBody={AddQuoteForm}
       />
     </div>
   );
 }
 
-const deleteModalHandler = (item:any) => {};
-
-const handleEditDrawer = (itemNumber:any) => {};
+const handleEditDrawer = (itemNumber: any) => {};
 
 export const quoteColumns = [
   columnHelper.accessor('quote_number', {
@@ -264,19 +266,11 @@ export const quoteColumns = [
               <TooltipContent>Edit</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant={'secondary'}
-                  className="px-3"
-                  onClick={() => deleteModalHandler(quote.quote_number)}>
-                  <TrashIcon size={'15px'} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Delete</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <ConnectedDeleteQuoteAlertDialog
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete quote with line-items and remove data from out servers."
+            itemId={quote.quote_number}
+          />
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>

@@ -33,8 +33,8 @@ export default function CustomersPage({}: Props) {
         title="Customers"
         subheading="Manage customers and view information focused on them."
         addItemTextButton="Add customer"
-        sheetTitle='Add customer'
-        sheetDescription='Create a new customer to track their content.'
+        sheetTitle="Add customer"
+        sheetDescription="Create a new customer to track their content."
         SheetContentBody={AddCustomerForm}
       />
       <div className="flex w-full gap-4 flex-col md:flex-row">
@@ -67,7 +67,10 @@ export default function CustomersPage({}: Props) {
         firstSelectName="Type"
         secondSelectName="State"
         thirdSelectName="Zipcode"
-        filterBarEntity='customer'
+        filterBarEntity="customer"
+        EmptyStateSheetBody={AddCustomerForm}
+        emptyStateSheetTitle="Add customer"
+        emptyStateSheetDescription="Create a new customer to track their content."
       />
     </div>
   );

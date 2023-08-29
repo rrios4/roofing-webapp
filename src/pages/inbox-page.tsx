@@ -78,6 +78,9 @@ export default function InboxPage({}: Props) {
         EntityFilterBar={DataTableFilterCard}
         columns={leadsTableColumns}
         filterBarEntity="customer"
+        EmptyStateSheetBody={AddLeadRequestForm}
+        emptyStateSheetTitle="Add request"
+        emptyStateSheetDescription="Manually create a new lead when getting a new potential customer."
       />
     </div>
   );

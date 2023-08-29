@@ -25,6 +25,9 @@ type Props = {
   secondSelectName: string;
   thirdSelectName: string;
   filterBarEntity: string;
+  emptyStateSheetTitle?: string;
+  emptyStateSheetDescription?: string;
+  EmptyStateSheetBody?: any
 };
 
 export default function DataTable({
@@ -37,7 +40,10 @@ export default function DataTable({
   firstSelectName,
   secondSelectName,
   thirdSelectName,
-  filterBarEntity
+  filterBarEntity,
+  emptyStateSheetTitle,
+  emptyStateSheetDescription,
+  EmptyStateSheetBody
 }: Props) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -79,6 +85,9 @@ export default function DataTable({
         entity={entity}
         icon={<HelpCircleIcon size={'20px'} />}
         activateModal={false}
+        sheetTitle={emptyStateSheetTitle ? emptyStateSheetTitle : ''}
+        sheetDescription={emptyStateSheetDescription ? emptyStateSheetDescription : ''}
+        SheetContentBody={EmptyStateSheetBody}
       />
     );
   }
@@ -132,9 +141,11 @@ export default function DataTable({
           <div className="flex my-auto w-full justify-center gap-4 md:flex-row flex-col-reverse">
             <div className="flex gap-1 my-auto text-[14px] font-[400] mx-auto md:mx-0">
               <p>Page</p>
-              <p className='text-blue-600 font-[700]'>{table.getState().pagination.pageIndex + 1}</p>
+              <p className="text-blue-600 font-[700]">
+                {table.getState().pagination.pageIndex + 1}
+              </p>
               <p>of</p>
-              <p className='font-[700]'>{table.getPageCount()}</p>
+              <p className="font-[700]">{table.getPageCount()}</p>
             </div>
             <div className="flex my-auto gap-2">
               <Select onValueChange={(e) => table.setPageSize(Number(e))}>

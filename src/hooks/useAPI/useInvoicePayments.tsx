@@ -3,15 +3,16 @@ import {
   createInvoicePayment,
   deleteAllInvoicePaymentsByInvoiceNumber,
   deleteInvoicePayment
+  // @ts-ignore
 } from '../../services/api/invoice_payment';
-import { formatDate, formatMoneyValue } from '../../utils';
+import { formatDate, formatMoneyValue } from '../../lib/utils';
 import { useDeleteAllInvoiceLineItemsByInvoiceNumber } from './useInvoiceLineItem';
 
 // Custom hook to create a new invoice payment
-export const useCreateInvoicePayment = (toast) => {
+export const useCreateInvoicePayment = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
   return useMutation((newInvoicePaymentObject) => createInvoicePayment(newInvoicePaymentObject), {
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         position: 'top',
         title: `Error Occured Adding Payment`,
@@ -21,7 +22,7 @@ export const useCreateInvoicePayment = (toast) => {
         isClosable: true
       });
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['invoiceById', data.invoice_id.toString()] });
       toast({
         position: 'top',
@@ -36,12 +37,12 @@ export const useCreateInvoicePayment = (toast) => {
 };
 
 // Custom hook to delete a invoice payment
-export const useDeleteInvoicePayment = (toast) => {
+export const useDeleteInvoicePayment = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation(
     (deleteInvoicePaymentObject) => deleteInvoicePayment(deleteInvoicePaymentObject),
     {
-      onError: (error) => {
+      onError: (error: any) => {
         toast({
           position: 'top',
           title: `Error Occured Deleting Payment`,
@@ -51,7 +52,7 @@ export const useDeleteInvoicePayment = (toast) => {
           isClosable: true
         });
       },
-      onSuccess: (data) => {
+      onSuccess: (data: any) => {
         queryClient.invalidateQueries({
           queryKey: ['invoiceById', data.invoice_number.toString()]
         });
@@ -71,20 +72,18 @@ export const useDeleteInvoicePayment = (toast) => {
 };
 
 // Custom hook to delete all invoice payments that belong to invoice number
-export const useDeleteAllInvoicePaymentsByInvoiceNumber = (toast) => {
-  const { mutate } = useDeleteAllInvoiceLineItemsByInvoiceNumber(toast);
+export const useDeleteAllInvoicePaymentsByInvoiceNumber = (toast: any, setOpen: any) => {
+  const { mutate } = useDeleteAllInvoiceLineItemsByInvoiceNumber(toast, setOpen);
   return useMutation((invoiceNumber) => deleteAllInvoicePaymentsByInvoiceNumber(invoiceNumber), {
-    onError: (error) => {
+    onError: (error: any) => {
+      setOpen(false)
       toast({
-        position: `top`,
-        title: `Error occured deleting Invoice's Payments!`,
-        description: `Error: ${error.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
+        title: 'Uh oh! Something went wrong.',
+        description: `There was a problem with deleting invoice payments from our system.\n Message: ${error.message}`,
+        variant: 'destructive'
       });
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       mutate(data);
     }
   });

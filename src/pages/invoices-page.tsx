@@ -32,6 +32,7 @@ import { Avatar, AvatarImage } from '../components/ui/avatar';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import AddInvoiceForm from '../components/invoice-forms';
+import { ConnectedDeleteInvoiceAlertDialog } from '../components/connected-delete-dialogs';
 
 type Props = {};
 const columnHelper = createColumnHelper<any>();
@@ -85,6 +86,9 @@ export default function InvoicesPage({}: Props) {
         filterBarEntity="customer"
         activateModal={false}
         columns={invoiceTableColumns}
+        EmptyStateSheetBody={AddInvoiceForm}
+        emptyStateSheetTitle="Add invoice"
+        emptyStateSheetDescription="Create a new invoice to track income."
       />
     </div>
   );
@@ -270,19 +274,11 @@ export const invoiceTableColumns = [
               <TooltipContent>Edit</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant={'secondary'}
-                  className="px-3"
-                  onClick={() => deleteModalHandler(invoice.id, invoice.invoice_number)}>
-                  <TrashIcon size={'15px'} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Delete</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <ConnectedDeleteInvoiceAlertDialog
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete invoice with line-items/payments and remove data from our server."
+            itemId={invoice.invoice_number}
+          />
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
