@@ -28,3 +28,7 @@ export default function ConnectedDeleteQRequestAlertDialog({ title, description,
     />
   );
 }
+
+export function ConnectedDeleteInvoiceAlertDialog({}: Props) {
+  const [open, setOpen] = React.useState(false);
+}
