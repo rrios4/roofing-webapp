@@ -37,7 +37,7 @@ const Layout = ({children}: Props) => {
       <header>
         <SideNavbar userData={loggedInUserData}/>
       </header>
-      <div className="flex justify-center lg:ml-[5rem] py-2 px-6">
+      <div className="flex justify-center lg:ml-[5rem] py-2 px-3 sm:px-6">
         <div className="flex w-full mt-[66px] lg:mt-[0rem] justify-center max-w-screen-3xl">
           {children}
         </div>
