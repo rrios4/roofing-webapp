@@ -16,6 +16,10 @@ import { Button } from './ui/button';
 import { cn } from '../lib/utils';
 import { format } from 'date-fns';
 import { SheetClose, SheetFooter } from './ui/sheet';
+import { useFetchAllServices } from '../hooks/useAPI/useServices';
+import DefaultSelectDataItems from './select-data-items';
+import { useQuoteStatuses } from '../hooks/useAPI/useQuoteStatuses';
+import { useFetchQuotes } from '../hooks/useAPI/useQuotes';
 
 type Props = {
   setOpen: any;
@@ -45,16 +49,37 @@ const formSwitches = [
 ];
 
 export default function AddQuoteForm({ setOpen }: Props) {
+  const { quotes } = useFetchQuotes();
+  const [nextQuoteNumber, setNextQuoteNumber] = React.useState(0);
   const { customers } = useFetchCustomers();
+  const {
+    data: roofingServices,
+    isLoading: isRoofingServices,
+    isError: isRoofingError
+  } = useFetchAllServices();
+  const { quoteStatuses } = useQuoteStatuses();
   React.useEffect(() => {
-    console.log(customers);
+    calculateNextQuoteNumber(quotes);
   }, []);
   const form = useForm<z.infer<typeof addQuoteFormSchema>>({
-    resolver: zodResolver(addQuoteFormSchema)
+    resolver: zodResolver(addQuoteFormSchema),
+    defaultValues: {
+      quote_number: nextQuoteNumber === 0 ? 1 : nextQuoteNumber
+    }
   });
 
   function onSubmit(values: z.infer<typeof addQuoteFormSchema>) {
     console.log(values);
+  }
+
+  async function calculateNextQuoteNumber(object: any) {
+    if (object.length === 0) {
+      setNextQuoteNumber(1);
+    } else if (object.lenght > 0) {
+      const calculatedNextQuoteNumber =
+        Math.max(...object?.map((item: any) => item.quote_number)) + 1;
+      setNextQuoteNumber(calculatedNextQuoteNumber);
+    }
   }
   return (
     <div className="w-full my-4">
@@ -106,6 +131,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
                           </SelectItem>
                         </React.Fragment>
                       ))} */}
+                        <DefaultSelectDataItems data={quoteStatuses} />
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -194,13 +220,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {/* {customerTypes?.map((item: any, index: number) => (
-                        <React.Fragment key={index}>
-                          <SelectItem value={item.id.toString()} className="hover:cursor-pointer">
-                            {item.name}
-                          </SelectItem>
-                        </React.Fragment>
-                      ))} */}
+                      <DefaultSelectDataItems data={roofingServices} />
                     </SelectContent>
                   </Select>
                   <FormMessage />

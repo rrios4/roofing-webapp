@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+// @ts-ignore
 import supabase from '../../utils/supabaseClient';
 
 export const useQuoteStatuses = () => {
