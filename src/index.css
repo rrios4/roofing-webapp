@@ -35,6 +35,8 @@
     --radius: 0.5rem;
 
     --test: 210 79% 46%;
+
+    --primarytheme: 221 83% 53%;
   }
  
   .dark {
@@ -67,6 +69,8 @@
     --ring: 240 4.9% 83.9%;
 
     --test: 210 79% 46%;
+
+    --primarytheme: 221 83% 53%;
   }
 }
  
