@@ -25,7 +25,8 @@ import {
   LoginPage,
   QuotesPage,
   InboxPage,
-  PageNotFound
+  PageNotFound,
+  CustomerInfoPage
 } from './pages';
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
@@ -88,6 +89,14 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <InboxPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/customers/:id"
+                element={
+                  <ProtectedRoute>
+                    <CustomerInfoPage />
                   </ProtectedRoute>
                 }
               />
