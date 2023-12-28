@@ -9,6 +9,7 @@ type Props = {
   state: string;
   zipcode: string;
   addressQuery: string;
+  textSize?: string | null;
 };
 
 export default function GoogleMapsAddressPreviewPopover({
@@ -16,24 +17,46 @@ export default function GoogleMapsAddressPreviewPopover({
   city,
   state,
   zipcode,
-  addressQuery
+  addressQuery,
+  textSize
 }: Props) {
   return (
     <Popover>
       <PopoverTrigger>
-        <div
-          className="flex gap-1 font-[400] text-[14px] cursor-pointer hover:text-blue-500"
-          // onClick={() =>
-          //   window.open(
-          //     `https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`
-          //   )
-          // }
-        >
-          <p>{streetAddress}</p>
-          <p>{city},</p>
-          <p>{state}</p>
-          <p>{zipcode}</p>
-        </div>
+        {!textSize && (
+          <>
+            <div
+              className="flex gap-1 font-[400] text-[14px] cursor-pointer hover:text-blue-500"
+              // onClick={() =>
+              //   window.open(
+              //     `https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`
+              //   )
+              // }
+            >
+              <p>{streetAddress}</p>
+              <p>{city},</p>
+              <p>{state}</p>
+              <p>{zipcode}</p>
+            </div>
+          </>
+        )}
+        {textSize === 'md' && (
+          <>
+            <div
+              className="flex gap-1 font-[400] text-[16px] cursor-pointer hover:text-blue-500"
+              // onClick={() =>
+              //   window.open(
+              //     `https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`
+              //   )
+              // }
+            >
+              <p>{streetAddress}</p>
+              <p>{city},</p>
+              <p>{state}</p>
+              <p>{zipcode}</p>
+            </div>
+          </>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-full h-full px-6 py-6">
         <iframe
@@ -43,15 +66,15 @@ export default function GoogleMapsAddressPreviewPopover({
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"></iframe>
         <div className="flex justify-between pt-6 flex-col md:flex-row gap-4">
-          <div className='w-full'>
+          <div className="w-full">
             <p className="text-[20px] font-[600]">{streetAddress}</p>
             <p className="font-[400]">
               {city}, {state} {zipcode}
             </p>
           </div>
-          <div className='w-full md:w-[300px]'>
+          <div className="w-full md:w-[300px]">
             <Button
-              className='w-full'
+              className="w-full"
               variant={'primary'}
               onClick={() =>
                 window.open(`https://www.google.com/maps/search/?api=1&query=${addressQuery}`)
