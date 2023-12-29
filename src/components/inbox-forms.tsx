@@ -19,6 +19,7 @@ import listOfUSStates from '../data/state_titlecase.json';
 import { SheetClose, SheetFooter } from './ui/sheet';
 import { toast } from './ui/use-toast';
 import { useCreateNewQuoteRequest } from '../hooks/useAPI/useQuoteRequests';
+import { ScrollArea } from './ui/scroll-area';
 
 type Props = {
   setOpen: any;
@@ -40,140 +41,208 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
   }
   return (
     <div className="w-full my-4">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            <div className="flex gap-2">
-              <ClipboardTypeIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
-              {/* <UserIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" /> */}
-              <p className="font-[600] text-blue-500 dark:text-blue-300">Request</p>
-            </div>
-            <div className="flex gap-6 w-full">
-              <FormField
-                control={form.control}
-                name="est_request_status_id"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select request status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {qrStatuses?.map((item: any, index: number) => (
-                          <React.Fragment key={index}>
-                            <SelectItem value={item.id.toString()} className="hover:cursor-pointer">
-                              {item.name}
-                            </SelectItem>
-                          </React.Fragment>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="requested_date"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Desired date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
+      <ScrollArea className='w-full'>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <ClipboardTypeIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
+                {/* <UserIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" /> */}
+                <p className="font-[600] text-blue-500 dark:text-blue-300">Request</p>
+              </div>
+              <div className="flex gap-6 w-full">
+                <FormField
+                  control={form.control}
+                  name="est_request_status_id"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Status</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <Button
-                            variant={'outline'}
-                            className={cn(
-                              'w-[240px] pl-3 text-left font-normal',
-                              !field.value && 'text-muted-foreground'
-                            )}>
-                            {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select request status" />
+                          </SelectTrigger>
                         </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 text-start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex gap-6 w-full">
-              <FormField
-                control={form.control}
-                name="customer_typeID"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Type of Customer</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectContent>
+                          {qrStatuses?.map((item: any, index: number) => (
+                            <React.Fragment key={index}>
+                              <SelectItem
+                                value={item.id.toString()}
+                                className="hover:cursor-pointer">
+                                {item.name}
+                              </SelectItem>
+                            </React.Fragment>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="requested_date"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Desired date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={'outline'}
+                              className={cn(
+                                'w-[240px] pl-3 text-left font-normal',
+                                !field.value && 'text-muted-foreground'
+                              )}>
+                              {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 text-start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex gap-6 w-full">
+                <FormField
+                  control={form.control}
+                  name="customer_typeID"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Type of Customer</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select request status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {customerTypes?.map((item: any, index: number) => (
+                            <React.Fragment key={index}>
+                              <SelectItem
+                                value={item.id.toString()}
+                                className="hover:cursor-pointer">
+                                {item.name}
+                              </SelectItem>
+                            </React.Fragment>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="service_type_id"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Service</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select request status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {servicesData?.map((item: any, index: number) => (
+                            <React.Fragment key={index}>
+                              <SelectItem
+                                value={item.id.toString()}
+                                className="hover:cursor-pointer">
+                                {item.name}
+                              </SelectItem>
+                            </React.Fragment>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex gap-2">
+                <UserIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
+                <p className="font-[600] text-blue-500 dark:text-blue-300">Client</p>
+              </div>
+              <div className="flex gap-6 w-full">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>First Name</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select request status" />
-                        </SelectTrigger>
+                        <Input {...field} className="w-full" />
                       </FormControl>
-                      <SelectContent>
-                        {customerTypes?.map((item: any, index: number) => (
-                          <React.Fragment key={index}>
-                            <SelectItem value={item.id.toString()} className="hover:cursor-pointer">
-                              {item.name}
-                            </SelectItem>
-                          </React.Fragment>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="service_type_id"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Service</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Last Name</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select request status" />
-                        </SelectTrigger>
+                        <Input {...field} />
                       </FormControl>
-                      <SelectContent>
-                        {servicesData?.map((item: any, index: number) => (
-                          <React.Fragment key={index}>
-                            <SelectItem value={item.id.toString()} className="hover:cursor-pointer">
-                              {item.name}
-                            </SelectItem>
-                          </React.Fragment>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="email" className="w-full" />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-            <div className="flex gap-2">
-              <UserIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
-              <p className="font-[600] text-blue-500 dark:text-blue-300">Client</p>
-            </div>
-            <div className="flex gap-6 w-full">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="phone_number"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>First Name</FormLabel>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="tel"
+                        className="w-full"
+                        onChange={(e) => field.onChange(formatPhoneNumber(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex gap-2">
+                <MapPinIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
+                <p className="font-[600] text-blue-500 dark:text-blue-300">Location</p>
+              </div>
+              <FormField
+                control={form.control}
+                name="streetAddress"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Street Address</FormLabel>
                     <FormControl>
                       <Input {...field} className="w-full" />
                     </FormControl>
@@ -181,131 +250,73 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="email" className="w-full" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone_number"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="tel"
-                      className="w-full"
-                      onChange={(e) => field.onChange(formatPhoneNumber(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex gap-2">
-              <MapPinIcon className="w-4 h-4 my-auto text-blue-900 dark:text-blue-300" />
-              <p className="font-[600] text-blue-500 dark:text-blue-300">Location</p>
-            </div>
-            <FormField
-              control={form.control}
-              name="streetAddress"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Street Address</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="w-full" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex gap-6 w-full">
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>City</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="w-full" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>State</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <div className="flex gap-6 w-full">
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>City</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select US state" />
-                        </SelectTrigger>
+                        <Input {...field} className="w-full" />
                       </FormControl>
-                      <SelectContent className="">
-                        {listOfUSStates?.map((item: any, index: number) => (
-                          <React.Fragment key={index}>
-                            <SelectItem value={item.abbreviation} className="hover:cursor-pointer">
-                              {item.name}
-                            </SelectItem>
-                          </React.Fragment>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>State</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select US state" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="">
+                          {listOfUSStates?.map((item: any, index: number) => (
+                            <React.Fragment key={index}>
+                              <SelectItem
+                                value={item.abbreviation}
+                                className="hover:cursor-pointer">
+                                {item.name}
+                              </SelectItem>
+                            </React.Fragment>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="zipcode"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Zipcode</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="numeric" pattern="[0-9]*" inputMode="numeric" />
+                    </FormControl>
                   </FormItem>
                 )}
               />
+              <SheetFooter className="pt-8 gap-2">
+                <SheetClose asChild>
+                  <Button variant={'secondary'}>Cancel</Button>
+                </SheetClose>
+                <Button variant={'primary'} type="submit">
+                  Save changes
+                </Button>
+              </SheetFooter>
             </div>
-            <FormField
-              control={form.control}
-              name="zipcode"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Zipcode</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="numeric" pattern="[0-9]*" inputMode="numeric" />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <SheetFooter className="pt-8 gap-2">
-              <SheetClose asChild>
-                <Button variant={'secondary'}>Cancel</Button>
-              </SheetClose>
-              <Button variant={'primary'} type="submit">
-                Save changes
-              </Button>
-            </SheetFooter>
-          </div>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </ScrollArea>
     </div>
   );
 }

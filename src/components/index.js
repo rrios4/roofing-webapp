@@ -1,4 +1,4 @@
-export { default as Layout } from './common/layout';
+export { default as Layout } from './common/Layout';
 export { default as ProtectedRoute } from './common/protected-route';
 // export { default as Navbar } from './common/Navbar';
 // export { default as PageHeader } from './ui/PageHeader';
