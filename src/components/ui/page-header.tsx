@@ -52,7 +52,7 @@ export default function DefaultPageHeader({
                 <PlusCircleIcon className="mr-2 h-4 w-4" /> {addItemTextButton}
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+            <SheetContent className="w-full sm:max-w-xl">
               <SheetHeader>
                 <SheetTitle className='text-[18px]'>{sheetTitle}</SheetTitle>
                 <SheetDescription>{sheetDescription}</SheetDescription>

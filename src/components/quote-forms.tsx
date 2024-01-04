@@ -84,7 +84,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
   }
 
   return (
-    <div className="w-full my-4">
+    <div className="w-full my-6">
       <ScrollArea className='w-full'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
