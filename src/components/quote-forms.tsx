@@ -4,11 +4,19 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { addQuoteFormSchema } from '../validations/quote-form-validations';
+import { v4 as uuidv4 } from 'uuid';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import SearchCustomerCombobox from './customer-combobox';
 import { useFetchCustomers } from '../hooks/useAPI/useCustomers';
-import { CalendarIcon, MapIcon, RulerIcon, StickyNoteIcon, User2Icon } from 'lucide-react';
-import DefaultSwitchCard from './switch-card';
+import {
+  CalendarIcon,
+  MapIcon,
+  RulerIcon,
+  StickyNoteIcon,
+  TrashIcon,
+  User2Icon
+} from 'lucide-react';
+import DefaultSwitchCard, { SwtichCardTwo } from './switch-card';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Calendar } from './ui/calendar';
@@ -21,6 +29,8 @@ import DefaultSelectDataItems from './select-data-items';
 import { useQuoteStatuses } from '../hooks/useAPI/useQuoteStatuses';
 import { useFetchQuotes } from '../hooks/useAPI/useQuotes';
 import { ScrollArea } from './ui/scroll-area';
+import { Label } from './ui/label';
+import { Switch } from './ui/switch';
 
 type Props = {
   setOpen: any;
@@ -28,24 +38,24 @@ type Props = {
 
 const formSwitches = [
   {
-    title: 'General Notes',
-    description: 'To jot down general info',
-    icon: <StickyNoteIcon className="w-5 h-5 my-auto mx-auto" />
-  },
-  {
     title: 'Custom Address',
     description: 'Manual input for address',
     icon: <MapIcon className="w-5 h-5 my-auto mx-auto" />
   },
   {
+    title: 'General Notes',
+    description: 'To jot down general info',
+    icon: <StickyNoteIcon className="w-5 h-5 my-auto mx-auto" />
+  },
+  {
     title: 'Measurements Note',
     description: 'To write roof measurement',
-    icon: <RulerIcon className="w-5 h-5 my-auto col-span-2 mx-auto" />
+    icon: <RulerIcon className="w-5 h-5 my-auto mx-auto" />
   },
   {
     title: 'Customer Note',
     description: 'Write a note to customer',
-    icon: <User2Icon className="w-5 h-5 my-auto col-span-2 mx-auto" />
+    icon: <User2Icon className="w-5 h-5 my-auto mx-auto" />
   }
 ];
 
@@ -59,9 +69,19 @@ export default function AddQuoteForm({ setOpen }: Props) {
     isError: isRoofingError
   } = useFetchAllServices();
   const { quoteStatuses } = useQuoteStatuses();
+  const [item, setItem] = React.useState([
+    {
+      id: uuidv4(),
+      description: '',
+      qty: 1,
+      amount: 0
+    }
+  ]);
+
   React.useEffect(() => {
     calculateNextQuoteNumber(quotes);
   }, []);
+
   const form = useForm<z.infer<typeof addQuoteFormSchema>>({
     resolver: zodResolver(addQuoteFormSchema),
     defaultValues: {
@@ -83,9 +103,27 @@ export default function AddQuoteForm({ setOpen }: Props) {
     console.log(values);
   }
 
+  function onDelete(id: any) {
+    setItem((prevState) => prevState.filter((el) => el.id !== id));
+  }
+
+  function handleOnChange(e, id: any) {
+    let data = [...item];
+    let foundData = data.find((el) => el.id === id);
+
+    // if (e.target.name === 'qty' || 'amount') {
+    //   foundData[e.target.name] = e.target.value;
+    //   foundData['amount'] = (
+    //     Number(foundData?.qty) *
+    //   )
+    // }
+    foundData[e.target.name] = e.target.value;
+    setItem(data);
+  }
+
   return (
     <div className="w-full my-6">
-      <ScrollArea className='w-full'>
+      <ScrollArea className="w-full">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
@@ -230,7 +268,59 @@ export default function AddQuoteForm({ setOpen }: Props) {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-flow-row grid-cols-2 gap-2 py-6">
+              <div className="flex flex-col py-2 gap-6">
+                <Label>Line Items</Label>
+                {item.map((itemDetails, index) => (
+                  <React.Fragment key={index}>
+                    <div className="grid w-full grid-cols-8 grid-flow-row gap-4">
+                      <FormItem className="col-span-6 sm:col-span-4">
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Input type="text" />
+                        </FormControl>
+                      </FormItem>
+                      <FormItem className="sm:col-span-1">
+                        <FormLabel>Qty</FormLabel>
+                        <FormControl>
+                          <Input type="number" disabled />
+                        </FormControl>
+                      </FormItem>
+                      <FormItem className="col-span-3 sm:col-span-2">
+                        <FormLabel>Amount</FormLabel>
+                        <FormControl>
+                          <Input type="number" />
+                        </FormControl>
+                      </FormItem>
+                      <div className="sm:col-span-1 mx-auto mt-auto">
+                        <Button
+                          type="button"
+                          variant={'secondary'}
+                          onClick={() => onDelete(itemDetails.id)}>
+                          <TrashIcon className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </React.Fragment>
+                ))}
+                <Button
+                  type="button"
+                  variant={'secondary'}
+                  onClick={() => {
+                    setItem((state) => [
+                      ...state,
+                      {
+                        id: uuidv4(),
+                        description: '',
+                        qty: 1,
+                        amount: 0
+                      }
+                    ]);
+                  }}>
+                  + Add Line Item
+                </Button>
+              </div>
+
+              {/* <div className="grid grid-flow-row grid-cols-2 gap-2 py-4">
                 {formSwitches.map((item, index) => (
                   <React.Fragment key={index}>
                     <DefaultSwitchCard
@@ -240,7 +330,21 @@ export default function AddQuoteForm({ setOpen }: Props) {
                     />
                   </React.Fragment>
                 ))}
+              </div> */}
+
+              <div className="flex flex-col gap-4 pt-2">
+                <Label>Extra Options</Label>
+                {formSwitches.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <SwtichCardTwo
+                      title={item.title}
+                      description={item.description}
+                      icon={item.icon}
+                    />
+                  </React.Fragment>
+                ))}
               </div>
+
               <SheetFooter className="pt-8 gap-2">
                 <SheetClose asChild>
                   <Button variant={'secondary'}>Cancel</Button>

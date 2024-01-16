@@ -23,3 +23,20 @@ export default function DefaultSwitchCard({ title, description, icon }: Props) {
     </div>
   );
 }
+
+export function SwtichCardTwo({ title, description, icon }: Props) {
+  return (
+    <div className="flex gap-4 justify-between px-2 py-2 rounded-md">
+      <div className="flex gap-6">
+        {icon}
+        <div>
+          <p className="font-semibold text-[14px]">{title}</p>
+          <p className="text-[14px] text-gray-500">{description}</p>
+        </div>
+      </div>
+      <div className="my-auto">
+        <Switch />
+      </div>
+    </div>
+  );
+}
