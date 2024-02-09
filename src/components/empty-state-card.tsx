@@ -19,6 +19,11 @@ type Props = {
   SheetContentBody?: any;
 };
 
+type EmptyItemNotFoundProps = {
+  title: string;
+  description: string;
+};
+
 export default function EmptyStateCard({
   icon,
   entity,
@@ -51,6 +56,22 @@ export default function EmptyStateCard({
               <SheetContentBody open={open} />
             </SheetContent>
           </Sheet>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function EmptyStateItemsNotFound({ title, description }: EmptyItemNotFoundProps) {
+  return (
+    <div className="w-full py-6">
+      <div className="max-w-[500px] w-full mx-auto">
+        <div className="max-w-[250px] mx-auto">
+          <img src="/assets/illustrations/no-data-illustration.png" />
+        </div>
+        <div className="flex flex-col w-full gap-2 mt-6">
+          <p className="text-center font-semibold text-[16px] sm:text-[18px]">{title}</p>
+          <p className="text-center font-light">{description}</p>
         </div>
       </div>
     </div>
