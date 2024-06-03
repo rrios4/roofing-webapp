@@ -7,7 +7,7 @@ export const fetchAllInvoices = async () => {
     .select(
       `*, customer:customer_id(*), services:service_type_id(*), invoice_status:invoice_status_id(*)`
     )
-    .order('invoice_status_id', { ascending: false })
+    .order('invoice_number', { ascending: false })
     .order('updated_at', { ascending: false });
 
   if (error) {

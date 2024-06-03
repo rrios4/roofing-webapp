@@ -5,7 +5,7 @@ export const fetchQuotes = async () => {
   const { data, error } = await supabase
     .from('quote')
     .select(`*, customer:customer_id(*), quote_status:status_id(*), services:service_id(*)`)
-    .order('status_id', { ascending: false })
+    .order('quote_number', { ascending: false })
     .order('updated_at', { ascending: false });
 
   if (error) {
