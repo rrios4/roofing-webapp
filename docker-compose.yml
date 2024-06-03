@@ -6,9 +6,9 @@ services:
     build: .
     env_file:
       - stack.env
-    # environment:
-    #   REACT_APP_SUPABASE_URL: ${REACT_APP_SUPABASE_URL}
-    #   REACT_APP_SUPABASE_KEY: ${REACT_APP_SUPABASE_KEY}
+    environment:
+      REACT_APP_SUPABASE_URL: ${REACT_APP_SUPABASE_URL}
+      REACT_APP_SUPABASE_KEY: ${REACT_APP_SUPABASE_KEY}
     expose:
       - 5173
     ports:
