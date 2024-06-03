@@ -4,9 +4,11 @@ services:
     container_name: roofing-app
     restart: always
     build: .
-    environment:
-      REACT_APP_SUPABASE_URL: ${REACT_APP_SUPABASE_URL}
-      REACT_APP_SUPABASE_KEY: ${REACT_APP_SUPABASE_KEY}
+    env_file:
+      - stack.env
+    # environment:
+    #   REACT_APP_SUPABASE_URL: ${REACT_APP_SUPABASE_URL}
+    #   REACT_APP_SUPABASE_KEY: ${REACT_APP_SUPABASE_KEY}
     expose:
       - 5173
     ports:
