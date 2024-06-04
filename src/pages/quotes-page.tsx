@@ -34,7 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
-import AddQuoteForm from '../components/quote-forms';
+import AddQuoteForm from '../components/forms/quote-forms';
 import { ConnectedDeleteQuoteAlertDialog } from '../components/connected-delete-dialogs';
 
 type Props = {};

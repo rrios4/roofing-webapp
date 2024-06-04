@@ -1,13 +1,13 @@
 import React from 'react';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { addQuoteFormSchema } from '../validations/quote-form-validations';
+import { addQuoteFormSchema } from '../../validations/quote-form-validations';
 import { v4 as uuidv4 } from 'uuid';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import SearchCustomerCombobox from './customer-combobox';
-import { useFetchCustomers } from '../hooks/useAPI/useCustomers';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import SearchCustomerCombobox from '../customer-combobox';
+import { useFetchCustomers } from '../../hooks/useAPI/useCustomers';
 import {
   CalendarIcon,
   MapIcon,
@@ -16,21 +16,21 @@ import {
   TrashIcon,
   User2Icon
 } from 'lucide-react';
-import DefaultSwitchCard, { SwtichCardTwo } from './switch-card';
-import { Input } from './ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Calendar } from './ui/calendar';
-import { Button } from './ui/button';
-import { cn } from '../lib/utils';
+import DefaultSwitchCard, { SwtichCardTwo } from '../switch-card';
+import { Input } from '../ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Calendar } from '../ui/calendar';
+import { Button } from '../ui/button';
+import { cn } from '../../lib/utils';
 import { format } from 'date-fns';
-import { SheetClose, SheetFooter } from './ui/sheet';
-import { useFetchAllServices } from '../hooks/useAPI/useServices';
-import DefaultSelectDataItems from './select-data-items';
-import { useQuoteStatuses } from '../hooks/useAPI/useQuoteStatuses';
-import { useFetchQuotes } from '../hooks/useAPI/useQuotes';
-import { ScrollArea } from './ui/scroll-area';
-import { Label } from './ui/label';
-import { Switch } from './ui/switch';
+import { SheetClose, SheetFooter } from '../ui/sheet';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import DefaultSelectDataItems from '../select-data-items';
+import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses';
+import { useFetchQuotes } from '../../hooks/useAPI/useQuotes';
+import { ScrollArea } from '../ui/scroll-area';
+import { Label } from '../ui/label';
+import { Switch } from '../ui/switch';
 
 type Props = {
   setOpen: any;

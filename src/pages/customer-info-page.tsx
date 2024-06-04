@@ -198,13 +198,13 @@ export default function CustomerInfoPage({}: Props) {
                 </div>
                 {customerInvoices?.length === 0 && (
                   <>
-                    {/* <p className="text-gray-500 dark:text-gray-300 text-center font-light mb-2">
+                    <p className="text-gray-500 dark:text-gray-300 text-center font-light mb-2">
                       No invoices found for this customer.
-                    </p> */}
-                    <EmptyStateItemsNotFound
+                    </p>
+                    {/* <EmptyStateItemsNotFound
                       title="No Invoices Found"
                       description="This customer currently does not have any invoices in our system saved."
-                    />
+                    /> */}
                   </>
                 )}
                 {customerInvoices?.length > 0 && (
@@ -322,13 +322,13 @@ export default function CustomerInfoPage({}: Props) {
                 </div>
                 {customerQuotes?.length === 0 && (
                   <>
-                    {/* <p className="text-gray-500 dark:text-gray-300 text-center font-light mb-2">
+                    <p className="text-gray-500 dark:text-gray-300 text-center font-light mb-2">
                       No quotes found for this customer.
-                    </p> */}
-                    <EmptyStateItemsNotFound
+                    </p>
+                    {/* <EmptyStateItemsNotFound
                       title="No Quotes Found"
                       description="This customer currently does not have any quotes in our system saved."
-                    />
+                    /> */}
                   </>
                 )}
                 {customerQuotes?.length > 0 && (

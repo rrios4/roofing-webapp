@@ -1,6 +1,6 @@
 import React from 'react';
 import DefaultPageHeader from '../components/ui/page-header';
-import AddJobForm from '../components/job-forms';
+import AddJobForm from '../components/forms/job-forms';
 
 type Props = {};
 

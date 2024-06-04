@@ -31,7 +31,7 @@ import { Link } from 'react-router-dom';
 import { Avatar, AvatarImage } from '../components/ui/avatar';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
-import AddInvoiceForm from '../components/invoice-forms';
+import AddInvoiceForm from '../components/forms/invoice-forms';
 import { ConnectedDeleteInvoiceAlertDialog } from '../components/connected-delete-dialogs';
 
 type Props = {};
