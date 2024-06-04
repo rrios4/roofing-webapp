@@ -107,7 +107,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
     setItem((prevState) => prevState.filter((el) => el.id !== id));
   }
 
-  function handleOnChange(e, id: any) {
+  function handleOnChange(e: React.ReactEventHandler, id: any) {
     let data = [...item];
     let foundData = data.find((el) => el.id === id);
 
