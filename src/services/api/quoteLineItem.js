@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabaseClient';
+import supabase from '../../lib/supabase-client';
 
 // DELETE request that will delete all line item that belong to a quote number
 export const deleteQuoteLineItems = async (quoteNumber) => {

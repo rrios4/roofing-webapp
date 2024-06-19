@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabaseClient';
+import supabase from '../../lib/supabase-client';
 
 // GET request to get all quote request from database
 export const fetchAllQuoteRequests = async () => {

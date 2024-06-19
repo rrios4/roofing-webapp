@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabaseClient';
+import supabase from '../../lib/supabase-client';
 
 // GET request to API for all customers
 export const fetchCustomers = async () => {

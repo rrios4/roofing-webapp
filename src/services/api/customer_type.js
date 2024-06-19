@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabaseClient';
+import supabase from '../../lib/supabase-client';
 
 // GET request to get all customer types from DB
 export const fetchAllCustomerTypes = async () => {

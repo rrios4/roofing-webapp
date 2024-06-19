@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabaseClient';
+import supabase from '../../lib/supabase-client';
 
 // GET request of a count of all leads with a Status
 export const fetchTotalNewLeads = async () => {

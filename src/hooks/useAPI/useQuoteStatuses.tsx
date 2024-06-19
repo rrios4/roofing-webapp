@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
-// @ts-ignore
-import supabase from '../../utils/supabaseClient';
+import { useEffect, useState } from 'react';  
+import supabase from '../../lib/supabase-client';
 
 export const useQuoteStatuses = () => {
-  const [quoteStatuses, setQuoteStatuses] = useState([]);
+  const [quoteStatuses, setQuoteStatuses] = useState<any>([]);
 
   const fetchQuoteStatuses = async () => {
     const { data, error } = await supabase

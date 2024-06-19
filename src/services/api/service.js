@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabaseClient';
+import supabase from '../../lib/supabase-client';
 
 // GET request that will give a list of all roofing services
 export const fetchAllServices = async () => {

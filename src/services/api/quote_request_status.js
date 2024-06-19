@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabaseClient';
+import supabase from '../../lib/supabase-client';
 
 // Get request that will get all qr statuses from database
 export const fetchAllQuoteRequestStatuses = async () => {

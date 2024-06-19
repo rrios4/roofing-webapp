@@ -1,4 +1,4 @@
-import supabase from '../../utils/supabaseClient';
+import supabase from '../../lib/supabase-client';
 
 // POST request to create a new invoice line item
 export const createInvoiceLineItem = async (newInvoiceLineItemObject) => {

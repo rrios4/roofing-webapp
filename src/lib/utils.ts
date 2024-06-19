@@ -101,3 +101,13 @@ export const arrayOfMemojiFileNames = [
   '4122.png',
   '4314.png'
 ]
+
+export function monthDDYYYYFormat(date:any) {
+  let parsedDate = new Date(Date.parse(date));
+  let dateString = parsedDate.toLocaleDateString(
+    // @ts-ignore
+    {},
+    { timeZone: 'UTC', month: 'long', day: '2-digit', year: 'numeric' }
+  );
+  return dateString;
+}
