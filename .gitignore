@@ -30,3 +30,8 @@ client/.env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# ASP.NET files to ignore
+obj
+bin
+appsettings.json
