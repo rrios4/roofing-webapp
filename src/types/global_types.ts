@@ -10,6 +10,35 @@ export type IGoogleUser = {
     sub: string;
 }
 
+export type IDbCompany = {
+    id: number;
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+    phone: string;
+    email: string;
+    website_url: string;
+    industry: "Construction" | "Insurance" | "Computer Software" | "" | string;
+}
+
+export type IDbContact = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    middle_name?: string;
+    phone?: string;
+    email?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    postal_code?: string;
+    type: "Residential" | "Commercial" | "Industrial" | "Multi-Family/HOA" | "Government/Institutional"
+    company_id?: number;
+    company: IDbCompany;
+}
+
 export type IDbCustomer = {
     id: number;
     customer_type_id: number;
@@ -52,12 +81,22 @@ export type IDbQRequest = {
 
 export type IFormAddCustomer = {
     first_name: string;
-    last_name:string;
+    last_name: string;
     customer_tpye: string;
     email: string;
     phone_number: string;
     street_address: string;
     city: string;
-    state:string; 
+    state: string;
     zipcode: string;
+}
+
+
+// Define enums here
+enum CustomerTypeEnum {
+    Residential = 'Residential',
+    Commercial = 'Commercial',
+    Industrial = 'Industrial',
+    MultiFamilyHOA = 'Multi-Family/HOA',
+    GovernmentInstitutional = 'Government/Institutional'
 }

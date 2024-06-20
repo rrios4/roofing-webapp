@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server.Models;
 using server.Models.Supabase;
 
@@ -95,9 +96,12 @@ public partial class PostgresContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public DbSet<Company> Companies { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
+
     //     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-    //         => optionsBuilder.UseNpgsql("connection string here");
+    //         => optionsBuilder.UseNpgsql();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -1293,6 +1297,18 @@ public partial class PostgresContext : DbContext
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
         });
         modelBuilder.HasSequence<int>("seq_schema_version", "graphql").IsCyclic();
+
+        // Configure Company entity
+        modelBuilder.Entity<Company>()
+            .HasMany(c => c.Contacts)
+            .WithOne(e => e.Company)
+            .HasForeignKey(e => e.CompanyId);
+
+        // Configure Contact entity
+        modelBuilder.Entity<Contact>()
+            .Property(c => c.Type)
+            .IsUnicode(false)
+            .HasMaxLength(50);
 
         OnModelCreatingPartial(modelBuilder);
     }

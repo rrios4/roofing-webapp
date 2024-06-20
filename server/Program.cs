@@ -49,10 +49,12 @@ await supabase.InitializeAsync();
 
 // Add services to the container.
 // Intializes database context
+// builder.Services.AddDbContext<PostgresContext>(options =>
+// {
+//     options.UseNpgsql(postgressConnectionString);
+// });
 builder.Services.AddDbContext<PostgresContext>(options =>
-{
-    options.UseNpgsql(postgressConnectionString);
-});
+    options.UseNpgsql(postgressConnectionString));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
