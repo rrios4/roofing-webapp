@@ -7,6 +7,7 @@ import {
   // @ts-ignore
 } from '../../services/api/quote_request';
 import { IDbQRequest } from '../../types/global_types';
+import React from 'react';
 
 // Custom react-query hook for quote requests
 export const useFetchAllQuoteRequests = () => {

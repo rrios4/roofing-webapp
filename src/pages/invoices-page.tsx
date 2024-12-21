@@ -37,7 +37,7 @@ import { ConnectedDeleteInvoiceAlertDialog } from '../components/connected-delet
 type Props = {};
 const columnHelper = createColumnHelper<any>();
 
-export default function InvoicesPage({}: Props) {
+export default function InvoicesPage() {
   const { data: invoices, isLoading: isInvoicesLoading } = useFetchAllInvoices();
   const { data: totalOverdueInvoicesCount, isLoading: isTotalOverdueInvoicesLoading } =
     useFetchTotalOverdueInvoices();

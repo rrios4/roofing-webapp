@@ -15,6 +15,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from './sheet';
+import { ScrollArea } from './scroll-area';
 
 type Props = {
   title: string;
@@ -52,15 +53,17 @@ export default function DefaultPageHeader({
                 <PlusCircleIcon className="mr-2 h-4 w-4" /> {addItemTextButton}
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-xl">
-              <SheetHeader>
-                <SheetTitle className='text-[18px]'>{sheetTitle}</SheetTitle>
+            <SheetContent className="w-full sm:max-w-xl px-2">
+              <SheetHeader className="px-4 space-y-0">
+                <SheetTitle className="text-[18px]">{sheetTitle}</SheetTitle>
                 <SheetDescription>{sheetDescription}</SheetDescription>
               </SheetHeader>
               {/* <div className="w-full pt-6 pb-8 h-full overflow-auto px-2">
                 <SheetContentBody />
               </div> */}
-              <SheetContentBody setOpen={setOpen}/>
+              <ScrollArea className="w-full h-full pb-8 pt-6">
+                <SheetContentBody setOpen={setOpen} />
+              </ScrollArea>
             </SheetContent>
           </Sheet>
         </div>

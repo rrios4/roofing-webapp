@@ -15,7 +15,7 @@ import AddCustomerForm from '../components/forms/customer-forms';
 
 type Props = {};
 
-export default function CustomersPage({}: Props) {
+export default function CustomersPage() {
   const { customers, isLoading } = useFetchCustomers();
   const { data: totalCustomersCount, isLoading: isTotalCustomerCountLoading } =
     useFetchTotalCustomers();

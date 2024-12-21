@@ -4,6 +4,8 @@ node_modules
 .pnp
 .pnp.js
 .vscode
+.idea
+qodana.yaml
 
 # Keep environment variables out of version control
 .env

@@ -40,7 +40,7 @@ import { ConnectedDeleteQuoteAlertDialog } from '../components/connected-delete-
 type Props = {};
 const columnHelper = createColumnHelper<any>();
 
-export default function QuotesPage({}: Props) {
+export default function QuotesPage() {
   const { quotes, isLoading: isQuotesLoading } = useFetchQuotes();
   const { data: totalAcceptedQuotesCount, isLoading: isTotalAcceptedQuoteCountLoading } =
     useFetchTotalAcceptedQuotes();
@@ -54,7 +54,7 @@ export default function QuotesPage({}: Props) {
         title="Quotes"
         subheading="Manage quotes and view information focused on them."
         addItemTextButton="Add quote"
-        sheetTitle="Add quote"
+        sheetTitle="Add Quote"
         sheetDescription="Create a new quote that will help track potential new work."
         SheetContentBody={AddQuoteForm}
       />
@@ -89,8 +89,8 @@ export default function QuotesPage({}: Props) {
         EntityFilterBar={DataTableFilterCard}
         filterBarEntity={'customer'}
         columns={quoteColumns}
-        emptyStateSheetTitle='Add quote'
-        emptyStateSheetDescription='Create a new quote to keep track of estimates customers request.'
+        emptyStateSheetTitle="Add quote"
+        emptyStateSheetDescription="Create a new quote to keep track of estimates customers request."
         EmptyStateSheetBody={AddQuoteForm}
       />
     </div>

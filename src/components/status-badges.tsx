@@ -4,7 +4,16 @@ import { Badge } from './ui/badge';
 type Props = {
   title: string;
   colorScheme?: string;
-  variant: 'blue' | 'default' | 'outline' | 'green' | 'gray' | 'secondary' | 'yellow' | 'red' | 'orange';
+  variant:
+    | 'blue'
+    | 'default'
+    | 'outline'
+    | 'green'
+    | 'gray'
+    | 'secondary'
+    | 'yellow'
+    | 'red'
+    | 'orange';
 };
 
 export default function DefaultStatusBadge({ title, colorScheme, variant }: Props) {

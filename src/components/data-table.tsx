@@ -27,7 +27,7 @@ type Props = {
   filterBarEntity: string;
   emptyStateSheetTitle?: string;
   emptyStateSheetDescription?: string;
-  EmptyStateSheetBody?: any
+  EmptyStateSheetBody?: any;
 };
 
 export default function DataTable({
@@ -54,10 +54,10 @@ export default function DataTable({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    // @ts-ignore
+    // @ts-expect-error not being used rn
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    // @ts-ignore
+    // @ts-expect-error not being used rn
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,

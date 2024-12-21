@@ -17,9 +17,9 @@ export default function PageNotFound({}: Props) {
       <div className="w-[100px] mx-auto">
         <DefaultStatusBadge variant="gray" title="404 error" />
       </div>
-      <p className="text-[32px] lg:text-[48px] font-[600] mx-auto">We can't find this page</p>
+      <p className="text-[32px] lg:text-[48px] font-[600] mx-auto">{"We can't find this page"}</p>
       <p className="text-center text-muted-foreground">
-        The page you are looking for doesn't exist or has been moved.
+        {"The page you are looking for doesn't exist or has been moved."}
       </p>
       <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 mt-8 gap-4">
         <Button variant={'secondary'} onClick={goBack} className="">

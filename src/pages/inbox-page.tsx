@@ -30,7 +30,7 @@ type Props = {};
 
 const columnHelper = createColumnHelper<any>();
 
-export default function InboxPage({}: Props) {
+export default function InboxPage() {
   const { data: quoteRequests, isLoading: isQuoteRequestLoading } = useFetchAllQuoteRequests();
   const { data: totalNewLeadsCount, isLoading: isTotalNewLeadsLoading } = useFetchTotalNewLeads();
   const { data: totalScheduledLeadsCount, isLoading: isTotalScheduledLeadsLoading } =

@@ -1,45 +1,40 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
- 
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export function abbreviateName(name:string){
-  if(name){
-    return (
-      name 
-        .split(" ")
-  
-        .map((part) => part[0].toUpperCase())
-  
-        .join("")
-    )
-  } else if(name === undefined) {
-    return("NA")
+export function abbreviateName(name: string) {
+  if (name) {
+    return name
+      .split(' ')
+
+      .map((part) => part[0].toUpperCase())
+
+      .join('');
+  } else if (name === undefined) {
+    return 'NA';
   } else {
-    return (
-      "NA"
-    )
+    return 'NA';
   }
 }
 
-export function getRandomIntBetweenInclusive(min:number, max:number){
+export function getRandomIntBetweenInclusive(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
 
-export function formatDate(date:any) {
-  let parsedDate = new Date(Date.parse(date));
-  let options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' };
-  // @ts-ignore
-  let dateString = parsedDate.toLocaleDateString('en-US', options);
+export function formatDate(date: any) {
+  const parsedDate = new Date(Date.parse(date));
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' };
+  // @ts-expect-error the date string need to be addressed here.
+  const dateString = parsedDate.toLocaleDateString('en-US', options);
   return dateString;
 }
 
-
-export function formatPhoneNumber(value:any) {
+export function formatPhoneNumber(value: any) {
   //if value is falsy eg if the user deletes the input, then just return
   if (!value) return value;
 
@@ -64,27 +59,26 @@ export function formatPhoneNumber(value:any) {
   return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
 }
 
-export function formatNumber(value:number) {
+export function formatNumber(value: number) {
   return value?.toLocaleString('en-US', {
     minimumIntegerDigits: 3,
     useGrouping: true
   });
 }
 
-export function formatMoneyValue(input:any) {
+export function formatMoneyValue(input: any) {
   return input?.toLocaleString(undefined, {
     minimumFractionDigits: 2
   });
 }
 
-export function formatDateWithAbbreviatedMonth(date:any) {
-  let parsedDate = new Date(Date.parse(date));
-  let dateString = parsedDate.toLocaleDateString(
-    // @ts-ignore
+export function formatDateWithAbbreviatedMonth(date: any) {
+  const parsedDate = new Date(Date.parse(date));
+  return parsedDate.toLocaleDateString(
+    // @ts-expect-error this needs to be addressed to
     {},
     { timeZone: 'UTC', month: 'long', day: '2-digit', year: 'numeric' }
   );
-  return dateString;
 }
 
 // util for storing memoji file names
@@ -100,14 +94,13 @@ export const arrayOfMemojiFileNames = [
   '3552.png',
   '4122.png',
   '4314.png'
-]
+];
 
-export function monthDDYYYYFormat(date:any) {
-  let parsedDate = new Date(Date.parse(date));
-  let dateString = parsedDate.toLocaleDateString(
-    // @ts-ignore
+export function monthDDYYYYFormat(date: any) {
+  const parsedDate = new Date(Date.parse(date));
+  return parsedDate.toLocaleDateString(
+    // @ts-expect-error this needs to be address also
     {},
     { timeZone: 'UTC', month: 'long', day: '2-digit', year: 'numeric' }
   );
-  return dateString;
 }

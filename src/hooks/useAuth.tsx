@@ -41,14 +41,14 @@ export const AuthProvider = ({ children }: Props) => {
       } = await supabase.auth.getSession();
       if (error) throw error;
       setSession(session);
-      // @ts-ignore
+      // @ts-expect-error needs to address session info here
       setUser(session?.user);
       setLoading(false);
     };
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      // @ts-ignore
+      // @ts-expect-error need to address session info here
       setUser(session?.user);
       setLoading(false);
     });

@@ -67,7 +67,7 @@ export default function CustomerPreviewPopover({
           </p>
           <div className="grid w-full grid-flow-row grid-cols-3 mt-6 gap-4">
             <Button asChild variant={'primary'}>
-              <a href={`mailto:${email}`} target="_blank">
+              <a href={`mailto:${email}`} target="_blank" rel="noreferrer">
                 <MailIcon size={'18px'} />
               </a>
             </Button>

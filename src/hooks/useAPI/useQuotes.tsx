@@ -8,6 +8,7 @@ import {
   updateQuoteStatusById
   // @ts-ignore
 } from '../../services/api/quote';
+import React from 'react';
 
 // Custom hook to get all quotes
 export const useFetchQuotes = () => {

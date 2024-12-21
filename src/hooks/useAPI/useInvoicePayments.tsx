@@ -76,7 +76,7 @@ export const useDeleteAllInvoicePaymentsByInvoiceNumber = (toast: any, setOpen: 
   const { mutate } = useDeleteAllInvoiceLineItemsByInvoiceNumber(toast, setOpen);
   return useMutation((invoiceNumber) => deleteAllInvoicePaymentsByInvoiceNumber(invoiceNumber), {
     onError: (error: any) => {
-      setOpen(false)
+      setOpen(false);
       toast({
         title: 'Uh oh! Something went wrong.',
         description: `There was a problem with deleting invoice payments from our system.\n Message: ${error.message}`,

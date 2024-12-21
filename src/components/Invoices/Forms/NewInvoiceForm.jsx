@@ -342,11 +342,11 @@ const NewInvoiceForm = (props) => {
 
   const handleNextInvoice = (data) => {
     if (data) {
-      Math.max(...data?.map((item) => item.invoice_number)) + 1 == -Infinity
-        ? '1'
-        : setNextInvoiceNumber(
-            Math.max(...data?.map((item) => item.invoice_number)) + 1 == -Infinity
-          );
+      Math.max(...data?.map((item) => item.invoice_number)) + 1 !== -Infinity
+        ? setNextInvoiceNumber(
+            Math.max(...data?.map((item) => item.invoice_number)) + 1 === -Infinity
+          )
+        : '1';
     } else {
       setNextInvoiceNumber('Loading...');
     }

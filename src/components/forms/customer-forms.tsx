@@ -192,7 +192,7 @@ export default function AddCustomerForm({ setOpen }: Props) {
                     <SelectContent>
                       {customerTypes?.map((item: any, index: number) => (
                         <React.Fragment key={index}>
-                          <SelectItem value={item.id.toString()} className="hover:cursor-pointer">
+                          <SelectItem value={item?.id?.toString()} className="hover:cursor-pointer">
                             {item.name}
                           </SelectItem>
                         </React.Fragment>

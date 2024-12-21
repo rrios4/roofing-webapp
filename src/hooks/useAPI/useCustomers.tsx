@@ -12,6 +12,7 @@ import {
   fetchSearchCustomers
   // @ts-ignore
 } from '../../services/api/customer';
+import React from 'react';
 
 // Custom hook to get all customers from db
 export const useFetchCustomers = () => {
@@ -130,13 +131,13 @@ export const useCreateCustomer = (toast?: any, setOpen?: any) => {
         title: 'Uh oh! Something went wrong.',
         description: <p>There was a problem with adding new customer to our system</p>
       });
-      setOpen(true)
+      setOpen(true);
       // handleResettingUseState();
     },
     onSuccess: () => {
       // handleResettingUseState();
       queryClient.invalidateQueries({ queryKey: ['customers'] });
-      setOpen(false)
+      setOpen(false);
       toast({
         variant: 'success',
         title: 'Added customer successfully! 🎉',

@@ -8,6 +8,7 @@ import {
   updateInvoiceStatusById
   // @ts-ignore
 } from '../../services/api/invoice';
+import React from 'react';
 
 // Custom hook that get all invoices
 export const useFetchAllInvoices = () => {

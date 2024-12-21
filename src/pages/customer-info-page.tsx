@@ -59,7 +59,7 @@ export default function CustomerInfoPage({}: Props) {
     console.log(customerById);
   }, []);
 
-  if (isLoading === true || isCustomerInvoicesLoading === true) {
+  if (isLoading || isCustomerInvoicesLoading) {
     return (
       <div className="flex flex-col w-full gap-4">
         <div className="flex w-full mt-2 gap-2">
@@ -211,7 +211,7 @@ export default function CustomerInfoPage({}: Props) {
                   <>
                     <Table>
                       <TableCaption>
-                        A list of {customerById?.first_name}'s recent invoices.
+                        A list of {customerById?.first_name}&#39;s recent invoices.
                       </TableCaption>
                       <TableHeader>
                         <TableRow>
@@ -335,7 +335,7 @@ export default function CustomerInfoPage({}: Props) {
                   <>
                     <Table>
                       <TableCaption>
-                        A list of {customerById?.first_name}'s recent quotes.
+                        A list of {customerById?.first_name}&#39;s recent quotes.
                       </TableCaption>
                       <TableHeader>
                         <TableRow>

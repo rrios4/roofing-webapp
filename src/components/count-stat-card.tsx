@@ -11,7 +11,9 @@ type Props = {
 
 export default function CountStatCard({ title, totalCount, icon, isLoading }: Props) {
   if (isLoading) {
-    return <Skeleton className="flex flex-col p-6 rounded-lg shadow-xs w-full md:w-[35%] h-[131px] md:h-[140px]" />;
+    return (
+      <Skeleton className="flex flex-col p-6 rounded-lg shadow-xs w-full md:w-[35%] h-[131px] md:h-[140px]" />
+    );
   }
 
   return (

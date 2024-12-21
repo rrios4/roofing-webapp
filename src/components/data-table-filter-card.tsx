@@ -11,7 +11,14 @@ type Props = {
   thirdSelectName: string;
 };
 
-export default function DataTableFilterCard({ rootTable, entity, columnEntity, firstSelectName, secondSelectName, thirdSelectName }: Props) {
+export default function DataTableFilterCard({
+  rootTable,
+  entity,
+  columnEntity,
+  firstSelectName,
+  secondSelectName,
+  thirdSelectName
+}: Props) {
   return (
     <>
       <div className="w-full">

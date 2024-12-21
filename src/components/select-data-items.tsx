@@ -17,7 +17,9 @@ export default function DefaultSelectDataItems({ data }: Props) {
           </React.Fragment>
         ))
       ) : (
-        <SelectItem value="" disabled>No items available in DB ❌</SelectItem>
+        <SelectItem value="" disabled>
+          No items available in DB ❌
+        </SelectItem>
       )}
     </>
   );

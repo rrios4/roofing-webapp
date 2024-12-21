@@ -1,13 +1,15 @@
 import React from 'react';
 import { Switch } from './ui/switch';
 
-type Props = {
+type Props<T> = {
   title: string | undefined;
   description: string | undefined;
   icon: React.ReactNode | undefined;
+  switchValue: T;
+  setSwitchValue: React.Dispatch<React.SetStateAction<T>>;
 };
 
-export default function DefaultSwitchCard({ title, description, icon }: Props) {
+export default function DefaultSwitchCard({ title, description, icon }: Props<any>) {
   return (
     <div className="grid grid-flow-row grid-cols-6 border rounded-lg h-14 gap-2 w-full px-2">
       <div className="flex gap-2 w-full col-span-5">
@@ -24,9 +26,15 @@ export default function DefaultSwitchCard({ title, description, icon }: Props) {
   );
 }
 
-export function SwtichCardTwo({ title, description, icon }: Props) {
+export function SwtichCardTwo({
+  title,
+  description,
+  icon,
+  switchValue,
+  setSwitchValue
+}: Props<any>) {
   return (
-    <div className="flex gap-4 justify-between px-2 py-2 rounded-md">
+    <div className="flex gap-4 justify-between p-4 rounded-md border border-gray-200">
       <div className="flex gap-6">
         {icon}
         <div>
@@ -35,7 +43,7 @@ export function SwtichCardTwo({ title, description, icon }: Props) {
         </div>
       </div>
       <div className="my-auto">
-        <Switch />
+        <Switch checked={switchValue} onCheckedChange={() => setSwitchValue(!switchValue)} />
       </div>
     </div>
   );
