@@ -26,7 +26,7 @@ export default function DefaultSwitchCard({ title, description, icon }: Props<an
   );
 }
 
-export function SwtichCardTwo({
+export function SwitchCardTwo({
   title,
   description,
   icon,

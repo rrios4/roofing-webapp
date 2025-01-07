@@ -48,6 +48,7 @@ export default function QuotesPage() {
     useFetchTotalPendingQuotes();
   const { data: totalRejectedQuotesCount, isLoading: isTotalRejectedQuoteCountLoading } =
     useFetchTotalRejectedQuotes();
+
   return (
     <div className="flex flex-col w-full gap-6 mb-6">
       <DefaultPageHeader
@@ -273,7 +274,7 @@ export const quoteColumns = [
           />
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Link to={`/quotes/${quote.quote_number}`}>
                   <Button className="px-3" variant={'secondary'}>
                     <ChevronRightIcon size={'15px'} />

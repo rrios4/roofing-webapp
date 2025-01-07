@@ -104,3 +104,11 @@ enum CustomerTypeEnum {
   MultiFamilyHOA = 'Multi-Family/HOA',
   GovernmentInstitutional = 'Government/Institutional'
 }
+
+export type IDbQuoteRequestStatus = {
+  id: number;
+  name: string;
+  description: string;
+  updated_at: Date;
+  created_at: Date;
+}

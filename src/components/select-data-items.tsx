@@ -1,23 +1,22 @@
 import React from 'react';
 import { SelectItem } from './ui/select';
+import { IDbQuoteRequestStatus } from '../types/global_types';
 
 type Props = {
-  data: any | undefined;
+  data?: IDbQuoteRequestStatus[];
 };
 
 export default function DefaultSelectDataItems({ data }: Props) {
   return (
     <>
-      {data ? (
-        data?.map((item: any, index: number) => (
-          <React.Fragment key={index}>
-            <SelectItem value={item.id.toString()} className="hover:cursor-pointer">
-              {item.name}
-            </SelectItem>
-          </React.Fragment>
+      {data && data.length > 0 ? (
+        data.map((item) => (
+          <SelectItem key={item.id} value={item.id.toString()} className="hover:cursor-pointer">
+            {item.name}
+          </SelectItem>
         ))
       ) : (
-        <SelectItem value="" disabled>
+        <SelectItem value=" " disabled>
           No items available in DB ❌
         </SelectItem>
       )}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,7 +16,7 @@ import {
   TrashIcon,
   User2Icon
 } from 'lucide-react';
-import DefaultSwitchCard, { SwtichCardTwo } from '../switch-card';
+import DefaultSwitchCard, { SwitchCardTwo } from '../switch-card';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Calendar } from '../ui/calendar';
@@ -31,6 +31,7 @@ import { useFetchQuotes } from '../../hooks/useAPI/useQuotes';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { ScrollArea } from '../ui/scroll-area';
+import { Textarea } from '@tremor/react';
 
 type Props = {
   setOpen: any;
@@ -65,8 +66,8 @@ export default function AddQuoteForm({ setOpen }: Props) {
   const { customers } = useFetchCustomers();
   const {
     data: roofingServices,
-    isLoading: isRoofingServices,
-    isError: isRoofingError
+    isLoading: isRoofingServicesLoading,
+    isError: isRoofingServicesError
   } = useFetchAllServices();
   const { quoteStatuses } = useQuoteStatuses();
   const [item, setItem] = React.useState([
@@ -79,6 +80,9 @@ export default function AddQuoteForm({ setOpen }: Props) {
   ]);
 
   const [customAddressSwitch, setCustomAddressSwitch] = React.useState(false);
+  const [generalNoteSwitch, setGeneralNoteSwitch] = useState(false);
+  const [measurementNoteSwitch, setMeasurementNoteSwitch] = useState(false);
+  const [customerNoteSwitch, setCustomerNoteSwitch] = useState(false);
 
   React.useEffect(() => {
     calculateNextQuoteNumber(quotes);
@@ -91,7 +95,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
     }
   });
 
-  async function calculateNextQuoteNumber(object: any) {
+  function calculateNextQuoteNumber(object: any) {
     if (object.length === 0) {
       setNextQuoteNumber(1);
     } else if (object.lenght > 0) {
@@ -341,25 +345,86 @@ export default function AddQuoteForm({ setOpen }: Props) {
             {/* Optional  */}
             <div className="flex flex-col gap-4 pt-2">
               <Label>Extra Options</Label>
-              {formSwitches.map((item, index) => (
-                <React.Fragment key={index}>
-                  <SwtichCardTwo
-                    title={item.title}
-                    description={item.description}
-                    icon={item.icon}
-                    switchValue={customAddressSwitch}
-                    setSwitchValue={setCustomAddressSwitch}
+              {customAddressSwitch && (
+                <div className={'flex gap-4 flex-col w-full mb-2'}>
+                  <div className={'w-full'}>
+                    <Label>Street Address</Label>
+                    <Input placeholder={'Enter address'} />
+                  </div>
+                  <div className={'flex gap-6'}>
+                    <div className={'w-full'}>
+                      <Label>City</Label>
+                      <Input placeholder={'Enter city'} />
+                    </div>
+                    <div className={'w-full'}>
+                      <Label>State</Label>
+                      <Input placeholder={'Enter state'} />
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Zipcode</Label>
+                    <Input placeholder={'Enter zipcode'} />
+                  </div>
+                </div>
+              )}
+              <SwitchCardTwo
+                title={formSwitches[0].title}
+                description={formSwitches[0].description}
+                icon={formSwitches[0].icon}
+                switchValue={customAddressSwitch}
+                setSwitchValue={setCustomAddressSwitch}
+              />
+              {generalNoteSwitch && (
+                <>
+                  <Textarea
+                    placeholder="Jot down any notes here..."
+                    className="resize-y rounded-lg h-[150px]"
                   />
-                  {customAddressSwitch && (
-                    <>
-                      <p>Test render of form fields</p>
-                    </>
-                  )}
-                </React.Fragment>
-              ))}
+                </>
+              )}
+              <SwitchCardTwo
+                title={formSwitches[1].title}
+                description={formSwitches[1].description}
+                icon={formSwitches[1].icon}
+                switchValue={generalNoteSwitch}
+                setSwitchValue={setGeneralNoteSwitch}
+              />
+              {measurementNoteSwitch && (
+                <>
+                  <Textarea
+                    placeholder="Write down any measurements about the roof here..."
+                    className="resize-y rounded-lg h-[150px]"
+                  />
+                </>
+              )}
+              <SwitchCardTwo
+                title={formSwitches[2].title}
+                description={formSwitches[2].description}
+                icon={formSwitches[2].icon}
+                switchValue={measurementNoteSwitch}
+                setSwitchValue={setMeasurementNoteSwitch}
+              />
+              {customerNoteSwitch && (
+                <>
+                  <Textarea
+                    placeholder="Tell the customer a custom message..."
+                    className="resize-y rounded-lg h-[150px]"
+                  />
+                </>
+              )}
+              <SwitchCardTwo
+                title={formSwitches[3].title}
+                description={formSwitches[3].description}
+                icon={formSwitches[3].icon}
+                switchValue={customerNoteSwitch}
+                setSwitchValue={setCustomerNoteSwitch}
+              />
             </div>
 
-            <SheetFooter className="pt-8 gap-2">
+            <SheetFooter className="pt-4 gap-2">
+              <Button type={'submit'} disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Loading...' : 'Submit'}
+              </Button>
               <SheetClose asChild>
                 <Button variant={'secondary'}>Cancel</Button>
               </SheetClose>
