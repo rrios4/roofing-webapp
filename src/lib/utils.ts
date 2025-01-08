@@ -67,7 +67,14 @@ export function formatNumber(value: number) {
 }
 
 export function formatMoneyValue(input: any) {
-  return input?.toLocaleString(undefined, {
+  if (typeof input !== 'number') {
+    return input?.toLocaleString(undefined, {
+      minimumFractionDigits: 2
+    });
+  }
+
+  const roundedValue = Math.ceil(input * 100) / 100; // Rounds up to 2 decimal places
+  return roundedValue.toLocaleString(undefined, {
     minimumFractionDigits: 2
   });
 }

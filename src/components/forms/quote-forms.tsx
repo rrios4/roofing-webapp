@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { addQuoteFormSchema } from '../../validations/quote-form-validations';
@@ -21,7 +21,7 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Calendar } from '../ui/calendar';
 import { Button } from '../ui/button';
-import { cn } from '../../lib/utils';
+import { cn, formatMoneyValue } from '../../lib/utils';
 import { format } from 'date-fns';
 import { SheetClose, SheetFooter } from '../ui/sheet';
 import { useFetchAllServices } from '../../hooks/useAPI/useServices';
@@ -84,17 +84,6 @@ export default function AddQuoteForm({ setOpen }: Props) {
   const [measurementNoteSwitch, setMeasurementNoteSwitch] = useState(false);
   const [customerNoteSwitch, setCustomerNoteSwitch] = useState(false);
 
-  React.useEffect(() => {
-    calculateNextQuoteNumber(quotes);
-  }, []);
-
-  const form = useForm<z.infer<typeof addQuoteFormSchema>>({
-    resolver: zodResolver(addQuoteFormSchema),
-    defaultValues: {
-      quote_number: nextQuoteNumber === 0 ? 1 : nextQuoteNumber
-    }
-  });
-
   function calculateNextQuoteNumber(object: any) {
     if (object.length === 0) {
       setNextQuoteNumber(1);
@@ -106,32 +95,52 @@ export default function AddQuoteForm({ setOpen }: Props) {
     }
   }
 
+  const form = useForm<z.infer<typeof addQuoteFormSchema>>({
+    resolver: zodResolver(addQuoteFormSchema),
+    defaultValues: {
+      quote_number: nextQuoteNumber === 0 ? 1 : nextQuoteNumber,
+      line_items: [{ description: '', qty: 1, amount: 0, subtotal: 0 }] // Start with one empty line item
+    }
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'line_items'
+  });
+
+  const lineItems = form.watch('line_items');
+  // Use useEffect to calculate subtotals whenever quantity or amount changes
+  React.useEffect(() => {
+    const updatedLineItems = (lineItems ?? []).map((item) => ({
+      ...item,
+      subtotal: item.qty * item.amount
+    }));
+    form.setValue('line_items', updatedLineItems);
+    calculateNextQuoteNumber(quotes);
+  }, [lineItems, form.setValue]);
+
+  const calculateSubtotal = () => {
+    return (lineItems ?? []).reduce((sum, item) => sum + item.subtotal, 0);
+  };
+
+  const subtotal = calculateSubtotal();
+  // const taxRate = 0.0825; // Example tax rate (5%)
+  // const discountRate = 0.1; // Example discount rate (10%)
+  // const discountAmount: number = subtotal * discountRate;
+  // const adjustedSubtotal = subtotal - discountAmount;
+  // const tax = adjustedSubtotal * taxRate;
+  // const total = adjustedSubtotal + tax;
+  const total: number = subtotal;
+
   function onSubmit(values: z.infer<typeof addQuoteFormSchema>) {
     console.log(values);
-  }
-
-  function onDelete(id: any) {
-    setItem((prevState) => prevState.filter((el) => el.id !== id));
-  }
-
-  function handleOnChange(e: React.ReactEventHandler, id: any) {
-    const data = [...item];
-    const foundData = data.find((el) => el.id === id);
-
-    // if (e.target.name === 'qty' || 'amount') {
-    //   foundData[e.target.name] = e.target.value;
-    //   foundData['amount'] = (
-    //     Number(foundData?.qty) *
-    //   )
-    // }
-    // foundData[e.target.name] = e.target.value;
-    setItem(data);
   }
 
   return (
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
+          {/* General Invoice Section */}
           <div className="space-y-4 h-full px-4 pb-6">
             <FormField
               control={form.control}
@@ -278,34 +287,91 @@ export default function AddQuoteForm({ setOpen }: Props) {
                 </FormItem>
               )}
             />
+
+            {/*Line items section */}
             <div className="flex flex-col py-2 gap-6">
               <Label>Line Items</Label>
-              {item.map((itemDetails, index) => (
+              {fields.map((item, index) => (
                 <React.Fragment key={index}>
                   <div className="grid w-full grid-cols-8 grid-flow-row gap-4">
-                    <FormItem className="col-span-6 sm:col-span-4">
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Input type="text" />
-                      </FormControl>
-                    </FormItem>
-                    <FormItem className="sm:col-span-1">
-                      <FormLabel>Qty</FormLabel>
-                      <FormControl>
-                        <Input type="number" disabled />
-                      </FormControl>
-                    </FormItem>
-                    <FormItem className="col-span-3 sm:col-span-2">
-                      <FormLabel>Amount</FormLabel>
-                      <FormControl>
-                        <Input type="number" />
-                      </FormControl>
-                    </FormItem>
+                    <FormField
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem className="col-span-6 sm:col-span-4">
+                          <FormLabel>Description</FormLabel>
+                          <FormControl>
+                            <Input type="text" {...field} />
+                          </FormControl>
+                          {/*<FormMessage />*/}
+                        </FormItem>
+                      )}
+                      name={`line_items.${index}.description`}
+                    />
+                    <FormField
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem className="sm:col-span-1">
+                          <FormLabel>Qty</FormLabel>
+                          <FormControl>
+                            <Input disabled {...field} />
+                          </FormControl>
+                          {/*<FormMessage />*/}
+                        </FormItem>
+                      )}
+                      name={`line_items.${index}.qty`}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem className="col-span-3 sm:col-span-2">
+                          <FormLabel>Amount</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              {...field}
+                              onChange={(e) => {
+                                // Convert the value to a number before passing it to the field
+                                field.onChange(e.target.value ? parseFloat(e.target.value) : '');
+                              }}
+                              value={field.value || ''}
+                            />
+                          </FormControl>
+                          {/*<FormMessage/>*/}
+                        </FormItem>
+                      )}
+                      name={`line_items.${index}.amount`}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem className="hidden col-span-3 sm:col-span-2">
+                          <FormLabel>Subtotal</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              {...field}
+                              onChange={(e) => {
+                                // Convert the value to a number before passing it to the field
+                                field.onChange(e.target.value ? parseFloat(e.target.value) : '');
+                              }}
+                              value={field.value || ''}
+                            />
+                          </FormControl>
+                          {/*<FormMessage/>*/}
+                        </FormItem>
+                      )}
+                      name={`line_items.${index}.subtotal`}
+                    />
+
                     <div className="sm:col-span-1 mx-auto mt-auto">
-                      <Button
-                        type="button"
-                        variant={'secondary'}
-                        onClick={() => onDelete(itemDetails.id)}>
+                      <Button type="button" variant={'secondary'} onClick={() => remove(index)}>
                         <TrashIcon className="w-4 h-4" />
                       </Button>
                     </div>
@@ -315,19 +381,43 @@ export default function AddQuoteForm({ setOpen }: Props) {
               <Button
                 type="button"
                 variant={'secondary'}
-                onClick={() => {
-                  setItem((state) => [
-                    ...state,
-                    {
-                      id: uuidv4(),
-                      description: '',
-                      qty: 1,
-                      amount: 0
-                    }
-                  ]);
-                }}>
+                onClick={() => append({ description: '', qty: 1, amount: 0, subtotal: 0 })}>
                 + Add Line Item
               </Button>
+            </div>
+
+            <div className={'w-full mx-auto pt-2 px-6'}>
+              <div className={'w-full flex flex-col gap-2 text-sm'}>
+                {/* Subtotal */}
+                <div className={'flex justify-between w-full'}>
+                  <p className={'my-auto font-light'}>Subtotal</p>
+                  <p className={'my-auto font-light'}>${formatMoneyValue(subtotal)}</p>
+                </div>
+                {/* TODO: Payment Processing Fee */}
+                {/* Discount */}
+                {/*<div className={'flex justify-between w-full'}>*/}
+                {/*  <p className={'my-auto font-light'}>*/}
+                {/*    Discount <span className={'text-xs'}>({discountRate * 100}%)</span>*/}
+                {/*  </p>*/}
+                {/*  <p className={'my-auto font-light'}>- ${formatMoneyValue(discountAmount)}</p>*/}
+                {/*</div>*/}
+                {/* Taxes */}
+                {/*<div className={'flex justify-between w-full'}>*/}
+                {/*  <p className={'my-auto font-light'}>*/}
+                {/*    Taxes <span className={'text-xs'}>({taxRate * 100}%)</span>*/}
+                {/*  </p>*/}
+                {/*  <p className={'my-auto font-light'}>${formatMoneyValue(tax)}</p>*/}
+                {/*</div>*/}
+              </div>
+            </div>
+
+            <div className={'w-full mx-auto py-4'}>
+              <div className={'w-full bg-blue-500 h-[50px] rounded-xl'}>
+                <div className={'flex justify-between w-full h-full px-6'}>
+                  <p className={'my-auto font-bold text-white'}>Total</p>
+                  <p className={'my-auto font-light text-white'}>${formatMoneyValue(total)}</p>
+                </div>
+              </div>
             </div>
 
             {/* <div className="grid grid-flow-row grid-cols-2 gap-2 py-4">
@@ -376,9 +466,19 @@ export default function AddQuoteForm({ setOpen }: Props) {
               />
               {generalNoteSwitch && (
                 <>
-                  <Textarea
-                    placeholder="Jot down any notes here..."
-                    className="resize-y rounded-lg h-[150px]"
+                  <FormField
+                    control={form.control}
+                    name={'private_note'}
+                    render={() => (
+                      <FormItem>
+                        <FormLabel>Internal Note</FormLabel>
+                        <Textarea
+                          placeholder="Jot down any notes here..."
+                          className="resize-y rounded-lg h-[150px]"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </>
               )}
