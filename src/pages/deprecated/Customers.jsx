@@ -4,12 +4,12 @@ import {
   PageHeader,
   CustomerStatsCards,
   CustomerFilterBar
-} from '../../components';
+} from '../../components/index.js';
 import { useDisclosure, VStack, useToast } from '@chakra-ui/react';
-import { useFetchCustomers } from '../../hooks/useAPI/useCustomers';
-import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
-import useDebounce from '../../hooks/useDebounce';
-import DataTable from '../../components/ui/DataTable';
+import { useFetchCustomers } from '../../hooks/useAPI/useCustomers.js';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes.js';
+import useDebounce from '../../hooks/useDebounce.jsx';
+import DataTable from '../../components/ui/DataTable.jsx';
 import customerColumns from '../../components/Customers/Tables/CustomerColumns';
 
 export default function Customers() {

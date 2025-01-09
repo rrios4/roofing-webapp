@@ -48,7 +48,7 @@ import {
 } from '@chakra-ui/react';
 import swal from 'sweetalert';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth.js';
 import {
   CustomerCountCard,
   EstimateRequestCountCard,
@@ -65,7 +65,7 @@ import {
   MonthlyRevenueStat,
   YearlyRevenueStat,
   MonthlyRevenueLineGraph
-} from '../../components';
+} from '../../components/index.js';
 import { FiActivity, FiBarChart2, FiSearch, FiBell, FiX } from 'react-icons/fi';
 import { BsChevronDown } from 'react-icons/bs';
 import { faker } from '@faker-js/faker';
@@ -76,7 +76,7 @@ import {
   useFetchTotalNewLeads,
   useFetchTotalOverdueInvoices,
   useFetchTotalPendingQuotes
-} from '../../hooks/useAPI/useReports';
+} from '../../hooks/useAPI/useReports.js';
 import {
   BadgeDollarSign,
   FileText,
@@ -90,8 +90,8 @@ import {
   Activity,
   ChevronRight
 } from 'lucide-react';
-import MonthlyRevenueStackedChart from '../../components/Dashboard/Charts/MonthlyRevenueStackedChart';
-import StatusBadge from '../../components/ui/StatusBadge';
+import MonthlyRevenueStackedChart from '../../components/Dashboard/Charts/MonthlyRevenueStackedChart.jsx';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 // export const data = {
 //   labels,
 //   datasets: [

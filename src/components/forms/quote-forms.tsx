@@ -99,7 +99,14 @@ export default function AddQuoteForm({ setOpen }: Props) {
     resolver: zodResolver(addQuoteFormSchema),
     defaultValues: {
       quote_number: nextQuoteNumber === 0 ? 1 : nextQuoteNumber,
-      line_items: [{ description: '', qty: 1, amount: 0, subtotal: 0 }] // Start with one empty line item
+      line_items: [{ description: '', qty: 1, amount: 0, subtotal: 0 }], // Start with one empty line item
+      custom_street_address: "",
+      custom_city: "",
+      custom_state: "",
+      custom_zipcode: "",
+      private_note: "",
+      public_note: "",
+      measurement_note: ""
     }
   });
 
@@ -161,7 +168,14 @@ export default function AddQuoteForm({ setOpen }: Props) {
                   <FormItem className="w-full">
                     <FormLabel>Quote #</FormLabel>
                     <FormControl>
-                      <Input {...field} className="w-full" />
+                      <Input
+                        {...field}
+                        className="w-full"
+                        onChange={(e) => {
+                          // Convert the value to a number before passing it to the field
+                          field.onChange(e.target.value ? parseFloat(e.target.value) : '');
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -174,7 +188,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
                   <FormItem className="w-full">
                     <FormLabel>Select Status</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => form.setValue('quote_status_id', Number(value))} // Convert string to number
                       defaultValue={field.value ? field.value.toString() : ''}>
                       <FormControl>
                         <SelectTrigger>
@@ -272,7 +286,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
                 <FormItem>
                   <FormLabel>Select Service</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => form.setValue('service_id', Number(value))} // Convert string to number
                     defaultValue={field.value ? field.value.toString() : ''}>
                     <FormControl>
                       <SelectTrigger>
@@ -438,22 +452,58 @@ export default function AddQuoteForm({ setOpen }: Props) {
               {customAddressSwitch && (
                 <div className={'flex gap-4 flex-col w-full mb-2'}>
                   <div className={'w-full'}>
-                    <Label>Street Address</Label>
-                    <Input placeholder={'Enter address'} />
+                    <FormField
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Street Address</FormLabel>
+                          <FormControl>
+                            <Input placeholder={'Enter address'} {...field} defaultValue={''} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                      name={'custom_street_address'}
+                    />
                   </div>
                   <div className={'flex gap-6'}>
                     <div className={'w-full'}>
-                      <Label>City</Label>
-                      <Input placeholder={'Enter city'} />
+                      <FormField
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>City</FormLabel>
+                            <FormControl>
+                              <Input placeholder={'Enter city'} {...field} defaultValue={''} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                        name={'custom_city'}
+                      />
                     </div>
                     <div className={'w-full'}>
-                      <Label>State</Label>
-                      <Input placeholder={'Enter state'} />
+                      <FormField
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>State</FormLabel>
+                            <FormControl>
+                              <Input placeholder={'Enter state'} {...field} defaultValue={''} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                        name={'custom_state'}
+                      />
                     </div>
                   </div>
                   <div>
-                    <Label>Zipcode</Label>
-                    <Input placeholder={'Enter zipcode'} />
+                    <FormField
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Zipcode</FormLabel>
+                          <FormControl>
+                            <Input placeholder={'Enter zipcode'} {...field} defaultValue={''} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                      name={'custom_zipcode'}
+                    />
                   </div>
                 </div>
               )}
@@ -469,14 +519,17 @@ export default function AddQuoteForm({ setOpen }: Props) {
                   <FormField
                     control={form.control}
                     name={'private_note'}
-                    render={() => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>Internal Note</FormLabel>
-                        <Textarea
-                          placeholder="Jot down any notes here..."
-                          className="resize-y rounded-lg h-[150px]"
-                        />
-                        <FormMessage />
+                        <FormControl>
+                          <Textarea
+                            placeholder="Jot down any notes here..."
+                            className="resize-y rounded-lg h-[150px]"
+                            defaultValue={''}
+                            {...field}
+                          />
+                        </FormControl>
                       </FormItem>
                     )}
                   />
@@ -491,9 +544,22 @@ export default function AddQuoteForm({ setOpen }: Props) {
               />
               {measurementNoteSwitch && (
                 <>
-                  <Textarea
-                    placeholder="Write down any measurements about the roof here..."
-                    className="resize-y rounded-lg h-[150px]"
+                  <FormField
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Measurement</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Write down any measurements about the roof here..."
+                            className="resize-y rounded-lg h-[150px]"
+                            defaultValue={''}
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                    name={'measurement_note'}
                   />
                 </>
               )}
@@ -506,9 +572,21 @@ export default function AddQuoteForm({ setOpen }: Props) {
               />
               {customerNoteSwitch && (
                 <>
-                  <Textarea
-                    placeholder="Tell the customer a custom message..."
-                    className="resize-y rounded-lg h-[150px]"
+                  <FormField
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Public Note</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tell the customer a custom message..."
+                            className="resize-y rounded-lg h-[150px]"
+                            defaultValue={''}
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                    name={'public_note'}
                   />
                 </>
               )}

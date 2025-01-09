@@ -5,13 +5,13 @@ import {
   CreateQuoteForm,
   NewCustomerForm
 } from '../index.js';
-import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses.jsx';
-import { useFetchQuotes } from '../../hooks/useAPI/useQuotes.jsx';
-import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses.jsx';
-import { useFetchAllInvoices } from '../../hooks/useAPI/useInvoices.jsx';
-import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses.jsx';
-import { useFetchAllServices } from '../../hooks/useAPI/useServices.jsx';
-import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes.jsx';
+import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses.tsx';
+import { useFetchQuotes } from '../../hooks/useAPI/useQuotes.tsx';
+import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses.tsx';
+import { useFetchAllInvoices } from '../../hooks/useAPI/useInvoices.tsx';
+import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses.tsx';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices.tsx';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes.tsx';
 import { AspectRatio } from '../ui/aspect-ratio.tsx';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip.tsx';
 import {
@@ -48,11 +48,11 @@ import {
   PopoverCloseButton,
   Button
 } from '@chakra-ui/react';
-import Toggle from './Toggle';
+import Toggle from './Toggle.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUsers, FiInbox, FiGrid, FiFileText, FiMenu } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth.js';
 import swal from 'sweetalert';
 import { LeafyGreen, LogIn, LogOut, Plus, Settings, User } from 'lucide-react';
 

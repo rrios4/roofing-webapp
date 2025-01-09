@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DrawerIndex, MultiPurposeOptions } from '../..';
+import { DrawerIndex, MultiPurposeOptions } from '../index.js';
 import { formatMoneyValue, supabase } from '../../../utils';
 import AsyncSelect from 'react-select/async';
 import {

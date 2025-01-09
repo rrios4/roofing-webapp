@@ -24,13 +24,13 @@ import {
   useFetchQuoteById,
   useUpdateQuote,
   useUpdateQuoteStatusById
-} from '../../hooks/useAPI/useQuotes.jsx';
+} from '../../hooks/useAPI/useQuotes.tsx';
 import {
   useCreateQuoteLineItem,
   useDeleteQuoteLineItemById
-} from '../../hooks/useAPI/useQuoteLineItem.jsx';
-import { useFetchAllServices } from '../../hooks/useAPI/useServices.jsx';
-import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses.jsx';
+} from '../../hooks/useAPI/useQuoteLineItem.tsx';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices.tsx';
+import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses.tsx';
 
 const QuoteById = () => {
   const { id } = useParams();

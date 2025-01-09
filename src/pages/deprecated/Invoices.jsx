@@ -35,16 +35,16 @@ import {
   PageHeader,
   InvoiceFilterBar,
   InvoiceStatCards
-} from '../../components';
+} from '../../components/index.js';
 import { MdPostAdd, MdSearch, MdFilterList } from 'react-icons/md';
 import { FiFileText, FiFolder, FiX } from 'react-icons/fi';
-import { useFetchAllInvoices, useUpdateInvoice } from '../../hooks/useAPI/useInvoices';
-import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
-import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { useFetchAllInvoices, useUpdateInvoice } from '../../hooks/useAPI/useInvoices.js';
+import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses.js';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices.js';
 import { ArrowUpDown, ChevronRight, Pencil, Plus, Trash } from 'lucide-react';
 import { createColumnHelper } from '@tanstack/react-table';
-import DataTable from '../../components/ui/DataTable';
-import StatusBadge from '../../components/ui/StatusBadge';
+import DataTable from '../../components/ui/DataTable.jsx';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 import { formatDate, formatMoneyValue, formatNumber, monthDDYYYYFormat } from '../../utils';
 
 function Invoices() {

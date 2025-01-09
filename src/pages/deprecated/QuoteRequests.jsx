@@ -18,17 +18,17 @@ import {
   PageHeader,
   LeadFilterBar,
   LeadStatCards
-} from '../../components';
+} from '../../components/index.js';
 import supabase from '../../utils/supabaseClient';
-import { useFetchAllQuoteRequests, useUpdateQRById } from '../../hooks/useAPI/useQuoteRequests';
-import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses';
-import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
-import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { useFetchAllQuoteRequests, useUpdateQRById } from '../../hooks/useAPI/useQuoteRequests.js';
+import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses.js';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes.js';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices.js';
 import { ArrowUpDown, Pencil, Trash, UserPlus } from 'lucide-react';
-import DataTable from '../../components/ui/DataTable';
+import DataTable from '../../components/ui/DataTable.jsx';
 import { createColumnHelper } from '@tanstack/react-table';
 import { formatNumber, monthDDYYYYFormat } from '../../utils';
-import StatusBadge from '../../components/ui/StatusBadge';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 
 const QuoteRequests = () => {
   // React Hook for managing state of quotes request

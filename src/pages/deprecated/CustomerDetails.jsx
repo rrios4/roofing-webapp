@@ -32,18 +32,18 @@ import {
   EditCustomerForm,
   ConnectedCustomerDeleteAlertDialog,
   CustomerInvoicesTable
-} from '../../components';
+} from '../../components/index.js';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { FiArrowRight, FiFileText } from 'react-icons/fi';
 import { TbRuler } from 'react-icons/tb';
 import { formatDate, formatMoneyValue, formatNumber } from '../../utils';
-import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes.js';
 import {
   useFetchCustomerByID,
   useFetchCustomerInvoices,
   useFetchCustomerQuotes,
   useUpdateCustomer
-} from '../../hooks/useAPI/useCustomers';
+} from '../../hooks/useAPI/useCustomers.js';
 
 const CustomerById = () => {
   // React Hooks

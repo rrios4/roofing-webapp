@@ -23,4 +23,8 @@ export const addQuoteFormSchema = z.object({
     )
     .min(1, "At least one line item is required.") // Enforce at least one item
     .optional(), // Allow for optional line items
+  custom_street_address: z.string().optional(),
+  custom_city: z.string().optional(),
+  custom_state: z.string().optional(),
+  custom_zipcode: z.string().optional(),
 });

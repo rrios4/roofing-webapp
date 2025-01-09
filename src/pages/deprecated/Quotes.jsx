@@ -17,17 +17,17 @@ import {
   EditQuoteForm,
   PageHeader,
   QuoteStatCards
-} from '../../components';
-import { useFetchQuotes, useUpdateQuote } from '../../hooks/useAPI/useQuotes';
-import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses';
-import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+} from '../../components/index.js';
+import { useFetchQuotes, useUpdateQuote } from '../../hooks/useAPI/useQuotes.js';
+import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses.js';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices.js';
 import { ArrowUpDown, ChevronRight, Pencil, Trash } from 'lucide-react';
-import DataTable from '../../components/ui/DataTable';
+import DataTable from '../../components/ui/DataTable.jsx';
 import { createColumnHelper } from '@tanstack/react-table';
 import { formatMoneyValue, monthDDYYYYFormat, formatNumber } from '../../utils';
 import { Link } from 'react-router-dom';
-import QuoteFilterBar from '../../components/Quotes/QuoteFilterBar';
-import StatusBadge from '../../components/ui/StatusBadge';
+import QuoteFilterBar from '../../components/Quotes/QuoteFilterBar.jsx';
+import StatusBadge from '../../components/ui/StatusBadge.jsx';
 
 function Estimates() {
   // const queryClient = useQueryClient();

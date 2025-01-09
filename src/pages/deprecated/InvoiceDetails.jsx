@@ -15,25 +15,25 @@ import {
   InvoiceDetailsPreviewPDFModal,
   InvoiceDetailsQuickActionCard,
   InvoiceDocument
-} from '../../components';
-import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog';
-import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses';
-import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader';
+} from '../../components/index.js';
+import DeleteInvoiceLineServiceAlertDialog from '../../components/ui/Alerts/DeleteInvoiceLineServiceAlertDialog.jsx';
+import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/useInvoiceStatuses.js';
+import InvoiceDetailsHeader from '../../components/Invoices/InvoiceDetails/InvoiceDetailsHeader.jsx';
 import {
   useFetchInvoiceById,
   useUpdateInvoice,
   useUpdateInvoiceStatusById
-} from '../../hooks/useAPI/useInvoices';
-import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+} from '../../hooks/useAPI/useInvoices.js';
+import { useFetchAllServices } from '../../hooks/useAPI/useServices.js';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   useCreateInvoiceLineItem,
   useDeleteInvoiceLineItem
-} from '../../hooks/useAPI/useInvoiceLineItem';
+} from '../../hooks/useAPI/useInvoiceLineItem.js';
 import {
   useCreateInvoicePayment,
   useDeleteInvoicePayment
-} from '../../hooks/useAPI/useInvoicePayments';
+} from '../../hooks/useAPI/useInvoicePayments.js';
 
 const InvoiceDetails = () => {
   const { id } = useParams();
