@@ -32,6 +32,8 @@ import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { ScrollArea } from '../ui/scroll-area';
 import { Textarea } from '@tremor/react';
+import supabase from '../../lib/supabase-client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type Props = {
   setOpen: any;
@@ -61,6 +63,7 @@ const formSwitches = [
 ];
 
 export default function AddQuoteForm({ setOpen }: Props) {
+  const queryClient = useQueryClient();
   const { quotes } = useFetchQuotes();
   const [nextQuoteNumber, setNextQuoteNumber] = React.useState(0);
   const { customers } = useFetchCustomers();
@@ -100,13 +103,13 @@ export default function AddQuoteForm({ setOpen }: Props) {
     defaultValues: {
       quote_number: nextQuoteNumber === 0 ? 1 : nextQuoteNumber,
       line_items: [{ description: '', qty: 1, amount: 0, subtotal: 0 }], // Start with one empty line item
-      custom_street_address: "",
-      custom_city: "",
-      custom_state: "",
-      custom_zipcode: "",
-      private_note: "",
-      public_note: "",
-      measurement_note: ""
+      custom_street_address: '',
+      custom_city: '',
+      custom_state: '',
+      custom_zipcode: '',
+      private_note: '',
+      public_note: '',
+      measurement_note: ''
     }
   });
 
@@ -139,8 +142,59 @@ export default function AddQuoteForm({ setOpen }: Props) {
   // const total = adjustedSubtotal + tax;
   const total: number = subtotal;
 
-  function onSubmit(values: z.infer<typeof addQuoteFormSchema>) {
-    console.log(values);
+  // Need to define the types for parameter
+  async function createQuote(newQuote: any) {
+    const { data, error } = await supabase.from('quote').insert(newQuote);
+
+    if (error) throw error;
+
+    return data;
+  }
+
+  // Need to define the types for parameter
+  async function createQuoteLineItems(quoteLineItems: any) {
+    const { data, error } = await supabase.from('quote_line_item').insert(quoteLineItems);
+
+    if (error) {
+      console.error('Error creating quote line items', error.message);
+    }
+
+    return console.log('Quote line items created: ', data);
+  }
+
+  // const mutation = useMutation(createQuote, {
+  //   onSuccess: (data) => {
+  //     // Invalidate the 'quotes' query to refresh
+  //     queryClient.invalidateQueries(['quotes']);
+  //   },
+  //   onError: (error) => {
+  //     console.log('Error creating quote: ', error);
+  //   }
+  // });
+  const quoteMutation = useMutation(createQuote);
+  const quoteLineItemMutation = useMutation(createQuoteLineItems);
+
+  async function onSubmit(values: z.infer<typeof addQuoteFormSchema>) {
+    // console.log(values);
+    const { line_items, ...quote } = values;
+    const updatedQuote = { ...quote, total: total, subtotal: subtotal };
+    const updatedLineItems = line_items?.map((item) => ({
+      ...item,
+      quote_id: values.quote_number,
+      service_id: values.service_id
+    }));
+
+    console.log('line_items', updatedLineItems);
+    console.log('quote', updatedQuote);
+
+    try {
+      await quoteMutation.mutateAsync(updatedQuote);
+      await quoteLineItemMutation.mutateAsync(updatedLineItems);
+      queryClient.invalidateQueries(['quotes']);
+      form.reset();
+    } catch (error) {
+      alert('Failed to create quote: ' + error);
+    }
   }
 
   return (
@@ -183,12 +237,12 @@ export default function AddQuoteForm({ setOpen }: Props) {
               />
               <FormField
                 control={form.control}
-                name="quote_status_id"
+                name="status_id"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Select Status</FormLabel>
                     <Select
-                      onValueChange={(value) => form.setValue('quote_status_id', Number(value))} // Convert string to number
+                      onValueChange={(value) => form.setValue('status_id', Number(value))} // Convert string to number
                       defaultValue={field.value ? field.value.toString() : ''}>
                       <FormControl>
                         <SelectTrigger>
@@ -600,9 +654,11 @@ export default function AddQuoteForm({ setOpen }: Props) {
             </div>
 
             <SheetFooter className="pt-4 gap-2">
-              <Button type={'submit'} disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Loading...' : 'Submit'}
-              </Button>
+              <SheetClose asChild>
+                <Button type={'submit'} disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? 'Loading...' : 'Submit'}
+                </Button>
+              </SheetClose>
               <SheetClose asChild>
                 <Button variant={'secondary'}>Cancel</Button>
               </SheetClose>
