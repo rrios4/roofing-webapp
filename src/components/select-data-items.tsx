@@ -11,9 +11,11 @@ export default function DefaultSelectDataItems({ data }: Props) {
     <>
       {data && data.length > 0 ? (
         data.map((item) => (
-          <SelectItem key={item.id} value={item.id.toString()} className="hover:cursor-pointer">
-            {item.name}
-          </SelectItem>
+          <React.Fragment key={item.id}>
+            <SelectItem value={item.id.toString()} className="hover:cursor-pointer">
+              {item.name}
+            </SelectItem>
+          </React.Fragment>
         ))
       ) : (
         <SelectItem value=" " disabled>

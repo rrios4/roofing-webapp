@@ -35,9 +35,7 @@ import { Textarea } from '@tremor/react';
 import supabase from '../../lib/supabase-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-type Props = {
-  setOpen: any;
-};
+type Props = {};
 
 const formSwitches = [
   {
@@ -62,10 +60,9 @@ const formSwitches = [
   }
 ];
 
-export default function AddQuoteForm({ setOpen }: Props) {
+export default function AddQuoteForm({}: Props) {
   const queryClient = useQueryClient();
   const { quotes } = useFetchQuotes();
-  const [nextQuoteNumber, setNextQuoteNumber] = React.useState(0);
   const { customers } = useFetchCustomers();
   const {
     data: roofingServices,
@@ -87,21 +84,11 @@ export default function AddQuoteForm({ setOpen }: Props) {
   const [measurementNoteSwitch, setMeasurementNoteSwitch] = useState(false);
   const [customerNoteSwitch, setCustomerNoteSwitch] = useState(false);
 
-  function calculateNextQuoteNumber(object: any) {
-    if (object.length === 0) {
-      setNextQuoteNumber(1);
-    } else if (object.lenght > 0) {
-      const calculatedNextQuoteNumber =
-        // eslint-disable-next-line no-unsafe-optional-chaining
-        Math.max(...object?.map((item: any) => item.quote_number)) + 1;
-      setNextQuoteNumber(calculatedNextQuoteNumber);
-    }
-  }
-
   const form = useForm<z.infer<typeof addQuoteFormSchema>>({
     resolver: zodResolver(addQuoteFormSchema),
     defaultValues: {
-      quote_number: nextQuoteNumber === 0 ? 1 : nextQuoteNumber,
+      // @ts-ignore
+      quote_number: '',
       line_items: [{ description: '', qty: 1, amount: 0, subtotal: 0 }], // Start with one empty line item
       custom_street_address: '',
       custom_city: '',
@@ -118,6 +105,19 @@ export default function AddQuoteForm({ setOpen }: Props) {
     name: 'line_items'
   });
 
+  function calculateNextQuoteNumber(quotes: { quote_number: number }[] | undefined): number {
+    if (!quotes || quotes.length === 0) {
+      return 1; // Start with 1 if no quotes exist
+    }
+    return Math.max(...quotes.map((quote) => quote.quote_number)) + 1;
+  }
+
+  // Watch the quotes array for changes
+  const quoteNumbers = form.watch('quote_number');
+
+  // Calculate the next quote number dynamically
+  const nextQuoteNumber = calculateNextQuoteNumber(quotes);
+
   const lineItems = form.watch('line_items');
   // Use useEffect to calculate subtotals whenever quantity or amount changes
   React.useEffect(() => {
@@ -126,7 +126,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
       subtotal: item.qty * item.amount
     }));
     form.setValue('line_items', updatedLineItems);
-    calculateNextQuoteNumber(quotes);
+    // calculateNextQuoteNumber(quotes);
   }, [lineItems, form.setValue]);
 
   const calculateSubtotal = () => {
@@ -229,6 +229,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
                           // Convert the value to a number before passing it to the field
                           field.onChange(e.target.value ? parseFloat(e.target.value) : '');
                         }}
+                        placeholder={String(nextQuoteNumber)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -243,10 +244,10 @@ export default function AddQuoteForm({ setOpen }: Props) {
                     <FormLabel>Select Status</FormLabel>
                     <Select
                       onValueChange={(value) => form.setValue('status_id', Number(value))} // Convert string to number
-                      defaultValue={field.value ? field.value.toString() : ''}>
+                      defaultValue={field.value?.toString()}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select status for quote..." />
+                          <SelectValue placeholder="Select status for quote" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -291,7 +292,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
+                          // disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
                         />
                       </PopoverContent>
                     </Popover>
@@ -324,7 +325,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
+                          // disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
                         />
                       </PopoverContent>
                     </Popover>
@@ -341,7 +342,7 @@ export default function AddQuoteForm({ setOpen }: Props) {
                   <FormLabel>Select Service</FormLabel>
                   <Select
                     onValueChange={(value) => form.setValue('service_id', Number(value))} // Convert string to number
-                    defaultValue={field.value ? field.value.toString() : ''}>
+                    defaultValue={field.value?.toString()}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a roofing service..." />

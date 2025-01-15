@@ -49,7 +49,7 @@ export default function DefaultPageHeader({
         <div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant={'primary'} className="" size={'sm'}>
+              <Button variant={'primary'} size={'sm'}>
                 <PlusCircleIcon className="mr-2 h-4 w-4" /> {addItemTextButton}
               </Button>
             </SheetTrigger>
