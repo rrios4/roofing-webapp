@@ -103,9 +103,9 @@ export default function DataTable({
       />
       <div className="w-full border rounded-lg overflow-hidden">
         <Table className="">
-          <TableHeader className="bg-zinc-50 dark:bg-zinc-800">
+          <TableHeader className="bg-slate-100 dark:bg-zinc-800">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow className="rounded-full" key={headerGroup.id}>
+              <TableRow className="rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800" key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
@@ -118,7 +118,7 @@ export default function DataTable({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
+              <TableRow key={row.id} className="hover:bg-transparent">
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
