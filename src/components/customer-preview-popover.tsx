@@ -6,7 +6,7 @@ import { ChevronRightIcon, MailIcon, MapPinIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 type Props = {
-  avatarUrl: string;
+  avatarUrl?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -34,18 +34,18 @@ export default function CustomerPreviewPopover({
     <Popover>
       <PopoverTrigger>
         <div className="flex gap-3">
-          <Avatar className="border w-[45px] h-[45px] bg-blue-100 dark:bg-blue-700/30">
+          <Avatar className="border bg-blue-100 dark:bg-blue-700/30">
             <AvatarImage src={avatarUrl} />
             <AvatarFallback>
               {`${firstName.substring(0, 1)}${lastName.substring(0, 1)}`}
             </AvatarFallback>
           </Avatar>
-          <div className="font-[14px] pr-2">
-            <div className="flex gap-1 font-[500]">
+          <div className="-space-y-0 my-auto">
+            <div className="flex gap-1 font-[600]">
               <p>{firstName}</p>
               <p>{lastName}</p>
             </div>
-            <p className="font-[400]">{email}</p>
+            <p className=" text-xs font-[300]">{email}</p>
           </div>
         </div>
       </PopoverTrigger>
@@ -54,6 +54,9 @@ export default function CustomerPreviewPopover({
           <div className="w-full">
             <Avatar className="border w-[120px] h-[120px] mx-auto bg-blue-100 dark:bg-blue-700/30">
               <AvatarImage src={avatarUrl} sizes="xl" className="mx-auto" />
+              <AvatarFallback className={"text-4xl"}>
+                {`${firstName.substring(0, 1)}${lastName.substring(0, 1)}`}
+              </AvatarFallback>
             </Avatar>
           </div>
           <p className="mx-auto text-center mt-4 font-[600] text-[24px] mb-2">

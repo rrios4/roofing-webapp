@@ -1,7 +1,7 @@
 import React from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
-import { ArrowUpDown, ChevronRight, CompassIcon } from 'lucide-react';
+import { ArrowDownIcon, ArrowUpDown, ArrowUpIcon, ChevronRight, CompassIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { arrayOfMemojiFileNames } from '../../lib/utils';
 import { Button } from '../ui/button';
@@ -29,11 +29,11 @@ export const customerColumns = [
           <div className="flex gap-4">
             <div></div>
             <Avatar className="border w-[45px] h-[45px] bg-blue-100 dark:bg-blue-700/30">
-              <AvatarImage
-                src={`https://raw.githubusercontent.com/alohe/memojis/main/png/${
-                  arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
-                }`}
-              />
+              {/*<AvatarImage*/}
+              {/*  src={`https://raw.githubusercontent.com/alohe/memojis/main/png/${*/}
+              {/*    arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]*/}
+              {/*  }`}*/}
+              {/*/>*/}
               <AvatarFallback>
                 {`${customer.first_name.substring(0, 1)}${customer.last_name.substring(0, 1)}`}
               </AvatarFallback>
@@ -54,7 +54,12 @@ export const customerColumns = [
             className="py-0 gap-2"
             variant={'ghost'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Customer <ArrowUpDown className="ml-2 h-4 w-4" />
+            Customer
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className="h-3 w-3 ml-2" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className="h-3 w-3 ml-2" />
+            ) : null}
           </Button>
         );
       }
@@ -76,7 +81,12 @@ export const customerColumns = [
         variant={'ghost'}
         className="px-0 gap-2"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Type <ArrowUpDown size={'15px'} className="ml-2 h-4 w-4" />
+        Type
+        {column.getIsSorted() === 'asc' ? (
+          <ArrowUpIcon className="h-3 w-3 ml-2" />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ArrowDownIcon className="h-3 w-3 ml-2" />
+        ) : null}
       </Button>
     )
   }),
@@ -119,7 +129,12 @@ export const customerColumns = [
           className="gap-2 px-0"
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Registered Since <ArrowUpDown className="ml-2 h-4 w-4" size={'15px'} />
+          Registered Since
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )

@@ -92,7 +92,7 @@ export default function CustomerInfoPage({}: Props) {
           <div className="flex gap-4">
             <div>
               <Avatar className="w-[50px] h-[50px]">
-                <AvatarImage src="https://github.com/shadcn.png" />
+                {/*<AvatarImage src="https://github.com/shadcn.png" />*/}
                 <AvatarFallback>
                   {abbreviateName(`${customerById?.first_name} ${customerById?.last_name}`)}
                 </AvatarFallback>
@@ -254,60 +254,58 @@ export default function CustomerInfoPage({}: Props) {
                       <TableBody>
                         {customerInvoices?.map((item: any, index: number) => {
                           return (
-                            <>
-                              <React.Fragment key={index}>
-                                <TableRow>
-                                  <TableCell className="font-medium">
-                                    INV-
-                                    {formatNumber(item.invoice_number)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {item.invoice_status.name === 'Overdue' && (
-                                      <>
-                                        <DefaultStatusBadge
-                                          title={item.invoice_status.name}
-                                          variant="red"
-                                        />
-                                      </>
-                                    )}
-                                    {item.invoice_status.name === 'Pending' && (
-                                      <>
-                                        <DefaultStatusBadge
-                                          title={item.invoice_status.name}
-                                          variant="yellow"
-                                        />
-                                      </>
-                                    )}
-                                    {item.invoice_status.name === 'Paid' && (
-                                      <>
-                                        <DefaultStatusBadge
-                                          title={item.invoice_status.name}
-                                          variant="green"
-                                        />
-                                      </>
-                                    )}
-                                    {item.invoice_status.name === 'Draft' && (
-                                      <>
-                                        <DefaultStatusBadge
-                                          title={item.invoice_status.name}
-                                          variant="gray"
-                                        />
-                                      </>
-                                    )}
-                                  </TableCell>
-                                  <TableCell>{formatDate(item.invoice_date)}</TableCell>
-                                  <TableCell>{item.service_type.name}</TableCell>
-                                  <TableCell className="text-right">
-                                    ${formatMoneyValue(item.total)}
-                                  </TableCell>
-                                  <TableCell className="flex">
-                                    <Button variant={'secondary'} className="ml-auto">
-                                      <ChevronRightIcon className="w-4 h-4" />
-                                    </Button>
-                                  </TableCell>
-                                </TableRow>
-                              </React.Fragment>
-                            </>
+                            <React.Fragment key={index}>
+                              <TableRow>
+                                <TableCell className="font-medium">
+                                  INV-
+                                  {formatNumber(item.invoice_number)}
+                                </TableCell>
+                                <TableCell>
+                                  {item.invoice_status.name === 'Overdue' && (
+                                    <>
+                                      <DefaultStatusBadge
+                                        title={item.invoice_status.name}
+                                        variant="red"
+                                      />
+                                    </>
+                                  )}
+                                  {item.invoice_status.name === 'Pending' && (
+                                    <>
+                                      <DefaultStatusBadge
+                                        title={item.invoice_status.name}
+                                        variant="yellow"
+                                      />
+                                    </>
+                                  )}
+                                  {item.invoice_status.name === 'Paid' && (
+                                    <>
+                                      <DefaultStatusBadge
+                                        title={item.invoice_status.name}
+                                        variant="green"
+                                      />
+                                    </>
+                                  )}
+                                  {item.invoice_status.name === 'Draft' && (
+                                    <>
+                                      <DefaultStatusBadge
+                                        title={item.invoice_status.name}
+                                        variant="gray"
+                                      />
+                                    </>
+                                  )}
+                                </TableCell>
+                                <TableCell>{formatDate(item.invoice_date)}</TableCell>
+                                <TableCell>{item.service_type.name}</TableCell>
+                                <TableCell className="text-right">
+                                  ${formatMoneyValue(item.total)}
+                                </TableCell>
+                                <TableCell className="flex">
+                                  <Button variant={'secondary'} className="ml-auto">
+                                    <ChevronRightIcon className="w-4 h-4" />
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            </React.Fragment>
                           );
                         })}
                       </TableBody>

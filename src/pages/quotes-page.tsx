@@ -2,7 +2,9 @@ import React from 'react';
 import DefaultPageHeader from '../components/ui/page-header';
 import CountStatCard from '../components/count-stat-card';
 import {
+  ArrowDownIcon,
   ArrowUpDownIcon,
+  ArrowUpIcon,
   CheckCircleIcon,
   ChevronRightIcon,
   CircleDotIcon,
@@ -104,9 +106,7 @@ export const quoteColumns = [
   columnHelper.accessor('quote_number', {
     cell: ({ row }) => {
       const quote = row.original;
-      return (
-        <p className="text-center font-[800] text-[14px]">QT-{formatNumber(quote.quote_number)}</p>
-      );
+      return <p className="text-center text-[14px]">QT-{formatNumber(quote.quote_number)}</p>;
     },
     header: ({ column }) => (
       <div className="w-full justify-center flex">
@@ -115,9 +115,11 @@ export const quoteColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Quote
-          <div className="h-4 w-4 ml-2">
-            <ArrowUpDownIcon size={'15px'} />
-          </div>
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -129,12 +131,11 @@ export const quoteColumns = [
       id: 'customer',
       cell: ({ row }: any) => {
         const quote = row.original;
-        const memojiUrl = `https://raw.githubusercontent.com/alohe/memojis/main/png/${
-          arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
-        }`;
+        // const memojiUrl = `https://raw.githubusercontent.com/alohe/memojis/main/png/${
+        //   arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
+        // }`;
         return (
           <CustomerPreviewPopover
-            avatarUrl={memojiUrl}
             firstName={quote.customer.first_name}
             lastName={quote.customer.last_name}
             email={quote.customer.email}
@@ -153,7 +154,11 @@ export const quoteColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Customer
-          <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       )
     }
@@ -165,7 +170,11 @@ export const quoteColumns = [
         variant={'ghost'}
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Status
-        <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
+        {column.getIsSorted() === 'asc' ? (
+          <ArrowUpIcon className="h-3 w-3 ml-2" />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ArrowDownIcon className="h-3 w-3 ml-2" />
+        ) : null}
       </Button>
     ),
     cell: ({ row }: any) => {
@@ -194,7 +203,11 @@ export const quoteColumns = [
         variant={'ghost'}
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Date
-        <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
+        {column.getIsSorted() === 'asc' ? (
+          <ArrowUpIcon className="h-3 w-3 ml-2" />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ArrowDownIcon className="h-3 w-3 ml-2" />
+        ) : null}
       </Button>
     )
   }),
@@ -206,7 +219,11 @@ export const quoteColumns = [
         variant={'ghost'}
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Service
-        <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
+        {column.getIsSorted() === 'asc' ? (
+          <ArrowUpIcon className="h-3 w-3 ml-2" />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ArrowDownIcon className="h-3 w-3 ml-2" />
+        ) : null}
       </Button>
     ),
     cell: ({ row }: any) => {
@@ -221,7 +238,11 @@ export const quoteColumns = [
         variant={'ghost'}
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Expiration
-        <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
+        {column.getIsSorted() === 'asc' ? (
+          <ArrowUpIcon className="h-3 w-3 ml-2" />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ArrowDownIcon className="h-3 w-3 ml-2" />
+        ) : null}
       </Button>
     ),
     cell: ({ row }: any) => {
@@ -244,7 +265,11 @@ export const quoteColumns = [
         variant={'ghost'}
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Total
-        <ArrowUpDownIcon size={'15px'} className={'h-4 w-4 ml-4'} />
+        {column.getIsSorted() === 'asc' ? (
+          <ArrowUpIcon className="h-3 w-3 ml-2" />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ArrowDownIcon className="h-3 w-3 ml-2" />
+        ) : null}
       </Button>
     )
   }),

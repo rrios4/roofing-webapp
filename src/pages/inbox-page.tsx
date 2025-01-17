@@ -8,7 +8,9 @@ import {
 import CountStatCard from '../components/count-stat-card';
 import {
   ArchiveIcon,
-  ArrowUpDownIcon,
+  ArrowDownIcon,
+  // ArrowUpDownIcon,
+  ArrowUpIcon,
   CalendarIcon,
   InboxIcon,
   PencilIcon,
@@ -92,7 +94,7 @@ const handleEmailValidation = (object: any) => {};
 const leadsTableColumns = [
   columnHelper.accessor('id', {
     cell: ({ row }) => (
-      <p className="text-center font-[800] text-[14px]">RQ-{formatNumber(row.getValue('id'))}</p>
+      <p className="text-center text-[14px]">RQ-{formatNumber(row.getValue('id'))}</p>
     ),
     header: ({ column }) => (
       <div className="w-full justify-center flex">
@@ -101,7 +103,11 @@ const leadsTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Request
-          <ArrowUpDownIcon className={'h-4 w-4 ml-2'} />
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -113,12 +119,12 @@ const leadsTableColumns = [
       id: 'customer',
       cell: ({ row }) => {
         const lead = row.original;
-        const memojiUrl = `https://raw.githubusercontent.com/alohe/memojis/main/png/${
-          arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
-        }`;
+        // const memojiUrl = `https://raw.githubusercontent.com/alohe/memojis/main/png/${
+        //   arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
+        // }`;
         return (
           <CustomerPreviewPopover
-            avatarUrl={memojiUrl}
+            // avatarUrl={memojiUrl}
             firstName={lead.firstName}
             lastName={lead.lastName}
             email={lead.email}
@@ -174,7 +180,11 @@ const leadsTableColumns = [
             variant={'ghost'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Requestor
-            <ArrowUpDownIcon className="h-4 w-4 ml-2" />
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className="h-3 w-3 ml-2" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className="h-3 w-3 ml-2" />
+            ) : null}
           </Button>
         </div>
       )
@@ -202,9 +212,11 @@ const leadsTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Status
-          <div className="h-4 w-4 ml-2">
-            <ArrowUpDownIcon size={'15px'} />
-          </div>
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -220,9 +232,11 @@ const leadsTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Desired Date
-          <div className="h-4 w-4 ml-2">
-            <ArrowUpDownIcon size={'15px'} />
-          </div>
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -239,9 +253,11 @@ const leadsTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Service
-          <div className="h-4 w-4 ml-2">
-            <ArrowUpDownIcon size={'15px'} />
-          </div>
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -264,9 +280,11 @@ const leadsTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Type
-          <div className="h-4 w-4 ml-2">
-            <ArrowUpDownIcon size={'15px'} />
-          </div>
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -282,9 +300,11 @@ const leadsTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Entry Date
-          <div className="h-4 w-4 ml-2">
-            <ArrowUpDownIcon size={'15px'} />
-          </div>
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )

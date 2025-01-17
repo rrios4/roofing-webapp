@@ -2,7 +2,9 @@ import React from 'react';
 import DefaultPageHeader from '../components/ui/page-header';
 import CountStatCard from '../components/count-stat-card';
 import {
+  ArrowDownIcon,
   ArrowUpDownIcon,
+  ArrowUpIcon,
   CheckCircleIcon,
   ChevronRightIcon,
   CircleDotIcon,
@@ -101,11 +103,7 @@ export const invoiceTableColumns = [
   columnHelper.accessor('invoice_number', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      return (
-        <p className="text-center font-[800] text-[14px]">
-          INV-{formatNumber(invoice.invoice_number)}
-        </p>
-      );
+      return <p className="text-center text-[14px]">INV-{formatNumber(invoice.invoice_number)}</p>;
     },
     header: ({ column }) => (
       <div className="flex justify-center w-full">
@@ -114,7 +112,11 @@ export const invoiceTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Invoice
-          <ArrowUpDownIcon className="h-4 w-4 ml-4" size={'15px'} />
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -126,12 +128,12 @@ export const invoiceTableColumns = [
       id: 'customer',
       cell: ({ row }: any) => {
         const invoice = row.original;
-        const memojiUrl = `https://raw.githubusercontent.com/alohe/memojis/main/png/${
-          arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
-        }`;
+        // const memojiUrl = `https://raw.githubusercontent.com/alohe/memojis/main/png/${
+        //   arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]
+        // }`;
         return (
           <CustomerPreviewPopover
-            avatarUrl={memojiUrl}
+            // avatarUrl={memojiUrl}
             firstName={invoice.customer.first_name}
             lastName={invoice.customer.last_name}
             email={invoice.customer.email}
@@ -151,7 +153,11 @@ export const invoiceTableColumns = [
             variant={'ghost'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Customer
-            <ArrowUpDownIcon className="h-4 w-4 ml-4" size={'15px'} />
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className="h-3 w-3 ml-2" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className="h-3 w-3 ml-2" />
+            ) : null}
           </Button>
         </div>
       )
@@ -177,7 +183,11 @@ export const invoiceTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Status
-          <ArrowUpDownIcon className="h-4 w-4 ml-4" size={'15px'} />
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -198,7 +208,11 @@ export const invoiceTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Date
-          <ArrowUpDownIcon className="h-4 w-4 ml-4" size={'15px'} />
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -215,7 +229,11 @@ export const invoiceTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Service
-          <ArrowUpDownIcon className="h-4 w-4 ml-4" size={'15px'} />
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
@@ -232,10 +250,37 @@ export const invoiceTableColumns = [
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Due Date
-          <ArrowUpDownIcon className="h-4 w-4 ml-4" size={'15px'} />
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="h-3 w-3 ml-2" />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="h-3 w-3 ml-2" />
+          ) : null}
         </Button>
       </div>
     )
+  }),
+  columnHelper.accessor('total', {
+    cell: ({ row }: any) => {
+      const invoice = row.original;
+      return <p>${formatMoneyValue(invoice.total)}</p>;
+    },
+    header: ({ column }) => {
+      return (
+        <div className="flex">
+          <Button
+            className="px-0"
+            variant={'ghost'}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Total
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className="h-3 w-3 ml-2" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className="h-3 w-3 ml-2" />
+            ) : null}
+          </Button>
+        </div>
+      );
+    }
   }),
   columnHelper.accessor('amount_due', {
     cell: ({ row }: any) => {
@@ -249,8 +294,12 @@ export const invoiceTableColumns = [
             className="px-1"
             variant={'ghost'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Balance
-            <ArrowUpDownIcon className="h-4 w-4 ml-4" size={'15px'} />
+            Balance Due
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className="h-3 w-3 ml-2" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className="h-3 w-3 ml-2" />
+            ) : null}
           </Button>
         </div>
       );
@@ -281,7 +330,7 @@ export const invoiceTableColumns = [
           />
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Link to={`/invoices/${invoice.invoice_number}`}>
                   <Button className="px-3" variant={'secondary'}>
                     <ChevronRightIcon size={'15px'} />
