@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from './ui/sheet';
+import { ScrollArea } from './ui/scroll-area';
 
 type Props = {
   icon: React.ReactNode;
@@ -48,12 +49,14 @@ export default function EmptyStateCard({
                 <PlusCircleIcon className="mr-2 h-4 w-4" /> Add {entity}
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
-              <SheetHeader className="text-[18px]">
+            <SheetContent className="w-full sm:max-w-xl overflow-y-auto px-2">
+              <SheetHeader className="px-4 space-y-0">
                 <SheetTitle>{sheetTitle}</SheetTitle>
                 <SheetDescription>{sheetDescription}</SheetDescription>
               </SheetHeader>
-              <SheetContentBody open={open} />
+              <ScrollArea className="w-full h-full pb-8 pt-6">
+                <SheetContentBody open={open} />
+              </ScrollArea>
             </SheetContent>
           </Sheet>
         </div>

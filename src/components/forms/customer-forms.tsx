@@ -176,7 +176,7 @@ export default function AddCustomerForm({ setOpen }: Props) {
               </Avatar>
             </div>
           </div> */}
-          <div className="space-y-2">
+          <div className="space-y-4 h-full px-4 pb-6">
             <FormField
               control={form.control}
               name="customer_type"
