@@ -44,6 +44,7 @@ import {
 import { Skeleton } from '../components/ui/skeleton';
 import DefaultStatusBadge from '../components/status-badges';
 import EmptyStateCard, { EmptyStateItemsNotFound } from '../components/empty-state-card';
+import { ConnectedDeleteCustomerAlertDialog } from '../components/connected-delete-dialogs';
 
 type Props = {};
 
@@ -129,10 +130,7 @@ export default function CustomerInfoPage({}: Props) {
               <PencilIcon className="w-4 h-4 mr-4" />
               Edit Info
             </Button>
-            <Button>
-              <TrashIcon className="w-4 h-4 mr-4" />
-              Delete
-            </Button>
+            <ConnectedDeleteCustomerAlertDialog title={"Delete Customer"} description={"This action cannot be undone. This will permanently delete customer data from our server and cannot be retrieved back."} itemId={id}/>
           </div>
         </div>
         <div className="grid grid-flow-col grid-rows-3 md:grid-rows-1 gap-6 px-1">
@@ -185,7 +183,7 @@ export default function CustomerInfoPage({}: Props) {
               Locations
             </TabsTrigger>
             <TabsTrigger value="notifications" disabled>
-              Notications
+              Notifications
             </TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="border rounded-md p-4">

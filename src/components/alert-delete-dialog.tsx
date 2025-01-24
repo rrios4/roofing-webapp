@@ -10,8 +10,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from './ui/alert-dialog';
-import { Trash2Icon, TrashIcon } from 'lucide-react';
+import { Loader2Icon, Trash2Icon, TrashIcon } from 'lucide-react';
 import ButtonLoading from './button-states';
+import { Button } from './ui/button';
 
 type Props = {
   title: string;
@@ -21,7 +22,19 @@ type Props = {
   open: any;
   onOpenChange: any;
   isLoading: any;
+  buttonTextEnabled: boolean;
+  buttonVariant: keyof typeof buttonVariants;
 };
+
+enum buttonVariants {
+  default = 'default',
+  primary = 'primary',
+  destructive = 'destructive',
+  outline = 'outline',
+  secondary = 'secondary',
+  ghost = 'ghost',
+  link = 'link'
+}
 
 export default function DefaultDeleteAlertDialog({
   title,
@@ -29,17 +42,27 @@ export default function DefaultDeleteAlertDialog({
   onSubmit,
   open,
   onOpenChange,
-  isLoading
+  isLoading,
+  buttonTextEnabled,
+  buttonVariant
 }: Props) {
   function handleOnClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     onSubmit();
     // console.log('Button was pressed!')
   }
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogTrigger className="px-3 rounded-md bg-secondary">
-        <TrashIcon className="w-4 h-4" />
+      <AlertDialogTrigger asChild>
+        <Button variant={buttonVariant}>
+          {buttonTextEnabled ? (
+            <TrashIcon className="w-4 h-4 mr-3" />
+          ) : (
+            <TrashIcon className="w-4 h-4" />
+          )}
+          {buttonTextEnabled ? 'Delete' : ''}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <div className="grid grid-flow-row grid-cols-1 sm:grid-cols-4 w-full gap-6">
@@ -60,15 +83,13 @@ export default function DefaultDeleteAlertDialog({
 
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          {isLoading ? (
-            <ButtonLoading variant="default" />
-          ) : (
-            <AlertDialogAction
-              className="bg-red-500 hover:bg-red-500/80 dark:text-white"
-              onClick={handleOnClick}>
-              Delete
-            </AlertDialogAction>
-          )}
+          <AlertDialogAction
+            className="bg-red-500 hover:bg-red-500/80 dark:text-white"
+            onClick={handleOnClick}
+            disabled={isLoading}>
+            {isLoading && <Loader2Icon className="mr-3 h-4 w-4 animate-spi" />}
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

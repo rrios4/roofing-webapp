@@ -6,6 +6,7 @@ import { useDeleteInvoiceById } from '../hooks/useAPI/useInvoices';
 import { useDeleteAllInvoiceLineItemsByInvoiceNumber } from '../hooks/useAPI/useInvoiceLineItem';
 import { useDeleteAllInvoicePaymentsByInvoiceNumber } from '../hooks/useAPI/useInvoicePayments';
 import { useDeleteAllQuoteLineItemsWithQuote } from '../hooks/useAPI/useQuoteLineItem';
+import { useDeleteCustomer } from '../hooks/useAPI/useCustomers';
 
 type Props = {
   title: string;
@@ -29,6 +30,8 @@ export default function ConnectedDeleteQRequestAlertDialog({ title, description,
       onSubmit={handeSubmit}
       open={open}
       onOpenChange={setOpen}
+      buttonTextEnabled={false}
+      buttonVariant={"secondary"}
     />
   );
 }
@@ -49,6 +52,8 @@ export function ConnectedDeleteInvoiceAlertDialog({ title, description, itemId }
       open={open}
       onOpenChange={setOpen}
       onSubmit={handleSubmit}
+      buttonTextEnabled={false}
+      buttonVariant={"secondary"}
     />
   );
 }
@@ -68,6 +73,29 @@ export function ConnectedDeleteQuoteAlertDialog({ title, description, itemId }: 
       onOpenChange={setOpen}
       onSubmit={handleSubmit}
       itemId={itemId}
+      buttonTextEnabled={false}
+      buttonVariant={"secondary"}
+    />
+  );
+}
+
+export function ConnectedDeleteCustomerAlertDialog({ title, description, itemId }: Props) {
+  const [open, setOpen] = React.useState(false);
+  const { mutate: deleteCustomer, isLoading } = useDeleteCustomer(toast);
+  const handleSubmit = async () => {
+    deleteCustomer(itemId);
+  };
+  return (
+    <DefaultDeleteAlertDialog
+      open={open}
+      isLoading={isLoading}
+      title={title}
+      description={description}
+      onOpenChange={setOpen}
+      onSubmit={handleSubmit}
+      itemId={itemId}
+      buttonTextEnabled={true}
+      buttonVariant={"primary"}
     />
   );
 }
