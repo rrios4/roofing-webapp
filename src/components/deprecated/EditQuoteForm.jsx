@@ -17,7 +17,7 @@ import {
   Button,
   Avatar
 } from '@chakra-ui/react';
-import { MultiPurposeOptions } from '../..';
+import { MultiPurposeOptions } from '../index.js';
 import { formatNumber } from '../../../utils';
 
 const EditQuoteForm = (props) => {

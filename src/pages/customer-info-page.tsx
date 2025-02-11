@@ -45,6 +45,15 @@ import { Skeleton } from '../components/ui/skeleton';
 import DefaultStatusBadge from '../components/status-badges';
 import EmptyStateCard, { EmptyStateItemsNotFound } from '../components/empty-state-card';
 import { ConnectedDeleteCustomerAlertDialog } from '../components/connected-delete-dialogs';
+import EditCustomerForm from '../components/forms/edit-customer-form';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader, SheetTitle,
+  SheetTrigger
+} from '../components/ui/sheet';
+import { ScrollArea } from '../components/ui/scroll-area';
 
 type Props = {};
 
@@ -55,10 +64,10 @@ export default function CustomerInfoPage({}: Props) {
   const { customerInvoices, isLoading: isCustomerInvoicesLoading } = useFetchCustomerInvoices(id);
   const { customerQuotes } = useFetchCustomerQuotes(id);
 
-  React.useEffect(() => {
-    console.log(customerQuotes);
-    console.log(customerById);
-  }, []);
+  // React.useEffect(() => {
+  //   console.log(customerQuotes);
+  //   console.log(customerById);
+  // }, []);
 
   if (isLoading || isCustomerInvoicesLoading) {
     return (
@@ -126,11 +135,32 @@ export default function CustomerInfoPage({}: Props) {
             </div>
           </div>
           <div className="flex gap-4">
-            <Button variant={'outline'}>
-              <PencilIcon className="w-4 h-4 mr-4" />
-              Edit Info
-            </Button>
-            <ConnectedDeleteCustomerAlertDialog title={"Delete Customer"} description={"This action cannot be undone. This will permanently delete customer data from our server and cannot be retrieved back."} itemId={id}/>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant={'outline'}>
+                  <PencilIcon className="w-4 h-4 mr-4" />
+                  Edit Info
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-xl px-2">
+                <SheetHeader className="px-4 space-y-0">
+                  <SheetTitle>Edit Customer</SheetTitle>
+                  <SheetDescription>
+                    Make changes to your customer here. Click save when you're done.
+                  </SheetDescription>
+                </SheetHeader>
+                <ScrollArea className="w-full h-full pb-8 pt-6">
+                  <EditCustomerForm customerData={customerById}/>
+                </ScrollArea>
+              </SheetContent>
+            </Sheet>
+            <ConnectedDeleteCustomerAlertDialog
+              title={'Delete Customer'}
+              description={
+                'This action cannot be undone. This will permanently delete customer data from our server and cannot be retrieved back.'
+              }
+              itemId={id}
+            />
           </div>
         </div>
         <div className="grid grid-flow-col grid-rows-3 md:grid-rows-1 gap-6 px-1">

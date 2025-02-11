@@ -96,7 +96,7 @@ export const updateCustomerById = async (selectedCustomerObject) => {
     .update(selectedCustomerObject)
     .match({ id: selectedCustomerObject.id });
   if (error) {
-    console.log(error);
+    // console.error(error);
     throw error;
   }
   return data;

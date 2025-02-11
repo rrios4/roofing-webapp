@@ -161,33 +161,24 @@ export const useCreateCustomer = (toast?: any, setOpen?: any) => {
 };
 
 // Custom hook to update a existing customer's information
-export const useUpdateCustomer = (
-  toast: any,
-  handleResetUpdateCustomerState: any,
-  customerId: any
-) => {
+export const useUpdateCustomer = (toast: any, customerId: string) => {
   const queryClient = useQueryClient();
-  return useMutation((selectedCustomerObject) => updateCustomerById(selectedCustomerObject), {
+
+  return useMutation(async (customerObject: any) => await updateCustomerById(customerObject), {
     onError: (error: any) => {
+      console.error('Error updating customer', error);
       toast({
-        position: 'top',
-        title: 'Error Occured!',
-        description: `Message: ${error.message ? error.message : error.details}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: <p>There was a problem with adding new customer to our system</p>
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['fetchCustomerById', customerId] });
-      handleResetUpdateCustomerState();
       toast({
-        position: 'top',
-        title: `Customer updated!`,
-        description: `We've updated customer data succesfully 🎉.`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true
+        variant: 'success',
+        title: 'Added customer successfully! 🎉',
+        description: <p>Successfully updated customer info in our system.</p>
       });
     }
   });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MultiPurposeOptions } from '../..';
+import { MultiPurposeOptions } from '../index.js';
 import {
   Flex,
   FormControl,

@@ -70,14 +70,6 @@ export default function AddQuoteForm({}: Props) {
     isError: isRoofingServicesError
   } = useFetchAllServices();
   const { quoteStatuses } = useQuoteStatuses();
-  const [item, setItem] = React.useState([
-    {
-      id: uuidv4(),
-      description: '',
-      qty: 1,
-      amount: 0
-    }
-  ]);
 
   const [customAddressSwitch, setCustomAddressSwitch] = React.useState(false);
   const [generalNoteSwitch, setGeneralNoteSwitch] = useState(false);
