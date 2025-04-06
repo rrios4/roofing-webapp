@@ -13,5 +13,11 @@ export default defineConfig({
     host: true,
     strictPort: true,
     port: 5173
+  },
+  publicDir: 'public',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    copyPublicDir: true
   }
 });
