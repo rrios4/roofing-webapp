@@ -1,3 +1,4 @@
+import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   deleteQuoteById,
@@ -7,8 +8,8 @@ import {
   updateQuoteById,
   updateQuoteStatusById
   // @ts-ignore
-} from '../../services/api/quote';
-import React from 'react';
+} from '../../services/api/quote-service';
+import { Quote } from '../../types/db_types';
 
 // Custom hook to get all quotes
 export const useFetchQuotes = () => {
@@ -44,7 +45,7 @@ export const useSearchQuote = (query: any) => {
     isError
   } = useQuery({
     queryKey: ['quoteSearch', query],
-    queryFn: () => fetchSearchQuotes()
+    queryFn: () => fetchSearchQuotes(query)
   });
   return { quoteSearchResult, quoteSearchIsLoading, isError };
 };
@@ -54,7 +55,7 @@ export const useSearchQuote = (query: any) => {
 // Custom hook to delete a quote
 export const useDeleteQuote = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
-  return useMutation((quoteNumber) => deleteQuoteById(quoteNumber), {
+  return useMutation((quoteNumber:number) => deleteQuoteById(quoteNumber), {
     onError: (error: any) => {
       setOpen(false);
       toast({
@@ -79,7 +80,7 @@ export const useDeleteQuote = (toast: any, setOpen: any) => {
 // Custom hook to update a quote
 export const useUpdateQuote = (toast: any) => {
   const queryClient = useQueryClient();
-  return useMutation((quoteObject) => updateQuoteById(quoteObject), {
+  return useMutation((quoteObject:Quote) => updateQuoteById(quoteObject), {
     onError: (error: any) => {
       toast({
         position: 'top',
@@ -108,7 +109,7 @@ export const useUpdateQuote = (toast: any) => {
 // Custom hook to update a status for a quote
 export const useUpdateQuoteStatusById = (toast: any, quote_number: any) => {
   const queryClient = useQueryClient();
-  return useMutation((status_id) => updateQuoteStatusById(status_id, quote_number), {
+  return useMutation((status_id:number) => updateQuoteStatusById(status_id, quote_number), {
     onError: (error: any) => {
       toast({
         position: 'top',

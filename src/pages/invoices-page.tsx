@@ -16,9 +16,9 @@ import {
   useFetchTotalOverdueInvoices,
   useFetchTotalPaidInvoices,
   useFetchTotalPendingInvoices
-} from '../hooks/useAPI/useReports';
+} from '../hooks/useAPI/use-report';
 import DataTable from '../components/data-table';
-import { useFetchAllInvoices } from '../hooks/useAPI/useInvoices';
+import { useFetchAllInvoices } from '../hooks/useAPI/use-invoice';
 import DataTableFilterCard from '../components/data-table-filter-card';
 import { createColumnHelper } from '@tanstack/react-table';
 import {
@@ -60,20 +60,20 @@ export default function InvoicesPage() {
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard
           title="Overdue"
-          totalCount={totalOverdueInvoicesCount}
+          totalCount={totalOverdueInvoicesCount ?? 0}
           icon={<MinusCircleIcon size={'25px'} />}
           isLoading={isTotalOverdueInvoicesLoading}
         />
         <CountStatCard
           title="Pending"
           icon={<CircleDotIcon size={'25px'} />}
-          totalCount={totalPendingInvoicesCount}
+          totalCount={totalPendingInvoicesCount ?? 0}
           isLoading={isTotalPendingInvoicesLoading}
         />
         <CountStatCard
           title="Paid"
           icon={<CheckCircleIcon size={'25px'} />}
-          totalCount={totalPaidInvoicesCount}
+          totalCount={totalPaidInvoicesCount ?? 0}
           isLoading={isTotalPaidInvoicesLoading}
         />
       </div>
@@ -220,7 +220,7 @@ export const invoiceTableColumns = [
   columnHelper.accessor('service_type_id', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      return <p>{invoice.services.name}</p>;
+      return <p>{invoice.service.name}</p>;
     },
     header: ({ column }) => (
       <div className="flex">

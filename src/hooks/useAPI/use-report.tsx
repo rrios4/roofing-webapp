@@ -13,13 +13,13 @@ import {
   fetchTotalResidentialCustomers,
   fetchTotalScheduledLeads
   // @ts-ignore
-} from '../../services/api/report_services';
+} from '../../services/api/report-service';
 
 // Custom hook that use react query to fetch total new leads count
 export const useFetchTotalNewLeads = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalNewLeads'],
-    queryFn: () => fetchTotalNewLeads()
+    queryFn: async () => await fetchTotalNewLeads()
   });
   return { data, isLoading, isError };
 };
@@ -27,7 +27,7 @@ export const useFetchTotalNewLeads = () => {
 export const useFetchTotalScheduledLeads = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalScheduledLeads'],
-    queryFn: () => fetchTotalScheduledLeads()
+    queryFn: async () => await fetchTotalScheduledLeads()
   });
   return { data, isLoading, isError };
 };
@@ -35,7 +35,7 @@ export const useFetchTotalScheduledLeads = () => {
 export const useFetchTotalClosedLeads = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalClosedLeads'],
-    queryFn: () => fetchTotalClosedLeads()
+    queryFn: async () => await fetchTotalClosedLeads()
   });
   return { data, isLoading, isError };
 };
@@ -44,7 +44,7 @@ export const useFetchTotalClosedLeads = () => {
 export const useFetchTotalCustomers = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalCustomers'],
-    queryFn: () => fetchTotalCustomers()
+    queryFn: async () => await fetchTotalCustomers()
   });
   return { data, isLoading, isError };
 };
@@ -52,7 +52,7 @@ export const useFetchTotalCustomers = () => {
 export const useFetchTotalResidentialCustomers = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalResidentialCustomers'],
-    queryFn: () => fetchTotalResidentialCustomers()
+    queryFn: async () => await fetchTotalResidentialCustomers()
   });
   return { data, isLoading, isError };
 };
@@ -60,7 +60,7 @@ export const useFetchTotalResidentialCustomers = () => {
 export const useFetchTotalCommercialCustomers = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalCommercialCustomers'],
-    queryFn: () => fetchTotalCommercialCustomers()
+    queryFn: async () => await fetchTotalCommercialCustomers()
   });
   return { data, isLoading, isError };
 };
@@ -69,7 +69,7 @@ export const useFetchTotalCommercialCustomers = () => {
 export const useFetchTotalOverdueInvoices = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalOverdueInvoices'],
-    queryFn: () => fetchTotalOverdueInvoices()
+    queryFn: async () => await fetchTotalOverdueInvoices()
   });
   return { data, isLoading, isError };
 };
@@ -77,7 +77,7 @@ export const useFetchTotalOverdueInvoices = () => {
 export const useFetchTotalPendingInvoices = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalPendingInvoices'],
-    queryFn: () => fetchTotalPendingInvoices()
+    queryFn: async () => await fetchTotalPendingInvoices()
   });
   return { data, isLoading, isError };
 };
@@ -85,7 +85,7 @@ export const useFetchTotalPendingInvoices = () => {
 export const useFetchTotalPaidInvoices = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalPaidInvoices'],
-    queryFn: () => fetchTotalPaidInvoices()
+    queryFn: async () => await fetchTotalPaidInvoices()
   });
   return { data, isLoading, isError };
 };
@@ -94,7 +94,7 @@ export const useFetchTotalPaidInvoices = () => {
 export const useFetchTotalPendingQuotes = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalPendingQuotes'],
-    queryFn: () => fetchTotalPendingQuotes()
+    queryFn: async () => await fetchTotalPendingQuotes()
   });
 
   return { data, isLoading, isError };
@@ -103,7 +103,7 @@ export const useFetchTotalPendingQuotes = () => {
 export const useFetchTotalAcceptedQuotes = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalAcceptedQuotes'],
-    queryFn: () => fetchTotalAcceptedQuotes()
+    queryFn: async () => await fetchTotalAcceptedQuotes()
   });
 
   return { data, isLoading, isError };
@@ -112,7 +112,7 @@ export const useFetchTotalAcceptedQuotes = () => {
 export const useFetchTotalRejectedQuotes = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalRejectedQuotes'],
-    queryFn: () => fetchTotalRejectedQuotes()
+    queryFn: async () => await fetchTotalRejectedQuotes()
   });
 
   return { data, isLoading, isError };

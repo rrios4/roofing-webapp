@@ -1,12 +1,12 @@
 import React from 'react';
 import DefaultDeleteAlertDialog from './alert-delete-dialog';
-import { useDeleteQRById } from '../hooks/useAPI/useQuoteRequests';
+import { useDeleteQRById } from '../hooks/useAPI/use-qr';
 import { toast } from './ui/use-toast';
-import { useDeleteInvoiceById } from '../hooks/useAPI/useInvoices';
-import { useDeleteAllInvoiceLineItemsByInvoiceNumber } from '../hooks/useAPI/useInvoiceLineItem';
-import { useDeleteAllInvoicePaymentsByInvoiceNumber } from '../hooks/useAPI/useInvoicePayments';
-import { useDeleteAllQuoteLineItemsWithQuote } from '../hooks/useAPI/useQuoteLineItem';
-import { useDeleteCustomer } from '../hooks/useAPI/useCustomers';
+import { useDeleteInvoiceById } from '../hooks/useAPI/use-invoice';
+import { useDeleteAllInvoiceLineItemsByInvoiceNumber } from '../hooks/useAPI/use-invoice-lineItem';
+import { useDeleteAllInvoicePaymentsByInvoiceNumber } from '../hooks/useAPI/use-invoice-payment';
+import { useDeleteAllQuoteLineItemsWithQuote } from '../hooks/useAPI/use-quote-lineitems';
+import { useDeleteCustomer } from '../hooks/useAPI/use-customer';
 
 type Props = {
   title: string;
@@ -74,7 +74,7 @@ export function ConnectedDeleteQuoteAlertDialog({ title, description, itemId }: 
       onSubmit={handleSubmit}
       itemId={itemId}
       buttonTextEnabled={false}
-      buttonVariant={"secondary"}
+      buttonVariant={"outline"}
     />
   );
 }

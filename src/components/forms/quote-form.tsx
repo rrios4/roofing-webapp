@@ -7,7 +7,7 @@ import { addQuoteFormSchema } from '../../validations/quote-form-validations';
 import { v4 as uuidv4 } from 'uuid';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import SearchCustomerCombobox from '../customer-combobox';
-import { useFetchCustomers } from '../../hooks/useAPI/useCustomers';
+import { useFetchCustomers } from '../../hooks/useAPI/use-customer';
 import {
   CalendarIcon,
   MapIcon,
@@ -24,10 +24,10 @@ import { Button } from '../ui/button';
 import { cn, formatMoneyValue } from '../../lib/utils';
 import { format } from 'date-fns';
 import { SheetClose, SheetFooter } from '../ui/sheet';
-import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { useFetchAllServices } from '../../hooks/useAPI/use-services';
 import DefaultSelectDataItems from '../select-data-items';
-import { useQuoteStatuses } from '../../hooks/useAPI/useQuoteStatuses';
-import { useFetchQuotes } from '../../hooks/useAPI/useQuotes';
+import { useQuoteStatuses } from '../../hooks/useAPI/use-quote-status';
+import { useFetchQuotes } from '../../hooks/useAPI/use-quotes';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { ScrollArea } from '../ui/scroll-area';
@@ -76,11 +76,15 @@ export default function AddQuoteForm({}: Props) {
   const [measurementNoteSwitch, setMeasurementNoteSwitch] = useState(false);
   const [customerNoteSwitch, setCustomerNoteSwitch] = useState(false);
 
-  const form = useForm<z.infer<typeof addQuoteFormSchema>>({
+    const form = useForm<z.infer<typeof addQuoteFormSchema>>({
     resolver: zodResolver(addQuoteFormSchema),
     defaultValues: {
-      // @ts-ignore
-      quote_number: '',
+      quote_number: undefined, // Change from 0 to undefined so placeholder shows
+      customer_id: 0,
+      service_id: undefined, // Change from 0 to undefined
+      status_id: undefined,  // Change from 0 to undefined
+      quote_date: new Date(),
+      expiration_date: new Date(),
       line_items: [{ description: '', qty: 1, amount: 0, subtotal: 0 }], // Start with one empty line item
       custom_street_address: '',
       custom_city: '',
@@ -166,7 +170,7 @@ export default function AddQuoteForm({}: Props) {
   const quoteMutation = useMutation(createQuote);
   const quoteLineItemMutation = useMutation(createQuoteLineItems);
 
-  async function onSubmit(values: z.infer<typeof addQuoteFormSchema>) {
+  const onSubmit = async (values: z.infer<typeof addQuoteFormSchema>) => {
     // console.log(values);
     const { line_items, ...quote } = values;
     const updatedQuote = { ...quote, total: total, subtotal: subtotal };
@@ -217,9 +221,10 @@ export default function AddQuoteForm({}: Props) {
                       <Input
                         {...field}
                         className="w-full"
+                        value={field.value || ''} // Show empty string when undefined, not 0
                         onChange={(e) => {
-                          // Convert the value to a number before passing it to the field
-                          field.onChange(e.target.value ? parseFloat(e.target.value) : '');
+                          // Convert the value to a number if not empty, otherwise set to undefined
+                          field.onChange(e.target.value ? parseFloat(e.target.value) : undefined);
                         }}
                         placeholder={String(nextQuoteNumber)}
                       />
@@ -235,23 +240,14 @@ export default function AddQuoteForm({}: Props) {
                   <FormItem className="w-full">
                     <FormLabel>Select Status</FormLabel>
                     <Select
-                      onValueChange={(value) => form.setValue('status_id', Number(value))} // Convert string to number
-                      defaultValue={field.value?.toString()}>
+                      onValueChange={(value) => field.onChange(Number(value))}
+                      value={field.value && field.value !== 0 ? String(field.value) : undefined}> {/* Use undefined instead of empty string */}
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select status for quote" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
-                        {/* {customerTypes?.map((item: any, index: number) => (
-                        <React.Fragment key={index}>
-                          <SelectItem value={item.id.toString()} className="hover:cursor-pointer">
-                            {item.name}
-                          </SelectItem>
-                        </React.Fragment>
-                      ))} */}
-                        <DefaultSelectDataItems data={quoteStatuses} />
-                      </SelectContent>
+                      <DefaultSelectDataItems data={quoteStatuses} />
                     </Select>
                     <FormMessage />
                   </FormItem>
@@ -333,16 +329,14 @@ export default function AddQuoteForm({}: Props) {
                 <FormItem>
                   <FormLabel>Select Service</FormLabel>
                   <Select
-                    onValueChange={(value) => form.setValue('service_id', Number(value))} // Convert string to number
-                    defaultValue={field.value?.toString()}>
+                    onValueChange={(value) => field.onChange(Number(value))}
+                    value={field.value && field.value !== 0 ? String(field.value) : undefined}> {/* Use undefined instead of empty string */}
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a roofing service..." />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      <DefaultSelectDataItems data={roofingServices} />
-                    </SelectContent>
+                    <DefaultSelectDataItems data={roofingServices} />
                   </Select>
                   <FormMessage />
                 </FormItem>

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 // @ts-ignore
-import { fetchAllInvoiceStatuses } from '../../services/api/invoice_status';
+import { fetchAllInvoiceStatuses } from '../../services/api/invoice-status-service';
 
 // Custom hook that uses react-query to get all invoice statuses
 export const useFetchAllInvoiceStatuses = () => {

@@ -7,7 +7,7 @@ import {
   updateInvoice,
   updateInvoiceStatusById
   // @ts-ignore
-} from '../../services/api/invoice';
+} from '../../services/api/invoice-service';
 import React from 'react';
 
 // Custom hook that get all invoices
@@ -15,7 +15,7 @@ export const useFetchAllInvoices = () => {
   // react-query
   const { data, isLoading, isError } = useQuery({
     queryKey: ['invoices'],
-    queryFn: () => fetchAllInvoices()
+    queryFn: async() => await fetchAllInvoices()
   });
 
   return { data, isError, isLoading };
@@ -34,7 +34,7 @@ export const useFetchInvoiceById = (invoice_number: any) => {
 
 // Custom hook to create a new invoice
 export const useCreateInvoice = (toast: any) => {
-  return useMutation((newInvoiceObject) => createNewInvoice(newInvoiceObject), {
+  return useMutation((newInvoiceObject: any) => createNewInvoice(newInvoiceObject), {
     onError: (error: any) => {
       toast({
         position: 'top',
@@ -63,7 +63,7 @@ export const useCreateInvoice = (toast: any) => {
 // Custom hook to delete invoice by id
 export const useDeleteInvoiceById = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
-  return useMutation((invoiceNumber) => deleteInvoiceById(invoiceNumber), {
+  return useMutation((invoiceNumber: number) => deleteInvoiceById(invoiceNumber), {
     onError: (error: any) => {
       setOpen(false);
       toast({
@@ -87,7 +87,7 @@ export const useDeleteInvoiceById = (toast: any, setOpen: any) => {
 // Custom hook to update invoice
 export const useUpdateInvoice = (toast: any) => {
   const queryClient = useQueryClient();
-  return useMutation((updateInvoiceObject) => updateInvoice(updateInvoiceObject), {
+  return useMutation((updateInvoiceObject:any) => updateInvoice(updateInvoiceObject), {
     onError: (error: any) => {
       toast({
         position: 'top',
@@ -119,7 +119,7 @@ export const useUpdateInvoice = (toast: any) => {
 export const useUpdateInvoiceStatusById = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation(
-    (updateInvoiceStatusObject) => updateInvoiceStatusById(updateInvoiceStatusObject),
+    (updateInvoiceStatusObject:any) => updateInvoiceStatusById(updateInvoiceStatusObject),
     {
       onError: (error: any) => {
         console.log(error);

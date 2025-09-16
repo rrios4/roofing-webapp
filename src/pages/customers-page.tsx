@@ -4,8 +4,8 @@ import {
   useFetchTotalCustomers,
   useFetchTotalResidentialCustomers,
   useFetchTotalCommercialCustomers
-} from '../hooks/useAPI/useReports';
-import { useFetchCustomers } from '../hooks/useAPI/useCustomers';
+} from '../hooks/useAPI/use-report';
+import { useFetchCustomers } from '../hooks/useAPI/use-customer';
 import { BuildingIcon, StoreIcon, UserIcon, UsersIcon } from 'lucide-react';
 import CountStatCard from '../components/count-stat-card';
 import DataTable from '../components/data-table';
@@ -40,19 +40,19 @@ export default function CustomersPage() {
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard
           title="Total Customers"
-          totalCount={totalCustomersCount}
+          totalCount={totalCustomersCount ?? 0}
           icon={<UserIcon size={'25px'} />}
           isLoading={isTotalCustomerCountLoading}
         />
         <CountStatCard
           title="Residential"
-          totalCount={totalResidentialCustomers}
+          totalCount={totalResidentialCustomers ?? 0}
           icon={<StoreIcon size={'25px'} />}
           isLoading={isTotalResidentialCustomersLoading}
         />
         <CountStatCard
           title="Commercial"
-          totalCount={totalCommercialCustomers}
+          totalCount={totalCommercialCustomers ?? 0}
           icon={<BuildingIcon size={'25px'} />}
           isLoading={isTotalCommercialCustomersLoading}
         />

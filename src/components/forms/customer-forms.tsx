@@ -5,14 +5,15 @@ import * as z from 'zod';
 import { addCustomerFormSchema } from '../../validations/customer-form-validations';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/use-customer-types';
 import { SheetClose, SheetFooter } from '../ui/sheet';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { toast } from '../ui/use-toast';
 import { formatPhoneNumber } from '../../lib/utils';
 import listOfUSStates from '../../data/state_titlecase.json';
-import { useCreateCustomer } from '../../hooks/useAPI/useCustomers';
+import { useCreateCustomer } from '../../hooks/useAPI/use-customer';
+import DefaultSelectDataItems from '../select-data-items';
 import ButtonLoading from '../button-states';
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { ScrollArea } from '../ui/scroll-area';
@@ -189,15 +190,7 @@ export default function AddCustomerForm({ setOpen }: Props) {
                         <SelectValue placeholder="Select the type of customer" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      {customerTypes?.map((item: any, index: number) => (
-                        <React.Fragment key={index}>
-                          <SelectItem value={item?.id?.toString()} className="hover:cursor-pointer">
-                            {item.name}
-                          </SelectItem>
-                        </React.Fragment>
-                      ))}
-                    </SelectContent>
+                    <DefaultSelectDataItems data={customerTypes} />
                   </Select>
                   <FormMessage />
                 </FormItem>
@@ -300,15 +293,11 @@ export default function AddCustomerForm({ setOpen }: Props) {
                           <SelectValue placeholder="Select US state" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent className="">
-                        {listOfUSStates?.map((item: any, index: number) => (
-                          <React.Fragment key={index}>
-                            <SelectItem value={item.abbreviation} className="hover:cursor-pointer">
-                              {item.name}
-                            </SelectItem>
-                          </React.Fragment>
-                        ))}
-                      </SelectContent>
+                      <DefaultSelectDataItems 
+                        data={listOfUSStates || []}
+                        valueKey="abbreviation"
+                        labelKey="name"
+                      />
                     </Select>
                     <FormMessage />
                   </FormItem>

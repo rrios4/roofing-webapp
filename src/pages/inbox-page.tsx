@@ -4,7 +4,7 @@ import {
   useFetchTotalClosedLeads,
   useFetchTotalNewLeads,
   useFetchTotalScheduledLeads
-} from '../hooks/useAPI/useReports';
+} from '../hooks/useAPI/use-report';
 import CountStatCard from '../components/count-stat-card';
 import {
   ArchiveIcon,
@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import AddLeadRequestForm from '../components/forms/inbox-forms';
 import DataTable from '../components/data-table';
-import { useFetchAllQuoteRequests } from '../hooks/useAPI/useQuoteRequests';
+import { useFetchAllQuoteRequests } from '../hooks/useAPI/use-qr';
 import DataTableFilterCard from '../components/data-table-filter-card';
 import { createColumnHelper } from '@tanstack/react-table';
 import { arrayOfMemojiFileNames, formatDateWithAbbreviatedMonth, formatNumber } from '../lib/utils';
@@ -52,19 +52,19 @@ export default function InboxPage() {
       <div className="flex w-full gap-4 flex-col md:flex-row">
         <CountStatCard
           title="New"
-          totalCount={totalNewLeadsCount}
+          totalCount={totalNewLeadsCount ?? 0}
           icon={<InboxIcon size={'25px'} />}
           isLoading={isTotalNewLeadsLoading}
         />
         <CountStatCard
           title="Scheduled"
-          totalCount={totalScheduledLeadsCount}
+          totalCount={totalScheduledLeadsCount ?? 0}
           isLoading={isTotalScheduledLeadsLoading}
           icon={<CalendarIcon size={'25px'} />}
         />
         <CountStatCard
           title="Closed"
-          totalCount={totalClosedLeadsCount}
+          totalCount={totalClosedLeadsCount ?? 0}
           isLoading={isTotalClosedLeadsLoading}
           icon={<ArchiveIcon size={'25px'} />}
         />

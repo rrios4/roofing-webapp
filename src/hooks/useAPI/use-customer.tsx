@@ -1,8 +1,8 @@
+// import React from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  fetchCustomers,
   fetchCustomerById,
   deleteCustomer,
   createCustomer,
@@ -11,8 +11,9 @@ import {
   fetchCustomerQuotes,
   fetchSearchCustomers
   // @ts-ignore
-} from '../../services/api/customer';
-import React from 'react';
+} from '../../services/api/customer-service';
+import { fetchCustomers } from '../../services/api/customer-service';
+import { CustomerInsert } from '../../types/db_types';
 
 // Custom hook to get all customers from db
 export const useFetchCustomers = () => {
@@ -48,7 +49,7 @@ export const useFetchCustomerByID = (id: any) => {
     isError
   } = useQuery({
     queryKey: ['fetchCustomerById', id],
-    queryFn: () => fetchCustomerById(id)
+    queryFn: async() => await fetchCustomerById(id)
   });
 
   return { customerById, isLoading, isError };
@@ -87,7 +88,7 @@ export const useFetchCustomerQuotes = (customerId: any) => {
 export const useDeleteCustomer = (toast: any) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  return useMutation((itemNumber) => deleteCustomer(itemNumber), {
+  return useMutation((itemNumber:number) => deleteCustomer(itemNumber), {
     onError: (error: any) => {
       toast({
         position: 'top',
@@ -116,7 +117,7 @@ export const useDeleteCustomer = (toast: any) => {
 // Custom hook to create a new customer
 export const useCreateCustomer = (toast?: any, setOpen?: any) => {
   const queryClient = useQueryClient();
-  return useMutation((newCustomerObject) => createCustomer(newCustomerObject), {
+  return useMutation((newCustomerObject:CustomerInsert) => createCustomer(newCustomerObject), {
     onError: (error: any) => {
       // toast({
       //   position: 'top',

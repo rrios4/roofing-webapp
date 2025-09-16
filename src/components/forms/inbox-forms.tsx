@@ -11,14 +11,15 @@ import { cn, formatPhoneNumber } from '../../lib/utils';
 import { format } from 'date-fns';
 import { CalendarIcon, ClipboardTypeIcon, FormInput, MapPinIcon, UserIcon } from 'lucide-react';
 import { Calendar } from '../ui/calendar';
-import { useFetchAllQRStatuses } from '../../hooks/useAPI/useQRStatuses';
-import { useFetchAllCustomerTypes } from '../../hooks/useAPI/useCustomerTypes';
-import { useFetchAllServices } from '../../hooks/useAPI/useServices';
+import { useFetchAllQRStatuses } from '../../hooks/useAPI/use-qr-status';
+import { useFetchAllCustomerTypes } from '../../hooks/useAPI/use-customer-types';
+import DefaultSelectDataItems from '../select-data-items';
+import { useFetchAllServices } from '../../hooks/useAPI/use-services';
 import { Input } from '../ui/input';
 import listOfUSStates from '../../data/state_titlecase.json';
 import { SheetClose, SheetFooter } from '../ui/sheet';
 import { toast } from '../ui/use-toast';
-import { useCreateNewQuoteRequest } from '../../hooks/useAPI/useQuoteRequests';
+import { useCreateNewQuoteRequest } from '../../hooks/useAPI/use-qr';
 import { ScrollArea } from '../ui/scroll-area';
 
 type Props = {
@@ -57,23 +58,16 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Status</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select 
+                        onValueChange={(value) => field.onChange(parseInt(value))} 
+                        defaultValue={field.value?.toString()}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select request status" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          {qrStatuses?.map((item: any, index: number) => (
-                            <React.Fragment key={index}>
-                              <SelectItem
-                                value={item.id.toString()}
-                                className="hover:cursor-pointer">
-                                {item.name}
-                              </SelectItem>
-                            </React.Fragment>
-                          ))}
-                        </SelectContent>
+                        <DefaultSelectDataItems data={qrStatuses} />
                       </Select>
                       <FormMessage />
                     </FormItem>
@@ -94,7 +88,7 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                                 'w-[240px] pl-3 text-left font-normal',
                                 !field.value && 'text-muted-foreground'
                               )}>
-                              {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                              {field.value ? format(new Date(field.value), 'PPP') : <span>Pick a date</span>}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
                           </FormControl>
@@ -102,7 +96,7 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                         <PopoverContent className="w-auto p-0 text-start">
                           <Calendar
                             mode="single"
-                            selected={field.value}
+                            selected={field.value ? new Date(field.value) : undefined}
                             onSelect={field.onChange}
                             disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
                           />
@@ -120,23 +114,13 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Type of Customer</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select request status" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          {customerTypes?.map((item: any, index: number) => (
-                            <React.Fragment key={index}>
-                              <SelectItem
-                                value={item.id.toString()}
-                                className="hover:cursor-pointer">
-                                {item.name}
-                              </SelectItem>
-                            </React.Fragment>
-                          ))}
-                        </SelectContent>
+                        <DefaultSelectDataItems data={customerTypes} />
                       </Select>
                       <FormMessage />
                     </FormItem>
@@ -148,23 +132,13 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Service</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select request status" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          {servicesData?.map((item: any, index: number) => (
-                            <React.Fragment key={index}>
-                              <SelectItem
-                                value={item.id.toString()}
-                                className="hover:cursor-pointer">
-                                {item.name}
-                              </SelectItem>
-                            </React.Fragment>
-                          ))}
-                        </SelectContent>
+                        <DefaultSelectDataItems data={servicesData} />
                       </Select>
                       <FormMessage />
                     </FormItem>
@@ -276,17 +250,11 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                             <SelectValue placeholder="Select US state" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="">
-                          {listOfUSStates?.map((item: any, index: number) => (
-                            <React.Fragment key={index}>
-                              <SelectItem
-                                value={item.abbreviation}
-                                className="hover:cursor-pointer">
-                                {item.name}
-                              </SelectItem>
-                            </React.Fragment>
-                          ))}
-                        </SelectContent>
+                        <DefaultSelectDataItems 
+                          data={listOfUSStates || []}
+                          valueKey="abbreviation"
+                          labelKey="name"
+                        />
                       </Select>
                       <FormMessage />
                     </FormItem>

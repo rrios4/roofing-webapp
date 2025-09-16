@@ -16,7 +16,7 @@ import {
   useFetchCustomerByID,
   useFetchCustomerInvoices,
   useFetchCustomerQuotes
-} from '../hooks/useAPI/useCustomers';
+} from '../hooks/useAPI/use-customer';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   abbreviateName,
@@ -50,7 +50,8 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetHeader, SheetTitle,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger
 } from '../components/ui/sheet';
 import { ScrollArea } from '../components/ui/scroll-area';
@@ -94,8 +95,8 @@ export default function CustomerInfoPage({}: Props) {
         {/* <Link to={'/'}>Home</Link>
         <p>/</p> */}
         <Link to={'/customers'}>Customers</Link>
-        <p>/</p>
-        <Link to={location.pathname}>Customer-{id}</Link>
+        <p>|</p>
+        <Link to={location.pathname}># {id}</Link>
       </div>
       <div className="flex flex-col border py-4 px-4 rounded-md gap-8">
         <div className="flex flex-col md:flex-row w-full gap-4 justify-between">
@@ -121,13 +122,16 @@ export default function CustomerInfoPage({}: Props) {
               )}
               {customerById?.customer_type.name === 'Commercial' && (
                 <>
-                  <DefaultStatusBadge title={customerById?.customer_type.name} variant="green" />
+                  <DefaultStatusBadge title={customerById.customer_type.name} variant="green" />
                 </>
               )}
               {customerById?.customer_type.name !== 'Commercial' &&
                 customerById?.customer_type.name !== 'Residential' && (
                   <>
-                    <DefaultStatusBadge title={customerById?.customer_type.name} variant="gray" />
+                    <DefaultStatusBadge
+                      title={customerById?.customer_type.name || 'N/A'}
+                      variant="gray"
+                    />
                   </>
                 )}
 
@@ -150,7 +154,7 @@ export default function CustomerInfoPage({}: Props) {
                   </SheetDescription>
                 </SheetHeader>
                 <ScrollArea className="w-full h-full pb-8 pt-6">
-                  <EditCustomerForm customerData={customerById}/>
+                  <EditCustomerForm customerData={customerById} />
                 </ScrollArea>
               </SheetContent>
             </Sheet>
@@ -175,11 +179,11 @@ export default function CustomerInfoPage({}: Props) {
           <div>
             <p className="text-gray-500 font-semibold text-[14px]">Main Address</p>
             <GoogleMapsAddressPreviewPopover
-              streetAddress={customerById?.street_address}
-              city={customerById?.city}
-              state={customerById?.state}
-              zipcode={customerById?.zipcode}
-              addressQuery={`${customerById?.street_address} ${customerById?.city} ${customerById?.state} ${customerById?.zipcode}`}
+              streetAddress={customerById?.street_address || ''}
+              city={customerById?.city || ''}
+              state={customerById?.state || ''}
+              zipcode={customerById?.zipcode || ''}
+              addressQuery={`${customerById?.street_address || ''} ${customerById?.city || ''} ${customerById?.state || ''} ${customerById?.zipcode || ''}`}
               textSize={'md'}
             />
             {/* <p>
@@ -235,7 +239,7 @@ export default function CustomerInfoPage({}: Props) {
                     /> */}
                   </>
                 )}
-                {customerInvoices?.length > 0 && (
+                {customerInvoices && customerInvoices.length > 0 && (
                   <>
                     <Table>
                       <TableCaption>
@@ -323,7 +327,7 @@ export default function CustomerInfoPage({}: Props) {
                                   )}
                                 </TableCell>
                                 <TableCell>{formatDate(item.invoice_date)}</TableCell>
-                                <TableCell>{item.service_type.name}</TableCell>
+                                <TableCell>{item.service.name}</TableCell>
                                 <TableCell className="text-right">
                                   ${formatMoneyValue(item.total)}
                                 </TableCell>
@@ -357,7 +361,7 @@ export default function CustomerInfoPage({}: Props) {
                     /> */}
                   </>
                 )}
-                {customerQuotes?.length > 0 && (
+                {customerQuotes && customerQuotes.length > 0 && (
                   <>
                     <Table>
                       <TableCaption>
@@ -445,7 +449,7 @@ export default function CustomerInfoPage({}: Props) {
                                   )}
                                 </TableCell>
                                 <TableCell>{formatDate(item.quote_date)}</TableCell>
-                                <TableCell>{item.services.name}</TableCell>
+                                <TableCell>{item.service.name}</TableCell>
                                 <TableCell className="text-right">
                                   ${formatMoneyValue(item.total)}
                                 </TableCell>

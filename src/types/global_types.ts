@@ -76,8 +76,8 @@ export type IDbQRequest = {
   phone_number: string;
   customer_typeID: string;
   est_request_status_id: string;
-  requested_date: Date;
-  service_type_id: string;
+  requested_date: string;
+  service_type_id: number;
   streetAddress: string;
   city: string;
   state: string;

@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-// @ts-ignore
-import { fetchAllCustomerTypes } from '../../services/api/customer_type';
+import { fetchAllCustomerTypes } from '../../services/api/customer-type-service';
+import { CustomerType } from '../../types/api-service';
 
 export const useFetchAllCustomerTypes = () => {
-  const { data, isError, isLoading } = useQuery({
+  const { data, isError, isLoading } = useQuery<CustomerType[]>({
     queryKey: ['customerTypes'],
     queryFn: () => fetchAllCustomerTypes()
   });

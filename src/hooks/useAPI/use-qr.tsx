@@ -5,9 +5,10 @@ import {
   fetchAllQuoteRequests,
   updateQuoteRequestById
   // @ts-ignore
-} from '../../services/api/quote_request';
+} from '../../services/api/quote-request-service';
 import { IDbQRequest } from '../../types/global_types';
 import React from 'react';
+import { QuoteRequestInsert } from '../../types/db_types';
 
 // Custom react-query hook for quote requests
 export const useFetchAllQuoteRequests = () => {
@@ -23,7 +24,7 @@ export const useFetchAllQuoteRequests = () => {
 export const useCreateNewQuoteRequest = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
   return useMutation(
-    (newQuoteRequestObject: IDbQRequest) => createNewQuoteRequest(newQuoteRequestObject),
+    (newQuoteRequestObject: QuoteRequestInsert) => createNewQuoteRequest(newQuoteRequestObject),
     {
       onError: (error: any) => {
         setOpen(true);
@@ -50,7 +51,7 @@ export const useCreateNewQuoteRequest = (toast: any, setOpen: any) => {
 // Custom react-query hook for deleting a qr by id
 export const useDeleteQRById = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
-  return useMutation((itemId) => deleteQuoteRequestById(itemId), {
+  return useMutation((itemId: number) => deleteQuoteRequestById(itemId), {
     onError: (error: any) => {
       // toast({
       //   position: `top`,
@@ -90,7 +91,7 @@ export const useDeleteQRById = (toast: any, setOpen: any) => {
 // Custom react-query hook for updating a qr by id
 export const useUpdateQRById = (toast: any) => {
   const queryClient = useQueryClient();
-  return useMutation((updatedQRObject) => updateQuoteRequestById(updatedQRObject), {
+  return useMutation((updatedQRObject: any) => updateQuoteRequestById(updatedQRObject), {
     onError: (error: any) => {
       toast({
         position: 'top',

@@ -4,13 +4,14 @@ import {
   deleteQuoteLineItemById,
   deleteQuoteLineItems
   // @ts-ignore
-} from '../../services/api/quoteLineItem';
-import { useDeleteQuote } from './useQuotes';
+} from '../../services/api/quote-lineitem-service';
+import { useDeleteQuote } from './use-quotes';
+import { QuoteLineItem, QuoteLineItemInsert } from '../../types/db_types';
 
 // Custom hook to delete all line items for a given quote number with quote also
 export const useDeleteAllQuoteLineItemsWithQuote = (toast: any, itemNumber: any, setOpen: any) => {
   const { mutate: mutateDeleteQuote } = useDeleteQuote(toast, setOpen);
-  return useMutation((quoteNumber) => deleteQuoteLineItems(quoteNumber), {
+  return useMutation((quoteNumber: number) => deleteQuoteLineItems(quoteNumber), {
     onError: (error: any) => {
       setOpen(false);
       toast({
@@ -26,7 +27,7 @@ export const useDeleteAllQuoteLineItemsWithQuote = (toast: any, itemNumber: any,
 // Custom hook to add a line item for a given quote number
 export const useCreateQuoteLineItem = (toast: any, quote_number: any) => {
   const queryClient = useQueryClient();
-  return useMutation((lineItemObject) => createQuoteLineItem(lineItemObject), {
+  return useMutation((lineItemObject: QuoteLineItemInsert) => createQuoteLineItem(lineItemObject), {
     onError: (error: any) => {
       toast({
         position: `top`,
@@ -53,7 +54,7 @@ export const useCreateQuoteLineItem = (toast: any, quote_number: any) => {
 
 export const useDeleteQuoteLineItemById = (toast: any, quoteNumber: any) => {
   const queryClient = useQueryClient();
-  return useMutation((item) => deleteQuoteLineItemById(item), {
+  return useMutation((item: QuoteLineItem) => deleteQuoteLineItemById(item), {
     onError: (error: any) => {
       toast({
         position: `top`,

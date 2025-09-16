@@ -18,9 +18,9 @@ import {
   useFetchTotalAcceptedQuotes,
   useFetchTotalPendingQuotes,
   useFetchTotalRejectedQuotes
-} from '../hooks/useAPI/useReports';
+} from '../hooks/useAPI/use-report';
 import DataTable from '../components/data-table';
-import { useFetchQuotes } from '../hooks/useAPI/useQuotes';
+import { useFetchQuotes } from '../hooks/useAPI/use-quotes';
 import DataTableFilterCard from '../components/data-table-filter-card';
 import { createColumnHelper } from '@tanstack/react-table';
 import {
@@ -36,7 +36,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
-import AddQuoteForm from '../components/forms/quote-forms';
+import AddQuoteForm from '../components/forms/quote-form';
 import { ConnectedDeleteQuoteAlertDialog } from '../components/connected-delete-dialogs';
 
 type Props = {};
@@ -65,19 +65,19 @@ export default function QuotesPage() {
         <CountStatCard
           title="Accepted"
           icon={<CheckCircleIcon size={'25px'} />}
-          totalCount={totalAcceptedQuotesCount}
+          totalCount={totalAcceptedQuotesCount ?? 0}
           isLoading={isTotalAcceptedQuoteCountLoading}
         />
         <CountStatCard
           title="Pending"
           icon={<CircleDotIcon size={'25px'} />}
-          totalCount={totalPendingQuotesCount}
+          totalCount={totalPendingQuotesCount ?? 0}
           isLoading={isTotalPendingQuoteCountLoading}
         />
         <CountStatCard
           title="Rejected"
           icon={<MinusCircleIcon size={'25px'} />}
-          totalCount={totalRejectedQuotesCount}
+          totalCount={totalRejectedQuotesCount ?? 0}
           isLoading={isTotalRejectedQuoteCountLoading}
         />
       </div>
@@ -106,7 +106,7 @@ export const quoteColumns = [
   columnHelper.accessor('quote_number', {
     cell: ({ row }) => {
       const quote = row.original;
-      return <p className="text-center text-[14px]">QT-{formatNumber(quote.quote_number)}</p>;
+      return <p className="text-center text-[14px]">{formatNumber(quote.quote_number)}</p>;
     },
     header: ({ column }) => (
       <div className="w-full justify-center flex">
@@ -228,7 +228,7 @@ export const quoteColumns = [
     ),
     cell: ({ row }: any) => {
       const quote = row.original;
-      return <p className="font-[400] text-[14px]">{quote.services.name}</p>;
+      return <p className="font-[400] text-[14px]">{quote?.service?.name}</p>;
     }
   }),
   columnHelper.accessor('expiration_date', {
@@ -282,10 +282,7 @@ export const quoteColumns = [
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant={'secondary'}
-                  className="px-3"
-                  onClick={() => handleEditDrawer(quote)}>
+                <Button variant={'outline'} onClick={() => handleEditDrawer(quote)}>
                   <PencilIcon size={'15px'} />
                 </Button>
               </TooltipTrigger>
@@ -301,7 +298,7 @@ export const quoteColumns = [
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link to={`/quotes/${quote.quote_number}`}>
-                  <Button className="px-3" variant={'secondary'}>
+                  <Button variant={'primary'}>
                     <ChevronRightIcon size={'15px'} />
                   </Button>
                 </Link>
