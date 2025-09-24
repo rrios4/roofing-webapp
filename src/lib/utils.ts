@@ -111,3 +111,16 @@ export function monthDDYYYYFormat(date: any) {
     { timeZone: 'UTC', month: 'long', day: '2-digit', year: 'numeric' }
   );
 }
+
+export function formatDateTimeWithAbbreviatedMonth(date: any) {
+  const parsedDate = new Date(Date.parse(date));
+  return parsedDate.toLocaleDateString('en-US', {
+    timeZone: 'America/Chicago',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+}

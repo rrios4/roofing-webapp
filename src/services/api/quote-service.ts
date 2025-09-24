@@ -41,14 +41,14 @@ export const fetchQuotes = async (): Promise<QuoteWithRelations[]> => {
         updated_at
       )
     `)
-    .order('status_id', { ascending: false })
-    .order('updated_at', { ascending: false });
+    // .order('updated_at', { ascending: false })
+    .order('quote_number', { ascending: false });
 
-  if (error) {
-    console.log(error);
-    throw error;
-  }
-  return data as QuoteWithRelations[];
+if (error) {
+  console.log(error);
+  throw error;
+}
+return data as QuoteWithRelations[];
 };
 
 // GET request to API to obtain quote by id
@@ -64,7 +64,7 @@ export const fetchQuoteById = async (quote_number: number): Promise<QuoteWithRel
         email,
         phone_number
       ),
-      status (
+      quote_status (
         id,
         name,
         description,
@@ -104,7 +104,7 @@ export const fetchQuoteById = async (quote_number: number): Promise<QuoteWithRel
 };
 
 // GET request to API to search quote by query
-export const fetchSearchQuotes = async (query:string): Promise<QuoteWithRelations[]> => {
+export const fetchSearchQuotes = async (query: string): Promise<QuoteWithRelations[]> => {
   let { data, error } = await supabase
     .from('quote')
     .select(`
@@ -163,7 +163,7 @@ export const deleteQuoteById = async (quoteNumber: number): Promise<any> => {
 };
 
 // PATCH request to API to update the status for a quote
-export const updateQuoteStatusById = async (status_id:number, quote_number: number): Promise<Quote | null> => {
+export const updateQuoteStatusById = async (status_id: number, quote_number: number): Promise<Quote | null> => {
   console.log(status_id);
   console.log(quote_number);
   const { data, error } = await supabase

@@ -26,6 +26,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import {
   arrayOfMemojiFileNames,
   formatDateWithAbbreviatedMonth,
+    formatDateTimeWithAbbreviatedMonth,
   formatMoneyValue,
   formatNumber
 } from '../lib/utils';
@@ -36,7 +37,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
-import AddQuoteForm from '../components/forms/quote-form';
+import AddQuoteForm from '../components/forms/add-quote-form';
+import UpdateQuoteSheet from '../components/forms/update-quote-sheet';
 import { ConnectedDeleteQuoteAlertDialog } from '../components/connected-delete-dialogs';
 
 type Props = {};
@@ -100,8 +102,6 @@ export default function QuotesPage() {
   );
 }
 
-const handleEditDrawer = (itemNumber: any) => {};
-
 export const quoteColumns = [
   columnHelper.accessor('quote_number', {
     cell: ({ row }) => {
@@ -126,7 +126,7 @@ export const quoteColumns = [
   }),
   columnHelper.accessor(
     (row: any) =>
-      `${row.customer.first_name} ${row.customer.last_name} ${row.customer.email} ${row.quote_number} ${row.quote_status.name} ${row.services.name}`,
+      `${row.customer.first_name} ${row.customer.last_name} ${row.customer.email} ${row.quote_number} ${row.quote_status.name} ${row.service.name}`,
     {
       id: 'customer',
       cell: ({ row }: any) => {
@@ -273,22 +273,41 @@ export const quoteColumns = [
       </Button>
     )
   }),
+  columnHelper.accessor('updated_at', {
+    cell: ({ row }: any) => {
+      const quote = row.original;
+      return (
+        <p className="font-[400] text-[14px]">{formatDateTimeWithAbbreviatedMonth(quote.updated_at)}</p>
+      );
+    },
+    header: ({ column }) => (
+      <Button
+        className="px-1"
+        variant={'ghost'}
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Updated At
+        {column.getIsSorted() === 'asc' ? (
+          <ArrowUpIcon className="h-3 w-3 ml-2" />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ArrowDownIcon className="h-3 w-3 ml-2" />
+        ) : null}
+      </Button>
+    )
+  }),
   columnHelper.accessor('actions', {
     header: () => <p>Actions</p>,
     cell: ({ row }: any) => {
       const quote = row.original;
       return (
         <div className="flex gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={'outline'} onClick={() => handleEditDrawer(quote)}>
-                  <PencilIcon size={'15px'} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Edit</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <UpdateQuoteSheet 
+            quote={quote}
+            trigger={
+              <Button variant={'outline'}>
+                <PencilIcon size={'15px'} />
+              </Button>
+            }
+          />
           <ConnectedDeleteQuoteAlertDialog
             title="Are you absolutely sure?"
             description="This action cannot be undone. This will permanently delete quote with line-items and remove data from out servers."
