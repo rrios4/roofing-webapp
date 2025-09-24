@@ -1,4 +1,4 @@
-import { LayoutDashboardIcon, HomeIcon, HammerIcon, InboxIcon, SendIcon, ClipboardSignatureIcon, UsersIcon, PlusIcon, SettingsIcon } from 'lucide-react';
+import { LayoutDashboardIcon, HomeIcon, HammerIcon, InboxIcon, SendIcon, ClipboardSignatureIcon, UsersIcon, PlusIcon, SettingsIcon, KanbanSquareIcon } from 'lucide-react';
 export const navLinks = [
     {
         title: 'Home',
@@ -8,17 +8,24 @@ export const navLinks = [
         lastOfGroup: true
       },
       {
+        title: 'Projects',
+        icon: <KanbanSquareIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
+        path: '/projects',
+        group: 1,
+        lastOfGroup: true
+      },
+      {
         title: 'Inbox',
         icon: <InboxIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
         path: '/inbox',
         group: 2
       },
-      {
-        title: 'Jobs',
-        icon: <HammerIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
-        path: '/jobs',
-        group: 2
-      },
+      // {
+      //   title: 'Jobs',
+      //   icon: <HammerIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
+      //   path: '/jobs',
+      //   group: 2
+      // },
       {
         title: 'Invoices',
         icon: <SendIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
