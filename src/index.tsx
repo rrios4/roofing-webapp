@@ -32,7 +32,9 @@ import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
 
 const container = document.getElementById('app');
-const root = createRoot(container); // createRoot(container!) if you use TypeScript
+if (!container) throw new Error('Failed to find the root element');
+
+const root = createRoot(container);
 
 const queryClient = new QueryClient();
 

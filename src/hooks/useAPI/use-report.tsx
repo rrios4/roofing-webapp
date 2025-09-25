@@ -11,8 +11,8 @@ import {
   fetchTotalPendingQuotes,
   fetchTotalRejectedQuotes,
   fetchTotalResidentialCustomers,
-  fetchTotalScheduledLeads
-  // @ts-ignore
+  fetchTotalScheduledLeads,
+  type DashboardMetrics
 } from '../../services/api/report-service';
 
 // Custom hook that use react query to fetch total new leads count
@@ -113,6 +113,22 @@ export const useFetchTotalRejectedQuotes = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['totalRejectedQuotes'],
     queryFn: async () => await fetchTotalRejectedQuotes()
+  });
+
+  return { data, isLoading, isError };
+};
+
+// Custom hook for dashboard metrics with monthly percentage changes
+export const useFetchDashboardMetrics = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['dashboardMetrics'],
+    queryFn: async () => {
+      // Import the function dynamically to avoid circular import issues
+      const { fetchDashboardMetrics } = await import('../../services/api/report-service');
+      return await fetchDashboardMetrics();
+    },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
   });
 
   return { data, isLoading, isError };

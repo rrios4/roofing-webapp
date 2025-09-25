@@ -98,7 +98,10 @@ export function DashboardPageHeader() {
         </div>
       </div> */}
       <div className="mt-auto">
-        <Button variant={'outline'}>
+        <Button 
+          variant={'outline'}
+          onClick={() => window.open('https://github.com/rrios4/roofing-webapp/issues/new', '_blank')}
+        >
           <GithubIcon className="mr-2 h-4 w-4" /> Open issue
         </Button>
       </div>

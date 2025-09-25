@@ -3,11 +3,10 @@ import { DashboardPageHeader } from '../components/ui/page-header';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Separator } from '../components/ui/separator';
-import { 
-  Card, 
-  AreaChart, 
-  DonutChart, 
-  BarChart, 
+import {
+  AreaChart,
+  DonutChart,
+  BarChart,
   LineChart,
   Title,
   Subtitle,
@@ -40,12 +39,54 @@ import {
   KanbanSquareIcon,
   UserPlusIcon,
   FileIcon,
-  Receipt
+  Receipt,
+  Loader2
 } from 'lucide-react';
+import { useFetchDashboardMetrics } from '../hooks/useAPI/use-report';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 
 type Props = {};
 
 export default function DashboardPage({}: Props) {
+  // Fetch real dashboard metrics
+  const { data: dashboardMetrics, isLoading, isError } = useFetchDashboardMetrics();
+
+  // Helper function to format currency
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+
+  // Helper function to format large numbers
+  const formatNumber = (num: number): string => {
+    if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`;
+    }
+    return num.toString();
+  };
+
+  // Helper function to get trend indicator
+  const getTrendIndicator = (percentChange: number) => {
+    const isPositive = percentChange >= 0;
+    const color = isPositive ? 'text-green-600' : 'text-red-600';
+    const Icon = isPositive ? ArrowUpIcon : ArrowDownIcon;
+
+    return (
+      <div className="flex items-center mt-1">
+        <Icon className={`h-4 w-4 ${isPositive ? 'text-green-500' : 'text-red-500'} mr-1`} />
+        <span className={`text-sm ${color}`}>
+          {isPositive ? '+' : ''}
+          {percentChange}%
+        </span>
+        <span className="text-sm text-gray-500 ml-1">vs last month</span>
+      </div>
+    );
+  };
+
   // Sample data for design purposes - replace with real data later
   const sampleQuoteData = [
     { name: 'Accepted', value: 45, color: '#10B981' },
@@ -75,91 +116,128 @@ export default function DashboardPage({}: Props) {
     { status: 'Overdue', count: 7, amount: 21000 }
   ];
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="w-full">
+        <DashboardPageHeader />
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+          <span className="ml-2 text-gray-500">Loading dashboard data...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (isError || !dashboardMetrics) {
+    return (
+      <div className="w-full">
+        <DashboardPageHeader />
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <AlertTriangleIcon className="h-8 w-8 text-red-500 mx-auto mb-2" />
+            <p className="text-red-600">Error loading dashboard data</p>
+            <Button variant="outline" className="mt-2" onClick={() => window.location.reload()}>
+              Retry
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       <DashboardPageHeader />
-      
+
       {/* Dashboard Content */}
       <div className="flex flex-col w-full gap-6 my-4">
-        
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Total Customers */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Customers</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">247</p>
-                <div className="flex items-center mt-1">
-                  <ArrowUpIcon className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-sm text-green-600">+12%</span>
-                  <span className="text-sm text-gray-500 ml-1">vs last month</span>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Total Customers
+                  </p>
+                  <p className="text-2xl font-bold">
+                    {dashboardMetrics.totalCustomers.toLocaleString()}
+                  </p>
+                  {getTrendIndicator(dashboardMetrics.customerPercentChange)}
+                </div>
+                <div className="p-3 bg-blue-100 rounded-full">
+                  <UsersIcon className="h-6 w-6 text-blue-600" />
                 </div>
               </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <UsersIcon className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Active Quotes */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Quotes</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">68</p>
-                <div className="flex items-center mt-1">
-                  <ArrowUpIcon className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-sm text-green-600">+8%</span>
-                  <span className="text-sm text-gray-500 ml-1">vs last month</span>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Active Quotes
+                  </p>
+                  <p className="text-2xl font-bold">
+                    {dashboardMetrics.activeQuotes.toLocaleString()}
+                  </p>
+                  {getTrendIndicator(dashboardMetrics.quotePercentChange)}
+                </div>
+                <div className="p-3 bg-green-100 rounded-full">
+                  <FileTextIcon className="h-6 w-6 text-green-600" />
                 </div>
               </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <FileTextIcon className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Monthly Revenue */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Monthly Revenue</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">$67K</p>
-                <div className="flex items-center mt-1">
-                  <ArrowUpIcon className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-sm text-green-600">+22%</span>
-                  <span className="text-sm text-gray-500 ml-1">vs last month</span>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Monthly Revenue
+                  </p>
+                  <p className="text-2xl font-bold">
+                    {formatCurrency(dashboardMetrics.monthlyRevenue)}
+                  </p>
+                  {getTrendIndicator(dashboardMetrics.revenuePercentChange)}
+                </div>
+                <div className="p-3 bg-purple-100 rounded-full">
+                  <DollarSignIcon className="h-6 w-6 text-purple-600" />
                 </div>
               </div>
-              <div className="p-3 bg-purple-100 rounded-full">
-                <DollarSignIcon className="h-6 w-6 text-purple-600" />
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Pending Leads */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Pending Leads</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">23</p>
-                <div className="flex items-center mt-1">
-                  <ArrowDownIcon className="h-4 w-4 text-red-500 mr-1" />
-                  <span className="text-sm text-red-600">-5%</span>
-                  <span className="text-sm text-gray-500 ml-1">vs last month</span>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Pending Leads
+                  </p>
+                  <p className="text-2xl font-bold">
+                    {dashboardMetrics.pendingLeads.toLocaleString()}
+                  </p>
+                  {getTrendIndicator(dashboardMetrics.leadPercentChange)}
+                </div>
+                <div className="p-3 bg-orange-100 rounded-full">
+                  <PhoneIcon className="h-6 w-6 text-orange-600" />
                 </div>
               </div>
-              <div className="p-3 bg-orange-100 rounded-full">
-                <PhoneIcon className="h-6 w-6 text-orange-600" />
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Quick Actions & Business Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
           {/* Quick Actions Card */}
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border shadow-sm">
             <div className="flex items-center justify-between mb-6">
@@ -192,7 +270,9 @@ export default function DashboardPage({}: Props) {
 
           {/* Business Status Overview */}
           <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg border shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Business Status Overview</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+              Business Status Overview
+            </h3>
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-4">
                 <h4 className="font-medium text-gray-700 dark:text-gray-300">Quote Status</h4>
@@ -220,7 +300,7 @@ export default function DashboardPage({}: Props) {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <h4 className="font-medium text-gray-700 dark:text-gray-300">Customer Types</h4>
                 <div className="space-y-3">
@@ -241,7 +321,9 @@ export default function DashboardPage({}: Props) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <AlertTriangleIcon className="h-4 w-4 text-red-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Overdue Invoices</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        Overdue Invoices
+                      </span>
                     </div>
                     <Badge variant="red">7</Badge>
                   </div>
@@ -253,11 +335,12 @@ export default function DashboardPage({}: Props) {
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
           {/* Quote Status Distribution */}
           <Card className="p-6">
             <Title className="text-gray-900 dark:text-white">Quote Status Distribution</Title>
-            <Subtitle className="text-gray-600 dark:text-gray-400">Current month breakdown</Subtitle>
+            <Subtitle className="text-gray-600 dark:text-gray-400">
+              Current month breakdown
+            </Subtitle>
             <DonutChart
               data={sampleQuoteData}
               category="value"
@@ -277,7 +360,9 @@ export default function DashboardPage({}: Props) {
           {/* Lead Pipeline */}
           <Card className="p-6">
             <Title className="text-gray-900 dark:text-white">Lead Pipeline</Title>
-            <Subtitle className="text-gray-600 dark:text-gray-400">Current lead status breakdown</Subtitle>
+            <Subtitle className="text-gray-600 dark:text-gray-400">
+              Current lead status breakdown
+            </Subtitle>
             <BarChart
               data={sampleLeadData}
               index="name"
@@ -292,12 +377,13 @@ export default function DashboardPage({}: Props) {
 
         {/* Revenue Trends & Invoice Status */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
           {/* Monthly Revenue Trend */}
           <div className="lg:col-span-2">
             <Card className="p-6">
               <Title className="text-gray-900 dark:text-white">Monthly Revenue Trend</Title>
-              <Subtitle className="text-gray-600 dark:text-gray-400">Revenue and customer acquisition over time</Subtitle>
+              <Subtitle className="text-gray-600 dark:text-gray-400">
+                Revenue and customer acquisition over time
+              </Subtitle>
               <AreaChart
                 data={sampleMonthlyRevenue}
                 index="month"
@@ -316,7 +402,9 @@ export default function DashboardPage({}: Props) {
             <Subtitle className="text-gray-600 dark:text-gray-400">Payment tracking</Subtitle>
             <div className="mt-6 space-y-4">
               {sampleInvoiceData.map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">{item.status}</p>
                     <p className="text-sm text-gray-500">{item.count} invoices</p>
@@ -325,9 +413,14 @@ export default function DashboardPage({}: Props) {
                     <p className="font-medium text-gray-900 dark:text-white">
                       ${(item.amount / 1000).toFixed(0)}K
                     </p>
-                    <Badge 
-                      variant={item.status === 'Paid' ? 'green' : item.status === 'Pending' ? 'yellow' : 'red'}
-                    >
+                    <Badge
+                      variant={
+                        item.status === 'Paid'
+                          ? 'green'
+                          : item.status === 'Pending'
+                            ? 'yellow'
+                            : 'red'
+                      }>
                       {item.status}
                     </Badge>
                   </div>
@@ -339,7 +432,6 @@ export default function DashboardPage({}: Props) {
 
         {/* Performance Metrics & Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
           {/* Key Performance Indicators */}
           <Card className="p-6">
             <Title className="text-gray-900 dark:text-white">Key Performance Indicators</Title>
@@ -349,47 +441,31 @@ export default function DashboardPage({}: Props) {
                   <Text className="text-gray-600 dark:text-gray-400">Quote Conversion Rate</Text>
                   <Text className="font-medium text-gray-900 dark:text-white">68.2%</Text>
                 </div>
-                <CategoryBar
-                  values={[68.2, 31.8]}
-                  colors={['emerald', 'gray']}
-                  className="h-2"
-                />
+                <CategoryBar values={[68.2, 31.8]} colors={['emerald', 'gray']} className="h-2" />
               </div>
-              
+
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <Text className="text-gray-600 dark:text-gray-400">Customer Satisfaction</Text>
                   <Text className="font-medium text-gray-900 dark:text-white">94.5%</Text>
                 </div>
-                <CategoryBar
-                  values={[94.5, 5.5]}
-                  colors={['green', 'gray']}
-                  className="h-2"
-                />
+                <CategoryBar values={[94.5, 5.5]} colors={['green', 'gray']} className="h-2" />
               </div>
-              
+
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <Text className="text-gray-600 dark:text-gray-400">On-Time Completion</Text>
                   <Text className="font-medium text-gray-900 dark:text-white">89.3%</Text>
                 </div>
-                <CategoryBar
-                  values={[89.3, 10.7]}
-                  colors={['blue', 'gray']}
-                  className="h-2"
-                />
+                <CategoryBar values={[89.3, 10.7]} colors={['blue', 'gray']} className="h-2" />
               </div>
-              
+
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <Text className="text-gray-600 dark:text-gray-400">Revenue Target Progress</Text>
                   <Text className="font-medium text-gray-900 dark:text-white">78.4%</Text>
                 </div>
-                <CategoryBar
-                  values={[78.4, 21.6]}
-                  colors={['purple', 'gray']}
-                  className="h-2"
-                />
+                <CategoryBar values={[78.4, 21.6]} colors={['purple', 'gray']} className="h-2" />
               </div>
             </div>
           </Card>
@@ -397,8 +473,12 @@ export default function DashboardPage({}: Props) {
           {/* Recent Activity Feed */}
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
-              <Button variant="outline" size="sm">View All</Button>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Recent Activity
+              </h3>
+              <Button variant="outline" size="sm">
+                View All
+              </Button>
             </div>
             <div className="space-y-4">
               <div className="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
@@ -411,7 +491,7 @@ export default function DashboardPage({}: Props) {
                   <p className="text-xs text-gray-400">2 hours ago</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1 min-w-0">
@@ -422,7 +502,7 @@ export default function DashboardPage({}: Props) {
                   <p className="text-xs text-gray-400">4 hours ago</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                 <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1 min-w-0">
@@ -433,7 +513,7 @@ export default function DashboardPage({}: Props) {
                   <p className="text-xs text-gray-400">6 hours ago</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                 <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1 min-w-0">
@@ -444,7 +524,7 @@ export default function DashboardPage({}: Props) {
                   <p className="text-xs text-gray-400">8 hours ago</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1 min-w-0">
