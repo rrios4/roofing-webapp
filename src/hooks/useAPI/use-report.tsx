@@ -12,7 +12,14 @@ import {
   fetchTotalRejectedQuotes,
   fetchTotalResidentialCustomers,
   fetchTotalScheduledLeads,
-  type DashboardMetrics
+  fetchMultiYearRevenueData,
+  fetchBusinessStatusOverview,
+  fetchInvoiceStatusTracking,
+  getRevenueYears,
+  type DashboardMetrics,
+  type MonthlyRevenueData,
+  type BusinessStatusOverview,
+  type InvoiceStatusTracking
 } from '../../services/api/report-service';
 
 // Custom hook that use react query to fetch total new leads count
@@ -127,6 +134,45 @@ export const useFetchDashboardMetrics = () => {
       const { fetchDashboardMetrics } = await import('../../services/api/report-service');
       return await fetchDashboardMetrics();
     },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+  });
+
+  return { data, isLoading, isError };
+};
+
+// Custom hook for fetching multi-year revenue data for the area chart
+export const useFetchMultiYearRevenueData = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['multiYearRevenueData'],
+    queryFn: async () => await fetchMultiYearRevenueData(),
+    staleTime: 10 * 60 * 1000, // Cache for 10 minutes (longer since historical data changes less frequently)
+    cacheTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+  });
+
+  // Get the dynamic years array
+  const years = getRevenueYears();
+
+  return { data, isLoading, isError, years };
+};
+
+// Custom hook for fetching business status overview data
+export const useFetchBusinessStatusOverview = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['businessStatusOverview'],
+    queryFn: async () => await fetchBusinessStatusOverview(),
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+  });
+
+  return { data, isLoading, isError };
+};
+
+// Custom hook for fetching invoice status tracking data
+export const useFetchInvoiceStatusTracking = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['invoiceStatusTracking'],
+    queryFn: async () => await fetchInvoiceStatusTracking(),
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
   });
