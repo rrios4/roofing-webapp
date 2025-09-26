@@ -3,14 +3,12 @@ import DefaultPageHeader from '../components/ui/page-header';
 import CountStatCard from '../components/count-stat-card';
 import {
   ArrowDownIcon,
-  ArrowUpDownIcon,
   ArrowUpIcon,
   CheckCircleIcon,
   ChevronRightIcon,
   CircleDotIcon,
   MinusCircleIcon,
-  PencilIcon,
-  TrashIcon
+  PencilIcon
 } from 'lucide-react';
 import {
   useFetchTotalOverdueInvoices,
@@ -22,7 +20,6 @@ import { useFetchAllInvoices } from '../hooks/useAPI/use-invoice';
 import DataTableFilterCard from '../components/data-table-filter-card';
 import { createColumnHelper } from '@tanstack/react-table';
 import {
-  arrayOfMemojiFileNames,
   formatDateWithAbbreviatedMonth,
   formatMoneyValue,
   formatNumber
@@ -30,7 +27,7 @@ import {
 import { Button } from '../components/ui/button';
 import DefaultStatusBadge from '../components/status-badges';
 import { Link } from 'react-router-dom';
-import { Avatar, AvatarImage } from '../components/ui/avatar';
+
 import CustomerPreviewPopover from '../components/customer-preview-popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import AddInvoiceForm from '../components/forms/add-invoice-form';
@@ -103,7 +100,7 @@ export const invoiceTableColumns = [
   columnHelper.accessor('invoice_number', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      return <p className="text-center text-[14px]">INV-{formatNumber(invoice.invoice_number)}</p>;
+      return <p className="text-center text-[14px]">INV-{formatNumber(invoice.invoice_number || 0)}</p>;
     },
     header: ({ column }) => (
       <div className="flex justify-center w-full">
@@ -123,7 +120,7 @@ export const invoiceTableColumns = [
   }),
   columnHelper.accessor(
     (row: any) =>
-      `${row.customer.first_name} ${row.customer.last_name} ${row.customer.email} ${row.invoice_number} ${row.invoice_status.name} ${row.services.name}`,
+      `${row.customer?.first_name || ''} ${row.customer?.last_name || ''} ${row.customer?.email || ''} ${row.invoice_number || ''} ${row.invoice_status?.name || ''} ${row.service?.name || ''}`,
     {
       id: 'customer',
       cell: ({ row }: any) => {
@@ -134,15 +131,15 @@ export const invoiceTableColumns = [
         return (
           <CustomerPreviewPopover
             // avatarUrl={memojiUrl}
-            firstName={invoice.customer.first_name}
-            lastName={invoice.customer.last_name}
-            email={invoice.customer.email}
-            phoneNumber={invoice.customer.phone_number}
-            streetAddress={invoice.customer.street_address}
-            city={invoice.customer.city}
-            state={invoice.customer.state}
-            zipcode={invoice.customer.zipcode}
-            customerId={invoice.customer.id}
+            firstName={invoice.customer?.first_name || ''}
+            lastName={invoice.customer?.last_name || ''}
+            email={invoice.customer?.email || ''}
+            phoneNumber={invoice.customer?.phone_number || ''}
+            streetAddress={invoice.customer?.street_address || ''}
+            city={invoice.customer?.city || ''}
+            state={invoice.customer?.state || ''}
+            zipcode={invoice.customer?.zipcode || ''}
+            customerId={invoice.customer?.id || 0}
           />
         );
       },
@@ -166,14 +163,15 @@ export const invoiceTableColumns = [
   columnHelper.accessor('invoice_status_id', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      if (invoice.invoice_status.name === 'Paid') {
-        return <DefaultStatusBadge title={invoice.invoice_status.name} variant={'green'} />;
-      } else if (invoice.invoice_status.name === 'Overdue') {
-        return <DefaultStatusBadge title={invoice.invoice_status.name} variant={'red'} />;
-      } else if (invoice.invoice_status.name === 'Pending') {
-        return <DefaultStatusBadge title={invoice.invoice_status.name} variant={'yellow'} />;
+      const statusName = invoice.invoice_status?.name || 'Unknown';
+      if (statusName === 'Paid') {
+        return <DefaultStatusBadge title={statusName} variant={'green'} />;
+      } else if (statusName === 'Overdue') {
+        return <DefaultStatusBadge title={statusName} variant={'red'} />;
+      } else if (statusName === 'Pending') {
+        return <DefaultStatusBadge title={statusName} variant={'yellow'} />;
       } else {
-        return <DefaultStatusBadge title={invoice.invoice_status.name} variant={'gray'} />;
+        return <DefaultStatusBadge title={statusName} variant={'gray'} />;
       }
     },
     header: ({ column }) => (
@@ -197,7 +195,7 @@ export const invoiceTableColumns = [
       const invoice = row.original;
       return (
         <p className="text-[14px] font-[400]">
-          {formatDateWithAbbreviatedMonth(invoice.invoice_date)}
+          {invoice.invoice_date ? formatDateWithAbbreviatedMonth(invoice.invoice_date) : 'N/A'}
         </p>
       );
     },
@@ -220,7 +218,7 @@ export const invoiceTableColumns = [
   columnHelper.accessor('service_type_id', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      return <p>{invoice.service.name}</p>;
+      return <p>{invoice.service?.name || 'Unknown Service'}</p>;
     },
     header: ({ column }) => (
       <div className="flex">
@@ -241,7 +239,7 @@ export const invoiceTableColumns = [
   columnHelper.accessor('due_date', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      return <p>{formatDateWithAbbreviatedMonth(invoice.due_date)}</p>;
+      return <p>{invoice.due_date ? formatDateWithAbbreviatedMonth(invoice.due_date) : 'N/A'}</p>;
     },
     header: ({ column }) => (
       <div className="flex">
@@ -262,7 +260,7 @@ export const invoiceTableColumns = [
   columnHelper.accessor('total', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      return <p>${formatMoneyValue(invoice.total)}</p>;
+      return <p>${formatMoneyValue(invoice.total || 0)}</p>;
     },
     header: ({ column }) => {
       return (
@@ -285,7 +283,7 @@ export const invoiceTableColumns = [
   columnHelper.accessor('amount_due', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      return <p>${formatMoneyValue(invoice.amount_due)}</p>;
+      return <p>${formatMoneyValue(invoice.amount_due || 0)}</p>;
     },
     header: ({ column }) => {
       return (

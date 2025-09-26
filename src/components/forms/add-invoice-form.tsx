@@ -9,6 +9,7 @@ import SearchCustomerCombobox from '../customer-combobox';
 import { useFetchCustomers } from '../../hooks/useAPI/use-customer';
 import {
   CalendarIcon,
+  Loader2Icon,
   MapIcon,
   RulerIcon,
   StickyNoteIcon,
@@ -27,7 +28,6 @@ import { cn, formatMoneyValue } from '../../lib/utils';
 import { format } from 'date-fns';
 import { Label } from '../ui/label';
 import { SheetClose, SheetFooter } from '../ui/sheet';
-import ButtonLoading from '../button-states';
 import { Textarea } from '../ui/textarea';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import supabase from '../../lib/supabase-client';
@@ -84,8 +84,8 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
     defaultValues: {
       invoice_number: undefined, // Will be calculated
       customer_id: 0,
-      service_type_id: undefined,
-      invoice_status_id: undefined,
+      service_type_id: 0, // Initialize as 0 instead of undefined
+      invoice_status_id: 0, // Initialize as 0 instead of undefined
       invoice_date: new Date(),
       issue_date: new Date(),
       due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
@@ -299,13 +299,18 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                     <FormLabel>Select Status</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
-                      value={field.value && field.value !== 0 ? String(field.value) : undefined}>
+                      value={field.value && field.value > 0 ? String(field.value) : ""}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent 
+                        side="bottom" 
+                        align="start"
+                        sideOffset={4}
+                        avoidCollisions={true}
+                        position="popper">
                         <DefaultSelectDataItems data={invoiceStatuses || []} />
                       </SelectContent>
                     </Select>
@@ -395,13 +400,18 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                   <FormLabel>Select Service</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(Number(value))}
-                    value={field.value && field.value !== 0 ? String(field.value) : undefined}>
+                    value={field.value && field.value > 0 ? String(field.value) : ""}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select service" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent 
+                      side="bottom" 
+                      align="start"
+                      sideOffset={4}
+                      avoidCollisions={true}
+                      position="popper">
                       <DefaultSelectDataItems data={roofingServices || []} />
                     </SelectContent>
                   </Select>
@@ -710,7 +720,10 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                 type="submit"
                 disabled={invoiceMutation.isLoading || invoiceLineItemMutation.isLoading}>
                 {invoiceMutation.isLoading || invoiceLineItemMutation.isLoading ? (
-                  <ButtonLoading variant="primary" />
+                  <>
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </>
                 ) : (
                   'Create Invoice'
                 )}

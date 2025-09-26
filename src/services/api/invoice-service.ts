@@ -19,7 +19,11 @@ export const fetchAllInvoices = async (): Promise<InvoiceWithRelations[]> => {
         first_name,
         last_name,
         email,
-        phone_number
+        phone_number,
+        street_address,
+        city,
+        state,
+        zipcode
       ),
       service (
         id,
