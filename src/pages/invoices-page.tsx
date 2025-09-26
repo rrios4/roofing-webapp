@@ -33,7 +33,8 @@ import { Link } from 'react-router-dom';
 import { Avatar, AvatarImage } from '../components/ui/avatar';
 import CustomerPreviewPopover from '../components/customer-preview-popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
-import AddInvoiceForm from '../components/forms/invoice-forms';
+import AddInvoiceForm from '../components/forms/add-invoice-form';
+import UpdateInvoiceSheet from '../components/forms/update-invoice-sheet';
 import { ConnectedDeleteInvoiceAlertDialog } from '../components/connected-delete-dialogs';
 
 type Props = {};
@@ -96,7 +97,6 @@ export default function InvoicesPage() {
   );
 }
 
-const handleEditDrawer = (item: any) => {};
 const deleteModalHandler = (itemId: any, itemNumber: any) => {};
 
 export const invoiceTableColumns = [
@@ -310,19 +310,14 @@ export const invoiceTableColumns = [
       const invoice = row.original;
       return (
         <div className="flex gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant={'secondary'}
-                  className="px-3"
-                  onClick={() => handleEditDrawer(invoice)}>
-                  <PencilIcon size={'15px'} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Edit</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <UpdateInvoiceSheet 
+            invoice={invoice}
+            trigger={
+              <Button variant={'outline'}>
+                <PencilIcon size={'15px'} />
+              </Button>
+            }
+          />
           <ConnectedDeleteInvoiceAlertDialog
             title="Are you absolutely sure?"
             description="This action cannot be undone. This will permanently delete invoice with line-items/payments and remove data from our server."

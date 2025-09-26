@@ -104,3 +104,7 @@ export { default as ProtectedRoute } from './common/protected-route';
 
 // Shadcn/ui and Radix UI Exports
 // export { default as Button } from './ui/button';
+
+// New Update Forms
+export { default as UpdateInvoiceForm } from './forms/update-invoice-form';
+export { default as UpdateInvoiceSheet } from './forms/update-invoice-sheet';

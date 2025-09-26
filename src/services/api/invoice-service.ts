@@ -37,6 +37,7 @@ export const fetchAllInvoices = async (): Promise<InvoiceWithRelations[]> => {
         updated_at
       )
     `)
+    .order('invoice_number', { ascending: false })
     .order('invoice_status_id', { ascending: false })
     .order('updated_at', { ascending: false });
 
