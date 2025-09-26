@@ -18,7 +18,8 @@ export default function ConnectedDeleteQRequestAlertDialog({ title, description,
   const [open, setOpen] = React.useState(false);
   const { mutate: deleteQRByIdMutation, isLoading } = useDeleteQRById(toast, setOpen);
   const handeSubmit = async () => {
-    deleteQRByIdMutation(itemId);
+    const qrId = typeof itemId === 'number' ? itemId : parseInt(itemId, 10);
+    deleteQRByIdMutation(qrId);
     // console.log(`Delete button works and will delete item with id: ${itemId}`);
   };
   return (
@@ -63,7 +64,7 @@ export function ConnectedDeleteInvoiceAlertDialog({ title, description, itemId }
       onOpenChange={setOpen}
       onSubmit={handleSubmit}
       buttonTextEnabled={false}
-      buttonVariant={"secondary"}
+      buttonVariant={"outline"}
     />
   );
 }
@@ -103,7 +104,8 @@ export function ConnectedDeleteCustomerAlertDialog({ title, description, itemId 
   const [open, setOpen] = React.useState(false);
   const { mutate: deleteCustomer, isLoading } = useDeleteCustomer(toast);
   const handleSubmit = async () => {
-    deleteCustomer(itemId);
+    const customerId = typeof itemId === 'number' ? itemId : parseInt(itemId, 10);
+    deleteCustomer(customerId);
   };
   return (
     <DefaultDeleteAlertDialog

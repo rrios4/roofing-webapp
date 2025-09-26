@@ -30,6 +30,7 @@ import {
 } from './pages';
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
+import InvoiceInfoPage from './pages/invoice-info';
 
 const container = document.getElementById('app');
 if (!container) throw new Error('Failed to find the root element');
@@ -83,6 +84,14 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <InvoicesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/invoices/:id"
+                element={
+                  <ProtectedRoute>
+                    <InvoiceInfoPage />
                   </ProtectedRoute>
                 }
               />

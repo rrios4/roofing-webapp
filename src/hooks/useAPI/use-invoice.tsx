@@ -26,7 +26,8 @@ export const useFetchInvoiceById = (invoice_number: any) => {
   // react-query
   const { data, isError, isLoading } = useQuery({
     queryKey: ['invoiceById', invoice_number],
-    queryFn: () => fetchInvoiceById(invoice_number)
+    queryFn: () => fetchInvoiceById(invoice_number),
+    enabled: !!invoice_number && invoice_number > 0 // Only run query if we have a valid invoice number
   });
 
   return { data, isError, isLoading };

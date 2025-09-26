@@ -108,3 +108,4 @@ export { default as ProtectedRoute } from './common/protected-route';
 // New Update Forms
 export { default as UpdateInvoiceForm } from './forms/update-invoice-form';
 export { default as UpdateInvoiceSheet } from './forms/update-invoice-sheet';
+export { default as RecordPaymentDialog } from './record-payment-dialog';

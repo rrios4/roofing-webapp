@@ -66,7 +66,11 @@ export const fetchInvoiceById = async (invoice_number: number): Promise<InvoiceW
         first_name,
         last_name,
         email,
-        phone_number
+        phone_number,
+        street_address,
+        city,
+        state,
+        zipcode
       ),
       invoice_status (
         id,

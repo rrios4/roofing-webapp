@@ -55,7 +55,7 @@ export default function DefaultDeleteAlertDialog({
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>
-        <Button variant={buttonVariant}>
+        <Button variant={buttonVariant} size={'icon'}>
           {buttonTextEnabled ? (
             <TrashIcon className="w-4 h-4 mr-3" />
           ) : (

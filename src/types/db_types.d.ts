@@ -93,6 +93,7 @@ export type InvoiceInsert = {
   // Type for invoice with joined relations
   export type InvoiceWithRelations = Invoice & {
     customer: Customer;
+    service: ServiceType;
     service_type: ServiceType;
     invoice_status: InvoiceStatus;
   };

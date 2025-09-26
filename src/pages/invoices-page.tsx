@@ -33,6 +33,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../com
 import AddInvoiceForm from '../components/forms/add-invoice-form';
 import UpdateInvoiceSheet from '../components/forms/update-invoice-sheet';
 import { ConnectedDeleteInvoiceAlertDialog } from '../components/connected-delete-dialogs';
+import RecordPaymentDialog from '../components/record-payment-dialog';
 
 type Props = {};
 const columnHelper = createColumnHelper<any>();
@@ -311,10 +312,13 @@ export const invoiceTableColumns = [
           <UpdateInvoiceSheet 
             invoice={invoice}
             trigger={
-              <Button variant={'outline'}>
+              <Button variant={'outline'} className='px-3'>
                 <PencilIcon size={'15px'} />
               </Button>
             }
+          />
+          <RecordPaymentDialog 
+            invoice={invoice}
           />
           <ConnectedDeleteInvoiceAlertDialog
             title="Are you absolutely sure?"
@@ -325,7 +329,7 @@ export const invoiceTableColumns = [
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link to={`/invoices/${invoice.invoice_number}`}>
-                  <Button className="px-3" variant={'secondary'}>
+                  <Button className="px-3" variant={'primary'}>
                     <ChevronRightIcon size={'15px'} />
                   </Button>
                 </Link>

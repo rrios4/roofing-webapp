@@ -50,7 +50,7 @@ export const useDeleteInvoicePayment = (toast: any) => {
       onError: (error: any) => {
         toast({
           position: 'top',
-          title: `Error Occured Deleting Payment`,
+          title: `Error Occurred Deleting Payment`,
           description: `Error: ${error.message}`,
           status: 'error',
           duration: 5000,
@@ -58,15 +58,17 @@ export const useDeleteInvoicePayment = (toast: any) => {
         });
       },
       onSuccess: (data: any) => {
-        queryClient.invalidateQueries({
-          queryKey: ['invoiceById', data.invoice_number.toString()]
-        });
+        // Only invalidate queries if we have the invoice_number in the response
+        if (data && data.invoice_number) {
+          queryClient.invalidateQueries({
+            queryKey: ['invoiceById', data.invoice_number.toString()]
+          });
+        }
+        
         toast({
           position: 'top',
-          title: `Succesfully Deleted Payment`,
-          description: `We were able to delete a payment that was posted for ${formatDate(
-            data.date_received
-          )} for a total of $${formatMoneyValue(data.amount)} 🎉`,
+          title: `Successfully Deleted Payment`,
+          description: `We were able to delete a payment${data && data.date_received ? ` that was posted for ${formatDate(data.date_received)}` : ''}${data && data.amount ? ` for a total of $${formatMoneyValue(data.amount)}` : ''} 🎉`,
           status: 'success',
           duration: 5000,
           isClosable: true
