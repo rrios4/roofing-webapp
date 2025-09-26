@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import DefaultDeleteAlertDialog from './alert-delete-dialog';
 import { useDeleteQRById } from '../hooks/useAPI/use-qr';
 import { toast } from './ui/use-toast';
@@ -11,7 +11,7 @@ import { useDeleteCustomer } from '../hooks/useAPI/use-customer';
 type Props = {
   title: string;
   description: string;
-  itemId: any;
+  itemId: string | number;
 };
 
 export default function ConnectedDeleteQRequestAlertDialog({ title, description, itemId }: Props) {
@@ -41,7 +41,17 @@ export function ConnectedDeleteInvoiceAlertDialog({ title, description, itemId }
   const { mutate: deleteInvoiceByIdMutation, isLoading } =
     useDeleteAllInvoicePaymentsByInvoiceNumber(toast, setOpen);
   const handleSubmit = async () => {
-    deleteInvoiceByIdMutation(itemId);
+    // Convert itemId to number to ensure proper type for API calls
+    const invoiceNumber = parseInt(itemId?.toString() || '0', 10);
+    if (invoiceNumber && invoiceNumber > 0) {
+      deleteInvoiceByIdMutation(invoiceNumber);
+    } else {
+      toast({
+        title: 'Error',
+        description: 'Invalid invoice number provided.',
+        variant: 'destructive'
+      });
+    }
   };
   return (
     <DefaultDeleteAlertDialog
@@ -62,7 +72,17 @@ export function ConnectedDeleteQuoteAlertDialog({ title, description, itemId }: 
   const [open, setOpen] = React.useState(false);
   const { mutate, isLoading } = useDeleteAllQuoteLineItemsWithQuote(toast, itemId, setOpen);
   const handleSubmit = async () => {
-    mutate(itemId);
+    // Convert itemId to number to ensure proper type for API calls
+    const quoteNumber = parseInt(itemId?.toString() || '0', 10);
+    if (quoteNumber && quoteNumber > 0) {
+      mutate(quoteNumber);
+    } else {
+      toast({
+        title: 'Error',
+        description: 'Invalid quote number provided.',
+        variant: 'destructive'
+      });
+    }
   };
   return (
     <DefaultDeleteAlertDialog

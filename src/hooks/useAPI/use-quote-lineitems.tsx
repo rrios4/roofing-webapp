@@ -20,7 +20,10 @@ export const useDeleteAllQuoteLineItemsWithQuote = (toast: any, itemNumber: any,
         variant: 'destructive'
       });
     },
-    onSuccess: () => mutateDeleteQuote(itemNumber)
+    onSuccess: (data: any, variables: number) => {
+      // Use the original quoteNumber (variables) passed to the mutation
+      mutateDeleteQuote(variables);
+    }
   });
 };
 

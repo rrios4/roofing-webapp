@@ -90,8 +90,9 @@ export const useDeleteAllInvoicePaymentsByInvoiceNumber = (toast: any, setOpen: 
           variant: 'destructive'
         });
       },
-      onSuccess: (data: any) => {
-        mutate(data);
+      onSuccess: (data: any, variables: number) => {
+        // Pass the original invoiceNumber (variables) to the next mutation, not the returned data
+        mutate(variables);
       }
     }
   );
