@@ -32,6 +32,11 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import AddCustomerForm from '../forms/customer-forms';
+import AddQuoteForm from '../forms/add-quote-form';
+import AddInvoiceForm from '../forms/add-invoice-form';
 
 type Props = {
   userData: IGoogleUser;
@@ -39,6 +44,9 @@ type Props = {
 
 export default function SideNavbar({ userData }: Props) {
   const auth = useAuth();
+  const [customerSheetOpen, setCustomerSheetOpen] = React.useState(false);
+  const [quoteSheetOpen, setQuoteSheetOpen] = React.useState(false);
+  const [invoiceSheetOpen, setInvoiceSheetOpen] = React.useState(false);
   return (
     <>
       {/* Desktop */}
@@ -97,9 +105,38 @@ export default function SideNavbar({ userData }: Props) {
           <div className="flex flex-col mt-auto gap-2 mx-auto">
             {auth?.user && (
               <div>
-                <Button variant={'primary'} className="rounded-full" size={'icon'}>
-                  <PlusIcon size={'18px'} />
-                </Button>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant={'primary'} className="rounded-full" size={'icon'}>
+                      <PlusIcon size={'18px'} />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent side="right" className="w-48 p-2">
+                    <div className="space-y-1">
+                      <button 
+                        onClick={() => setCustomerSheetOpen(true)}
+                        className="flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors w-full text-left"
+                      >
+                        <UsersIcon size={16} />
+                        <span>New Customer</span>
+                      </button>
+                      <button 
+                        onClick={() => setQuoteSheetOpen(true)}
+                        className="flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors w-full text-left"
+                      >
+                        <ClipboardSignatureIcon size={16} />
+                        <span>New Quote</span>
+                      </button>
+                      <button 
+                        onClick={() => setInvoiceSheetOpen(true)}
+                        className="flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors w-full text-left"
+                      >
+                        <SendIcon size={16} />
+                        <span>New Invoice</span>
+                      </button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             )}
             <div className="flex justify-center w-full">
@@ -109,6 +146,36 @@ export default function SideNavbar({ userData }: Props) {
         </div>
       </div>
       <MobileNavbar userData={userData} />
+
+      {/* Customer Form Sheet */}
+      <Sheet open={customerSheetOpen} onOpenChange={setCustomerSheetOpen}>
+        <SheetContent className="w-full sm:w-[440px]">
+          <SheetHeader>
+            <SheetTitle>Add New Customer</SheetTitle>
+          </SheetHeader>
+          <AddCustomerForm setOpen={setCustomerSheetOpen} />
+        </SheetContent>
+      </Sheet>
+
+      {/* Quote Form Sheet */}
+      <Sheet open={quoteSheetOpen} onOpenChange={setQuoteSheetOpen}>
+        <SheetContent className="w-full sm:w-[640px]">
+          <SheetHeader>
+            <SheetTitle>Create New Quote</SheetTitle>
+          </SheetHeader>
+          <AddQuoteForm />
+        </SheetContent>
+      </Sheet>
+
+      {/* Invoice Form Sheet */}
+      <Sheet open={invoiceSheetOpen} onOpenChange={setInvoiceSheetOpen}>
+        <SheetContent className="w-full sm:w-[640px]">
+          <SheetHeader>
+            <SheetTitle>Create New Invoice</SheetTitle>
+          </SheetHeader>
+          <AddInvoiceForm setOpen={setInvoiceSheetOpen} />
+        </SheetContent>
+      </Sheet>
     </>
   );
 }
