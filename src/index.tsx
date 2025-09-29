@@ -26,7 +26,8 @@ import {
   QuotesPage,
   InboxPage,
   PageNotFound,
-  CustomerInfoPage
+  CustomerInfoPage,
+  DataManagementPage
 } from './pages';
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
@@ -117,6 +118,14 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <CustomerInfoPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/data-management"
+                element={
+                  <ProtectedRoute>
+                    <DataManagementPage />
                   </ProtectedRoute>
                 }
               />

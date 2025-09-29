@@ -16,4 +16,5 @@ export { default as QuotesPage } from './quotes-page';
 export { default as InvoicesPage } from './invoices-page';
 export { default as InboxPage } from './inbox-page';
 export { default as CustomerInfoPage } from './customer-info-page';
+export { default as DataManagementPage } from './data-management-page';
 export { default as PageNotFound } from './page-not-found';
