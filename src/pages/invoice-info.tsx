@@ -26,7 +26,9 @@ import {
   SendHorizonalIcon,
   Share2Icon,
   Trash2Icon,
-  EditIcon
+  EditIcon,
+  UserIcon,
+  PackageIcon
 } from 'lucide-react';
 import {
   Table,
@@ -57,6 +59,8 @@ import {
   useDeleteInvoicePayment
 } from '../hooks/useAPI/use-invoice-payment';
 import { EmailInvoiceDialog } from '../components/forms/email-invoice-form';
+import { InvoicePDFPreviewDialog } from '../components/invoice-pdf-preview-dialog';
+import { transformInvoiceForPDF } from '../lib/pdf-utils';
 
 type Props = {};
 
@@ -431,9 +435,14 @@ export default function InvoiceInfoPage({}: Props) {
             title="Print invoice">
             <PrinterIcon className="w-[16px]" />
           </Button>
-          <Button size={'icon'} variant={'secondary'}>
-            <CloudDownloadIcon className="w-[16px]" />
-          </Button>
+          <InvoicePDFPreviewDialog
+            invoice={transformInvoiceForPDF(invoice)}
+            trigger={
+              <Button size={'icon'} variant={'secondary'} title="Download PDF">
+                <CloudDownloadIcon className="w-[16px]" />
+              </Button>
+            }
+          />
           {/* <Button size={'icon'} variant={'secondary'}>
             <EyeIcon className="w-[16px]" />
           </Button> */}
@@ -476,7 +485,7 @@ export default function InvoiceInfoPage({}: Props) {
       <div className="w-full flex lg:flex-row flex-col gap-4">
         <Card className="dark:bg-zinc-900 w-full">
           <CardHeader>
-            <div className="w-full flex flex-col sm:flex-row sm:justify-between md:px-8 md:pt-5">
+            <div className="w-full flex flex-col sm:flex-row sm:justify-between md:px-6 md:pt-5">
               <div className="flex gap-4">
                 <div className="w-[50px] h-max bg-blue-600 rounded-2xl transition ease-in-out duration-300 hover:scale-105">
                   <Link to={'/'}>
@@ -503,27 +512,41 @@ export default function InvoiceInfoPage({}: Props) {
           </CardHeader>
           <CardContent>
             {/* Invoice Info */}
-            <div className="flex flex-col sm:px-8 pb-6 w-full">
+            <div className="flex flex-col sm:px-6 pb-6 w-full">
               <div className="flex w-full justify-between gap-4">
                 <div>
                   {/* Customer Avatar */}
-                  <p className="text-sm text-gray-500 mb-0">Customer</p>
+                  <div className="flex gap-2">
+                    <UserIcon className="w-4 h-4 my-auto" />
+                    <p className="text-sm text-gray-500 align-middle">Customer</p>
+                  </div>
+
                   <div className="flex my-2 pt-1 pb-2 gap-4">
-                    <Avatar>
-                      <AvatarFallback>
-                        {`${(invoice.customer?.first_name || '').substring(0, 1)}${(invoice.customer?.last_name || '').substring(0, 1)}`}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="text-sm">
-                      <p className="font-medium">
-                        {invoice.customer?.first_name || ''} {invoice.customer?.last_name || ''}
-                      </p>
-                      <p className="font-light">{invoice.customer?.email || ''}</p>
-                    </div>
+                    <Link 
+                      to={`/customers/${invoice.customer_id}`}
+                      className="cursor-pointer hover:opacity-80 transition-opacity flex gap-4"
+                      title="View customer details"
+                    >
+                      <Avatar>
+                        <AvatarFallback>
+                          {`${(invoice.customer?.first_name || '').substring(0, 1)}${(invoice.customer?.last_name || '').substring(0, 1)}`}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="text-sm">
+                        <p className="font-medium">
+                          {invoice.customer?.first_name || ''} {invoice.customer?.last_name || ''}
+                        </p>
+                        <p className="font-light">{invoice.customer?.email || ''}</p>
+                      </div>
+                    </Link>
                   </div>
                 </div>
                 <div className="text-sm text-right">
-                  <p className="text-sm text-gray-500 mb-0">Service</p>
+                  <div className="flex gap-2">
+                    <PackageIcon className="w-4 h-4 my-auto" />
+                    <p className="text-sm text-gray-500 mb-0">Service</p>
+                  </div>
+
                   <p className="font-medium">{invoice.service?.name || 'Unknown Service'}</p>
                 </div>
               </div>
@@ -638,9 +661,7 @@ export default function InvoiceInfoPage({}: Props) {
               <div className="mt-8">
                 <p className="text-sm font-medium">NOTES</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {invoice.public_note ||
-                    invoice.cust_note ||
-                    'No customer notes added'}
+                  {invoice.public_note || invoice.cust_note || 'No customer notes added'}
                 </p>
               </div>
 
