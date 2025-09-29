@@ -9,7 +9,7 @@ import { useFetchCustomers } from '../hooks/useAPI/use-customer';
 import { BuildingIcon, StoreIcon, UserIcon, UsersIcon } from 'lucide-react';
 import CountStatCard from '../components/count-stat-card';
 import DataTable from '../components/data-table';
-import customerColumns from '../components/Customers/customer-table-columns.js';
+import customerColumns from '../components/tables/customer-table-columns.js';
 import DataTableFilterCard from '../components/data-table-filter-card';
 import AddCustomerForm from '../components/forms/customer-forms';
 
