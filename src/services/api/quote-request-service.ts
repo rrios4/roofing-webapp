@@ -8,7 +8,7 @@ export const fetchAllQuoteRequests = async (): Promise<QuoteRequestWithRelations
     .from(TABLES.QUOTE_REQUEST)
     .select(`
       *,
-      service_type (
+      service (
         id,
         name,
         description,
@@ -23,7 +23,7 @@ export const fetchAllQuoteRequests = async (): Promise<QuoteRequestWithRelations
         created_at,
         updated_at
       ),
-      status (
+      quote_request_status (
         id,
         name,
         description,
@@ -42,15 +42,15 @@ export const fetchAllQuoteRequests = async (): Promise<QuoteRequestWithRelations
   // Transform joined arrays to single objects
   const transformedData = data?.map((request: any) => ({
     ...request,
-    service_type: Array.isArray(request.service_type) 
-      ? request.service_type[0] 
-      : request.service_type,
+    service: Array.isArray(request.service) 
+      ? request.service[0] 
+      : request.service,
     customer_type: Array.isArray(request.customer_type) 
       ? request.customer_type[0] 
       : request.customer_type,
-    status: Array.isArray(request.status) 
-      ? request.status[0] 
-      : request.status
+    status: Array.isArray(request.quote_request_status) 
+      ? request.quote_request_status[0] 
+      : request.quote_request_status
   }));
 
   return transformedData as QuoteRequestWithRelations[];

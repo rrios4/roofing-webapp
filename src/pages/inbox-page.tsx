@@ -193,16 +193,16 @@ const leadsTableColumns = [
   columnHelper.accessor('est_request_status_id', {
     cell: ({ row }) => {
       const lead = row.original;
-      if (lead.estimate_request_status.name === 'New') {
-        return <DefaultStatusBadge title={lead.estimate_request_status.name} variant={'green'} />;
-      } else if (lead.estimate_request_status.name === 'Scheduled') {
-        return <DefaultStatusBadge title={lead.estimate_request_status.name} variant={'yellow'} />;
-      } else if (lead.estimate_request_status.name === 'Pending') {
-        return <DefaultStatusBadge title={lead.estimate_request_status.name} variant={'yellow'} />;
-      } else if (lead.estimate_request_status.name === 'Closed') {
-        return <DefaultStatusBadge title={lead.estimate_request_status.name} variant={'red'} />;
+      if (lead.status?.name === 'New') {
+        return <DefaultStatusBadge title={lead.status.name} variant={'green'} />;
+      } else if (lead.status?.name === 'Scheduled') {
+        return <DefaultStatusBadge title={lead.status.name} variant={'yellow'} />;
+      } else if (lead.status?.name === 'Pending') {
+        return <DefaultStatusBadge title={lead.status.name} variant={'yellow'} />;
+      } else if (lead.status?.name === 'Closed') {
+        return <DefaultStatusBadge title={lead.status.name} variant={'red'} />;
       } else {
-        return <DefaultStatusBadge title={lead.estimate_request_status.name} variant="gray" />;
+        return <DefaultStatusBadge title={lead.status?.name || 'Unknown'} variant="gray" />;
       }
     },
     header: ({ column }) => (
@@ -244,7 +244,7 @@ const leadsTableColumns = [
   columnHelper.accessor('service_type_id', {
     cell: ({ row }) => {
       const lead = row.original;
-      return <p>{lead.services.name}</p>;
+      return <p>{lead.service?.name}</p>;
     },
     header: ({ column }) => (
       <div className="w-full justify-center flex">
