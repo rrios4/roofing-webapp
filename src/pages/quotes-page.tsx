@@ -303,7 +303,7 @@ export const quoteColumns = [
           <UpdateQuoteSheet 
             quote={quote}
             trigger={
-              <Button variant={'outline'}>
+              <Button variant={'outline'} size={'icon'}>
                 <PencilIcon size={'15px'} />
               </Button>
             }
@@ -317,7 +317,7 @@ export const quoteColumns = [
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link to={`/quotes/${quote.quote_number}`}>
-                  <Button variant={'primary'}>
+                  <Button variant={'primary'} size={'icon'}>
                     <ChevronRightIcon size={'15px'} />
                   </Button>
                 </Link>

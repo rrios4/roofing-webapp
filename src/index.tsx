@@ -31,6 +31,7 @@ import {
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
 import InvoiceInfoPage from './pages/invoice-info';
+import QuoteInfoPage from './pages/quote-info';
 
 const container = document.getElementById('app');
 if (!container) throw new Error('Failed to find the root element');
@@ -76,6 +77,14 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <QuotesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/quotes/:id"
+                element={
+                  <ProtectedRoute>
+                    <QuoteInfoPage />
                   </ProtectedRoute>
                 }
               />

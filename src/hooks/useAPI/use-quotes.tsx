@@ -6,7 +6,8 @@ import {
   fetchQuotes,
   fetchSearchQuotes,
   updateQuoteById,
-  updateQuoteStatusById
+  updateQuoteStatusById,
+  convertQuoteToInvoice
   // @ts-ignore
 } from '../../services/api/quote-service';
 import { Quote } from '../../types/db_types';
@@ -130,6 +131,44 @@ export const useUpdateQuoteStatusById = (toast: any, quote_number: any) => {
         duration: 5000,
         isClosable: true
       });
+    }
+  });
+};
+
+// Custom hook to convert quote to invoice
+export const useConvertQuoteToInvoice = (toast: any, quote_number: number) => {
+  const queryClient = useQueryClient();
+  return useMutation(() => convertQuoteToInvoice(quote_number), {
+    onError: (error: any) => {
+      // Handle the specific duplicate conversion error
+      if (error.message.includes('already been converted')) {
+        toast({
+          title: 'Quote Already Converted',
+          description: error.message,
+          variant: 'destructive'
+        });
+      } else {
+        toast({
+          title: 'Error Converting Quote',
+          description: `Failed to convert quote to invoice. Error: ${error.message}`,
+          variant: 'destructive'
+        });
+      }
+    },
+    onSuccess: (result: any) => {
+      queryClient.invalidateQueries({ queryKey: ['quoteById', quote_number] });
+      queryClient.invalidateQueries({ queryKey: ['quotes'] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      
+      const invoiceNumber = result.invoice.invoice_number;
+      toast({
+        title: 'Quote Converted Successfully! 🎉',
+        description: `Quote has been converted to Invoice #INV-${invoiceNumber}. You can view it in the invoices section.`,
+        variant: 'success'
+      });
+      
+      // Return the invoice data for potential navigation
+      return result;
     }
   });
 };
