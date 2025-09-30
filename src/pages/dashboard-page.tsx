@@ -460,7 +460,7 @@ export default function DashboardPage({}: Props) {
                   data={multiYearRevenueData}
                   index="month"
                   categories={years}
-                  colors={['slate', 'blue', 'indigo', 'purple', 'emerald'].slice(0, years.length)}
+                  colors={['gray', 'red', 'yellow', 'blue', 'green'].slice(0, years.length)}
                   className="mt-6 h-96"
                   valueFormatter={(value: number) => `$${(value / 1000).toFixed(0)}K`}
                   showAnimation={true}

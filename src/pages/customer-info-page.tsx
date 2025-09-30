@@ -163,7 +163,7 @@ export default function CustomerInfoPage({}: Props) {
               description={
                 'This action cannot be undone. This will permanently delete customer data from our server and cannot be retrieved back.'
               }
-              itemId={id}
+              itemId={id || ''}
             />
           </div>
         </div>
