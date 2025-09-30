@@ -27,8 +27,10 @@ import {
   InboxPage,
   PageNotFound,
   CustomerInfoPage,
-  DataManagementPage
+  DataManagementPage,
+  ServicesManagementPage
 } from './pages';
+import ProfilePage from './pages/profile-page';
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
 import InvoiceInfoPage from './pages/invoice-info';
@@ -126,6 +128,22 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <DataManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/data-management/services"
+                element={
+                  <ProtectedRoute>
+                    <ServicesManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
                   </ProtectedRoute>
                 }
               />

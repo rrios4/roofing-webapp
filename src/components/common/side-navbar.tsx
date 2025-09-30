@@ -34,7 +34,7 @@ import {
 } from '../ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
-import AddCustomerForm from '../forms/customer-forms';
+import AddCustomerForm from '../forms/add-customer-form';
 import AddQuoteForm from '../forms/add-quote-form';
 import AddInvoiceForm from '../forms/add-invoice-form';
 
@@ -75,11 +75,13 @@ export default function SideNavbar({ userData }: Props) {
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                      <DropdownMenuItem className="cursor-pointer">
-                        <UsersIcon className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
-                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                      </DropdownMenuItem>
+                      <Link to="/profile">
+                        <DropdownMenuItem className="cursor-pointer">
+                          <UsersIcon className="mr-2 h-4 w-4" />
+                          <span>Profile</span>
+                          <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </Link>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>

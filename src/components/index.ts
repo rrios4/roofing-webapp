@@ -1,5 +1,6 @@
 export { default as Layout } from './common/Layout';
 export { default as ProtectedRoute } from './common/protected-route';
+export { Breadcrumb, PageBreadcrumb } from './ui/breadcrumb';
 // export { default as Navbar } from './common/Navbar';
 // export { default as PageHeader } from './ui/PageHeader';
 // export { default as Customer } from './Customers/Customer/Customer';

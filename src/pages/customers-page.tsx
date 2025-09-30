@@ -11,7 +11,7 @@ import CountStatCard from '../components/count-stat-card';
 import DataTable from '../components/data-table';
 import customerColumns from '../components/tables/customer-table-columns.js';
 import DataTableFilterCard from '../components/data-table-filter-card';
-import AddCustomerForm from '../components/forms/customer-forms';
+import AddCustomerForm from '../components/forms/add-customer-form';
 
 type Props = {};
 

@@ -1,4 +1,4 @@
-import { LayoutDashboardIcon, HomeIcon, HammerIcon, InboxIcon, SendIcon, ClipboardSignatureIcon, UsersIcon, PlusIcon, SettingsIcon, KanbanSquareIcon, ServerCogIcon } from 'lucide-react';
+import { LayoutDashboardIcon, HomeIcon, HammerIcon, InboxIcon, SendIcon, ClipboardSignatureIcon, UsersIcon, PlusIcon, SettingsIcon, KanbanSquareIcon, ServerCogIcon, UserIcon } from 'lucide-react';
 import { title } from 'process';
 export const navLinks = [
     {
@@ -51,7 +51,14 @@ export const navLinks = [
         icon: <ServerCogIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300"/>,
         path: "/data-management",
         group: 3
-      }
+      },
+      // {
+      //   title: "Profile",
+      //   icon: <UserIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300"/>,
+      //   path: "/profile",
+      //   group: 3,
+      //   lastOfGroup: true
+      // }
       // {
       //   title: "Settings",
       //   icon: <SettingsIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300"/>,
