@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import DefaultPageHeader from '../components/ui/page-header';
+import { PageBreadcrumb } from '../components/ui/breadcrumb';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
 import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
@@ -58,7 +58,7 @@ import {
   useCreateInvoicePayment,
   useDeleteInvoicePayment
 } from '../hooks/useAPI/use-invoice-payment';
-import { EmailInvoiceDialog } from '../components/forms/email-invoice-form';
+import { EmailInvoiceDialog } from '../components/forms/send-email-invoice-form';
 import { InvoicePDFPreviewDialog } from '../components/invoice-pdf-preview-dialog';
 import { transformInvoiceForPDF } from '../lib/pdf-utils';
 
@@ -400,21 +400,15 @@ export default function InvoiceInfoPage({}: Props) {
 
   return (
     <div className="w-full mx-auto py-4">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-2">
-        <div>
-          <h1 className="text-xl font-semibold">INV-{formatNumber(invoice.invoice_number || 0)}</h1>
-          <p className="text-sm text-gray-500">
-            Dashboard &gt; Invoice &gt; INV-{formatNumber(invoice.invoice_number || 0)}
-          </p>
-        </div>
-
-        {/* <div className="flex items-center space-x-3">
-          <span className="text-sm font-medium">Status</span>
-          <span className="px-3 py-1 text-sm rounded-md bg-green-100 text-green-700 font-medium">
-            Paid
-          </span>
-        </div> */}
+      {/* Breadcrumb Navigation */}
+      <div className="pt-1 pb-2">
+        <PageBreadcrumb
+          currentPage={`Invoice #${formatNumber(invoice.invoice_number || 0)}`}
+          parentPages={[
+            { label: 'Invoices', href: '/invoices' }
+          ]}
+          homeHref="/"
+        />
       </div>
 
       {/* Menu Action Bar */}

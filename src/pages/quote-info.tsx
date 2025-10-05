@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from '../components/ui/card';
+import { PageBreadcrumb } from '../components/ui/breadcrumb';
 import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
 import { Link } from 'react-router-dom';
@@ -36,13 +37,18 @@ import {
   TableHeader,
   TableRow
 } from '../components/ui/table';
-import { useFetchQuoteById, useUpdateQuoteStatusById, useConvertQuoteToInvoice } from '../hooks/useAPI/use-quotes';
+import {
+  useFetchQuoteById,
+  useUpdateQuoteStatusById,
+  useConvertQuoteToInvoice
+} from '../hooks/useAPI/use-quotes';
 import { useQuoteStatuses } from '../hooks/useAPI/use-quote-status';
 import { formatDateWithAbbreviatedMonth, formatMoneyValue, formatNumber } from '../lib/utils';
 import { useToast } from '../components/ui/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import UpdateQuoteSheet from '../components/forms/update-quote-sheet';
 import { QuotePDFPreviewDialog } from '../components/quote-pdf-preview-dialog';
+import { EmailQuoteDialog } from '../components/forms/send-email-quote-form';
 import { transformQuoteForPDF } from '../lib/pdf-utils';
 import ConvertQuoteAlertDialog from '../components/alert-convert-quote-dialog';
 
@@ -66,10 +72,14 @@ export default function QuoteInfoPage({}: Props) {
     isError
   } = useFetchQuoteById(isValidQuoteNumber ? parsedQuoteNumber : null);
   const { quoteStatuses, isLoading: isStatusesLoading } = useQuoteStatuses();
-  const { mutate: updateQuoteStatus, isLoading: isUpdatingStatus } =
-    useUpdateQuoteStatusById(toast, parsedQuoteNumber);
-  const { mutate: convertQuoteToInvoice, isLoading: isConverting } =
-    useConvertQuoteToInvoice(toast, parsedQuoteNumber || 0);
+  const { mutate: updateQuoteStatus, isLoading: isUpdatingStatus } = useUpdateQuoteStatusById(
+    toast,
+    parsedQuoteNumber
+  );
+  const { mutate: convertQuoteToInvoice, isLoading: isConverting } = useConvertQuoteToInvoice(
+    toast,
+    parsedQuoteNumber || 0
+  );
 
   // Show error if invalid quote number in URL
   if (!isValidQuoteNumber) {
@@ -158,7 +168,7 @@ export default function QuoteInfoPage({}: Props) {
       onSuccess: (result: any) => {
         // Optional: Navigate to the newly created invoice
         const invoiceNumber = result.invoice.invoice_number;
-        
+
         // Show success message and ask if user wants to view the invoice
         setTimeout(() => {
           const shouldNavigate = window.confirm(
@@ -191,21 +201,29 @@ export default function QuoteInfoPage({}: Props) {
 
   return (
     <div className="w-full mx-auto py-4">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-2">
-        <div>
-          <h1 className="text-xl font-semibold">QT-{formatNumber(quote.quote_number || 0)}</h1>
-          <p className="text-sm text-gray-500">
-            Dashboard &gt; Quote &gt; QT-{formatNumber(quote.quote_number || 0)}
-          </p>
-        </div>
+      {/* Breadcrumb Navigation */}
+      <div className="pt-1 pb-2">
+        <PageBreadcrumb
+          currentPage={`Quote #${formatNumber(quote.quote_number || 0)}`}
+          parentPages={[
+            { label: 'Quotes', href: '/quotes' }
+          ]}
+          homeHref="/"
+        />
       </div>
+
+      {/* Header */}
+      {/* <div className="flex justify-between items-center mb-2">
+        <div>
+          <h1 className="text-xl font-semibold">QUOTE-{formatNumber(quote.quote_number || 0)}</h1>
+        </div>
+      </div> */}
 
       {/* Menu Action Bar */}
       <div className="flex justify-between gap-4 mb-2 pb-2">
         <div className="w-full flex gap-2 mt-auto">
           {/* Update Quote Button */}
-          <UpdateQuoteSheet 
+          <UpdateQuoteSheet
             quote={quote}
             trigger={
               <Button size={'icon'} variant={'secondary'} title="Edit quote">
@@ -213,7 +231,7 @@ export default function QuoteInfoPage({}: Props) {
               </Button>
             }
           />
-          
+
           <Button
             size={'icon'}
             variant={'secondary'}
@@ -221,7 +239,7 @@ export default function QuoteInfoPage({}: Props) {
             title="Print quote">
             <PrinterIcon className="w-[16px]" />
           </Button>
-          
+
           <QuotePDFPreviewDialog
             quote={transformQuoteForPDF(quote)}
             trigger={
@@ -230,10 +248,15 @@ export default function QuoteInfoPage({}: Props) {
               </Button>
             }
           />
-          
-          {/* <Button size={'icon'} variant={'secondary'} title="Email quote">
-            <SendHorizonalIcon className="w-[16px]" />
-          </Button> */}
+
+          <EmailQuoteDialog
+            quote={quote}
+            trigger={
+              <Button size={'icon'} variant={'secondary'} title="Email quote">
+                <SendHorizonalIcon className="w-[16px]" />
+              </Button>
+            }
+          />
 
           {/* Convert to Invoice Button */}
           {/* {!quote.converted && !isQuoteExpired() && (
@@ -252,7 +275,7 @@ export default function QuoteInfoPage({}: Props) {
             />
           )} */}
         </div>
-        
+
         <div className="w-full flex justify-end gap-4">
           <div className="w-fit">
             <Label>Status</Label>
@@ -277,7 +300,7 @@ export default function QuoteInfoPage({}: Props) {
           </div>
         </div>
       </div>
-      
+
       <div className="w-full flex lg:flex-row flex-col gap-4">
         <Card className="dark:bg-zinc-900 w-full">
           <CardHeader>
@@ -300,13 +323,11 @@ export default function QuoteInfoPage({}: Props) {
                   variant={getStatusVariant((quote as any).quote_status?.name || '')}>
                   {(quote as any).quote_status?.name || 'Unknown'}
                 </Badge>
-                <p className="text-lg font-medium">
-                  QT-{formatNumber(quote.quote_number || 0)}
-                </p>
+                <p className="text-lg font-medium">QT-{formatNumber(quote.quote_number || 0)}</p>
               </div>
             </div>
           </CardHeader>
-          
+
           <CardContent>
             {/* Quote Info */}
             <div className="flex flex-col sm:px-6 pb-6 w-full">
@@ -319,11 +340,10 @@ export default function QuoteInfoPage({}: Props) {
                   </div>
 
                   <div className="flex my-2 pt-1 pb-2 gap-4">
-                    <Link 
+                    <Link
                       to={`/customers/${quote.customer_id}`}
                       className="cursor-pointer hover:opacity-80 transition-opacity flex gap-4"
-                      title="View customer details"
-                    >
+                      title="View customer details">
                       <Avatar>
                         <AvatarFallback>
                           {`${(quote.customer?.first_name || '').substring(0, 1)}${(quote.customer?.last_name || '').substring(0, 1)}`}
@@ -364,9 +384,7 @@ export default function QuoteInfoPage({}: Props) {
                   <div className="my-6 text-left">
                     <p className="text-sm text-gray-500">Quote Date</p>
                     <p className="font-medium">
-                      {quote.quote_date
-                        ? formatDateWithAbbreviatedMonth(quote.quote_date)
-                        : 'N/A'}
+                      {quote.quote_date ? formatDateWithAbbreviatedMonth(quote.quote_date) : 'N/A'}
                     </p>
                   </div>
                 </div>
@@ -409,7 +427,9 @@ export default function QuoteInfoPage({}: Props) {
                   <div className="text-left my-6">
                     <p className="text-sm text-gray-500">Expiration Date</p>
                     <p className={`font-medium ${isQuoteExpired() ? 'text-red-600' : ''}`}>
-                      {quote.expiration_date ? formatDateWithAbbreviatedMonth(quote.expiration_date) : 'N/A'}
+                      {quote.expiration_date
+                        ? formatDateWithAbbreviatedMonth(quote.expiration_date)
+                        : 'N/A'}
                     </p>
                   </div>
                 </div>
@@ -433,7 +453,9 @@ export default function QuoteInfoPage({}: Props) {
                         <TableRow key={lineItem.id}>
                           <TableCell>{index + 1}</TableCell>
                           <TableCell>
-                            <p className="font-medium">{lineItem.description || 'No description'}</p>
+                            <p className="font-medium">
+                              {lineItem.description || 'No description'}
+                            </p>
                             {/* {lineItem.sq_ft && (
                               <p className="text-sm text-gray-500">Square feet: {lineItem.sq_ft}</p>
                             )} */}
@@ -503,7 +525,7 @@ export default function QuoteInfoPage({}: Props) {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="w-full lg:w-1/3 h-fit">
           <CardContent>
             <div className="flex flex-col sm:px-0 pb-6 w-full">
@@ -522,24 +544,23 @@ export default function QuoteInfoPage({}: Props) {
                         ${formatMoneyValue(total)}
                       </p>
                     </div>
-                    <Badge 
+                    <Badge
                       variant={
-                        quote.converted 
-                          ? 'green' 
+                        quote.converted
+                          ? 'green'
                           : (quote as any).quote_status?.name?.toLowerCase() === 'accepted'
                             ? 'green'
-                            : isQuoteExpired() 
-                              ? 'red' 
+                            : isQuoteExpired()
+                              ? 'red'
                               : 'blue'
-                      } 
-                      className="text-sm"
-                    >
-                      {quote.converted 
-                        ? 'Converted' 
+                      }
+                      className="text-sm">
+                      {quote.converted
+                        ? 'Converted'
                         : (quote as any).quote_status?.name?.toLowerCase() === 'accepted'
                           ? 'Accepted Quote'
-                          : isQuoteExpired() 
-                            ? 'Expired Quote' 
+                          : isQuoteExpired()
+                            ? 'Expired Quote'
                             : 'Active Quote'}
                     </Badge>
                   </div>
@@ -555,24 +576,33 @@ export default function QuoteInfoPage({}: Props) {
                           {(quote as any).quote_status?.name || 'Unknown'}
                         </Badge>
                       </div>
-                      
+
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Issue Date:</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          Issue Date:
+                        </span>
                         <span className="text-sm font-medium">
-                          {quote.issue_date ? formatDateWithAbbreviatedMonth(quote.issue_date) : 'N/A'}
+                          {quote.issue_date
+                            ? formatDateWithAbbreviatedMonth(quote.issue_date)
+                            : 'N/A'}
                         </span>
                       </div>
-                      
+
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Expires:</span>
-                        <span className={`text-sm font-medium ${isQuoteExpired() ? 'text-red-600' : ''}`}>
-                          {quote.expiration_date ? formatDateWithAbbreviatedMonth(quote.expiration_date) : 'N/A'}
+                        <span
+                          className={`text-sm font-medium ${isQuoteExpired() ? 'text-red-600' : ''}`}>
+                          {quote.expiration_date
+                            ? formatDateWithAbbreviatedMonth(quote.expiration_date)
+                            : 'N/A'}
                         </span>
                       </div>
-                      
+
                       {quote.converted && (
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">Converted:</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            Converted:
+                          </span>
                           <Badge variant="green" className="text-xs">
                             <CheckCircleIcon className="w-3 h-3 mr-1" />
                             To Invoice
@@ -592,10 +622,15 @@ export default function QuoteInfoPage({}: Props) {
                         onConfirm={handleConvertQuote}
                         isLoading={isConverting}
                       />
-                      <Button className="w-full" variant="outline">
-                        <SendHorizonalIcon className="w-4 h-4 mr-2" />
-                        Send Quote
-                      </Button>
+                      <EmailQuoteDialog
+                        quote={quote}
+                        trigger={
+                          <Button className="w-full" variant="outline">
+                            <SendHorizonalIcon className="w-4 h-4 mr-2" />
+                            Send Quote
+                          </Button>
+                        }
+                      />
                     </div>
                   )}
                 </div>
@@ -605,6 +640,7 @@ export default function QuoteInfoPage({}: Props) {
               <div className="mt-6">
                 <p className="text-sm font-medium my-4">Private Note</p>
                 <Textarea
+                  className="min-h-[200px]"
                   value={quote.private_note || ''}
                   placeholder="No private notes added"
                   readOnly
@@ -615,6 +651,7 @@ export default function QuoteInfoPage({}: Props) {
               <div className="mt-4">
                 <p className="text-sm font-medium my-4">Measurement Note</p>
                 <Textarea
+                  className="min-h-[200px]"
                   value={quote.measurement_note || ''}
                   placeholder="No measurement notes added"
                   readOnly

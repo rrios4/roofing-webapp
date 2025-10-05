@@ -16,7 +16,7 @@ import {
   PencilIcon,
   UserPlusIcon
 } from 'lucide-react';
-import AddLeadRequestForm from '../components/forms/inbox-forms';
+import AddLeadRequestForm from '../components/forms/add-inbox-forms';
 import DataTable from '../components/data-table';
 import { useFetchAllQuoteRequests } from '../hooks/useAPI/use-qr';
 import DataTableFilterCard from '../components/data-table-filter-card';

@@ -1,4 +1,5 @@
 import supabase from '../lib/supabase-client';
+import { Buffer } from 'buffer';
 
 /**
  * Google Services Integration
@@ -127,7 +128,7 @@ class GoogleService {
         {
           method: 'POST',
           body: JSON.stringify({
-            raw: btoa(emailContent).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+            raw: Buffer.from(emailContent, 'utf-8').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
           }),
         }
       );

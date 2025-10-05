@@ -5,6 +5,17 @@ export default defineConfig({
   envPrefix: 'REACT_APP_',
 
   plugins: [react()],
+  define: {
+    global: 'globalThis',
+  },
+  resolve: {
+    alias: {
+      buffer: 'buffer',
+    },
+  },
+  optimizeDeps: {
+    include: ['buffer'],
+  },
   server: {
     watch: {
       usePolling: true
