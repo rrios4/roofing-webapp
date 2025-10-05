@@ -18,4 +18,5 @@ export { default as InboxPage } from './inbox-page';
 export { default as CustomerInfoPage } from './customer-info-page';
 export { default as DataManagementPage } from './data-management-page';
 export { default as ServicesManagementPage } from './services-management-page';
+export { default as StatusManagementPage } from './status-management-page';
 export { default as PageNotFound } from './page-not-found';

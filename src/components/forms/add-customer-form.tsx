@@ -23,13 +23,15 @@ type Props = {
 };
 
 export default function AddCustomerForm({ setOpen }: Props) {
-  const { data: customerTypes } = useFetchAllCustomerTypes();
+  const { data: customerTypes, isLoading: customerTypesLoading, error: customerTypesError } = useFetchAllCustomerTypes();
   const { mutate: addCustomerMutation, isLoading: isAddCustomerMutationLoading } =
     useCreateCustomer(toast, setOpen);
 
-  // React.useEffect(() => {
-  //   console.log(customerTypes);
-  // }, []);
+  React.useEffect(() => {
+    console.log('Customer Types Data:', customerTypes);
+    console.log('Customer Types Loading:', customerTypesLoading);
+    console.log('Customer Types Error:', customerTypesError);
+  }, [customerTypes, customerTypesLoading, customerTypesError]);
 
   // Define form
   const form = useForm<z.infer<typeof addCustomerFormSchema>>({
@@ -184,13 +186,24 @@ export default function AddCustomerForm({ setOpen }: Props) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Customer Type</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={customerTypesLoading}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select the type of customer" />
+                        <SelectValue placeholder={
+                          customerTypesLoading 
+                            ? "Loading customer types..." 
+                            : customerTypesError 
+                              ? "Error loading customer types"
+                              : "Select the type of customer"
+                        } />
                       </SelectTrigger>
                     </FormControl>
-                    <DefaultSelectDataItems data={customerTypes} />
+                    <DefaultSelectDataItems 
+                      data={customerTypes} 
+                      valueKey="id"
+                      labelKey="name"
+                      emptyMessage={customerTypesError ? `Error: ${customerTypesError}` : "No customer types available"}
+                    />
                   </Select>
                   <FormMessage />
                 </FormItem>

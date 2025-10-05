@@ -57,6 +57,23 @@ export default function GoogleMapsAddressPreviewPopover({
             </div>
           </>
         )}
+        {textSize === 'sm' && (
+          <>
+            <div
+              className="flex gap-1 font-light text-sm cursor-pointer hover:text-blue-500"
+              // onClick={() =>
+              //   window.open(
+              //     `https://www.google.com/maps/search/?api=1&query=${customer.street_address}+${customer.city}+${customer.state}+${customer.zipcode}`
+              //   )
+              // }
+            >
+              <p>{streetAddress}</p>
+              <p>{city},</p>
+              <p>{state}</p>
+              <p>{zipcode}</p>
+            </div>
+          </>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-full h-full px-6 py-6">
         <iframe

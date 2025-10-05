@@ -33,12 +33,18 @@ import {
   CircleDashedIcon,
   CircleDollarSignIcon,
   ClipboardSignatureIcon,
+  EarthIcon,
   FileIcon,
   HashIcon,
+  MailIcon,
+  MapIcon,
   MousePointerClickIcon,
   PaperclipIcon,
   PencilIcon,
+  PhoneIcon,
+  PinIcon,
   SendIcon,
+  SquarePenIcon,
   TrashIcon
 } from 'lucide-react';
 import { Skeleton } from '../components/ui/skeleton';
@@ -55,6 +61,7 @@ import {
   SheetTrigger
 } from '../components/ui/sheet';
 import { ScrollArea } from '../components/ui/scroll-area';
+import { PageBreadcrumb } from '../components/ui/breadcrumb';
 
 type Props = {};
 
@@ -91,12 +98,15 @@ export default function CustomerInfoPage({}: Props) {
 
   return (
     <div className="flex flex-col w-full gap-4">
-      <div className="flex w-full mt-2 gap-2">
-        {/* <Link to={'/'}>Home</Link>
-        <p>/</p> */}
-        <Link to={'/customers'}>Customers</Link>
-        <p>|</p>
-        <Link to={location.pathname}># {id}</Link>
+      {/* Breadcrumb Navigation */}
+      <div className="pt-4 pb-2">
+        <PageBreadcrumb
+          currentPage={`Customer #${id}`}
+          parentPages={[
+            { label: 'Customers', href: '/customers' }
+          ]}
+          homeHref="/"
+        />
       </div>
       <div className="flex flex-col border py-4 px-4 rounded-md gap-8">
         <div className="flex flex-col md:flex-row w-full gap-4 justify-between">
@@ -169,22 +179,31 @@ export default function CustomerInfoPage({}: Props) {
         </div>
         <div className="grid grid-flow-col grid-rows-3 md:grid-rows-1 gap-6 px-1">
           <div>
-            <p className="text-gray-500 font-semibold text-[14px]">Email</p>
-            <p>{customerById?.email}</p>
+            <div className="flex gap-2">
+              <MailIcon className="w-3 h-3 my-auto" />
+              <p className="text-gray-500 font-semibold text-[14px]">Email</p>
+            </div>
+            <p className="text-sm font-light">{customerById?.email}</p>
           </div>
           <div>
-            <p className="text-gray-500 font-semibold text-[14px]">Phone Number</p>
-            <p>{formatPhoneNumber(customerById?.phone_number)}</p>
+            <div className="flex gap-2">
+              <PhoneIcon className="w-3 h-3 my-auto" />
+              <p className="text-gray-500 font-semibold text-[14px]">Phone Number</p>
+            </div>
+            <p className="text-sm font-light">{formatPhoneNumber(customerById?.phone_number)}</p>
           </div>
           <div>
-            <p className="text-gray-500 font-semibold text-[14px]">Main Address</p>
+            <div className="flex gap-2">
+              <MapIcon className="w-3 h-3 my-auto" />
+              <p className="text-gray-500 font-semibold text-[14px]">Main Address</p>
+            </div>
             <GoogleMapsAddressPreviewPopover
               streetAddress={customerById?.street_address || ''}
               city={customerById?.city || ''}
               state={customerById?.state || ''}
               zipcode={customerById?.zipcode || ''}
               addressQuery={`${customerById?.street_address || ''} ${customerById?.city || ''} ${customerById?.state || ''} ${customerById?.zipcode || ''}`}
-              textSize={'md'}
+              textSize={'sm'}
             />
             {/* <p>
               {customerById?.street_address} {customerById?.city}, {customerById?.state}{' '}
@@ -192,14 +211,20 @@ export default function CustomerInfoPage({}: Props) {
             </p> */}
           </div>
           <div>
-            <p className="text-gray-500 font-semibold text-[14px]">Market</p>
-            <p>
+            <div className="flex gap-2">
+              <EarthIcon className="w-3 h-3 my-auto" />
+              <p className="text-gray-500 font-semibold text-[14px]">Market</p>
+            </div>
+            <p className="text-sm font-light">
               {customerById?.city}, {customerById?.state} 🇺🇸
             </p>
           </div>
           <div>
-            <p className="text-gray-500 font-semibold text-[14px]">Registered</p>
-            <p>Tuesday, Dec 19, 2023</p>
+            <div className="flex gap-2">
+              <SquarePenIcon className="w-3 h-3 my-auto" />
+              <p className="text-gray-500 font-semibold text-[14px]">Registed At</p>
+            </div>
+            <p className='text-sm font-light'>Tuesday, Dec 19, 2023</p>
           </div>
         </div>
       </div>

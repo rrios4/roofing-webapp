@@ -55,7 +55,8 @@ export default function LoginPage({}: Props) {
           <form onSubmit={handleGoogleSignin}>
             <Button variant={'outline'} className="w-full" type="submit">
               <img
-                src="https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png"
+                src="/assets/google-icon-144.png"
+                alt='Google Icon'
                 className="mr-2 h-4 w-4"
               />{' '}
               Sign in with Google

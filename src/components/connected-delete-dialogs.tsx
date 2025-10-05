@@ -12,6 +12,7 @@ type Props = {
   title: string;
   description: string;
   itemId: string | number;
+  buttonTextEnabled?: boolean;
 };
 
 export default function ConnectedDeleteQRequestAlertDialog({ title, description, itemId }: Props) {
@@ -100,7 +101,7 @@ export function ConnectedDeleteQuoteAlertDialog({ title, description, itemId }: 
   );
 }
 
-export function ConnectedDeleteCustomerAlertDialog({ title, description, itemId }: Props) {
+export function ConnectedDeleteCustomerAlertDialog({ title, description, itemId, buttonTextEnabled }: Props) {
   const [open, setOpen] = React.useState(false);
   const { mutate: deleteCustomer, isLoading } = useDeleteCustomer(toast);
   const handleSubmit = async () => {
@@ -116,7 +117,7 @@ export function ConnectedDeleteCustomerAlertDialog({ title, description, itemId 
       onOpenChange={setOpen}
       onSubmit={handleSubmit}
       itemId={itemId}
-      buttonTextEnabled={true}
+      buttonTextEnabled={buttonTextEnabled ? buttonTextEnabled: false}
       buttonVariant={"primary"}
     />
   );

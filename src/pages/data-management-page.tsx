@@ -29,6 +29,13 @@ const managementSections: ManagementSection[] = [
     description: 'Manage service types and pricing used in quotes and invoices',
     icon: <HammerIcon className="h-6 w-6" />,
     path: '/data-management/services'
+  },
+  {
+    id: 'customer-types',
+    title: 'Customer Types',
+    description: 'Manage customer categories and classification types for better organization',
+    icon: <UsersIcon className="h-6 w-6" />,
+    path: '/data-management/customer-types'
   }
 ];
 

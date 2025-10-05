@@ -28,8 +28,10 @@ import {
   PageNotFound,
   CustomerInfoPage,
   DataManagementPage,
-  ServicesManagementPage
+  ServicesManagementPage,
+  StatusManagementPage
 } from './pages';
+import CustomerTypesPage from './pages/customer-types-page';
 import ProfilePage from './pages/profile-page';
 import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
@@ -136,6 +138,22 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <ServicesManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/data-management/statuses"
+                element={
+                  <ProtectedRoute>
+                    <StatusManagementPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/data-management/customer-types"
+                element={
+                  <ProtectedRoute>
+                    <CustomerTypesPage />
                   </ProtectedRoute>
                 }
               />
