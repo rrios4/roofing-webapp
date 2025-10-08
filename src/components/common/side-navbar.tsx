@@ -33,7 +33,8 @@ import {
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import { ScrollArea } from '../ui/scroll-area';
 import AddCustomerForm from '../forms/add-customer-form';
 import AddQuoteForm from '../forms/add-quote-form';
 import AddInvoiceForm from '../forms/add-invoice-form';
@@ -151,31 +152,40 @@ export default function SideNavbar({ userData }: Props) {
 
       {/* Customer Form Sheet */}
       <Sheet open={customerSheetOpen} onOpenChange={setCustomerSheetOpen}>
-        <SheetContent className="w-full sm:w-[440px]">
-          <SheetHeader>
+        <SheetContent className='w-full sm:max-w-lg px-2'>
+          <SheetHeader className='px-4 space-y-0 mb-4'>
             <SheetTitle>Add New Customer</SheetTitle>
+            <SheetDescription>Fill out the details for the new customer.</SheetDescription>
           </SheetHeader>
-          <AddCustomerForm setOpen={setCustomerSheetOpen} />
+          <ScrollArea className="h-[calc(100vh-120px)]">
+            <AddCustomerForm setOpen={setCustomerSheetOpen} />
+          </ScrollArea>
         </SheetContent>
       </Sheet>
 
       {/* Quote Form Sheet */}
       <Sheet open={quoteSheetOpen} onOpenChange={setQuoteSheetOpen}>
-        <SheetContent className="w-full sm:w-[640px]">
-          <SheetHeader>
+        <SheetContent className='w-full sm:max-w-lg px-2'>
+          <SheetHeader className='px-4 space-y-0 mb-4'>
             <SheetTitle>Create New Quote</SheetTitle>
+            <SheetDescription>Fill out the details for the new quote.</SheetDescription>
           </SheetHeader>
-          <AddQuoteForm />
+          <ScrollArea className="h-[calc(100vh-120px)]">
+            <AddQuoteForm />
+          </ScrollArea>
         </SheetContent>
       </Sheet>
 
       {/* Invoice Form Sheet */}
       <Sheet open={invoiceSheetOpen} onOpenChange={setInvoiceSheetOpen}>
-        <SheetContent className="w-full sm:w-[640px]">
-          <SheetHeader>
+        <SheetContent className='w-full sm:max-w-lg px-2'>
+          <SheetHeader className='px-4 space-y-0 mb-4'>
             <SheetTitle>Create New Invoice</SheetTitle>
+            <SheetDescription>Fill out the details for the new invoice.</SheetDescription>
           </SheetHeader>
-          <AddInvoiceForm setOpen={setInvoiceSheetOpen} />
+          <ScrollArea className="h-[calc(100vh-120px)]">
+            <AddInvoiceForm setOpen={setInvoiceSheetOpen} />
+          </ScrollArea>
         </SheetContent>
       </Sheet>
     </>
