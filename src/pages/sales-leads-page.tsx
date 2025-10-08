@@ -42,7 +42,7 @@ export default function InboxPage() {
   return (
     <div className="flex flex-col w-full gap-6 mb-6">
       <DefaultPageHeader
-        title="Inbox"
+        title="Sales Leads"
         subheading="Manage and view all lead requests from website here."
         addItemTextButton="Add request"
         sheetTitle="Add request"

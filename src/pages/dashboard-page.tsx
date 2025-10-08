@@ -49,6 +49,11 @@ import {
 } from 'lucide-react';
 import { useFetchDashboardMetrics, useFetchMultiYearRevenueData, useFetchBusinessStatusOverview, useFetchInvoiceStatusTracking } from '../hooks/useAPI/use-report';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../components/ui/sheet';
+import { ScrollArea } from '../components/ui/scroll-area';
+import AddCustomerForm from '../components/forms/add-customer-form';
+import AddQuoteForm from '../components/forms/add-quote-form';
+import AddInvoiceForm from '../components/forms/add-invoice-form';
 import { count } from 'console';
 
 type Props = {};
@@ -65,6 +70,11 @@ export default function DashboardPage({}: Props) {
 
   // Fetch real invoice status tracking data
   const { data: invoiceStatusData, isLoading: isInvoiceStatusLoading, isError: isInvoiceStatusError } = useFetchInvoiceStatusTracking();
+
+  // State management for form sheets
+  const [customerSheetOpen, setCustomerSheetOpen] = React.useState(false);
+  const [quoteSheetOpen, setQuoteSheetOpen] = React.useState(false);
+  const [invoiceSheetOpen, setInvoiceSheetOpen] = React.useState(false);
 
   // Helper function to format currency
   const formatCurrency = (amount: number): string => {
@@ -242,25 +252,37 @@ export default function DashboardPage({}: Props) {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <Button className="w-full justify-start" variant="outline">
+                <Button 
+                  className="w-full justify-start" 
+                  variant="outline"
+                  onClick={() => setCustomerSheetOpen(true)}
+                >
                   <UserPlusIcon className="h-4 w-4 mr-3" />
                   Add New Customer
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
+                <Button 
+                  className="w-full justify-start" 
+                  variant="outline"
+                  onClick={() => setQuoteSheetOpen(true)}
+                >
                   <FileIcon className="h-4 w-4 mr-3" />
                   Create Quote
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
+                <Button 
+                  className="w-full justify-start" 
+                  variant="outline"
+                  onClick={() => setInvoiceSheetOpen(true)}
+                >
                   <Receipt className="h-4 w-4 mr-3" />
                   Generate Invoice
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
+                <Button disabled className="w-full justify-start" variant="outline">
                   <KanbanSquareIcon className="h-4 w-4 mr-3" />
-                  Update Kanban
+                  Update Kanban <span className='text-red-400 ml-2 font-extralight'>Coming Soon!</span>
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
+                <Button disabled className="w-full justify-start" variant="outline">
                   <CalendarIcon className="h-4 w-4 mr-3" />
-                  Schedule Visit
+                  Schedule Visit <span className='text-red-400 ml-2 font-extralight'>Coming Soon!</span>
                 </Button>
               </div>
             </CardContent>
@@ -677,6 +699,42 @@ export default function DashboardPage({}: Props) {
           </Card> */}
         </div>
       </div>
+
+      {/* Customer Form Sheet */}
+      <Sheet open={customerSheetOpen} onOpenChange={setCustomerSheetOpen}>
+        <SheetContent className="w-full sm:max-w-lg px-2">
+          <SheetHeader className="px-4 space-y-0 mb-4">
+            <SheetTitle>Add New Customer</SheetTitle>
+          </SheetHeader>
+          <ScrollArea className="h-[calc(100vh-120px)]">
+            <AddCustomerForm setOpen={setCustomerSheetOpen} />
+          </ScrollArea>
+        </SheetContent>
+      </Sheet>
+
+      {/* Quote Form Sheet */}
+      <Sheet open={quoteSheetOpen} onOpenChange={setQuoteSheetOpen}>
+        <SheetContent className="w-full sm:max-w-lg px-2">
+          <SheetHeader className="px-4 space-y-0 mb-4">
+            <SheetTitle>Create New Quote</SheetTitle>
+          </SheetHeader>
+          <ScrollArea className="h-[calc(100vh-120px)]">
+            <AddQuoteForm />
+          </ScrollArea>
+        </SheetContent>
+      </Sheet>
+
+      {/* Invoice Form Sheet */}
+      <Sheet open={invoiceSheetOpen} onOpenChange={setInvoiceSheetOpen}>
+        <SheetContent className="w-full sm:max-w-lg px-2">
+          <SheetHeader className="px-4 space-y-0 mb-4">
+            <SheetTitle>Create New Invoice</SheetTitle>
+          </SheetHeader>
+          <ScrollArea className="h-[calc(100vh-120px)]">
+            <AddInvoiceForm setOpen={setInvoiceSheetOpen} />
+          </ScrollArea>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
