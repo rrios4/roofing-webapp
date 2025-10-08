@@ -102,9 +102,7 @@ export default function CustomerInfoPage({}: Props) {
       <div className="pt-4 pb-2">
         <PageBreadcrumb
           currentPage={`Customer #${id}`}
-          parentPages={[
-            { label: 'Customers', href: '/customers' }
-          ]}
+          parentPages={[{ label: 'Customers', href: '/customers' }]}
           homeHref="/"
         />
       </div>
@@ -224,7 +222,7 @@ export default function CustomerInfoPage({}: Props) {
               <SquarePenIcon className="w-3 h-3 my-auto" />
               <p className="text-gray-500 font-semibold text-[14px]">Registed At</p>
             </div>
-            <p className='text-sm font-light'>Tuesday, Dec 19, 2023</p>
+            <p className="text-sm font-light">Tuesday, Dec 19, 2023</p>
           </div>
         </div>
       </div>
@@ -357,8 +355,10 @@ export default function CustomerInfoPage({}: Props) {
                                   ${formatMoneyValue(item.total)}
                                 </TableCell>
                                 <TableCell className="flex">
-                                  <Button variant={'secondary'} className="ml-auto">
-                                    <ChevronRightIcon className="w-4 h-4" />
+                                  <Button variant={'secondary'} className="ml-auto" asChild>
+                                    <Link to={`/invoices/${item.invoice_number}`}>
+                                      <ChevronRightIcon className="w-4 h-4" />
+                                    </Link>
                                   </Button>
                                 </TableCell>
                               </TableRow>
@@ -479,8 +479,10 @@ export default function CustomerInfoPage({}: Props) {
                                   ${formatMoneyValue(item.total)}
                                 </TableCell>
                                 <TableCell className="flex">
-                                  <Button variant={'secondary'} className="ml-auto">
-                                    <ChevronRightIcon className="w-4 h-4" />
+                                  <Button variant={'secondary'} className="ml-auto" asChild>
+                                    <Link to={`/quotes/${item.quote_number}`}>
+                                      <ChevronRightIcon className="w-4 h-4" />
+                                    </Link>
                                   </Button>
                                 </TableCell>
                               </TableRow>
