@@ -11,6 +11,7 @@ import { useFetchCustomers } from '../../hooks/useAPI/use-customer';
 import {
   CalendarIcon,
   MapIcon,
+  PlusIcon,
   RulerIcon,
   StickyNoteIcon,
   TrashIcon,
@@ -34,6 +35,8 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Textarea } from '@tremor/react';
 import supabase from '../../lib/supabase-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
+import AddCustomerForm from './add-customer-form';
 
 type Props = {};
 
@@ -75,6 +78,7 @@ export default function AddQuoteForm({}: Props) {
   const [generalNoteSwitch, setGeneralNoteSwitch] = useState(false);
   const [measurementNoteSwitch, setMeasurementNoteSwitch] = useState(false);
   const [customerNoteSwitch, setCustomerNoteSwitch] = useState(false);
+  const [customerSheetOpen, setCustomerSheetOpen] = useState(false);
 
     const form = useForm<z.infer<typeof addQuoteFormSchema>>({
     resolver: zodResolver(addQuoteFormSchema),
@@ -205,7 +209,20 @@ export default function AddQuoteForm({}: Props) {
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
                   <FormLabel>Search for customer</FormLabel>
-                  <SearchCustomerCombobox data={customers} form={form} field={field} />
+                  <div className="flex gap-2 w-full">
+                    <div className="flex-1">
+                      <SearchCustomerCombobox data={customers} form={form} field={field} />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setCustomerSheetOpen(true)}
+                      className="shrink-0 h-10 w-10"
+                    >
+                      <PlusIcon className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -664,6 +681,16 @@ export default function AddQuoteForm({}: Props) {
           </div>
         </form>
       </Form>
+      
+      {/* Add Customer Sheet */}
+      <Sheet open={customerSheetOpen} onOpenChange={setCustomerSheetOpen}>
+        <SheetContent className='w-full sm:max-w-lg px-2'>
+          <SheetHeader className='px-4'>
+            <SheetTitle>Add New Customer</SheetTitle>
+          </SheetHeader>
+          <AddCustomerForm setOpen={setCustomerSheetOpen} />
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
