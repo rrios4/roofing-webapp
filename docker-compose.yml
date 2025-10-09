@@ -4,6 +4,8 @@ services:
     container_name: roofing-app
     restart: always
     build: .
+    # env_file:
+    #   - stack.env
     environment:
       REACT_APP_SUPABASE_URL: ${REACT_APP_SUPABASE_URL}
       REACT_APP_SUPABASE_KEY: ${REACT_APP_SUPABASE_KEY}
