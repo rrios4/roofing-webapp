@@ -16,6 +16,10 @@ export default defineConfig({
   optimizeDeps: {
     include: ['buffer'],
   },
+  esbuild: {
+    target: 'esnext',
+    format: 'esm',
+  },
   server: {
     watch: {
       usePolling: true
@@ -25,8 +29,10 @@ export default defineConfig({
     port: 5173
   },
   build: {
+    target: 'esnext',
     rollupOptions: {
       output: {
+        format: 'es',
         manualChunks: {
           // Separate vendor libraries
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
