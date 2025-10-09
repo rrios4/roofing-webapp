@@ -1,21 +1,23 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
   envPrefix: 'REACT_APP_',
 
-  plugins: [react()],
-  define: {
-    global: 'globalThis'
-  },
-  resolve: {
-    alias: {
-      buffer: 'buffer'
-    }
-  },
-  optimizeDeps: {
-    include: ['buffer']
-  },
+  plugins: [
+    react(),
+    nodePolyfills({
+      // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
+      include: ['buffer', 'process'],
+      // Whether to polyfill specific globals.
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true
+      }
+    })
+  ],
   esbuild: {
     target: 'esnext',
     format: 'esm'

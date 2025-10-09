@@ -37,6 +37,15 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="app"></div>
+    
+    <!-- Buffer polyfill initialization -->
+    <script>
+      // Initialize Buffer polyfill before the app loads
+      if (typeof global === 'undefined') {
+        var global = globalThis;
+      }
+    </script>
+    
     <script type="module" src="/src/index.tsx"></script>
 
   </body>
