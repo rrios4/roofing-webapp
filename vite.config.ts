@@ -18,6 +18,14 @@ export default defineConfig({
       }
     })
   ],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+    alias: {
+      // Ensure consistent React version
+      react: 'react',
+      'react-dom': 'react-dom'
+    }
+  },
   esbuild: {
     target: 'esnext',
     format: 'esm'
@@ -35,14 +43,17 @@ export default defineConfig({
     rollupOptions: {
       output: {
         format: 'es',
-        manualChunks: (id) => {
+        manualChunks(id) {
           // Node modules chunking
           if (id.includes('node_modules')) {
-            // React core - split React and ReactDOM
-            if (id.includes('react/') && !id.includes('react-')) {
+            // React core - ensure single instance
+            if (
+              id.includes('node_modules/react/index.js') ||
+              (id.includes('node_modules/react/') && !id.includes('react-'))
+            ) {
               return 'react';
             }
-            if (id.includes('react-dom')) {
+            if (id.includes('node_modules/react-dom/')) {
               return 'react-dom';
             }
 
