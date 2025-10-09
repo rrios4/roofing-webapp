@@ -19,11 +19,7 @@ import DataTable from '../components/data-table';
 import { useFetchAllInvoices } from '../hooks/useAPI/use-invoice';
 import DataTableFilterCard from '../components/data-table-filter-card';
 import { createColumnHelper } from '@tanstack/react-table';
-import {
-  formatDateWithAbbreviatedMonth,
-  formatMoneyValue,
-  formatNumber
-} from '../lib/utils';
+import { formatDateWithAbbreviatedMonth, formatMoneyValue, formatNumber } from '../lib/utils';
 import { Button } from '../components/ui/button';
 import DefaultStatusBadge from '../components/status-badges';
 import { Link } from 'react-router-dom';
@@ -101,7 +97,9 @@ export const invoiceTableColumns = [
   columnHelper.accessor('invoice_number', {
     cell: ({ row }: any) => {
       const invoice = row.original;
-      return <p className="text-center text-[14px]">INV-{formatNumber(invoice.invoice_number || 0)}</p>;
+      return (
+        <p className="text-center text-[14px]">INV-{formatNumber(invoice.invoice_number || 0)}</p>
+      );
     },
     header: ({ column }) => (
       <div className="flex justify-center w-full">
@@ -309,17 +307,15 @@ export const invoiceTableColumns = [
       const invoice = row.original;
       return (
         <div className="flex gap-2">
-          <UpdateInvoiceSheet 
+          <UpdateInvoiceSheet
             invoice={invoice}
             trigger={
-              <Button variant={'outline'} className='px-3'>
+              <Button variant={'outline'} className="px-3">
                 <PencilIcon size={'15px'} />
               </Button>
             }
           />
-          <RecordPaymentDialog 
-            invoice={invoice}
-          />
+          <RecordPaymentDialog invoice={invoice} />
           <ConnectedDeleteInvoiceAlertDialog
             title="Are you absolutely sure?"
             description="This action cannot be undone. This will permanently delete invoice with line-items/payments and remove data from our server."

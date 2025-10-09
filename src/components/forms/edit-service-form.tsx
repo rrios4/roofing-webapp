@@ -1,13 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  HammerIcon,
-  DollarSignIcon,
-  FileTextIcon,
-  CheckIcon,
-  LoaderIcon
-} from 'lucide-react';
+import { HammerIcon, DollarSignIcon, FileTextIcon, CheckIcon, LoaderIcon } from 'lucide-react';
 
 // UI Components
 import { Button } from '../ui/button';
@@ -21,11 +15,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
+  FormDescription
 } from '../ui/form';
 
 // Validations, Hooks, and Types
-import { updateServiceFormSchema, UpdateServiceFormData } from '../../validations/service-form-validations';
+import {
+  updateServiceFormSchema,
+  UpdateServiceFormData
+} from '../../validations/service-form-validations';
 import { useServiceManagement } from '../../hooks/useServiceManagement';
 import { Service } from '../../types/db_types';
 
@@ -43,7 +40,7 @@ export default function EditServiceForm({ setOpen, service }: EditServiceFormPro
       id: service.id,
       name: service.name || '',
       description: service.description || '',
-      default_price: service.default_price || '',
+      default_price: service.default_price || ''
     }
   });
 
@@ -53,7 +50,7 @@ export default function EditServiceForm({ setOpen, service }: EditServiceFormPro
       id: service.id,
       name: service.name || '',
       description: service.description || '',
-      default_price: service.default_price || '',
+      default_price: service.default_price || ''
     });
   }, [service, form]);
 
@@ -63,11 +60,11 @@ export default function EditServiceForm({ setOpen, service }: EditServiceFormPro
       const cleanData = {
         ...values,
         description: values.description?.trim() || undefined,
-        default_price: values.default_price?.trim() || undefined,
+        default_price: values.default_price?.trim() || undefined
       };
 
       await updateService.mutateAsync(cleanData);
-      
+
       // Close sheet on success
       setOpen(false);
     } catch (error) {
@@ -98,9 +95,7 @@ export default function EditServiceForm({ setOpen, service }: EditServiceFormPro
                       className="w-full"
                     />
                   </FormControl>
-                  <FormDescription>
-                    Enter a clear, descriptive name for the service
-                  </FormDescription>
+                  <FormDescription>Enter a clear, descriptive name for the service</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -150,7 +145,8 @@ export default function EditServiceForm({ setOpen, service }: EditServiceFormPro
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional: Enter a price, rate, or pricing description. Can be a number (150) or text ($300 per sq ft)
+                    Optional: Enter a price, rate, or pricing description. Can be a number (150) or
+                    text ($300 per sq ft)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -164,7 +160,8 @@ export default function EditServiceForm({ setOpen, service }: EditServiceFormPro
                 <span className="font-medium text-amber-900">Edit Service</span>
               </div>
               <p className="text-sm text-amber-700">
-                Changes will be applied immediately and will affect future quotes and invoices using this service.
+                Changes will be applied immediately and will affect future quotes and invoices using
+                this service.
               </p>
             </div>
           </div>
@@ -172,19 +169,11 @@ export default function EditServiceForm({ setOpen, service }: EditServiceFormPro
           {/* Form Actions */}
           <SheetFooter className="px-4 pt-4 gap-2 border-t">
             <SheetClose asChild>
-              <Button 
-                type="button" 
-                variant="outline"
-                disabled={isUpdating}
-              >
+              <Button type="button" variant="outline" disabled={isUpdating}>
                 Cancel
               </Button>
             </SheetClose>
-            <Button 
-              type="submit" 
-              disabled={isUpdating}
-              className="min-w-[120px]"
-            >
+            <Button type="submit" disabled={isUpdating} className="min-w-[120px]">
               {isUpdating ? (
                 <>
                   <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />

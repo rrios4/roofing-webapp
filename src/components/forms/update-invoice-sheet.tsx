@@ -1,5 +1,12 @@
 import React from 'react';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from '../ui/sheet';
 import { Button } from '../ui/button';
 import { PencilIcon } from 'lucide-react';
 import UpdateInvoiceForm from './update-invoice-form';
@@ -13,10 +20,10 @@ type Props = {
 
 /**
  * UpdateInvoiceSheet Component
- * 
+ *
  * A sheet component that wraps the UpdateInvoiceForm for editing an existing invoice.
  * This component handles loading the invoice data and line items before rendering the form.
- * 
+ *
  * @param invoice - The invoice object to be updated
  * @param trigger - Optional custom trigger element, defaults to a pencil icon button
  */
@@ -32,19 +39,13 @@ export default function UpdateInvoiceSheet({ invoice, trigger }: Props) {
   );
 
   if (isError) {
-    return (
-      <div className="text-red-500 text-sm">
-        Error loading invoice data
-      </div>
-    );
+    return <div className="text-red-500 text-sm">Error loading invoice data</div>;
   }
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        {trigger || defaultTrigger}
-      </SheetTrigger>
-      
+      <SheetTrigger asChild>{trigger || defaultTrigger}</SheetTrigger>
+
       <SheetContent className="w-full md:w-[600px] sm:max-w-none overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Update Invoice #{invoice.invoice_number}</SheetTitle>
@@ -63,9 +64,7 @@ export default function UpdateInvoiceSheet({ invoice, trigger }: Props) {
             invoiceLineItems={(invoiceById as any).invoice_line_service || []}
           />
         ) : (
-          <div className="text-gray-500 text-sm py-4">
-            Invoice not found
-          </div>
+          <div className="text-gray-500 text-sm py-4">Invoice not found</div>
         )}
       </SheetContent>
     </Sheet>

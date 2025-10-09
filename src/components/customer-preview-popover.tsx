@@ -54,7 +54,7 @@ export default function CustomerPreviewPopover({
           <div className="w-full">
             <Avatar className="border w-[120px] h-[120px] mx-auto bg-blue-100 dark:bg-blue-700/30">
               <AvatarImage src={avatarUrl} sizes="xl" className="mx-auto" />
-              <AvatarFallback className={"text-4xl"}>
+              <AvatarFallback className={'text-4xl'}>
                 {`${firstName.substring(0, 1)}${lastName.substring(0, 1)}`}
               </AvatarFallback>
             </Avatar>

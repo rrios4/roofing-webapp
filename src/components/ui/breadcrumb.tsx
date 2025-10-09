@@ -33,19 +33,14 @@ export function Breadcrumb({
       <ol className="flex items-center space-x-2">
         {allItems.map((item, index) => {
           const isLast = index === allItems.length - 1;
-          
+
           return (
             <li key={index} className="flex items-center">
-              {index > 0 && (
-                <span className="mr-2">
-                  {separator}
-                </span>
-              )}
+              {index > 0 && <span className="mr-2">{separator}</span>}
               {item.href && !isLast ? (
                 <Link
                   to={item.href}
-                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-200">
                   {item.icon}
                   <span>{item.label}</span>
                 </Link>
@@ -54,8 +49,7 @@ export function Breadcrumb({
                   className={cn(
                     'flex items-center gap-1',
                     isLast ? 'text-foreground font-medium' : 'text-muted-foreground'
-                  )}
-                >
+                  )}>
                   {item.icon}
                   <span>{item.label}</span>
                 </span>
@@ -82,18 +76,9 @@ export function PageBreadcrumb({
   className,
   homeHref = '/dashboard'
 }: PageBreadcrumbProps) {
-  const items = [
-    ...parentPages,
-    { label: currentPage }
-  ];
+  const items = [...parentPages, { label: currentPage }];
 
-  return (
-    <Breadcrumb
-      items={items}
-      className={className}
-      homeHref={homeHref}
-    />
-  );
+  return <Breadcrumb items={items} className={className} homeHref={homeHref} />;
 }
 
 export default Breadcrumb;

@@ -3,7 +3,14 @@ import { pdf } from '@react-pdf/renderer';
 import { Send, Mail } from 'lucide-react';
 
 import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
@@ -116,7 +123,8 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
 
   // Get email templates
   const emailTemplates = getEmailTemplates(quote);
-  const currentTemplate = emailTemplates.find(t => t.id === selectedTemplate) || emailTemplates[0];
+  const currentTemplate =
+    emailTemplates.find((t) => t.id === selectedTemplate) || emailTemplates[0];
 
   const [emailForm, setEmailForm] = useState({
     to: quote?.customer?.email || '',
@@ -143,10 +151,10 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
 
   const handleTemplateChange = (templateId: string) => {
     setSelectedTemplate(templateId);
-    const template = emailTemplates.find(t => t.id === templateId);
+    const template = emailTemplates.find((t) => t.id === templateId);
     if (template) {
       let messageContent = template.message;
-      
+
       // For custom template, replace the placeholder with current custom message
       if (templateId === 'custom' && customMessage) {
         messageContent = template.message.replace(
@@ -154,7 +162,7 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
           customMessage
         );
       }
-      
+
       setEmailForm((prev) => ({
         ...prev,
         subject: template.subject,
@@ -165,10 +173,10 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
 
   const handleCustomMessageChange = (message: string) => {
     setCustomMessage(message);
-    
+
     // If custom template is selected, update the email form message
     if (selectedTemplate === 'custom') {
-      const template = emailTemplates.find(t => t.id === 'custom');
+      const template = emailTemplates.find((t) => t.id === 'custom');
       if (template) {
         const updatedMessage = template.message.replace(
           '[CUSTOM MESSAGE - Please customize this section with your specific message]',
@@ -273,7 +281,8 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
       if (!hasPermissions) {
         toast({
           title: 'Permission Required',
-          description: 'Gmail permissions are required to send emails. Please authorize the application.',
+          description:
+            'Gmail permissions are required to send emails. Please authorize the application.',
           variant: 'destructive'
         });
         return;
@@ -297,12 +306,13 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
         console.error('PDF generation error:', pdfError);
         toast({
           title: 'PDF Generation Failed',
-          description: pdfError instanceof Error 
-            ? pdfError.message 
-            : 'Could not generate PDF attachment. The email will be sent without the PDF.',
+          description:
+            pdfError instanceof Error
+              ? pdfError.message
+              : 'Could not generate PDF attachment. The email will be sent without the PDF.',
           variant: 'destructive'
         });
-        
+
         // Continue without PDF attachment
         pdfBase64 = '';
         pdfFilename = '';
@@ -339,27 +349,41 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
               <td style="padding: 8px 0; font-weight: bold; color: #374151;">Quote Date:</td>
               <td style="padding: 8px 0; color: #6b7280;">${quote?.quote_date ? new Date(quote.quote_date).toLocaleDateString() : 'N/A'}</td>
             </tr>
-            ${quote?.expiration_date ? `
+            ${
+              quote?.expiration_date
+                ? `
             <tr>
               <td style="padding: 8px 0; font-weight: bold; color: #374151;">Expiration Date:</td>
               <td style="padding: 8px 0; color: #dc2626;">${new Date(quote.expiration_date).toLocaleDateString()}</td>
             </tr>
-            ` : ''}
-            ${quote?.subtotal ? `
+            `
+                : ''
+            }
+            ${
+              quote?.subtotal
+                ? `
             <tr>
               <td style="padding: 8px 0; font-weight: bold; color: #374151;">Subtotal:</td>
               <td style="padding: 8px 0; color: #6b7280;">${formatMoneyValue(quote.subtotal)}</td>
             </tr>
-            ` : ''}
-            ${quote?.total ? `
+            `
+                : ''
+            }
+            ${
+              quote?.total
+                ? `
             <tr>
               <td style="padding: 8px 0; font-weight: bold; color: #374151; font-size: 16px;">Total Amount:</td>
               <td style="padding: 8px 0; color: #059669; font-weight: bold; font-size: 16px;">${formatMoneyValue(quote.total)}</td>
             </tr>
-            ` : ''}
+            `
+                : ''
+            }
           </table>
           
-          ${quote?.quote_line_item && quote.quote_line_item.length > 0 ? `
+          ${
+            quote?.quote_line_item && quote.quote_line_item.length > 0
+              ? `
           <div style="margin-top: 20px;">
             <h4 style="color: #1e40af; margin: 0 0 10px 0;">Line Items:</h4>
             <table style="width: 100%; border-collapse: collapse; border: 1px solid #e5e7eb;">
@@ -372,25 +396,35 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
                 </tr>
               </thead>
               <tbody>
-                ${quote.quote_line_item.map((item: any) => `
+                ${quote.quote_line_item
+                  .map(
+                    (item: any) => `
                   <tr>
                     <td style="padding: 10px; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #374151;">${item.description || 'Service Item'}</td>
                     <td style="padding: 10px; text-align: center; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #6b7280;">${item.qty || 1}</td>
                     <td style="padding: 10px; text-align: right; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #6b7280;">${item.rate ? formatMoneyValue(item.rate) : 'N/A'}</td>
                     <td style="padding: 10px; text-align: right; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #6b7280;">${item.amount ? formatMoneyValue(item.amount) : 'N/A'}</td>
                   </tr>
-                `).join('')}
+                `
+                  )
+                  .join('')}
               </tbody>
             </table>
           </div>
-          ` : ''}
+          `
+              : ''
+          }
 
-          ${quote?.public_note || quote?.cust_note ? `
+          ${
+            quote?.public_note || quote?.cust_note
+              ? `
           <div style="margin-top: 15px; padding: 15px; background-color: #fffbeb; border-radius: 6px; border-left: 3px solid #f59e0b;">
             <h4 style="color: #92400e; margin: 0 0 8px 0; font-size: 14px;">Additional Notes:</h4>
             <p style="color: #78350f; margin: 0; font-size: 13px; line-height: 1.5;">${quote.public_note || quote.cust_note}</p>
           </div>
-          ` : ''}
+          `
+              : ''
+          }
         </div>
       `;
 
@@ -426,13 +460,16 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
         cc: emailForm.cc ? [emailForm.cc] : undefined,
         subject: emailForm.subject,
         htmlBody: htmlContent,
-        attachments: pdfBase64 && pdfFilename ? [
-          {
-            filename: pdfFilename,
-            content: pdfBase64,
-            mimeType: 'application/pdf'
-          }
-        ] : undefined
+        attachments:
+          pdfBase64 && pdfFilename
+            ? [
+                {
+                  filename: pdfFilename,
+                  content: pdfBase64,
+                  mimeType: 'application/pdf'
+                }
+              ]
+            : undefined
       };
 
       console.log('📧 Sending email with data:', {
@@ -460,7 +497,7 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
           variant: 'default'
         });
         setIsOpen(false);
-        
+
         // Reset form
         setEmailForm({
           to: quote?.customer?.email || '',
@@ -477,7 +514,10 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
       console.error('Email sending error:', error);
       toast({
         title: 'Failed to Send Email',
-        description: error instanceof Error ? error.message : 'An unexpected error occurred while sending the email.',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred while sending the email.',
         variant: 'destructive'
       });
     } finally {
@@ -505,7 +545,8 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
             Send Quote via Email
           </DialogTitle>
           <DialogDescription>
-            Send Quote QT-{formatNumber(quote?.quote_number || 0)} to {quote?.customer?.first_name || 'the customer'} with PDF attachment
+            Send Quote QT-{formatNumber(quote?.quote_number || 0)} to{' '}
+            {quote?.customer?.first_name || 'the customer'} with PDF attachment
           </DialogDescription>
         </DialogHeader>
 
@@ -519,9 +560,7 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
 
         {!isReady && !hasError && (
           <div className="p-4 border border-yellow-200 rounded-lg bg-yellow-50">
-            <p className="text-sm text-yellow-600">
-              Gmail service is initializing... Please wait.
-            </p>
+            <p className="text-sm text-yellow-600">Gmail service is initializing... Please wait.</p>
           </div>
         )}
 
@@ -529,10 +568,7 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
           {/* Template Selection */}
           <div className="space-y-2">
             <Label htmlFor="template">Email Template</Label>
-            <Select 
-              value={selectedTemplate} 
-              onValueChange={handleTemplateChange}
-            >
+            <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select email template" />
               </SelectTrigger>
@@ -635,18 +671,13 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-2 pt-4">
-            <Button 
-              variant="outline" 
-              onClick={() => setIsOpen(false)}
-              disabled={isSending}
-            >
+            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isSending}>
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={handleSendEmail}
               disabled={!isReady || isSending || hasError}
-              className="gap-2"
-            >
+              className="gap-2">
               {isSending ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

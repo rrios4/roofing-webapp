@@ -8,7 +8,7 @@ interface InvoiceItemsTableProps {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 15,
+    marginBottom: 15
   },
   sectionTitle: {
     fontSize: 9,
@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginBottom: 6,
     textTransform: 'uppercase',
-    letterSpacing: 0.3,
+    letterSpacing: 0.3
   },
   table: {
     borderWidth: 1,
     borderColor: '#e5e7eb',
-    borderRadius: 4,
+    borderRadius: 4
   },
   tableHeader: {
     flexDirection: 'row',
@@ -29,29 +29,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
     paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
   tableHeaderCell: {
     fontSize: 7,
     fontWeight: 'bold',
     color: '#374151',
     textTransform: 'uppercase',
-    letterSpacing: 0.3,
+    letterSpacing: 0.3
   },
   descriptionHeader: {
-    flex: 3,
+    flex: 3
   },
   quantityHeader: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   rateHeader: {
     flex: 1.2,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   amountHeader: {
     flex: 1.2,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   tableRow: {
     flexDirection: 'row',
@@ -59,47 +59,47 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f3f4f6',
     paddingVertical: 6,
     paddingHorizontal: 8,
-    minHeight: 24,
+    minHeight: 24
   },
   lastRow: {
-    borderBottomWidth: 0,
+    borderBottomWidth: 0
   },
   tableCell: {
     fontSize: 8,
-    color: '#1f2937',
+    color: '#1f2937'
   },
   descriptionCell: {
-    flex: 3,
+    flex: 3
   },
   quantityCell: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   rateCell: {
     flex: 1.2,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   amountCell: {
     flex: 1.2,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   itemDescription: {
     fontSize: 8,
     color: '#1f2937',
     fontWeight: 'medium',
-    marginBottom: 1,
+    marginBottom: 1
   },
   itemDetails: {
     fontSize: 7,
-    color: '#6b7280',
+    color: '#6b7280'
   },
   emptyState: {
     padding: 20,
     textAlign: 'center',
     color: '#6b7280',
     fontSize: 8,
-    fontStyle: 'italic',
-  },
+    fontStyle: 'italic'
+  }
 });
 
 export const InvoiceItemsTable: React.FC<InvoiceItemsTableProps> = ({ invoice }) => {
@@ -107,7 +107,7 @@ export const InvoiceItemsTable: React.FC<InvoiceItemsTableProps> = ({ invoice })
     if (amount === null || amount === undefined) return '$0.00';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'USD'
     }).format(amount);
   };
 
@@ -126,9 +126,7 @@ export const InvoiceItemsTable: React.FC<InvoiceItemsTableProps> = ({ invoice })
       <View style={styles.container}>
         <Text style={styles.sectionTitle}>Invoice Items</Text>
         <View style={styles.table}>
-          <Text style={styles.emptyState}>
-            No items found for this invoice
-          </Text>
+          <Text style={styles.emptyState}>No items found for this invoice</Text>
         </View>
       </View>
     );
@@ -140,18 +138,10 @@ export const InvoiceItemsTable: React.FC<InvoiceItemsTableProps> = ({ invoice })
       <View style={styles.table}>
         {/* Table Header */}
         <View style={styles.tableHeader}>
-          <Text style={[styles.tableHeaderCell, styles.descriptionHeader]}>
-            Description
-          </Text>
-          <Text style={[styles.tableHeaderCell, styles.quantityHeader]}>
-            Qty
-          </Text>
-          <Text style={[styles.tableHeaderCell, styles.rateHeader]}>
-            Rate
-          </Text>
-          <Text style={[styles.tableHeaderCell, styles.amountHeader]}>
-            Amount
-          </Text>
+          <Text style={[styles.tableHeaderCell, styles.descriptionHeader]}>Description</Text>
+          <Text style={[styles.tableHeaderCell, styles.quantityHeader]}>Qty</Text>
+          <Text style={[styles.tableHeaderCell, styles.rateHeader]}>Rate</Text>
+          <Text style={[styles.tableHeaderCell, styles.amountHeader]}>Amount</Text>
         </View>
 
         {/* Table Rows */}
@@ -162,8 +152,7 @@ export const InvoiceItemsTable: React.FC<InvoiceItemsTableProps> = ({ invoice })
           return (
             <View
               key={`${item.id || index}`}
-              style={[styles.tableRow, ...(isLastRow ? [styles.lastRow] : [])]}
-            >
+              style={[styles.tableRow, ...(isLastRow ? [styles.lastRow] : [])]}>
               <View style={styles.descriptionCell}>
                 <Text style={styles.itemDescription}>
                   {item.description || 'No description provided'}
@@ -175,9 +164,7 @@ export const InvoiceItemsTable: React.FC<InvoiceItemsTableProps> = ({ invoice })
               <Text style={[styles.tableCell, styles.rateCell]}>
                 {item.fixed_item ? 'Fixed' : formatMoney(item.rate)}
               </Text>
-              <Text style={[styles.tableCell, styles.amountCell]}>
-                {formatMoney(item.amount)}
-              </Text>
+              <Text style={[styles.tableCell, styles.amountCell]}>{formatMoney(item.amount)}</Text>
             </View>
           );
         })}

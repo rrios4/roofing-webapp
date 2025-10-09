@@ -42,7 +42,7 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
   }
   return (
     <div className="w-full my-4">
-      <ScrollArea className='w-full'>
+      <ScrollArea className="w-full">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
@@ -58,10 +58,9 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Status</FormLabel>
-                      <Select 
-                        onValueChange={(value) => field.onChange(parseInt(value))} 
-                        defaultValue={field.value?.toString()}
-                      >
+                      <Select
+                        onValueChange={(value) => field.onChange(parseInt(value))}
+                        defaultValue={field.value?.toString()}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select request status" />
@@ -88,7 +87,11 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                                 'w-[240px] pl-3 text-left font-normal',
                                 !field.value && 'text-muted-foreground'
                               )}>
-                              {field.value ? format(new Date(field.value), 'PPP') : <span>Pick a date</span>}
+                              {field.value ? (
+                                format(new Date(field.value), 'PPP')
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
                           </FormControl>
@@ -250,7 +253,7 @@ export default function AddLeadRequestForm({ setOpen }: Props) {
                             <SelectValue placeholder="Select US state" />
                           </SelectTrigger>
                         </FormControl>
-                        <DefaultSelectDataItems 
+                        <DefaultSelectDataItems
                           data={listOfUSStates || []}
                           valueKey="abbreviation"
                           labelKey="name"

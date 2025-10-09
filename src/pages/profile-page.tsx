@@ -7,12 +7,12 @@ import { Badge } from '../components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Separator } from '../components/ui/separator';
 import DefaultPageHeader, { PageHeader } from '../components/ui/page-header';
-import { 
-  UserIcon, 
-  MailIcon, 
-  ShieldIcon, 
-  ClockIcon, 
-  MapPinIcon, 
+import {
+  UserIcon,
+  MailIcon,
+  ShieldIcon,
+  ClockIcon,
+  MapPinIcon,
   GlobeIcon,
   KeyIcon,
   CalendarIcon,
@@ -56,14 +56,14 @@ export default function ProfilePage() {
       await auth?.signOut();
       toast({
         title: 'Signed out successfully',
-        description: 'You have been logged out of your account.',
+        description: 'You have been logged out of your account.'
       });
       navigate('/login');
     } catch (error) {
       toast({
         variant: 'destructive',
         title: 'Sign out failed',
-        description: 'There was an error signing you out. Please try again.',
+        description: 'There was an error signing you out. Please try again.'
       });
     } finally {
       setIsSigningOut(false);
@@ -112,21 +112,24 @@ export default function ProfilePage() {
               <UserIcon className="h-5 w-5" />
               Personal Information
             </CardTitle>
-            <CardDescription>
-              Your profile information from Google authentication
-            </CardDescription>
+            <CardDescription>Your profile information from Google authentication</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-start gap-4">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={userMetadata?.avatar_url || userMetadata?.picture} alt={userMetadata?.full_name || 'User'} />
+                <AvatarImage
+                  src={userMetadata?.avatar_url || userMetadata?.picture}
+                  alt={userMetadata?.full_name || 'User'}
+                />
                 <AvatarFallback className="text-lg">
                   {abbreviateName(userMetadata?.full_name || userMetadata?.name || 'User')}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-3">
                 <div>
-                  <h3 className="text-xl font-semibold">{userMetadata?.full_name || userMetadata?.name || 'No Name'}</h3>
+                  <h3 className="text-xl font-semibold">
+                    {userMetadata?.full_name || userMetadata?.name || 'No Name'}
+                  </h3>
                   <p className="text-muted-foreground">{user.email}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -157,22 +160,20 @@ export default function ProfilePage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="w-full"
-              onClick={() => window.location.reload()}
-            >
+              onClick={() => window.location.reload()}>
               <RefreshCwIcon className="h-4 w-4 mr-2" />
               Refresh Profile
             </Button>
-            <Button 
-              variant="destructive" 
-              size="sm" 
+            <Button
+              variant="destructive"
+              size="sm"
               className="w-full"
               onClick={handleSignOut}
-              disabled={isSigningOut}
-            >
+              disabled={isSigningOut}>
               {isSigningOut ? (
                 <RefreshCwIcon className="h-4 w-4 mr-2 animate-spin" />
               ) : (
@@ -193,9 +194,7 @@ export default function ProfilePage() {
               <ShieldIcon className="h-5 w-5" />
               Account Details
             </CardTitle>
-            <CardDescription>
-              Information about your account and authentication
-            </CardDescription>
+            <CardDescription>Information about your account and authentication</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -260,13 +259,13 @@ export default function ProfilePage() {
               <KeyIcon className="h-5 w-5" />
               Authentication
             </CardTitle>
-            <CardDescription>
-              Login providers and security information
-            </CardDescription>
+            <CardDescription>Login providers and security information</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">Authentication Providers</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">
+                Authentication Providers
+              </p>
               <div className="space-y-2">
                 {appMetadata?.providers?.map((provider: string) => (
                   <div key={provider} className="flex items-center gap-2">
@@ -330,13 +329,14 @@ export default function ProfilePage() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {Object.entries(userMetadata)
-                .filter(([key, value]) => 
-                  value && 
-                  key !== 'avatar_url' && 
-                  key !== 'picture' && 
-                  key !== 'full_name' && 
-                  key !== 'name' &&
-                  key !== 'email'
+                .filter(
+                  ([key, value]) =>
+                    value &&
+                    key !== 'avatar_url' &&
+                    key !== 'picture' &&
+                    key !== 'full_name' &&
+                    key !== 'name' &&
+                    key !== 'email'
                 )
                 .map(([key, value]) => (
                   <div key={key}>

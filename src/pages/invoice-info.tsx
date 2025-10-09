@@ -64,7 +64,7 @@ import { transformInvoiceForPDF } from '../lib/pdf-utils';
 
 type Props = {};
 
-export default function InvoiceInfoPage({}: Props) {
+export default function InvoiceInfoPage() {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -404,9 +404,7 @@ export default function InvoiceInfoPage({}: Props) {
       <div className="pt-1 pb-2">
         <PageBreadcrumb
           currentPage={`Invoice #${formatNumber(invoice.invoice_number || 0)}`}
-          parentPages={[
-            { label: 'Invoices', href: '/invoices' }
-          ]}
+          parentPages={[{ label: 'Invoices', href: '/invoices' }]}
           homeHref="/"
         />
       </div>
@@ -516,11 +514,10 @@ export default function InvoiceInfoPage({}: Props) {
                   </div>
 
                   <div className="flex my-2 pt-1 pb-2 gap-4">
-                    <Link 
+                    <Link
                       to={`/customers/${invoice.customer_id}`}
                       className="cursor-pointer hover:opacity-80 transition-opacity flex gap-4"
-                      title="View customer details"
-                    >
+                      title="View customer details">
                       <Avatar>
                         <AvatarFallback>
                           {`${(invoice.customer?.first_name || '').substring(0, 1)}${(invoice.customer?.last_name || '').substring(0, 1)}`}

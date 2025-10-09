@@ -65,7 +65,7 @@ import { PageBreadcrumb } from '../components/ui/breadcrumb';
 
 type Props = {};
 
-export default function CustomerInfoPage({}: Props) {
+export default function CustomerInfoPage() {
   const { id } = useParams();
   const location = useLocation();
   const { customerById, isError, isLoading } = useFetchCustomerByID(id);

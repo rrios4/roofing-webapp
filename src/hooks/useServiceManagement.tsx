@@ -18,10 +18,10 @@ export const useServiceManagement = () => {
     onSuccess: (newService: Service) => {
       // Invalidate and refetch services
       queryClient.invalidateQueries({ queryKey: ['services'] });
-      
+
       toast({
         title: 'Service created successfully',
-        description: `${newService.name} has been added to your services.`,
+        description: `${newService.name} has been added to your services.`
       });
     },
     onError: (error: any) => {
@@ -29,9 +29,9 @@ export const useServiceManagement = () => {
       toast({
         title: 'Error creating service',
         description: error.message || 'Something went wrong. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
-    },
+    }
   });
 
   // Update service mutation
@@ -40,10 +40,10 @@ export const useServiceManagement = () => {
     onSuccess: (updatedService: Service) => {
       // Invalidate and refetch services
       queryClient.invalidateQueries({ queryKey: ['services'] });
-      
+
       toast({
         title: 'Service updated successfully',
-        description: `${updatedService.name} has been updated.`,
+        description: `${updatedService.name} has been updated.`
       });
     },
     onError: (error: any) => {
@@ -51,9 +51,9 @@ export const useServiceManagement = () => {
       toast({
         title: 'Error updating service',
         description: error.message || 'Something went wrong. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
-    },
+    }
   });
 
   // Delete service mutation
@@ -62,10 +62,10 @@ export const useServiceManagement = () => {
     onSuccess: () => {
       // Invalidate and refetch services
       queryClient.invalidateQueries({ queryKey: ['services'] });
-      
+
       toast({
         title: 'Service deleted successfully',
-        description: 'The service has been removed from your system.',
+        description: 'The service has been removed from your system.'
       });
     },
     onError: (error: any) => {
@@ -73,9 +73,9 @@ export const useServiceManagement = () => {
       toast({
         title: 'Error deleting service',
         description: error.message || 'Something went wrong. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
-    },
+    }
   });
 
   return {
@@ -83,15 +83,16 @@ export const useServiceManagement = () => {
     createService: createServiceMutation,
     updateService: updateServiceMutation,
     deleteService: deleteServiceMutation,
-    
+
     // Loading states
     isCreating: createServiceMutation.isPending,
     isUpdating: updateServiceMutation.isPending,
     isDeleting: deleteServiceMutation.isPending,
-    
+
     // Helper function to check if any operation is in progress
-    isLoading: createServiceMutation.isPending || 
-               updateServiceMutation.isPending || 
-               deleteServiceMutation.isPending,
+    isLoading:
+      createServiceMutation.isPending ||
+      updateServiceMutation.isPending ||
+      deleteServiceMutation.isPending
   };
 };

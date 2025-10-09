@@ -54,7 +54,7 @@ import ConvertQuoteAlertDialog from '../components/alert-convert-quote-dialog';
 
 type Props = {};
 
-export default function QuoteInfoPage({}: Props) {
+export default function QuoteInfoPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -205,9 +205,7 @@ export default function QuoteInfoPage({}: Props) {
       <div className="pt-1 pb-2">
         <PageBreadcrumb
           currentPage={`Quote #${formatNumber(quote.quote_number || 0)}`}
-          parentPages={[
-            { label: 'Quotes', href: '/quotes' }
-          ]}
+          parentPages={[{ label: 'Quotes', href: '/quotes' }]}
           homeHref="/"
         />
       </div>

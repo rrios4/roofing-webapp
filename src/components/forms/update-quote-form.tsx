@@ -118,7 +118,7 @@ export default function UpdateQuoteForm({ quote, quoteLineItems, onSuccess }: Pr
       subtotal: item.qty * item.amount
     }));
     form.setValue('line_items', updatedLineItems);
-  }, [lineItems, form.setValue]);
+  }, [lineItems, form]);
 
   const calculateSubtotal = () => {
     return (lineItems ?? []).reduce((sum, item) => sum + item.subtotal, 0);

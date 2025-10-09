@@ -6,21 +6,38 @@ export interface UseGoogleServiceReturn {
   isInitialized: boolean;
   isLoading: boolean;
   error: string | null;
-  
+
   // Gmail functions
-  sendEmail: (message: EmailMessage) => Promise<{ success: boolean; messageId?: string; error?: string }>;
+  sendEmail: (
+    message: EmailMessage
+  ) => Promise<{ success: boolean; messageId?: string; error?: string }>;
   getMessages: (query?: string, maxResults?: number) => Promise<any[]>;
   getLabels: () => Promise<Array<{ id: string; name: string; type: string }>>;
-  getUserProfile: () => Promise<{ emailAddress?: string; messagesTotal?: number; threadsTotal?: number }>;
-  
+  getUserProfile: () => Promise<{
+    emailAddress?: string;
+    messagesTotal?: number;
+    threadsTotal?: number;
+  }>;
+
   // Drive functions
-  getDriveFiles: (query?: string, maxResults?: number) => Promise<Array<{ id: string; name: string; mimeType: string }>>;
-  uploadFileToDrive: (fileName: string, fileContent: string, mimeType: string, folderId?: string) => Promise<{ success: boolean; fileId?: string; error?: string }>;
-  
+  getDriveFiles: (
+    query?: string,
+    maxResults?: number
+  ) => Promise<Array<{ id: string; name: string; mimeType: string }>>;
+  uploadFileToDrive: (
+    fileName: string,
+    fileContent: string,
+    mimeType: string,
+    folderId?: string
+  ) => Promise<{ success: boolean; fileId?: string; error?: string }>;
+
   // Calendar functions
   getCalendars: () => Promise<Array<{ id: string; summary: string; primary?: boolean }>>;
-  createCalendarEvent: (calendarId: string, event: any) => Promise<{ success: boolean; eventId?: string; error?: string }>;
-  
+  createCalendarEvent: (
+    calendarId: string,
+    event: any
+  ) => Promise<{ success: boolean; eventId?: string; error?: string }>;
+
   // Utility functions
   checkGmailPermissions: () => Promise<boolean>;
   reinitialize: () => Promise<void>;
@@ -50,9 +67,11 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
       try {
         const success = await googleService.initialize();
         setIsInitialized(success);
-        
+
         if (!success) {
-          setError('Failed to initialize Google service. Please ensure you have the required permissions.');
+          setError(
+            'Failed to initialize Google service. Please ensure you have the required permissions.'
+          );
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error occurred');
@@ -67,7 +86,10 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
 
   // Wrapper function to handle errors consistently
   const handleServiceCall = useCallback(
-    async function<T>(serviceCall: () => Promise<T>, errorMessage = 'Service call failed'): Promise<T | null> {
+    async function <T>(
+      serviceCall: () => Promise<T>,
+      errorMessage = 'Service call failed'
+    ): Promise<T | null> {
       if (!isInitialized) {
         setError('Google service not initialized');
         return null;
@@ -82,32 +104,35 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
         console.error(errorMessage, err);
         return null;
       }
-    }, 
+    },
     [isInitialized]
   );
 
   // Gmail functions
-  const sendEmail = useCallback(async (message: EmailMessage) => {
-    const result = await handleServiceCall(
-      () => googleService.sendEmail(message),
-      'Failed to send email'
-    );
-    return result || { success: false, error: 'Service not available' };
-  }, [handleServiceCall]);
+  const sendEmail = useCallback(
+    async (message: EmailMessage) => {
+      const result = await handleServiceCall(
+        () => googleService.sendEmail(message),
+        'Failed to send email'
+      );
+      return result || { success: false, error: 'Service not available' };
+    },
+    [handleServiceCall]
+  );
 
-  const getMessages = useCallback(async (query?: string, maxResults?: number) => {
-    const result = await handleServiceCall(
-      () => googleService.getMessages(query, maxResults),
-      'Failed to get messages'
-    );
-    return result || [];
-  }, [handleServiceCall]);
+  const getMessages = useCallback(
+    async (query?: string, maxResults?: number) => {
+      const result = await handleServiceCall(
+        () => googleService.getMessages(query, maxResults),
+        'Failed to get messages'
+      );
+      return result || [];
+    },
+    [handleServiceCall]
+  );
 
   const getLabels = useCallback(async () => {
-    const result = await handleServiceCall(
-      () => googleService.getLabels(),
-      'Failed to get labels'
-    );
+    const result = await handleServiceCall(() => googleService.getLabels(), 'Failed to get labels');
     return result || [];
   }, [handleServiceCall]);
 
@@ -120,26 +145,27 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
   }, [handleServiceCall]);
 
   // Drive functions
-  const getDriveFiles = useCallback(async (query?: string, maxResults?: number) => {
-    const result = await handleServiceCall(
-      () => googleService.getDriveFiles(query, maxResults),
-      'Failed to get Drive files'
-    );
-    return result || [];
-  }, [handleServiceCall]);
+  const getDriveFiles = useCallback(
+    async (query?: string, maxResults?: number) => {
+      const result = await handleServiceCall(
+        () => googleService.getDriveFiles(query, maxResults),
+        'Failed to get Drive files'
+      );
+      return result || [];
+    },
+    [handleServiceCall]
+  );
 
-  const uploadFileToDrive = useCallback(async (
-    fileName: string, 
-    fileContent: string, 
-    mimeType: string, 
-    folderId?: string
-  ) => {
-    const result = await handleServiceCall(
-      () => googleService.uploadFileToDrive(fileName, fileContent, mimeType, folderId),
-      'Failed to upload file to Drive'
-    );
-    return result || { success: false, error: 'Service not available' };
-  }, [handleServiceCall]);
+  const uploadFileToDrive = useCallback(
+    async (fileName: string, fileContent: string, mimeType: string, folderId?: string) => {
+      const result = await handleServiceCall(
+        () => googleService.uploadFileToDrive(fileName, fileContent, mimeType, folderId),
+        'Failed to upload file to Drive'
+      );
+      return result || { success: false, error: 'Service not available' };
+    },
+    [handleServiceCall]
+  );
 
   // Calendar functions
   const getCalendars = useCallback(async () => {
@@ -150,13 +176,16 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
     return result || [];
   }, [handleServiceCall]);
 
-  const createCalendarEvent = useCallback(async (calendarId: string, event: any) => {
-    const result = await handleServiceCall(
-      () => googleService.createCalendarEvent(calendarId, event),
-      'Failed to create calendar event'
-    );
-    return result || { success: false, error: 'Service not available' };
-  }, [handleServiceCall]);
+  const createCalendarEvent = useCallback(
+    async (calendarId: string, event: any) => {
+      const result = await handleServiceCall(
+        () => googleService.createCalendarEvent(calendarId, event),
+        'Failed to create calendar event'
+      );
+      return result || { success: false, error: 'Service not available' };
+    },
+    [handleServiceCall]
+  );
 
   // Utility functions
   const checkGmailPermissions = useCallback(async () => {
@@ -170,11 +199,11 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
   const reinitialize = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const success = await googleService.initialize();
       setIsInitialized(success);
-      
+
       if (!success) {
         setError('Failed to reinitialize Google service');
       }
@@ -199,6 +228,6 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
     getCalendars,
     createCalendarEvent,
     checkGmailPermissions,
-    reinitialize,
+    reinitialize
   };
 };

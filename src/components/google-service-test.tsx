@@ -4,16 +4,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge';
 import { useToast } from './ui/use-toast';
 import { useGoogleService } from '../hooks/useGoogleService';
-import { Loader2, Mail, Calendar, HardDrive, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import {
+  Loader2,
+  Mail,
+  Calendar,
+  HardDrive,
+  CheckCircle,
+  XCircle,
+  AlertCircle
+} from 'lucide-react';
 
 /**
  * Test component for Google Services Integration
  * Use this component to verify that Google services are working correctly
  */
 export const GoogleServiceTest: React.FC = () => {
-  const [testResults, setTestResults] = useState<Record<string, 'idle' | 'loading' | 'success' | 'error'>>({});
+  const [testResults, setTestResults] = useState<
+    Record<string, 'idle' | 'loading' | 'success' | 'error'>
+  >({});
   const [testOutputs, setTestOutputs] = useState<Record<string, any>>({});
-  
+
   const { toast } = useToast();
   const {
     isInitialized,
@@ -30,22 +40,22 @@ export const GoogleServiceTest: React.FC = () => {
   } = useGoogleService();
 
   const runTest = async (testName: string, testFn: () => Promise<any>) => {
-    setTestResults(prev => ({ ...prev, [testName]: 'loading' }));
-    
+    setTestResults((prev) => ({ ...prev, [testName]: 'loading' }));
+
     try {
       const result = await testFn();
-      setTestResults(prev => ({ ...prev, [testName]: 'success' }));
-      setTestOutputs(prev => ({ ...prev, [testName]: result }));
-      
+      setTestResults((prev) => ({ ...prev, [testName]: 'success' }));
+      setTestOutputs((prev) => ({ ...prev, [testName]: result }));
+
       toast({
         title: `${testName} Test Passed`,
         description: 'Test completed successfully',
         variant: 'default'
       });
     } catch (error) {
-      setTestResults(prev => ({ ...prev, [testName]: 'error' }));
-      setTestOutputs(prev => ({ ...prev, [testName]: error }));
-      
+      setTestResults((prev) => ({ ...prev, [testName]: 'error' }));
+      setTestOutputs((prev) => ({ ...prev, [testName]: error }));
+
       toast({
         title: `${testName} Test Failed`,
         description: error instanceof Error ? error.message : 'Unknown error',
@@ -72,7 +82,11 @@ export const GoogleServiceTest: React.FC = () => {
       case 'loading':
         return <Badge variant="secondary">Running...</Badge>;
       case 'success':
-        return <Badge variant="default" className="bg-green-500">Pass</Badge>;
+        return (
+          <Badge variant="default" className="bg-green-500">
+            Pass
+          </Badge>
+        );
       case 'error':
         return <Badge variant="destructive">Fail</Badge>;
       default:
@@ -179,12 +193,12 @@ export const GoogleServiceTest: React.FC = () => {
         if (!Array.isArray(calendars)) {
           throw new Error('Could not retrieve calendars');
         }
-        const primaryCalendar = calendars.find(cal => cal.primary);
-        return { 
-          count: calendars.length, 
+        const primaryCalendar = calendars.find((cal) => cal.primary);
+        return {
+          count: calendars.length,
           hasCalendars: calendars.length > 0,
           hasPrimary: !!primaryCalendar,
-          calendars: calendars.slice(0, 3).map(cal => ({ id: cal.id, summary: cal.summary }))
+          calendars: calendars.slice(0, 3).map((cal) => ({ id: cal.id, summary: cal.summary }))
         };
       }
     }
@@ -210,7 +224,9 @@ export const GoogleServiceTest: React.FC = () => {
             <div className="flex items-center space-x-2">
               <span className="font-medium">Initialized:</span>
               {isInitialized ? (
-                <Badge variant="default" className="bg-green-500">Yes</Badge>
+                <Badge variant="default" className="bg-green-500">
+                  Yes
+                </Badge>
               ) : (
                 <Badge variant="destructive">No</Badge>
               )}
@@ -228,22 +244,19 @@ export const GoogleServiceTest: React.FC = () => {
               {error ? (
                 <Badge variant="destructive">Yes</Badge>
               ) : (
-                <Badge variant="default" className="bg-green-500">No</Badge>
+                <Badge variant="default" className="bg-green-500">
+                  No
+                </Badge>
               )}
             </div>
           </div>
-          
+
           {error && (
             <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
               <p className="text-sm text-red-800">
                 <strong>Error:</strong> {error}
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2"
-                onClick={reinitialize}
-              >
+              <Button variant="outline" size="sm" className="mt-2" onClick={reinitialize}>
                 Try to Reinitialize
               </Button>
             </div>
@@ -254,7 +267,7 @@ export const GoogleServiceTest: React.FC = () => {
       {/* Test Cases */}
       <div className="grid gap-4">
         <h2 className="text-xl font-semibold">Test Cases</h2>
-        
+
         {tests.map((test) => (
           <Card key={test.name}>
             <CardContent className="pt-6">
@@ -266,14 +279,13 @@ export const GoogleServiceTest: React.FC = () => {
                     <p className="text-sm text-muted-foreground">{test.description}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   {getStatusBadge(testResults[test.name] || 'idle')}
                   <Button
                     size="sm"
                     onClick={() => runTest(test.name, test.test)}
-                    disabled={!isInitialized || isLoading || testResults[test.name] === 'loading'}
-                  >
+                    disabled={!isInitialized || isLoading || testResults[test.name] === 'loading'}>
                     {getStatusIcon(testResults[test.name] || 'idle')}
                     <span className="ml-2">Run Test</span>
                   </Button>
@@ -301,11 +313,10 @@ export const GoogleServiceTest: React.FC = () => {
             for (const test of tests) {
               await runTest(test.name, test.test);
               // Small delay between tests
-              await new Promise(resolve => setTimeout(resolve, 1000));
+              await new Promise((resolve) => setTimeout(resolve, 1000));
             }
           }}
-          disabled={!isInitialized || isLoading}
-        >
+          disabled={!isInitialized || isLoading}>
           Run All Tests
         </Button>
       </div>

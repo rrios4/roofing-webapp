@@ -12,7 +12,8 @@ import {
 export const fetchCustomers = async (): Promise<CustomerWithType[]> => {
   const { data, error } = await supabase
     .from(TABLES.CUSTOMER)
-    .select(`
+    .select(
+      `
       id,
       customer_type_id,
       first_name,
@@ -33,7 +34,8 @@ export const fetchCustomers = async (): Promise<CustomerWithType[]> => {
         created_at,
         updated_at
       )
-    `)
+    `
+    )
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -50,12 +52,12 @@ export const fetchCustomers = async (): Promise<CustomerWithType[]> => {
   return transformedData as CustomerWithType[];
 };
 
-
 // GET request to API to get a customer by id
 export const fetchCustomerById = async (customerId: number): Promise<CustomerWithType> => {
   const { data, error } = await supabase
     .from(TABLES.CUSTOMER)
-    .select(`
+    .select(
+      `
       id,
       customer_type_id,
       first_name,
@@ -76,7 +78,8 @@ export const fetchCustomerById = async (customerId: number): Promise<CustomerWit
         created_at,
         updated_at
       )
-    `)
+    `
+    )
     .eq('id', customerId)
     .single();
 
@@ -87,19 +90,20 @@ export const fetchCustomerById = async (customerId: number): Promise<CustomerWit
 
   const transformedData = {
     ...data,
-    customer_type: Array.isArray(data.customer_type)
-      ? data.customer_type[0]
-      : data.customer_type
+    customer_type: Array.isArray(data.customer_type) ? data.customer_type[0] : data.customer_type
   };
 
   return transformedData as CustomerWithType;
 };
 
 // GET request to API to get all invoices that belong to a customer
-export const fetchCustomerInvoices = async (customerId: number): Promise<InvoiceWithRelations[]> => {
+export const fetchCustomerInvoices = async (
+  customerId: number
+): Promise<InvoiceWithRelations[]> => {
   const { data, error } = await supabase
     .from(TABLES.INVOICE)
-    .select(`
+    .select(
+      `
       *,
       customer (
         id,
@@ -123,7 +127,8 @@ export const fetchCustomerInvoices = async (customerId: number): Promise<Invoice
         created_at,
         updated_at
       )
-    `)
+    `
+    )
     .eq('customer_id', customerId);
 
   if (error) {
@@ -137,7 +142,8 @@ export const fetchCustomerInvoices = async (customerId: number): Promise<Invoice
 export const fetchCustomerQuotes = async (customerId: number): Promise<QuoteWithRelations[]> => {
   const { data, error } = await supabase
     .from(TABLES.QUOTE)
-    .select(`
+    .select(
+      `
       *,
       customer (
         id,
@@ -161,7 +167,8 @@ export const fetchCustomerQuotes = async (customerId: number): Promise<QuoteWith
         created_at,
         updated_at
       )
-    `)
+    `
+    )
     .eq('customer_id', customerId);
 
   if (error) {
@@ -189,10 +196,7 @@ export const fetchSearchCustomers = async (query: string): Promise<Customer[]> =
 
 // DELETE request to API to delete a customer by id
 export const deleteCustomer = async (itemNumber: number): Promise<void> => {
-  const { error } = await supabase
-    .from(TABLES.CUSTOMER)
-    .delete()
-    .eq('id', itemNumber);
+  const { error } = await supabase.from(TABLES.CUSTOMER).delete().eq('id', itemNumber);
 
   if (error) {
     throw error;

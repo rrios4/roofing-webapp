@@ -9,7 +9,7 @@ import {
   getStatusUsage,
   StatusType,
   UnifiedStatus,
-  StatusInsert,
+  StatusInsert
 } from '../../services/api/status-service';
 
 // Query keys for React Query cache management
@@ -17,8 +17,9 @@ export const STATUS_QUERY_KEYS = {
   all: ['statuses'] as const,
   allStatuses: () => [...STATUS_QUERY_KEYS.all, 'all'] as const,
   byType: (type: StatusType) => [...STATUS_QUERY_KEYS.all, 'type', type] as const,
-  byId: (type: StatusType, id: number) => [...STATUS_QUERY_KEYS.all, 'type', type, 'id', id] as const,
-  usage: (type: StatusType, id: number) => [...STATUS_QUERY_KEYS.all, 'usage', type, id] as const,
+  byId: (type: StatusType, id: number) =>
+    [...STATUS_QUERY_KEYS.all, 'type', type, 'id', id] as const,
+  usage: (type: StatusType, id: number) => [...STATUS_QUERY_KEYS.all, 'usage', type, id] as const
 } as const;
 
 /**
@@ -34,15 +35,18 @@ export const useFetchAllStatuses = () => {
       if (response.error || !response.data) {
         return { statuses: [], error: response.error };
       }
-      
+
       // Group statuses by type for easier consumption
-      const grouped = response.data.reduce((acc, status) => {
-        if (!acc[status.type]) {
-          acc[status.type] = [];
-        }
-        acc[status.type].push(status);
-        return acc;
-      }, {} as Record<StatusType, UnifiedStatus[]>);
+      const grouped = response.data.reduce(
+        (acc, status) => {
+          if (!acc[status.type]) {
+            acc[status.type] = [];
+          }
+          acc[status.type].push(status);
+          return acc;
+        },
+        {} as Record<StatusType, UnifiedStatus[]>
+      );
 
       return {
         statuses: response.data,
@@ -109,19 +113,19 @@ export const useCreateStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ type, data }: { type: StatusType; data: StatusInsert }) => 
+    mutationFn: ({ type, data }: { type: StatusType; data: StatusInsert }) =>
       createStatus(type, data),
     onSuccess: (response, { type }) => {
       if (response.data && !response.error) {
         // Invalidate and refetch related queries
         queryClient.invalidateQueries({ queryKey: STATUS_QUERY_KEYS.allStatuses() });
         queryClient.invalidateQueries({ queryKey: STATUS_QUERY_KEYS.byType(type) });
-        
+
         // Optionally add the new status to the cache
-        queryClient.setQueryData(
-          STATUS_QUERY_KEYS.byId(type, response.data.id),
-          { data: response.data, error: null }
-        );
+        queryClient.setQueryData(STATUS_QUERY_KEYS.byId(type, response.data.id), {
+          data: response.data,
+          error: null
+        });
       }
     },
     onError: (error) => {
@@ -137,19 +141,19 @@ export const useUpdateStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ type, id, data }: { type: StatusType; id: number; data: StatusInsert }) => 
+    mutationFn: ({ type, id, data }: { type: StatusType; id: number; data: StatusInsert }) =>
       updateStatus(type, id, data),
     onSuccess: (response, { type, id }) => {
       if (response.data && !response.error) {
         // Invalidate and refetch related queries
         queryClient.invalidateQueries({ queryKey: STATUS_QUERY_KEYS.allStatuses() });
         queryClient.invalidateQueries({ queryKey: STATUS_QUERY_KEYS.byType(type) });
-        
+
         // Update the specific status in the cache
-        queryClient.setQueryData(
-          STATUS_QUERY_KEYS.byId(type, id),
-          { data: response.data, error: null }
-        );
+        queryClient.setQueryData(STATUS_QUERY_KEYS.byId(type, id), {
+          data: response.data,
+          error: null
+        });
       }
     },
     onError: (error) => {
@@ -165,14 +169,13 @@ export const useDeleteStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ type, id }: { type: StatusType; id: number }) => 
-      deleteStatus(type, id),
+    mutationFn: ({ type, id }: { type: StatusType; id: number }) => deleteStatus(type, id),
     onSuccess: (response, { type, id }) => {
       if (response.success) {
         // Invalidate and refetch related queries
         queryClient.invalidateQueries({ queryKey: STATUS_QUERY_KEYS.allStatuses() });
         queryClient.invalidateQueries({ queryKey: STATUS_QUERY_KEYS.byType(type) });
-        
+
         // Remove the specific status from the cache
         queryClient.removeQueries({ queryKey: STATUS_QUERY_KEYS.byId(type, id) });
         queryClient.removeQueries({ queryKey: STATUS_QUERY_KEYS.usage(type, id) });
@@ -191,7 +194,7 @@ export const useDeleteStatus = () => {
 export const useStatusManagement = (type?: StatusType) => {
   // Data fetching hooks
   const allStatusesQuery = useFetchAllStatuses();
-  const typeStatusesQuery = type ? useFetchStatusesByType(type) : null;
+  const typeStatusesQuery = useFetchStatusesByType(type || 'invoice'); // Always call the hook, but with a default
 
   // Mutation hooks
   const createMutation = useCreateStatus();
@@ -213,7 +216,7 @@ export const useStatusManagement = (type?: StatusType) => {
 
   const refetchAll = () => {
     allStatusesQuery.refetch();
-    if (typeStatusesQuery) {
+    if (type) {
       typeStatusesQuery.refetch();
     }
   };
@@ -222,35 +225,35 @@ export const useStatusManagement = (type?: StatusType) => {
     // Data
     allStatuses: allStatusesQuery.data?.statuses || [],
     groupedStatuses: allStatusesQuery.data?.grouped || {},
-    typeStatuses: typeStatusesQuery?.data?.statuses || [],
-    
+    typeStatuses: type ? typeStatusesQuery.data?.statuses || [] : [],
+
     // Loading states
-    isLoading: allStatusesQuery.isLoading || (typeStatusesQuery?.isLoading ?? false),
+    isLoading: allStatusesQuery.isLoading || (type ? typeStatusesQuery.isLoading : false),
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
-    
+
     // Error states
-    error: allStatusesQuery.data?.error || typeStatusesQuery?.data?.error || null,
+    error: allStatusesQuery.data?.error || (type ? typeStatusesQuery.data?.error : null) || null,
     createError: createMutation.error,
     updateError: updateMutation.error,
     deleteError: deleteMutation.error,
-    
+
     // Success states
     createSuccess: createMutation.isSuccess,
     updateSuccess: updateMutation.isSuccess,
     deleteSuccess: deleteMutation.isSuccess,
-    
+
     // Operations
     createStatus: createStatusFn,
     updateStatus: updateStatusFn,
     deleteStatus: deleteStatusFn,
     refetchAll,
-    
+
     // Reset functions
     resetCreateState: createMutation.reset,
     resetUpdateState: updateMutation.reset,
-    resetDeleteState: deleteMutation.reset,
+    resetDeleteState: deleteMutation.reset
   };
 };
 
@@ -259,7 +262,7 @@ export const useStatusManagement = (type?: StatusType) => {
  */
 export const useStatusOptions = () => {
   const { data } = useFetchAllStatuses();
-  
+
   return {
     invoiceStatuses: data?.grouped?.invoice || [],
     quoteStatuses: data?.grouped?.quote || [],

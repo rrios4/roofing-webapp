@@ -47,7 +47,12 @@ import {
   CreditCardIcon,
   ClockIcon as Clock4Icon
 } from 'lucide-react';
-import { useFetchDashboardMetrics, useFetchMultiYearRevenueData, useFetchBusinessStatusOverview, useFetchInvoiceStatusTracking } from '../hooks/useAPI/use-report';
+import {
+  useFetchDashboardMetrics,
+  useFetchMultiYearRevenueData,
+  useFetchBusinessStatusOverview,
+  useFetchInvoiceStatusTracking
+} from '../hooks/useAPI/use-report';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../components/ui/sheet';
 import { ScrollArea } from '../components/ui/scroll-area';
@@ -58,18 +63,31 @@ import { count } from 'console';
 
 type Props = {};
 
-export default function DashboardPage({}: Props) {
+export default function DashboardPage() {
   // Fetch real dashboard metrics
   const { data: dashboardMetrics, isLoading, isError } = useFetchDashboardMetrics();
-  
+
   // Fetch real multi-year revenue data
-  const { data: multiYearRevenueData, isLoading: isRevenueLoading, isError: isRevenueError, years } = useFetchMultiYearRevenueData();
+  const {
+    data: multiYearRevenueData,
+    isLoading: isRevenueLoading,
+    isError: isRevenueError,
+    years
+  } = useFetchMultiYearRevenueData();
 
   // Fetch real business status overview data
-  const { data: businessStatusData, isLoading: isBusinessStatusLoading, isError: isBusinessStatusError } = useFetchBusinessStatusOverview();
+  const {
+    data: businessStatusData,
+    isLoading: isBusinessStatusLoading,
+    isError: isBusinessStatusError
+  } = useFetchBusinessStatusOverview();
 
   // Fetch real invoice status tracking data
-  const { data: invoiceStatusData, isLoading: isInvoiceStatusLoading, isError: isInvoiceStatusError } = useFetchInvoiceStatusTracking();
+  const {
+    data: invoiceStatusData,
+    isLoading: isInvoiceStatusLoading,
+    isError: isInvoiceStatusError
+  } = useFetchInvoiceStatusTracking();
 
   // State management for form sheets
   const [customerSheetOpen, setCustomerSheetOpen] = React.useState(false);
@@ -125,8 +143,6 @@ export default function DashboardPage({}: Props) {
     { name: 'Qualified', value: 15 },
     { name: 'Converted', value: 8 }
   ];
-
-
 
   // Loading state
   if (isLoading) {
@@ -252,37 +268,36 @@ export default function DashboardPage({}: Props) {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <Button 
-                  className="w-full justify-start" 
+                <Button
+                  className="w-full justify-start"
                   variant="outline"
-                  onClick={() => setCustomerSheetOpen(true)}
-                >
+                  onClick={() => setCustomerSheetOpen(true)}>
                   <UserPlusIcon className="h-4 w-4 mr-3" />
                   Add New Customer
                 </Button>
-                <Button 
-                  className="w-full justify-start" 
+                <Button
+                  className="w-full justify-start"
                   variant="outline"
-                  onClick={() => setQuoteSheetOpen(true)}
-                >
+                  onClick={() => setQuoteSheetOpen(true)}>
                   <FileIcon className="h-4 w-4 mr-3" />
                   Create Quote
                 </Button>
-                <Button 
-                  className="w-full justify-start" 
+                <Button
+                  className="w-full justify-start"
                   variant="outline"
-                  onClick={() => setInvoiceSheetOpen(true)}
-                >
+                  onClick={() => setInvoiceSheetOpen(true)}>
                   <Receipt className="h-4 w-4 mr-3" />
                   Generate Invoice
                 </Button>
                 <Button disabled className="w-full justify-start" variant="outline">
                   <KanbanSquareIcon className="h-4 w-4 mr-3" />
-                  Update Kanban <span className='text-red-400 ml-2 font-extralight'>Coming Soon!</span>
+                  Update Kanban{' '}
+                  <span className="text-red-400 ml-2 font-extralight">Coming Soon!</span>
                 </Button>
                 <Button disabled className="w-full justify-start" variant="outline">
                   <CalendarIcon className="h-4 w-4 mr-3" />
-                  Schedule Visit <span className='text-red-400 ml-2 font-extralight'>Coming Soon!</span>
+                  Schedule Visit{' '}
+                  <span className="text-red-400 ml-2 font-extralight">Coming Soon!</span>
                 </Button>
               </div>
             </CardContent>
@@ -291,165 +306,175 @@ export default function DashboardPage({}: Props) {
           {/* Business Status Overview */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-lg">
-                Business Status Overview
-              </CardTitle>
+              <CardTitle className="text-lg">Business Status Overview</CardTitle>
             </CardHeader>
             <CardContent>
-            {isBusinessStatusLoading ? (
-              <div className="flex items-center justify-center h-32">
-                <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
-                <span className="ml-2 text-gray-500">Loading business status...</span>
-              </div>
-            ) : isBusinessStatusError || !businessStatusData ? (
-              <div className="flex items-center justify-center h-32">
-                <div className="text-center">
-                  <AlertTriangleIcon className="h-6 w-6 text-red-500 mx-auto mb-2" />
-                  <p className="text-red-600 text-sm">Error loading business status</p>
+              {isBusinessStatusLoading ? (
+                <div className="flex items-center justify-center h-32">
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
+                  <span className="ml-2 text-gray-500">Loading business status...</span>
                 </div>
-              </div>
-            ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-4">
-                <h4 className="font-medium text-gray-700 dark:text-gray-300">Quote Status</h4>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Accepted</span>
-                    </div>
-                    <Badge variant="green">{businessStatusData.quoteStatus.accepted}</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <ClockIcon className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Pending</span>
-                    </div>
-                    <Badge variant="yellow">{businessStatusData.quoteStatus.pending}</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <XCircleIcon className="h-4 w-4 text-red-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Rejected</span>
-                    </div>
-                    <Badge variant="red">{businessStatusData.quoteStatus.rejected}</Badge>
+              ) : isBusinessStatusError || !businessStatusData ? (
+                <div className="flex items-center justify-center h-32">
+                  <div className="text-center">
+                    <AlertTriangleIcon className="h-6 w-6 text-red-500 mx-auto mb-2" />
+                    <p className="text-red-600 text-sm">Error loading business status</p>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-700 dark:text-gray-300">Quote Status</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Accepted</span>
+                        </div>
+                        <Badge variant="green">{businessStatusData.quoteStatus.accepted}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <ClockIcon className="h-4 w-4 text-yellow-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Pending</span>
+                        </div>
+                        <Badge variant="yellow">{businessStatusData.quoteStatus.pending}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <XCircleIcon className="h-4 w-4 text-red-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Rejected</span>
+                        </div>
+                        <Badge variant="red">{businessStatusData.quoteStatus.rejected}</Badge>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="space-y-4">
-                <h4 className="font-medium text-gray-700 dark:text-gray-300">Invoice Status</h4>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <CheckIcon className="h-4 w-4 text-green-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Paid</span>
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-700 dark:text-gray-300">Invoice Status</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <CheckIcon className="h-4 w-4 text-green-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Paid</span>
+                        </div>
+                        <Badge variant="green">{businessStatusData.invoiceStatus.paid}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Clock4Icon className="h-4 w-4 text-yellow-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Pending</span>
+                        </div>
+                        <Badge variant="yellow">{businessStatusData.invoiceStatus.pending}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <AlertTriangleIcon className="h-4 w-4 text-red-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Overdue</span>
+                        </div>
+                        <Badge variant="red">{businessStatusData.invoiceStatus.overdue}</Badge>
+                      </div>
                     </div>
-                    <Badge variant="green">{businessStatusData.invoiceStatus.paid}</Badge>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Clock4Icon className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Pending</span>
-                    </div>
-                    <Badge variant="yellow">{businessStatusData.invoiceStatus.pending}</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <AlertTriangleIcon className="h-4 w-4 text-red-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Overdue</span>
-                    </div>
-                    <Badge variant="red">{businessStatusData.invoiceStatus.overdue}</Badge>
-                  </div>
-                </div>
-              </div>
 
-              <div className="space-y-4">
-                <h4 className="font-medium text-gray-700 dark:text-gray-300">Project Status</h4>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <PlayIcon className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Active</span>
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-700 dark:text-gray-300">Project Status</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <PlayIcon className="h-4 w-4 text-blue-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Active</span>
+                        </div>
+                        <Badge variant="blue">{businessStatusData.projectStatus.active}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <PauseIcon className="h-4 w-4 text-yellow-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">On Hold</span>
+                        </div>
+                        <Badge variant="yellow">{businessStatusData.projectStatus.onHold}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            Completed
+                          </span>
+                        </div>
+                        <Badge variant="green">{businessStatusData.projectStatus.completed}</Badge>
+                      </div>
                     </div>
-                    <Badge variant="blue">{businessStatusData.projectStatus.active}</Badge>
                   </div>
-                  <div className="flex items-center justify-between">
+                </div>
+              )}
+
+              {/* Customer Types - Horizontal Layout */}
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-4">
+                  Customer Types
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <PauseIcon className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">On Hold</span>
+                      <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
+                        <HomeIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          Residential
+                        </p>
+                        <p className="text-xs text-gray-500">Active customers</p>
+                      </div>
                     </div>
-                    <Badge variant="yellow">{businessStatusData.projectStatus.onHold}</Badge>
+                    <Badge variant="blue">189</Badge>
                   </div>
-                  <div className="flex items-center justify-between">
+
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Completed</span>
+                      <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-full">
+                        <BuildingIcon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          Commercial
+                        </p>
+                        <p className="text-xs text-gray-500">Business clients</p>
+                      </div>
                     </div>
-                    <Badge variant="green">{businessStatusData.projectStatus.completed}</Badge>
+                    <Badge variant="default">58</Badge>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-green-100 dark:bg-green-900 rounded-full">
+                        <UsersIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          Referrals
+                        </p>
+                        <p className="text-xs text-gray-500">Word of mouth</p>
+                      </div>
+                    </div>
+                    <Badge variant="green">34</Badge>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-full">
+                        <TrendingUpIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          New Leads
+                        </p>
+                        <p className="text-xs text-gray-500">This month</p>
+                      </div>
+                    </div>
+                    <Badge variant="yellow">42</Badge>
                   </div>
                 </div>
               </div>
-            </div>
-            )}
-            
-            {/* Customer Types - Horizontal Layout */}
-            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-4">Customer Types</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
-                      <HomeIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">Residential</p>
-                      <p className="text-xs text-gray-500">Active customers</p>
-                    </div>
-                  </div>
-                  <Badge variant="blue">189</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-full">
-                      <BuildingIcon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">Commercial</p>
-                      <p className="text-xs text-gray-500">Business clients</p>
-                    </div>
-                  </div>
-                  <Badge variant="default">58</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-green-100 dark:bg-green-900 rounded-full">
-                      <UsersIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">Referrals</p>
-                      <p className="text-xs text-gray-500">Word of mouth</p>
-                    </div>
-                  </div>
-                  <Badge variant="green">34</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-full">
-                      <TrendingUpIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">New Leads</p>
-                      <p className="text-xs text-gray-500">This month</p>
-                    </div>
-                  </div>
-                  <Badge variant="yellow">42</Badge>
-                </div>
-              </div>
-            </div>
             </CardContent>
           </Card>
         </div>
@@ -522,7 +547,9 @@ export default function DashboardPage({}: Props) {
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {item.amount >= 1000 ? `$${(item.amount / 1000).toFixed(0)}K` : `$${item.amount}`}
+                        {item.amount >= 1000
+                          ? `$${(item.amount / 1000).toFixed(0)}K`
+                          : `$${item.amount}`}
                       </p>
                       <Badge
                         variant={
@@ -532,7 +559,7 @@ export default function DashboardPage({}: Props) {
                               ? 'yellow'
                               : item.status === 'Draft'
                                 ? 'gray'
-                              : 'red'
+                                : 'red'
                         }>
                         {item.status}
                       </Badge>

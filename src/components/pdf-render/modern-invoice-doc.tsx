@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
     backgroundColor: '#ffffff',
     fontFamily: 'Helvetica',
-    lineHeight: 1.3,
-  },
+    lineHeight: 1.3
+  }
 });
 
 export const ModernInvoiceDocument: React.FC<ModernInvoiceDocumentProps> = ({ invoice }) => {
@@ -48,19 +48,19 @@ export const ModernInvoiceDocument: React.FC<ModernInvoiceDocumentProps> = ({ in
       <Page size="A4" style={styles.page}>
         {/* Header with logo, invoice info, and status */}
         <InvoiceHeader invoice={invoice} />
-        
+
         {/* Customer and billing information */}
         <InvoiceCustomerInfo invoice={invoice} />
-        
+
         {/* Line items table */}
         <InvoiceItemsTable invoice={invoice} />
-        
+
         {/* Payment history (if any) */}
         <InvoicePayments invoice={invoice} />
-        
+
         {/* Summary with totals */}
         <InvoiceSummary invoice={invoice} />
-        
+
         {/* Footer with notes and company info */}
         <InvoiceFooter invoice={invoice} />
       </Page>

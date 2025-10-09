@@ -6,7 +6,7 @@ import {
   QuoteStatus,
   QuoteStatusInsert,
   QuoteRequestStatus,
-  QuoteRequestStatusInsert,
+  QuoteRequestStatusInsert
 } from '../../types/db_types';
 
 // Status types for type safety
@@ -54,13 +54,16 @@ const getTableName = (type: StatusType): string => {
 };
 
 // Helper function to convert database rows to unified status
-const convertToUnifiedStatus = (row: InvoiceStatus | QuoteStatus | QuoteRequestStatus, type: StatusType): UnifiedStatus => ({
+const convertToUnifiedStatus = (
+  row: InvoiceStatus | QuoteStatus | QuoteRequestStatus,
+  type: StatusType
+): UnifiedStatus => ({
   id: row.id,
   name: row.name,
   description: row.description,
   created_at: row.created_at,
   updated_at: row.updated_at,
-  type,
+  type
 });
 
 /**
@@ -69,7 +72,7 @@ const convertToUnifiedStatus = (row: InvoiceStatus | QuoteStatus | QuoteRequestS
 export const fetchStatusesByType = async (type: StatusType): Promise<StatusResponse> => {
   try {
     const tableName = getTableName(type);
-    
+
     const { data, error } = await supabase
       .from(tableName)
       .select('*')
@@ -80,8 +83,8 @@ export const fetchStatusesByType = async (type: StatusType): Promise<StatusRespo
       return { data: null, error: error.message };
     }
 
-    const unifiedData = data?.map(row => convertToUnifiedStatus(row, type)) || [];
-    
+    const unifiedData = data?.map((row) => convertToUnifiedStatus(row, type)) || [];
+
     return { data: unifiedData, error: null };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -98,7 +101,7 @@ export const fetchAllStatuses = async (): Promise<StatusResponse> => {
     const [invoiceResult, quoteResult, quoteRequestResult] = await Promise.all([
       fetchStatusesByType('invoice'),
       fetchStatusesByType('quote'),
-      fetchStatusesByType('quote_request'),
+      fetchStatusesByType('quote_request')
     ]);
 
     // Check for any errors
@@ -113,7 +116,7 @@ export const fetchAllStatuses = async (): Promise<StatusResponse> => {
     const allStatuses = [
       ...(invoiceResult.data || []),
       ...(quoteResult.data || []),
-      ...(quoteRequestResult.data || []),
+      ...(quoteRequestResult.data || [])
     ];
 
     return { data: allStatuses, error: null };
@@ -142,17 +145,15 @@ export const createStatus = async (
       .maybeSingle();
 
     if (existing) {
-      return { 
-        data: null, 
-        error: `A ${type} status with the name "${statusData.name}" already exists` 
+      return {
+        data: null,
+        error: `A ${type} status with the name "${statusData.name}" already exists`
       };
     }
 
-
-
     const insertData = {
       name: statusData.name.trim(),
-      description: statusData.description?.trim() || null,
+      description: statusData.description?.trim() || null
     };
 
     const { data, error } = await supabase
@@ -163,22 +164,22 @@ export const createStatus = async (
 
     if (error) {
       console.error(`Error creating ${type} status:`, error);
-      
+
       // Handle unique constraint violations with user-friendly messages
       if (error.code === '23505' && error.message.includes('pkey')) {
-        return { 
-          data: null, 
-          error: `Database primary key error. This usually happens when the database sequence is out of sync. Please refresh the page and try again, or contact support if the issue persists.` 
+        return {
+          data: null,
+          error: `Database primary key error. This usually happens when the database sequence is out of sync. Please refresh the page and try again, or contact support if the issue persists.`
         };
       }
-      
+
       if (error.code === '23505') {
-        return { 
-          data: null, 
-          error: `A status with this name already exists. Please choose a different name.` 
+        return {
+          data: null,
+          error: `A status with this name already exists. Please choose a different name.`
         };
       }
-      
+
       return { data: null, error: error.message };
     }
 
@@ -211,9 +212,9 @@ export const updateStatus = async (
       .maybeSingle();
 
     if (existing) {
-      return { 
-        data: null, 
-        error: `A ${type} status with the name "${statusData.name}" already exists` 
+      return {
+        data: null,
+        error: `A ${type} status with the name "${statusData.name}" already exists`
       };
     }
 
@@ -222,7 +223,7 @@ export const updateStatus = async (
       .update({
         name: statusData.name.trim(),
         description: statusData.description?.trim() || null,
-        updated_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       })
       .eq('id', id)
       .select('*')
@@ -262,7 +263,7 @@ export const deleteStatus = async (
         .select('id')
         .eq('invoice_status_id', id)
         .limit(1);
-      
+
       if (invoices && invoices.length > 0) {
         isInUse = true;
         usageDetails = 'invoices';
@@ -273,7 +274,7 @@ export const deleteStatus = async (
         .select('id')
         .eq('status_id', id)
         .limit(1);
-      
+
       if (quotes && quotes.length > 0) {
         isInUse = true;
         usageDetails = 'quotes';
@@ -284,7 +285,7 @@ export const deleteStatus = async (
         .select('id')
         .eq('est_request_status_id', id)
         .limit(1);
-      
+
       if (quoteRequests && quoteRequests.length > 0) {
         isInUse = true;
         usageDetails = 'quote requests';
@@ -292,16 +293,13 @@ export const deleteStatus = async (
     }
 
     if (isInUse) {
-      return { 
-        success: false, 
-        error: `Cannot delete this status because it is currently being used by existing ${usageDetails}.` 
+      return {
+        success: false,
+        error: `Cannot delete this status because it is currently being used by existing ${usageDetails}.`
       };
     }
 
-    const { error } = await supabase
-      .from(tableName)
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from(tableName).delete().eq('id', id);
 
     if (error) {
       console.error(`Error deleting ${type} status:`, error);
@@ -325,12 +323,8 @@ export const getStatusById = async (
 ): Promise<SingleStatusResponse> => {
   try {
     const tableName = getTableName(type);
-    
-    const { data, error } = await supabase
-      .from(tableName)
-      .select('*')
-      .eq('id', id)
-      .single();
+
+    const { data, error } = await supabase.from(tableName).select('*').eq('id', id).single();
 
     if (error) {
       console.error(`Error fetching ${type} status by ID:`, error);
@@ -361,7 +355,7 @@ export const getStatusUsage = async (
         .from(TABLES.INVOICE)
         .select('*', { count: 'exact', head: true })
         .eq('invoice_status_id', id);
-      
+
       if (error) throw error;
       count = invoiceCount || 0;
     } else if (type === 'quote') {
@@ -369,7 +363,7 @@ export const getStatusUsage = async (
         .from(TABLES.QUOTE)
         .select('*', { count: 'exact', head: true })
         .eq('status_id', id);
-      
+
       if (error) throw error;
       count = quoteCount || 0;
     } else if (type === 'quote_request') {
@@ -377,7 +371,7 @@ export const getStatusUsage = async (
         .from(TABLES.QUOTE_REQUEST)
         .select('*', { count: 'exact', head: true })
         .eq('est_request_status_id', id);
-      
+
       if (error) throw error;
       count = quoteRequestCount || 0;
     }

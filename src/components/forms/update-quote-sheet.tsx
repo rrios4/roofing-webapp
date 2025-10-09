@@ -1,5 +1,12 @@
 import React from 'react';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from '../ui/sheet';
 import { Button } from '../ui/button';
 import { PencilIcon } from 'lucide-react';
 import UpdateQuoteForm from './update-quote-form';
@@ -13,10 +20,10 @@ type Props = {
 
 /**
  * UpdateQuoteSheet Component
- * 
+ *
  * A sheet component that wraps the UpdateQuoteForm for editing an existing quote.
  * This component handles loading the quote data and line items before rendering the form.
- * 
+ *
  * @param quote - The quote object to be updated
  * @param trigger - Optional custom trigger element, defaults to a pencil icon button
  */
@@ -32,19 +39,13 @@ export default function UpdateQuoteSheet({ quote, trigger }: Props) {
   );
 
   if (isError) {
-    return (
-      <div className="text-red-500 text-sm">
-        Error loading quote data
-      </div>
-    );
+    return <div className="text-red-500 text-sm">Error loading quote data</div>;
   }
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        {trigger || defaultTrigger}
-      </SheetTrigger>
-      
+      <SheetTrigger asChild>{trigger || defaultTrigger}</SheetTrigger>
+
       <SheetContent className="w-full md:w-[600px] sm:max-w-none overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Update Quote #{quote.quote_number}</SheetTitle>
@@ -63,9 +64,7 @@ export default function UpdateQuoteSheet({ quote, trigger }: Props) {
             quoteLineItems={(quoteById as any).quote_line_item || []}
           />
         ) : (
-          <div className="text-gray-500 text-sm py-4">
-            Quote not found
-          </div>
+          <div className="text-gray-500 text-sm py-4">Quote not found</div>
         )}
       </SheetContent>
     </Sheet>

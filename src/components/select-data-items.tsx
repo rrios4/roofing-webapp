@@ -8,8 +8,8 @@ interface SelectableItem {
 
 type Props<T extends SelectableItem = SelectableItem> = {
   data?: T[];
-  valueKey?: keyof T; // Which property to use as the value 
-  labelKey?: keyof T; // Which property to use as the label 
+  valueKey?: keyof T; // Which property to use as the value
+  labelKey?: keyof T; // Which property to use as the label
   emptyMessage?: string; // Custom empty message
   disabled?: boolean; // Option to disable all items
 };
@@ -27,19 +27,16 @@ export default function DefaultSelectDataItems<T extends SelectableItem>({
         data.map((item, index) => {
           const value = item[valueKey];
           const label = item[labelKey];
-          
+
           // Ensure we never pass an empty string as value
-          const itemValue = value !== null && value !== undefined && value !== '' 
-            ? String(value) 
-            : `fallback_${index}`;
-          
+          const itemValue =
+            value !== null && value !== undefined && value !== ''
+              ? String(value)
+              : `fallback_${index}`;
+
           return (
             <React.Fragment key={`${index}_${itemValue}`}>
-              <SelectItem 
-                value={itemValue} 
-                className="hover:cursor-pointer"
-                disabled={disabled}
-              >
+              <SelectItem value={itemValue} className="hover:cursor-pointer" disabled={disabled}>
                 {String(label || '')}
               </SelectItem>
             </React.Fragment>

@@ -132,7 +132,7 @@ export const useFetchDashboardMetrics = () => {
     queryKey: ['dashboardMetrics'],
     queryFn: async () => await fetchDashboardMetrics(),
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+    cacheTime: 10 * 60 * 1000 // Keep in cache for 10 minutes
   });
 
   return { data, isLoading, isError };
@@ -144,7 +144,7 @@ export const useFetchMultiYearRevenueData = () => {
     queryKey: ['multiYearRevenueData'],
     queryFn: async () => await fetchMultiYearRevenueData(),
     staleTime: 10 * 60 * 1000, // Cache for 10 minutes (longer since historical data changes less frequently)
-    cacheTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    cacheTime: 30 * 60 * 1000 // Keep in cache for 30 minutes
   });
 
   // Get the dynamic years array
@@ -159,7 +159,7 @@ export const useFetchBusinessStatusOverview = () => {
     queryKey: ['businessStatusOverview'],
     queryFn: async () => await fetchBusinessStatusOverview(),
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+    cacheTime: 10 * 60 * 1000 // Keep in cache for 10 minutes
   });
 
   return { data, isLoading, isError };
@@ -171,7 +171,7 @@ export const useFetchInvoiceStatusTracking = () => {
     queryKey: ['invoiceStatusTracking'],
     queryFn: async () => await fetchInvoiceStatusTracking(),
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+    cacheTime: 10 * 60 * 1000 // Keep in cache for 10 minutes
   });
 
   return { data, isLoading, isError };

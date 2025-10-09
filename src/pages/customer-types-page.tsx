@@ -13,7 +13,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   DownloadIcon,
-  EyeIcon,
+  EyeIcon
 } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
@@ -31,7 +31,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '../components/ui/dialog';
 import {
   Sheet,
@@ -40,7 +40,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from '../components/ui/sheet';
 import {
   Form,
@@ -49,7 +49,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from '../components/ui/form';
 import {
   DropdownMenu,
@@ -57,12 +57,15 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '../components/ui/dropdown-menu';
 import { Textarea } from '../components/ui/textarea';
 import { ScrollArea } from '../components/ui/scroll-area';
 
-import { useCustomerTypeManagement, useFetchCustomerTypeUsage } from '../hooks/useAPI/use-customer-type-management';
+import {
+  useCustomerTypeManagement,
+  useFetchCustomerTypeUsage
+} from '../hooks/useAPI/use-customer-type-management';
 import { CustomerType } from '../types/db_types';
 import {
   createCustomerTypeSchema,
@@ -72,7 +75,7 @@ import {
   createCustomerTypeResolver,
   updateCustomerTypeResolver,
   defaultCreateCustomerTypeValues,
-  getDefaultUpdateCustomerTypeValues,
+  getDefaultUpdateCustomerTypeValues
 } from '../validations/customer-type-form-validations';
 
 // Helper functions
@@ -89,9 +92,9 @@ const getCustomerTypeColor = (name: string): string => {
     'bg-red-100 text-red-800',
     'bg-yellow-100 text-yellow-800',
     'bg-indigo-100 text-indigo-800',
-    'bg-pink-100 text-pink-800',
+    'bg-pink-100 text-pink-800'
   ];
-  
+
   // Use name hash to consistently assign colors
   const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return colors[hash % colors.length];
@@ -126,26 +129,25 @@ const CustomerTypeForm: React.FC<CustomerTypeFormProps> = ({
   onSubmit,
   onCancel,
   isLoading,
-  mode,
+  mode
 }) => {
   const form = useForm<any>({
     resolver: mode === 'create' ? createCustomerTypeResolver : updateCustomerTypeResolver,
-    defaultValues: mode === 'create' 
-      ? defaultCreateCustomerTypeValues 
-      : customerType 
-        ? getDefaultUpdateCustomerTypeValues({
-            id: customerType.id,
-            name: customerType.name,
-            description: customerType.description || null,
-          })
-        : defaultCreateCustomerTypeValues,
+    defaultValues:
+      mode === 'create'
+        ? defaultCreateCustomerTypeValues
+        : customerType
+          ? getDefaultUpdateCustomerTypeValues({
+              id: customerType.id,
+              name: customerType.name,
+              description: customerType.description || null
+            })
+          : defaultCreateCustomerTypeValues
   });
 
   const handleSubmit = async (data: any) => {
     try {
-      const submitData = mode === 'edit' && customerType 
-        ? { ...data, id: customerType.id }
-        : data;
+      const submitData = mode === 'edit' && customerType ? { ...data, id: customerType.id } : data;
       await onSubmit(submitData);
       form.reset();
     } catch (error) {
@@ -185,7 +187,7 @@ const CustomerTypeForm: React.FC<CustomerTypeFormProps> = ({
               <FormLabel>Description (Optional)</FormLabel>
               <FormControl>
                 <Textarea
-                  className='min-h-[200px]'
+                  className="min-h-[200px]"
                   placeholder="Describe this customer type and its characteristics..."
                   rows={3}
                   {...field}
@@ -201,25 +203,19 @@ const CustomerTypeForm: React.FC<CustomerTypeFormProps> = ({
         />
 
         <SheetFooter className="flex justify-end space-x-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
-          <Button
-            type="submit"
-            disabled={isLoading || !form.formState.isDirty}
-          >
+          <Button type="submit" disabled={isLoading || !form.formState.isDirty}>
             {isLoading ? (
               <>
                 <RefreshCwIcon className="mr-2 h-4 w-4 animate-spin" />
                 {mode === 'create' ? 'Creating...' : 'Updating...'}
               </>
+            ) : mode === 'create' ? (
+              'Create Customer Type'
             ) : (
-              mode === 'create' ? 'Create Customer Type' : 'Update Customer Type'
+              'Update Customer Type'
             )}
           </Button>
         </SheetFooter>
@@ -232,7 +228,7 @@ const CustomerTypeForm: React.FC<CustomerTypeFormProps> = ({
 const CustomerTypeUsageDialog: React.FC<CustomerTypeUsageDialogProps> = ({
   customerType,
   isOpen,
-  onClose,
+  onClose
 }) => {
   const { data: usage, isLoading } = useFetchCustomerTypeUsage(customerType.id, isOpen);
 
@@ -244,9 +240,7 @@ const CustomerTypeUsageDialog: React.FC<CustomerTypeUsageDialogProps> = ({
             <EyeIcon className="h-5 w-5 text-blue-600" />
             <span>Customer Type Usage</span>
           </DialogTitle>
-          <DialogDescription>
-            Usage details for "{customerType.name}"
-          </DialogDescription>
+          <DialogDescription>Usage details for "{customerType.name}"</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -263,7 +257,7 @@ const CustomerTypeUsageDialog: React.FC<CustomerTypeUsageDialogProps> = ({
                   {usage.customerCount}
                 </Badge>
               </div>
-              
+
               <div className="p-3 border rounded-lg">
                 <div className="flex items-center space-x-2 mb-2">
                   {usage.canDelete ? (
@@ -303,7 +297,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   isOpen,
   onConfirm,
   onCancel,
-  isLoading,
+  isLoading
 }) => {
   const { data: usage } = useFetchCustomerTypeUsage(customerType.id, isOpen);
 
@@ -328,15 +322,17 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
                 <span className="text-sm font-medium text-red-800">Cannot delete</span>
               </div>
               <p className="text-sm text-red-700">
-                This customer type is assigned to {usage.customerCount} customer{usage.customerCount !== 1 ? 's' : ''}. 
-                Please reassign or remove these customers before deleting.
+                This customer type is assigned to {usage.customerCount} customer
+                {usage.customerCount !== 1 ? 's' : ''}. Please reassign or remove these customers
+                before deleting.
               </p>
             </div>
           )}
-          
+
           {usage && usage.canDelete && (
             <p className="text-sm text-gray-600">
-              This action cannot be undone. The customer type will be permanently removed from the system.
+              This action cannot be undone. The customer type will be permanently removed from the
+              system.
             </p>
           )}
         </div>
@@ -348,8 +344,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
           <Button
             variant="destructive"
             onClick={onConfirm}
-            disabled={isLoading || (usage ? !usage.canDelete : false)}
-          >
+            disabled={isLoading || (usage ? !usage.canDelete : false)}>
             {isLoading ? (
               <>
                 <RefreshCwIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -386,13 +381,13 @@ const CustomerTypesPage: React.FC = () => {
     isDeleting,
     createError,
     updateError,
-    deleteError,
+    deleteError
   } = useCustomerTypeManagement();
 
   // Filter customer types based on search
   const filteredCustomerTypes = useMemo(() => {
     if (!searchTerm.trim()) return customerTypes;
-    
+
     const search = searchTerm.toLowerCase();
     return customerTypes.filter(
       (type) =>
@@ -422,7 +417,7 @@ const CustomerTypesPage: React.FC = () => {
 
   const handleDeleteCustomerType = async () => {
     if (!selectedCustomerType) return;
-    
+
     try {
       await deleteCustomerType(selectedCustomerType.id);
       setIsDeleteDialogOpen(false);
@@ -518,8 +513,7 @@ const CustomerTypesPage: React.FC = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => refetchCustomerTypes()}
-                disabled={isLoading}
-              >
+                disabled={isLoading}>
                 <RefreshCwIcon className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
                 Refresh
               </Button>
@@ -573,10 +567,9 @@ const CustomerTypesPage: React.FC = () => {
                 {searchTerm ? 'No customer types found' : 'No customer types yet'}
               </h3>
               <p className="mt-1 text-sm text-gray-500">
-                {searchTerm 
-                  ? 'Try adjusting your search terms' 
-                  : 'Get started by creating your first customer type'
-                }
+                {searchTerm
+                  ? 'Try adjusting your search terms'
+                  : 'Get started by creating your first customer type'}
               </p>
               {!searchTerm && (
                 <p className="mt-2 text-sm text-gray-500">
@@ -602,7 +595,7 @@ const CustomerTypesPage: React.FC = () => {
                           </p>
                         )}
                       </div>
-                      
+
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm">
@@ -620,22 +613,19 @@ const CustomerTypesPage: React.FC = () => {
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={() => handleDeleteClick(customerType)}
-                            className="text-red-600 hover:text-red-700"
-                          >
+                            className="text-red-600 hover:text-red-700">
                             <TrashIcon className="mr-2 h-4 w-4" />
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                    
+
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <span>ID: {customerType.id}</span>
-                      <span>
-                        {new Date(customerType.created_at).toLocaleDateString()}
-                      </span>
+                      <span>{new Date(customerType.created_at).toLocaleDateString()}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -645,16 +635,12 @@ const CustomerTypesPage: React.FC = () => {
         </CardContent>
       </Card>
 
-
-
       {/* Edit Customer Type Sheet */}
       <Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Edit Customer Type</SheetTitle>
-            <SheetDescription>
-              Update the selected customer type details
-            </SheetDescription>
+            <SheetDescription>Update the selected customer type details</SheetDescription>
           </SheetHeader>
           <div className="mt-6">
             {selectedCustomerType && (

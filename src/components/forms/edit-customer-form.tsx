@@ -178,7 +178,7 @@ function EditCustomerForm({ customerData }: EditCustomerFormProps) {
                           <SelectValue placeholder="Select US state" />
                         </SelectTrigger>
                       </FormControl>
-                      <DefaultSelectDataItems 
+                      <DefaultSelectDataItems
                         data={listOfUSStates || []}
                         valueKey="abbreviation"
                         labelKey="name"

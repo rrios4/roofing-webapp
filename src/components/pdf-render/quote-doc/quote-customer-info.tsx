@@ -10,10 +10,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 15,
+    marginBottom: 15
   },
   section: {
-    width: '48%',
+    width: '48%'
   },
   sectionTitle: {
     fontSize: 9,
@@ -21,43 +21,43 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginBottom: 4,
     textTransform: 'uppercase',
-    letterSpacing: 0.3,
+    letterSpacing: 0.3
   },
   infoBox: {
     backgroundColor: '#f9fafb',
     padding: 8,
     borderRadius: 4,
     borderLeftWidth: 2,
-    borderLeftColor: '#3b82f6',
+    borderLeftColor: '#3b82f6'
   },
   companyName: {
     fontSize: 10,
     fontWeight: 'bold',
     color: '#1f2937',
-    marginBottom: 2,
+    marginBottom: 2
   },
   addressLine: {
     fontSize: 8,
     color: '#4b5563',
-    marginBottom: 1,
+    marginBottom: 1
   },
   contactLine: {
     fontSize: 8,
     color: '#4b5563',
-    marginBottom: 1,
+    marginBottom: 1
   },
   customerName: {
     fontSize: 10,
     fontWeight: 'bold',
     color: '#1f2937',
-    marginBottom: 2,
+    marginBottom: 2
   },
   serviceNote: {
     fontSize: 7,
     color: '#6b7280',
     fontStyle: 'italic',
-    marginTop: 4,
-  },
+    marginTop: 4
+  }
 });
 
 export const QuoteCustomerInfo: React.FC<QuoteCustomerInfoProps> = ({ quote }) => {
@@ -75,15 +75,15 @@ export const QuoteCustomerInfo: React.FC<QuoteCustomerInfoProps> = ({ quote }) =
         street: quote.custom_street_address,
         city: quote.custom_city,
         state: quote.custom_state,
-        zipcode: quote.custom_zipcode,
+        zipcode: quote.custom_zipcode
       };
     }
-    
+
     return {
       street: quote.customer.street_address,
       city: quote.customer.city,
       state: quote.customer.state,
-      zipcode: quote.customer.zipcode,
+      zipcode: quote.customer.zipcode
     };
   };
 
@@ -107,31 +107,17 @@ export const QuoteCustomerInfo: React.FC<QuoteCustomerInfoProps> = ({ quote }) =
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Quote To</Text>
         <View style={styles.infoBox}>
-          <Text style={styles.customerName}>
-            {formatCustomerName(quote.customer)}
-          </Text>
+          <Text style={styles.customerName}>{formatCustomerName(quote.customer)}</Text>
           <Text style={styles.addressLine}>{quoteToAddress.street}</Text>
           <Text style={styles.addressLine}>
             {quoteToAddress.city}, {quoteToAddress.state} {quoteToAddress.zipcode}
           </Text>
-          <Text style={styles.contactLine}>
-            Phone: {quote.customer.phone_number}
-          </Text>
-          <Text style={styles.contactLine}>
-            Email: {quote.customer.email}
-          </Text>
-          
-          {quote.service && (
-            <Text style={styles.serviceNote}>
-              Service: {quote.service.name}
-            </Text>
-          )}
-          
-          {quote.custom_address && (
-            <Text style={styles.serviceNote}>
-              * Custom service address
-            </Text>
-          )}
+          <Text style={styles.contactLine}>Phone: {quote.customer.phone_number}</Text>
+          <Text style={styles.contactLine}>Email: {quote.customer.email}</Text>
+
+          {quote.service && <Text style={styles.serviceNote}>Service: {quote.service.name}</Text>}
+
+          {quote.custom_address && <Text style={styles.serviceNote}>* Custom service address</Text>}
         </View>
       </View>
     </View>

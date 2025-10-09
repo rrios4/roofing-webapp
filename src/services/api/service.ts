@@ -29,11 +29,7 @@ export const fetchAllServices = async (): Promise<Service[]> => {
 
 // GET request to fetch a single service by ID
 export const fetchServiceById = async (id: number): Promise<Service> => {
-  const { data, error } = await supabase
-    .from(TABLES.SERVICE)
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from(TABLES.SERVICE).select('*').eq('id', id).single();
 
   if (error) {
     console.log('Error fetching service:', error);
@@ -61,7 +57,7 @@ export const createService = async (serviceData: CreateServicePayload): Promise<
 // PUT request to update an existing service
 export const updateService = async (serviceData: UpdateServicePayload): Promise<Service> => {
   const { id, ...updateData } = serviceData;
-  
+
   const { data, error } = await supabase
     .from(TABLES.SERVICE)
     .update(updateData)
@@ -78,10 +74,7 @@ export const updateService = async (serviceData: UpdateServicePayload): Promise<
 
 // DELETE request to delete a service
 export const deleteService = async (id: number): Promise<void> => {
-  const { error } = await supabase
-    .from(TABLES.SERVICE)
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from(TABLES.SERVICE).delete().eq('id', id);
 
   if (error) {
     console.log('Error deleting service:', error);

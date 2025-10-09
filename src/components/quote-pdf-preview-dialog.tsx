@@ -7,7 +7,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from './ui/dialog';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -20,10 +20,7 @@ interface QuotePDFPreviewDialogProps {
   trigger: React.ReactNode;
 }
 
-export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({
-  quote,
-  trigger,
-}) => {
+export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({ quote, trigger }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPreviewLoading, setIsPreviewLoading] = useState(true);
 
@@ -81,12 +78,11 @@ export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({
               </div>
             </div>
           )}
-          
+
           <PDFViewer
             width="100%"
             height="100%"
-            className="border-0 min-h-[calc(100vh-200px)] sm:min-h-[500px]"
-          >
+            className="border-0 min-h-[calc(100vh-200px)] sm:min-h-[500px]">
             <ModernQuoteDocument quote={quote} />
           </PDFViewer>
         </div>
@@ -96,17 +92,16 @@ export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({
             <FileTextIcon className="w-4 h-4" />
             <span>File: {getQuoteFileName()}</span>
           </div>
-          
+
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setIsOpen(false)}>
               <XIcon className="w-4 h-4 mr-2" />
               Cancel
             </Button>
-            
+
             <PDFDownloadLink
               document={<ModernQuoteDocument quote={quote} />}
-              fileName={getQuoteFileName()}
-            >
+              fileName={getQuoteFileName()}>
               {({ loading }) => (
                 <Button disabled={loading} className="bg-blue-600 hover:bg-blue-700">
                   {loading ? (

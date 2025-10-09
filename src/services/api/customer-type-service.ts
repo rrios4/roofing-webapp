@@ -72,7 +72,9 @@ export const fetchCustomerTypeById = async (id: number): Promise<ApiResponse<Cus
 };
 
 // Create new customer type
-export const createCustomerType = async (payload: CreateCustomerTypePayload): Promise<ApiResponse<CustomerType>> => {
+export const createCustomerType = async (
+  payload: CreateCustomerTypePayload
+): Promise<ApiResponse<CustomerType>> => {
   try {
     // Check for duplicate names
     const { data: existing } = await supabase
@@ -82,15 +84,15 @@ export const createCustomerType = async (payload: CreateCustomerTypePayload): Pr
       .maybeSingle();
 
     if (existing) {
-      return { 
-        data: null, 
-        error: `A customer type with the name "${payload.name}" already exists` 
+      return {
+        data: null,
+        error: `A customer type with the name "${payload.name}" already exists`
       };
     }
 
     const cleanData = {
       name: payload.name.trim(),
-      description: payload.description?.trim() || null,
+      description: payload.description?.trim() || null
     };
 
     const { data, error } = await supabase
@@ -101,22 +103,22 @@ export const createCustomerType = async (payload: CreateCustomerTypePayload): Pr
 
     if (error) {
       console.error('Error creating customer type:', error);
-      
+
       // Handle unique constraint violations with user-friendly messages
       if (error.code === '23505' && error.message.includes('pkey')) {
-        return { 
-          data: null, 
-          error: `Database primary key error. Please refresh the page and try again.` 
+        return {
+          data: null,
+          error: `Database primary key error. Please refresh the page and try again.`
         };
       }
-      
+
       if (error.code === '23505') {
-        return { 
-          data: null, 
-          error: `A customer type with this name already exists. Please choose a different name.` 
+        return {
+          data: null,
+          error: `A customer type with this name already exists. Please choose a different name.`
         };
       }
-      
+
       return { data: null, error: error.message };
     }
 
@@ -129,7 +131,9 @@ export const createCustomerType = async (payload: CreateCustomerTypePayload): Pr
 };
 
 // Update existing customer type
-export const updateCustomerType = async (payload: UpdateCustomerTypePayload): Promise<ApiResponse<CustomerType>> => {
+export const updateCustomerType = async (
+  payload: UpdateCustomerTypePayload
+): Promise<ApiResponse<CustomerType>> => {
   try {
     // Check for duplicate names (excluding current record)
     const { data: existing } = await supabase
@@ -140,15 +144,15 @@ export const updateCustomerType = async (payload: UpdateCustomerTypePayload): Pr
       .maybeSingle();
 
     if (existing) {
-      return { 
-        data: null, 
-        error: `A customer type with the name "${payload.name}" already exists` 
+      return {
+        data: null,
+        error: `A customer type with the name "${payload.name}" already exists`
       };
     }
 
     const cleanData = {
       name: payload.name.trim(),
-      description: payload.description?.trim() || null,
+      description: payload.description?.trim() || null
     };
 
     const { data, error } = await supabase
@@ -160,14 +164,14 @@ export const updateCustomerType = async (payload: UpdateCustomerTypePayload): Pr
 
     if (error) {
       console.error('Error updating customer type:', error);
-      
+
       if (error.code === '23505') {
-        return { 
-          data: null, 
-          error: `A customer type with this name already exists. Please choose a different name.` 
+        return {
+          data: null,
+          error: `A customer type with this name already exists. Please choose a different name.`
         };
       }
-      
+
       return { data: null, error: error.message };
     }
 
@@ -189,16 +193,13 @@ export const deleteCustomerType = async (id: number): Promise<ApiResponseSuccess
       .eq('customer_type_id', id);
 
     if (customerCount && customerCount > 0) {
-      return { 
-        success: false, 
-        error: `Cannot delete customer type. It is being used by ${customerCount} customer(s).` 
+      return {
+        success: false,
+        error: `Cannot delete customer type. It is being used by ${customerCount} customer(s).`
       };
     }
 
-    const { error } = await supabase
-      .from(TABLES.CUSTOMER_TYPE)
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from(TABLES.CUSTOMER_TYPE).delete().eq('id', id);
 
     if (error) {
       console.error('Error deleting customer type:', error);
@@ -223,16 +224,16 @@ export const getCustomerTypeUsage = async (id: number): Promise<ApiResponse<Cust
 
     const usage: CustomerTypeUsage = {
       customerCount: customerCount || 0,
-      canDelete: !customerCount || customerCount === 0,
+      canDelete: !customerCount || customerCount === 0
     };
 
     return { data: usage, error: null };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     console.error('Error getting customer type usage:', error);
-    return { 
-      data: { customerCount: 0, canDelete: true }, 
-      error: errorMessage 
+    return {
+      data: { customerCount: 0, canDelete: true },
+      error: errorMessage
     };
   }
 };

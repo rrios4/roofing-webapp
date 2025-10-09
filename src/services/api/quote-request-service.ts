@@ -6,7 +6,8 @@ import { QuoteRequest, QuoteRequestInsert, QuoteRequestWithRelations } from '../
 export const fetchAllQuoteRequests = async (): Promise<QuoteRequestWithRelations[]> => {
   const { data, error } = await supabase
     .from(TABLES.QUOTE_REQUEST)
-    .select(`
+    .select(
+      `
       *,
       service (
         id,
@@ -30,7 +31,8 @@ export const fetchAllQuoteRequests = async (): Promise<QuoteRequestWithRelations
         created_at,
         updated_at
       )
-    `)
+    `
+    )
     .order('est_request_status_id', { ascending: true })
     .order('created_at', { ascending: false });
 
@@ -42,14 +44,12 @@ export const fetchAllQuoteRequests = async (): Promise<QuoteRequestWithRelations
   // Transform joined arrays to single objects
   const transformedData = data?.map((request: any) => ({
     ...request,
-    service: Array.isArray(request.service) 
-      ? request.service[0] 
-      : request.service,
-    customer_type: Array.isArray(request.customer_type) 
-      ? request.customer_type[0] 
+    service: Array.isArray(request.service) ? request.service[0] : request.service,
+    customer_type: Array.isArray(request.customer_type)
+      ? request.customer_type[0]
       : request.customer_type,
-    status: Array.isArray(request.quote_request_status) 
-      ? request.quote_request_status[0] 
+    status: Array.isArray(request.quote_request_status)
+      ? request.quote_request_status[0]
       : request.quote_request_status
   }));
 
@@ -57,13 +57,15 @@ export const fetchAllQuoteRequests = async (): Promise<QuoteRequestWithRelations
 };
 
 // POST request to create a new qr
-export const createNewQuoteRequest = async (newQuoteRequest: QuoteRequestInsert): Promise<QuoteRequest> => {
+export const createNewQuoteRequest = async (
+  newQuoteRequest: QuoteRequestInsert
+): Promise<QuoteRequest> => {
   const { data, error } = await supabase
     .from(TABLES.QUOTE_REQUEST)
     .insert(newQuoteRequest)
     .select()
     .single();
-    
+
   if (error) {
     throw error;
   }
@@ -72,18 +74,17 @@ export const createNewQuoteRequest = async (newQuoteRequest: QuoteRequestInsert)
 
 // DELETE request to delete a qr by id
 export const deleteQuoteRequestById = async (itemId: number): Promise<void> => {
-  const { error } = await supabase
-    .from(TABLES.QUOTE_REQUEST)
-    .delete()
-    .eq('id', itemId);
-    
+  const { error } = await supabase.from(TABLES.QUOTE_REQUEST).delete().eq('id', itemId);
+
   if (error) {
     throw error;
   }
 };
 
 // PUT request to update a quote request
-export const updateQuoteRequestById = async (updatedQRObject: Partial<QuoteRequest> & { id: number }): Promise<QuoteRequest> => {
+export const updateQuoteRequestById = async (
+  updatedQRObject: Partial<QuoteRequest> & { id: number }
+): Promise<QuoteRequest> => {
   const { data, error } = await supabase
     .from(TABLES.QUOTE_REQUEST)
     .update(updatedQRObject)

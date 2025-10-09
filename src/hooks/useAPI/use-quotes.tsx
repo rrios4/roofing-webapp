@@ -56,7 +56,7 @@ export const useSearchQuote = (query: any) => {
 // Custom hook to delete a quote
 export const useDeleteQuote = (toast: any, setOpen: any) => {
   const queryClient = useQueryClient();
-  return useMutation((quoteNumber:number) => deleteQuoteById(quoteNumber), {
+  return useMutation((quoteNumber: number) => deleteQuoteById(quoteNumber), {
     onError: (error: any) => {
       setOpen(false);
       toast({
@@ -81,7 +81,7 @@ export const useDeleteQuote = (toast: any, setOpen: any) => {
 // Custom hook to update a quote
 export const useUpdateQuote = (toast: any) => {
   const queryClient = useQueryClient();
-  return useMutation((quoteObject:Quote) => updateQuoteById(quoteObject), {
+  return useMutation((quoteObject: Quote) => updateQuoteById(quoteObject), {
     onError: (error: any) => {
       toast({
         position: 'top',
@@ -110,7 +110,7 @@ export const useUpdateQuote = (toast: any) => {
 // Custom hook to update a status for a quote
 export const useUpdateQuoteStatusById = (toast: any, quote_number: any) => {
   const queryClient = useQueryClient();
-  return useMutation((status_id:number) => updateQuoteStatusById(status_id, quote_number), {
+  return useMutation((status_id: number) => updateQuoteStatusById(status_id, quote_number), {
     onError: (error: any) => {
       toast({
         position: 'top',
@@ -159,14 +159,14 @@ export const useConvertQuoteToInvoice = (toast: any, quote_number: number) => {
       queryClient.invalidateQueries({ queryKey: ['quoteById', quote_number] });
       queryClient.invalidateQueries({ queryKey: ['quotes'] });
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
-      
+
       const invoiceNumber = result.invoice.invoice_number;
       toast({
         title: 'Quote Converted Successfully! 🎉',
         description: `Quote has been converted to Invoice #INV-${invoiceNumber}. You can view it in the invoices section.`,
         variant: 'success'
       });
-      
+
       // Return the invoice data for potential navigation
       return result;
     }

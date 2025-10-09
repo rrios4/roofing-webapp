@@ -33,7 +33,7 @@ export default function ConnectedDeleteQRequestAlertDialog({ title, description,
       open={open}
       onOpenChange={setOpen}
       buttonTextEnabled={false}
-      buttonVariant={"secondary"}
+      buttonVariant={'secondary'}
     />
   );
 }
@@ -65,7 +65,7 @@ export function ConnectedDeleteInvoiceAlertDialog({ title, description, itemId }
       onOpenChange={setOpen}
       onSubmit={handleSubmit}
       buttonTextEnabled={false}
-      buttonVariant={"outline"}
+      buttonVariant={'outline'}
     />
   );
 }
@@ -96,12 +96,17 @@ export function ConnectedDeleteQuoteAlertDialog({ title, description, itemId }: 
       onSubmit={handleSubmit}
       itemId={itemId}
       buttonTextEnabled={false}
-      buttonVariant={"outline"}
+      buttonVariant={'outline'}
     />
   );
 }
 
-export function ConnectedDeleteCustomerAlertDialog({ title, description, itemId, buttonTextEnabled }: Props) {
+export function ConnectedDeleteCustomerAlertDialog({
+  title,
+  description,
+  itemId,
+  buttonTextEnabled
+}: Props) {
   const [open, setOpen] = React.useState(false);
   const { mutate: deleteCustomer, isLoading } = useDeleteCustomer(toast);
   const handleSubmit = async () => {
@@ -117,8 +122,8 @@ export function ConnectedDeleteCustomerAlertDialog({ title, description, itemId,
       onOpenChange={setOpen}
       onSubmit={handleSubmit}
       itemId={itemId}
-      buttonTextEnabled={buttonTextEnabled ? buttonTextEnabled: false}
-      buttonVariant={"primary"}
+      buttonTextEnabled={buttonTextEnabled ? buttonTextEnabled : false}
+      buttonVariant={'primary'}
     />
   );
 }

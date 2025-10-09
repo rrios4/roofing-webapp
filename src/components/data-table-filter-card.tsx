@@ -26,7 +26,7 @@ export default function DataTableFilterCard({
           <div className="w-full md:w-[40%]">
             <p className="mb-1 text-muted-foreground text-[14px]">Search for {entity}</p>
             <Input
-              className={"bg-white dark:bg-zinc-900"}
+              className={'bg-white dark:bg-zinc-900'}
               name={`search_${entity}`}
               type="search"
               placeholder={`Enter ${entity} information here...`}
@@ -40,8 +40,8 @@ export default function DataTableFilterCard({
             <div className="text-[14px] font-[500]">
               <p className="mb-1 text-muted-foreground text-[14px]">{firstSelectName}</p>
               <Select>
-                <SelectTrigger className={"bg-white dark:bg-zinc-900"}>
-                  <SelectValue  placeholder="All" />
+                <SelectTrigger className={'bg-white dark:bg-zinc-900'}>
+                  <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
@@ -51,7 +51,7 @@ export default function DataTableFilterCard({
             <div className="text-[14px] font-[500]">
               <p className="mb-1 text-muted-foreground text-[14px]">{secondSelectName}</p>
               <Select>
-                <SelectTrigger className={"bg-white dark:bg-zinc-900"}>
+                <SelectTrigger className={'bg-white dark:bg-zinc-900'}>
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
@@ -62,7 +62,7 @@ export default function DataTableFilterCard({
             <div className="text-[14px] font-[500]">
               <p className="mb-1 text-muted-foreground text-[14px]">{thirdSelectName}</p>
               <Select>
-                <SelectTrigger className={"bg-white dark:bg-zinc-900"}>
+                <SelectTrigger className={'bg-white dark:bg-zinc-900'}>
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>

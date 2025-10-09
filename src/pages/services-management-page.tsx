@@ -57,7 +57,7 @@ import { useServiceManagement } from '../hooks/useServiceManagement';
 
 type Props = {};
 
-export default function ServicesManagementPage({}: Props) {
+export default function ServicesManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false);
@@ -186,9 +186,7 @@ export default function ServicesManagementPage({}: Props) {
       <div className="pt-4">
         <PageBreadcrumb
           currentPage="Services Management"
-          parentPages={[
-            { label: 'Data Management', href: '/data-management' }
-          ]}
+          parentPages={[{ label: 'Data Management', href: '/data-management' }]}
           homeHref="/"
         />
       </div>
@@ -391,10 +389,7 @@ export default function ServicesManagementPage({}: Props) {
             </div>
           </SheetHeader>
           {selectedService && (
-            <EditServiceForm 
-              setOpen={setIsEditSheetOpen} 
-              service={selectedService} 
-            />
+            <EditServiceForm setOpen={setIsEditSheetOpen} service={selectedService} />
           )}
         </SheetContent>
       </Sheet>

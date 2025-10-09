@@ -15,7 +15,7 @@ export const useFetchAllInvoices = () => {
   // react-query
   const { data, isLoading, isError } = useQuery({
     queryKey: ['invoices'],
-    queryFn: async() => await fetchAllInvoices()
+    queryFn: async () => await fetchAllInvoices()
   });
 
   return { data, isError, isLoading };
@@ -88,7 +88,7 @@ export const useDeleteInvoiceById = (toast: any, setOpen: any) => {
 // Custom hook to update invoice
 export const useUpdateInvoice = (toast: any) => {
   const queryClient = useQueryClient();
-  return useMutation((updateInvoiceObject:any) => updateInvoice(updateInvoiceObject), {
+  return useMutation((updateInvoiceObject: any) => updateInvoice(updateInvoiceObject), {
     onError: (error: any) => {
       toast({
         position: 'top',
@@ -120,7 +120,7 @@ export const useUpdateInvoice = (toast: any) => {
 export const useUpdateInvoiceStatusById = (toast: any) => {
   const queryClient = useQueryClient();
   return useMutation(
-    (updateInvoiceStatusObject:any) => updateInvoiceStatusById(updateInvoiceStatusObject),
+    (updateInvoiceStatusObject: any) => updateInvoiceStatusById(updateInvoiceStatusObject),
     {
       onError: (error: any) => {
         console.log(error);

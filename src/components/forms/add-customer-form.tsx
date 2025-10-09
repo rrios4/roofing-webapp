@@ -23,7 +23,11 @@ type Props = {
 };
 
 export default function AddCustomerForm({ setOpen }: Props) {
-  const { data: customerTypes, isLoading: customerTypesLoading, error: customerTypesError } = useFetchAllCustomerTypes();
+  const {
+    data: customerTypes,
+    isLoading: customerTypesLoading,
+    error: customerTypesError
+  } = useFetchAllCustomerTypes();
   const { mutate: addCustomerMutation, isLoading: isAddCustomerMutationLoading } =
     useCreateCustomer(toast, setOpen);
 
@@ -186,23 +190,32 @@ export default function AddCustomerForm({ setOpen }: Props) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Customer Type</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={customerTypesLoading}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={customerTypesLoading}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder={
-                          customerTypesLoading 
-                            ? "Loading customer types..." 
-                            : customerTypesError 
-                              ? "Error loading customer types"
-                              : "Select the type of customer"
-                        } />
+                        <SelectValue
+                          placeholder={
+                            customerTypesLoading
+                              ? 'Loading customer types...'
+                              : customerTypesError
+                                ? 'Error loading customer types'
+                                : 'Select the type of customer'
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
-                    <DefaultSelectDataItems 
-                      data={customerTypes} 
+                    <DefaultSelectDataItems
+                      data={customerTypes}
                       valueKey="id"
                       labelKey="name"
-                      emptyMessage={customerTypesError ? `Error: ${customerTypesError}` : "No customer types available"}
+                      emptyMessage={
+                        customerTypesError
+                          ? `Error: ${customerTypesError}`
+                          : 'No customer types available'
+                      }
                     />
                   </Select>
                   <FormMessage />
@@ -306,7 +319,7 @@ export default function AddCustomerForm({ setOpen }: Props) {
                           <SelectValue placeholder="Select US state" />
                         </SelectTrigger>
                       </FormControl>
-                      <DefaultSelectDataItems 
+                      <DefaultSelectDataItems
                         data={listOfUSStates || []}
                         valueKey="abbreviation"
                         labelKey="name"

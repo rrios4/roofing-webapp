@@ -66,7 +66,7 @@ export interface ServerOverviewStats {
 // GET request to fetch infrastructure information
 export const fetchInfrastructureInfo = async (): Promise<InfrastructureInfo> => {
   const startTime = performance.now();
-  
+
   try {
     // Test database connection and measure latency
     const latencyStart = performance.now();
@@ -84,14 +84,14 @@ export const fetchInfrastructureInfo = async (): Promise<InfrastructureInfo> => 
     let totalRows: number | null = null;
     let lastActivity: string | null = null;
     let rlsEnabled = false;
-    
+
     if (!connectionError) {
       // Get table count from our application tables
       const { data: appTables } = await supabase
         .from('information_schema.tables')
         .select('table_name')
         .eq('table_schema', 'public');
-      
+
       totalTables = appTables?.length || 0;
 
       // Get row counts from main tables
@@ -99,7 +99,7 @@ export const fetchInfrastructureInfo = async (): Promise<InfrastructureInfo> => 
         const { count: servicesCount } = await supabase
           .from(TABLES.SERVICE)
           .select('*', { count: 'exact', head: true });
-        
+
         const { count: quoteStatusCount } = await supabase
           .from(TABLES.QUOTE_STATUS)
           .select('*', { count: 'exact', head: true });
@@ -115,10 +115,7 @@ export const fetchInfrastructureInfo = async (): Promise<InfrastructureInfo> => 
 
       // Check for RLS policies (indicates security is configured)
       try {
-        const { data: policies } = await supabase
-          .from('pg_policies')
-          .select('policyname')
-          .limit(1);
+        const { data: policies } = await supabase.from('pg_policies').select('policyname').limit(1);
         rlsEnabled = !!(policies && policies.length > 0);
       } catch (e) {
         // RLS check failed, assume false
@@ -131,7 +128,7 @@ export const fetchInfrastructureInfo = async (): Promise<InfrastructureInfo> => 
           .select('updated_at, created_at')
           .order('updated_at', { ascending: false })
           .limit(1);
-        
+
         if (recentActivity && recentActivity[0]) {
           lastActivity = recentActivity[0].updated_at || recentActivity[0].created_at;
         }
@@ -150,7 +147,7 @@ export const fetchInfrastructureInfo = async (): Promise<InfrastructureInfo> => 
     const supabaseUrl = import.meta.env.REACT_APP_SUPABASE_URL || '';
     const urlParts = supabaseUrl.match(/https:\/\/([^.]+)\.supabase\.co/);
     const projectId = urlParts ? urlParts[1] : 'unknown';
-    
+
     // Infer region from project URL (Supabase uses geographic prefixes)
     let region = 'us-east-1'; // Default
     if (supabaseUrl.includes('.supabase.co')) {
@@ -315,34 +312,36 @@ export const fetchServerOverviewStats = async (): Promise<ServerOverviewStats> =
 
     // Calculate statistics
     const activeServices = services?.length || 0;
-    
+
     const totalStatuses = {
       quote: quoteStatuses?.length || 0,
       invoice: invoiceStatuses?.length || 0,
       quoteRequest: quoteRequestStatuses?.length || 0,
-      total: (quoteStatuses?.length || 0) + (invoiceStatuses?.length || 0) + (quoteRequestStatuses?.length || 0)
+      total:
+        (quoteStatuses?.length || 0) +
+        (invoiceStatuses?.length || 0) +
+        (quoteRequestStatuses?.length || 0)
     };
 
     // Find most recent updates
     const allUpdates = [
-      ...(services?.map(s => s.updated_at || s.created_at) || []),
-      ...(quoteStatuses?.map(s => s.updated_at) || []),
-      ...(invoiceStatuses?.map(s => s.updated_at) || []),
-      ...(quoteRequestStatuses?.map(s => s.updated_at) || [])
+      ...(services?.map((s) => s.updated_at || s.created_at) || []),
+      ...(quoteStatuses?.map((s) => s.updated_at) || []),
+      ...(invoiceStatuses?.map((s) => s.updated_at) || []),
+      ...(quoteRequestStatuses?.map((s) => s.updated_at) || [])
     ].filter(Boolean);
 
-    const servicesLastUpdated = services && services.length > 0 
-      ? Math.max(...services.map(s => new Date(s.updated_at || s.created_at).getTime()))
-      : null;
+    const servicesLastUpdated =
+      services && services.length > 0
+        ? Math.max(...services.map((s) => new Date(s.updated_at || s.created_at).getTime()))
+        : null;
 
-    const statusesLastUpdated = allUpdates.length > 0
-      ? Math.max(...allUpdates.map(date => new Date(date).getTime()))
-      : null;
+    const statusesLastUpdated =
+      allUpdates.length > 0
+        ? Math.max(...allUpdates.map((date) => new Date(date).getTime()))
+        : null;
 
-    const mostRecentUpdate = Math.max(
-      servicesLastUpdated || 0,
-      statusesLastUpdated || 0
-    );
+    const mostRecentUpdate = Math.max(servicesLastUpdated || 0, statusesLastUpdated || 0);
 
     return {
       totalStatuses,
@@ -358,7 +357,6 @@ export const fetchServerOverviewStats = async (): Promise<ServerOverviewStats> =
       },
       infrastructure
     };
-
   } catch (error) {
     console.error('Error fetching server overview stats:', error);
     throw error;
@@ -368,10 +366,7 @@ export const fetchServerOverviewStats = async (): Promise<ServerOverviewStats> =
 // GET request to check system health
 export const checkSystemHealth = async (): Promise<boolean> => {
   try {
-    const { error } = await supabase
-      .from(TABLES.SERVICE)
-      .select('id')
-      .limit(1);
+    const { error } = await supabase.from(TABLES.SERVICE).select('id').limit(1);
 
     return !error;
   } catch (error) {

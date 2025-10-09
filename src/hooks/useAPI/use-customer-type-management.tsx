@@ -8,7 +8,7 @@ import {
   getCustomerTypeUsage,
   CreateCustomerTypePayload,
   UpdateCustomerTypePayload,
-  CustomerTypeUsage,
+  CustomerTypeUsage
 } from '../../services/api/customer-type-service';
 import { CustomerType } from '../../types/db_types';
 
@@ -16,14 +16,14 @@ import { CustomerType } from '../../types/db_types';
 const CUSTOMER_TYPE_KEYS = {
   ALL: ['customer-types'] as const,
   DETAIL: (id: number) => ['customer-types', id] as const,
-  USAGE: (id: number) => ['customer-types', id, 'usage'] as const,
+  USAGE: (id: number) => ['customer-types', id, 'usage'] as const
 };
 
 // Query Keys
 const QUERY_KEYS = {
   CUSTOMER_TYPES: ['customerTypes'] as const,
   CUSTOMER_TYPE: (id: number) => ['customerType', id] as const,
-  CUSTOMER_TYPE_USAGE: (id: number) => ['customerTypeUsage', id] as const,
+  CUSTOMER_TYPE_USAGE: (id: number) => ['customerTypeUsage', id] as const
 };
 
 // Fetch all customer types
@@ -38,7 +38,7 @@ export const useFetchCustomerTypes = () => {
       return response.data || [];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 2,
+    retry: 2
   });
 };
 
@@ -55,7 +55,7 @@ export const useFetchCustomerTypeById = (id: number, enabled: boolean = true) =>
     },
     enabled: enabled && !!id,
     staleTime: 5 * 60 * 1000,
-    retry: 2,
+    retry: 2
   });
 };
 
@@ -72,7 +72,7 @@ export const useFetchCustomerTypeUsage = (id: number, enabled: boolean = true) =
     },
     enabled: enabled && !!id,
     staleTime: 2 * 60 * 1000, // 2 minutes (shorter cache for usage data)
-    retry: 1,
+    retry: 1
   });
 };
 
@@ -94,7 +94,7 @@ export const useCreateCustomerType = (options?: {
     onError: (error: any) => {
       console.error('Error creating customer type:', error);
       options?.onError?.(error.message || 'Failed to create customer type');
-    },
+    }
   });
 };
 
@@ -111,21 +111,22 @@ export const useUpdateCustomerType = () => {
 
       // Invalidate and refetch customer types list
       queryClient.invalidateQueries({ queryKey: CUSTOMER_TYPE_KEYS.ALL });
-      
+
       // Update specific customer type in cache
       if (response.data) {
         queryClient.setQueryData(CUSTOMER_TYPE_KEYS.DETAIL(variables.id), response.data);
-        
+
         // Update the customer type in the list cache
         queryClient.setQueryData(CUSTOMER_TYPE_KEYS.ALL, (old: CustomerType[] = []) => {
-          return old.map(ct => ct.id === variables.id ? response.data! : ct)
-                    .sort((a, b) => a.name.localeCompare(b.name));
+          return old
+            .map((ct) => (ct.id === variables.id ? response.data! : ct))
+            .sort((a, b) => a.name.localeCompare(b.name));
         });
       }
     },
     onError: (error) => {
       console.error('Update customer type mutation error:', error);
-    },
+    }
   });
 };
 
@@ -142,30 +143,25 @@ export const useDeleteCustomerType = () => {
 
       // Remove from customer types list cache
       queryClient.setQueryData(CUSTOMER_TYPE_KEYS.ALL, (old: CustomerType[] = []) => {
-        return old.filter(ct => ct.id !== id);
+        return old.filter((ct) => ct.id !== id);
       });
 
       // Remove specific customer type from cache
       queryClient.removeQueries({ queryKey: CUSTOMER_TYPE_KEYS.DETAIL(id) });
       queryClient.removeQueries({ queryKey: CUSTOMER_TYPE_KEYS.USAGE(id) });
-      
+
       // Invalidate customer types list to ensure consistency
       queryClient.invalidateQueries({ queryKey: CUSTOMER_TYPE_KEYS.ALL });
     },
     onError: (error) => {
       console.error('Delete customer type mutation error:', error);
-    },
+    }
   });
 };
 
 // Custom hook for customer type management with state management
 export const useCustomerTypeManagement = () => {
-  const {
-    data: customerTypes = [],
-    isLoading,
-    error,
-    refetch,
-  } = useFetchCustomerTypes();
+  const { data: customerTypes = [], isLoading, error, refetch } = useFetchCustomerTypes();
 
   const createMutation = useCreateCustomerType();
   const updateMutation = useUpdateCustomerType();
@@ -174,28 +170,28 @@ export const useCustomerTypeManagement = () => {
   return {
     // Data
     customerTypes,
-    
+
     // Loading states
     isLoading,
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
-    
+
     // Error states
     error: (error as any)?.message || null,
     createError: (createMutation.error as any)?.message || null,
     updateError: (updateMutation.error as any)?.message || null,
     deleteError: (deleteMutation.error as any)?.message || null,
-    
+
     // Actions
     createCustomerType: createMutation.mutateAsync,
     updateCustomerType: updateMutation.mutateAsync,
     deleteCustomerType: deleteMutation.mutateAsync,
     refetchCustomerTypes: refetch,
-    
+
     // State reset functions
     resetCreateState: createMutation.reset,
     resetUpdateState: updateMutation.reset,
-    resetDeleteState: deleteMutation.reset,
+    resetDeleteState: deleteMutation.reset
   };
 };

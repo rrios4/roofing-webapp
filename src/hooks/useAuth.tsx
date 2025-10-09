@@ -25,12 +25,13 @@ export const AuthProvider = ({ children }: Props) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        scopes: 'https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.readonly',
+        scopes:
+          'https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.readonly',
         queryParams: {
           access_type: 'offline',
-          prompt: 'consent',
-        },
-      },
+          prompt: 'consent'
+        }
+      }
     });
 
     if (error) {

@@ -7,7 +7,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from './ui/dialog';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -21,7 +21,7 @@ interface InvoicePDFPreviewDialogProps {
 
 export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = ({
   invoice,
-  trigger,
+  trigger
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPreviewLoading, setIsPreviewLoading] = useState(true);
@@ -65,7 +65,9 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
             Invoice PDF Preview
           </DialogTitle>
           <DialogDescription className="flex items-center gap-2">
-            <span>Preview and download invoice INV-{formatNumber(invoice.invoice_number || 0)}</span>
+            <span>
+              Preview and download invoice INV-{formatNumber(invoice.invoice_number || 0)}
+            </span>
             <Badge variant="outline" className="ml-2">
               {invoice.customer
                 ? `${invoice.customer.first_name} ${invoice.customer.last_name}`
@@ -84,12 +86,11 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
               </div>
             </div>
           )}
-          
+
           <PDFViewer
             width="100%"
             height="100%"
-            className="border-0 min-h-[calc(100vh-200px)] sm:min-h-[500px]"
-          >
+            className="border-0 min-h-[calc(100vh-200px)] sm:min-h-[500px]">
             <ModernInvoiceDocument invoice={invoice} />
           </PDFViewer>
         </div>
@@ -99,17 +100,16 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
             <FileTextIcon className="w-4 h-4" />
             <span>File: {getInvoiceFileName()}</span>
           </div>
-          
+
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setIsOpen(false)}>
               <XIcon className="w-4 h-4 mr-2" />
               Cancel
             </Button>
-            
+
             <PDFDownloadLink
               document={<ModernInvoiceDocument invoice={invoice} />}
-              fileName={getInvoiceFileName()}
-            >
+              fileName={getInvoiceFileName()}>
               {({ loading }) => (
                 <Button disabled={loading} className="bg-blue-600 hover:bg-blue-700">
                   {loading ? (

@@ -25,7 +25,7 @@ export const createQuoteLineItem = async (lineItemObject: QuoteLineItemInsert) =
 };
 
 // DELETE request that will delete a line-item by id
-export const deleteQuoteLineItemById = async (item:QuoteLineItem) => {
+export const deleteQuoteLineItemById = async (item: QuoteLineItem) => {
   const { data, error } = await supabase.from('quote_line_item').delete().eq('id', item.id);
   if (error) {
     throw error;

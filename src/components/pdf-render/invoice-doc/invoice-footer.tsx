@@ -11,75 +11,75 @@ const styles = StyleSheet.create({
     marginTop: 'auto', // Push to bottom of page
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
+    borderTopColor: '#e5e7eb'
   },
   notesSection: {
-    marginBottom: 10,
+    marginBottom: 10
   },
   notesTitle: {
     fontSize: 8,
     fontWeight: 'bold',
     color: '#374151',
-    marginBottom: 3,
+    marginBottom: 3
   },
   notesText: {
     fontSize: 7,
     color: '#4b5563',
-    lineHeight: 1.2,
+    lineHeight: 1.2
   },
   footerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    alignItems: 'flex-end'
   },
   companyInfo: {
-    flex: 1,
+    flex: 1
   },
   companyName: {
     fontSize: 8,
     fontWeight: 'bold',
     color: '#1f2937',
-    marginBottom: 1,
+    marginBottom: 1
   },
   companyAddress: {
     fontSize: 6,
     color: '#6b7280',
-    marginBottom: 0.5,
+    marginBottom: 0.5
   },
   companyContact: {
     fontSize: 6,
-    color: '#6b7280',
+    color: '#6b7280'
   },
   thankYou: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   thankYouText: {
     fontSize: 8,
     color: '#3b82f6',
     fontWeight: 'medium',
-    marginBottom: 1,
+    marginBottom: 1
   },
   tagline: {
     fontSize: 6,
     color: '#6b7280',
-    fontStyle: 'italic',
+    fontStyle: 'italic'
   },
   paymentInfo: {
     flex: 1,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   paymentTitle: {
     fontSize: 7,
     fontWeight: 'bold',
     color: '#374151',
-    marginBottom: 2,
+    marginBottom: 2
   },
   paymentText: {
     fontSize: 6,
     color: '#4b5563',
-    marginBottom: 0.5,
-  },
+    marginBottom: 0.5
+  }
 });
 
 export const InvoiceFooter: React.FC<InvoiceFooterProps> = ({ invoice }) => {
@@ -89,9 +89,7 @@ export const InvoiceFooter: React.FC<InvoiceFooterProps> = ({ invoice }) => {
       {(invoice.public_note || invoice.cust_note) && (
         <View style={styles.notesSection}>
           <Text style={styles.notesTitle}>Notes:</Text>
-          <Text style={styles.notesText}>
-            {invoice.public_note || invoice.cust_note}
-          </Text>
+          <Text style={styles.notesText}>{invoice.public_note || invoice.cust_note}</Text>
         </View>
       )}
 
@@ -114,26 +112,16 @@ export const InvoiceFooter: React.FC<InvoiceFooterProps> = ({ invoice }) => {
 
         {/* Thank You Message */}
         <View style={styles.thankYou}>
-          <Text style={styles.thankYouText}>
-            Thank you for your business!
-          </Text>
-          <Text style={styles.tagline}>
-            Your trusted roofing partner
-          </Text>
+          <Text style={styles.thankYouText}>Thank you for your business!</Text>
+          <Text style={styles.tagline}>Your trusted roofing partner</Text>
         </View>
 
         {/* Payment Information */}
         <View style={styles.paymentInfo}>
           <Text style={styles.paymentTitle}>Payment Information</Text>
-          <Text style={styles.paymentText}>
-            Payment is due within 30 days
-          </Text>
-          <Text style={styles.paymentText}>
-            Please reference Invoice #{invoice.invoice_number}
-          </Text>
-          <Text style={styles.paymentText}>
-            Questions? Contact us at:
-          </Text>
+          <Text style={styles.paymentText}>Payment is due within 30 days</Text>
+          <Text style={styles.paymentText}>Please reference Invoice #{invoice.invoice_number}</Text>
+          <Text style={styles.paymentText}>Questions? Contact us at:</Text>
           <Text style={styles.paymentText}>
             {invoice.bill_from_email || 'info@riosroofing.com'}
           </Text>

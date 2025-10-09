@@ -15,61 +15,61 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: '#e5e7eb'
   },
   logoSection: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'flex-start'
   },
   logo: {
     width: 40,
     height: 40,
     marginBottom: 6,
-    borderRadius: 6,
+    borderRadius: 6
   },
   companyName: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#1f2937',
-    marginBottom: 2,
+    marginBottom: 2
   },
   companyTagline: {
     fontSize: 8,
     color: '#6b7280',
-    fontStyle: 'italic',
+    fontStyle: 'italic'
   },
   quoteSection: {
     flexDirection: 'column',
-    alignItems: 'flex-end',
+    alignItems: 'flex-end'
   },
   quoteTitle: {
     fontSize: 22,
     fontWeight: 'bold',
     color: '#1f2937',
     marginBottom: 14,
-    letterSpacing: 0.5,
+    letterSpacing: 0.5
   },
   quoteDetails: {
     flexDirection: 'column',
-    alignItems: 'flex-end',
+    alignItems: 'flex-end'
   },
   detailRow: {
     flexDirection: 'row',
     marginBottom: 2,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   detailLabel: {
     fontSize: 8,
     color: '#6b7280',
     marginRight: 6,
     width: 55,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   detailValue: {
     fontSize: 8,
     color: '#1f2937',
     fontWeight: 'medium',
-    width: 70,
+    width: 70
   },
   statusBadge: {
     marginTop: 4,
@@ -78,24 +78,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#3b82f6',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   statusBadgeAccepted: {
-    backgroundColor: '#10b981',
+    backgroundColor: '#10b981'
   },
   statusBadgeExpired: {
-    backgroundColor: '#ef4444',
+    backgroundColor: '#ef4444'
   },
   statusBadgeRejected: {
-    backgroundColor: '#ef4444',
+    backgroundColor: '#ef4444'
   },
   statusText: {
     fontSize: 7,
     color: '#ffffff',
     fontWeight: 'bold',
     textTransform: 'uppercase',
-    letterSpacing: 0.3,
-  },
+    letterSpacing: 0.3
+  }
 });
 
 export const QuoteHeader: React.FC<QuoteHeaderProps> = ({ quote }) => {
@@ -124,33 +124,30 @@ export const QuoteHeader: React.FC<QuoteHeaderProps> = ({ quote }) => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.logoSection}>
-        <Image 
-          style={styles.logo} 
-          src="/public/company-logo.png"
-        />
+        <Image style={styles.logo} src="/public/company-logo.png" />
         <Text style={styles.companyName}>RIOS ROOFING</Text>
         <Text style={styles.companyTagline}>Professional Roofing Services</Text>
       </View>
-      
+
       <View style={styles.quoteSection}>
         <Text style={styles.quoteTitle}>QUOTE</Text>
-        
+
         <View style={styles.quoteDetails}>
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Quote #:</Text>
             <Text style={styles.detailValue}>QT-{formatNumber(quote.quote_number || 0)}</Text>
           </View>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Quote Date:</Text>
             <Text style={styles.detailValue}>{formatDate(quote.quote_date)}</Text>
           </View>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Expires:</Text>
             <Text style={styles.detailValue}>{formatDate(quote.expiration_date)}</Text>
           </View>
-          
+
           {/* Status badge */}
           <View style={getStatusStyle((quote as any).quote_status?.name || '')}>
             <Text style={styles.statusText}>

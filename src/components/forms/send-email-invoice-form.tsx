@@ -121,8 +121,8 @@ const getEmailTemplates = (invoice: any): EmailTemplate[] => [
       150 Tallant St, Houston TX 77076
       Phone: 832-310-3593
       Email: rrios.roofing@gmail.com`
-        }
-      ];
+  }
+];
 
 export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice, trigger }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -146,7 +146,8 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
 
   // Get email templates
   const emailTemplates = getEmailTemplates(invoice);
-  const currentTemplate = emailTemplates.find(t => t.id === selectedTemplate) || emailTemplates[0];
+  const currentTemplate =
+    emailTemplates.find((t) => t.id === selectedTemplate) || emailTemplates[0];
 
   const [emailForm, setEmailForm] = useState({
     to: invoice?.customer?.email || '',
@@ -173,7 +174,7 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
 
   const handleTemplateChange = (templateId: string) => {
     setSelectedTemplate(templateId);
-    const template = emailTemplates.find(t => t.id === templateId);
+    const template = emailTemplates.find((t) => t.id === templateId);
     if (template) {
       setEmailForm((prev) => ({
         ...prev,

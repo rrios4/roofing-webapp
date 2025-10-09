@@ -12,7 +12,8 @@ import {
 export const fetchQuotes = async (): Promise<QuoteWithRelations[]> => {
   const { data, error } = await supabase
     .from(TABLES.QUOTE)
-    .select(`
+    .select(
+      `
       *,
       customer (
         id,
@@ -40,22 +41,24 @@ export const fetchQuotes = async (): Promise<QuoteWithRelations[]> => {
         created_at,
         updated_at
       )
-    `)
+    `
+    )
     // .order('updated_at', { ascending: false })
     .order('quote_number', { ascending: false });
 
-if (error) {
-  console.log(error);
-  throw error;
-}
-return data as QuoteWithRelations[];
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+  return data as QuoteWithRelations[];
 };
 
 // GET request to API to obtain quote by id
 export const fetchQuoteById = async (quote_number: number): Promise<QuoteWithRelations | null> => {
   const { data, error } = await supabase
     .from(TABLES.QUOTE)
-    .select(`
+    .select(
+      `
       *,
       customer (
         id,
@@ -97,7 +100,8 @@ export const fetchQuoteById = async (quote_number: number): Promise<QuoteWithRel
         created_at,
         updated_at
       )
-    `)
+    `
+    )
     .eq('quote_number', quote_number);
 
   if (error) {
@@ -111,7 +115,8 @@ export const fetchQuoteById = async (quote_number: number): Promise<QuoteWithRel
 export const fetchSearchQuotes = async (query: string): Promise<QuoteWithRelations[]> => {
   let { data, error } = await supabase
     .from('quote')
-    .select(`
+    .select(
+      `
       *,
       customer (
         id,
@@ -120,7 +125,8 @@ export const fetchSearchQuotes = async (query: string): Promise<QuoteWithRelatio
         email,
         phone_number
       )
-    `)
+    `
+    )
     .textSearch(
       'quote_number,custom_street_address,custom_city,custom_state,custom_zipcode',
       query
@@ -158,7 +164,10 @@ export const updateQuoteById = async (quoteObject: Partial<Quote>): Promise<Quot
 
 // DELETE request to API to delete a quote by id
 export const deleteQuoteById = async (quoteNumber: number): Promise<any> => {
-  const { data, error } = await supabase.from(TABLES.QUOTE).delete().eq('quote_number', quoteNumber);
+  const { data, error } = await supabase
+    .from(TABLES.QUOTE)
+    .delete()
+    .eq('quote_number', quoteNumber);
 
   if (error) {
     throw error;
@@ -167,7 +176,10 @@ export const deleteQuoteById = async (quoteNumber: number): Promise<any> => {
 };
 
 // PATCH request to API to update the status for a quote
-export const updateQuoteStatusById = async (status_id: number, quote_number: number): Promise<Quote | null> => {
+export const updateQuoteStatusById = async (
+  status_id: number,
+  quote_number: number
+): Promise<Quote | null> => {
   console.log(status_id);
   console.log(quote_number);
   const { data, error } = await supabase
@@ -192,7 +204,7 @@ export const getNextInvoiceNumber = async (): Promise<number> => {
   if (error) {
     throw error;
   }
-  
+
   const lastInvoiceNumber = data && data.length > 0 ? data[0].invoice_number : 0;
   return lastInvoiceNumber + 1;
 };
@@ -208,13 +220,15 @@ export const getInvoiceByQuoteNumber = async (quote_number: number): Promise<any
   if (error && error.code !== 'PGRST116') {
     throw error;
   }
-  
+
   return data || null;
 };
 
 // Convert quote to invoice - comprehensive function
-export const convertQuoteToInvoice = async (quote_number: number): Promise<{ 
-  quote: Quote | null; 
+export const convertQuoteToInvoice = async (
+  quote_number: number
+): Promise<{
+  quote: Quote | null;
   invoice: any;
   invoiceLineItems: any[];
 }> => {
@@ -232,13 +246,16 @@ export const convertQuoteToInvoice = async (quote_number: number): Promise<{
 
   if (existingInvoice) {
     // Quote has already been converted, return the existing invoice
-    throw new Error(`This quote has already been converted to Invoice #${existingInvoice.invoice_number}. Each quote can only be converted once.`);
+    throw new Error(
+      `This quote has already been converted to Invoice #${existingInvoice.invoice_number}. Each quote can only be converted once.`
+    );
   }
 
   // Fetch the complete quote data with line items
   const { data: quoteData, error: quoteError } = await supabase
     .from(TABLES.QUOTE)
-    .select(`
+    .select(
+      `
       *,
       customer (
         id,
@@ -260,7 +277,8 @@ export const convertQuoteToInvoice = async (quote_number: number): Promise<{
       quote_line_item (
         *
       )
-    `)
+    `
+    )
     .eq('quote_number', quote_number)
     .single();
 
@@ -270,12 +288,14 @@ export const convertQuoteToInvoice = async (quote_number: number): Promise<{
 
   // Double-check that the quote hasn't been converted already (database level check)
   if (quoteData.converted) {
-    throw new Error(`This quote has already been marked as converted. Please refresh the page and try again.`);
+    throw new Error(
+      `This quote has already been marked as converted. Please refresh the page and try again.`
+    );
   }
 
   // Get next invoice number
   const nextInvoiceNumber = await getNextInvoiceNumber();
-  
+
   // Get default invoice status (typically "Pending" or "Draft")
   const { data: invoiceStatuses, error: statusError } = await supabase
     .from(TABLES.INVOICE_STATUS)
@@ -293,7 +313,7 @@ export const convertQuoteToInvoice = async (quote_number: number): Promise<{
   const today = new Date().toISOString().split('T')[0];
   const dueDate = new Date();
   dueDate.setDate(dueDate.getDate() + 30); // 30 days from today
-  
+
   const invoiceData = {
     invoice_number: nextInvoiceNumber,
     customer_id: quoteData.customer_id,
@@ -318,18 +338,18 @@ export const convertQuoteToInvoice = async (quote_number: number): Promise<{
     bill_from_zipcode: '77076',
     bill_from_email: 'rrios.roofing@gmail.com',
     // Bill to (customer) address
-    bill_to_street_address: quoteData.custom_address ? 
-      (quoteData.custom_street_address || '') : 
-      (quoteData.customer?.street_address || ''),
-    bill_to_city: quoteData.custom_address ? 
-      (quoteData.custom_city || '') : 
-      (quoteData.customer?.city || ''),
-    bill_to_state: quoteData.custom_address ? 
-      (quoteData.custom_state || '') : 
-      (quoteData.customer?.state || ''),
-    bill_to_zipcode: quoteData.custom_address ? 
-      (quoteData.custom_zipcode || '') : 
-      (quoteData.customer?.zipcode || ''),
+    bill_to_street_address: quoteData.custom_address
+      ? quoteData.custom_street_address || ''
+      : quoteData.customer?.street_address || '',
+    bill_to_city: quoteData.custom_address
+      ? quoteData.custom_city || ''
+      : quoteData.customer?.city || '',
+    bill_to_state: quoteData.custom_address
+      ? quoteData.custom_state || ''
+      : quoteData.customer?.state || '',
+    bill_to_zipcode: quoteData.custom_address
+      ? quoteData.custom_zipcode || ''
+      : quoteData.customer?.zipcode || '',
     bill_to: false // Default to false, can be customized later
   };
 
@@ -370,7 +390,7 @@ export const convertQuoteToInvoice = async (quote_number: number): Promise<{
     if (lineItemError) {
       throw lineItemError;
     }
-    
+
     invoiceLineItems = lineItemResults || [];
   }
 

@@ -2,13 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  HammerIcon,
-  DollarSignIcon,
-  FileTextIcon,
-  CheckIcon,
-  LoaderIcon
-} from 'lucide-react';
+import { HammerIcon, DollarSignIcon, FileTextIcon, CheckIcon, LoaderIcon } from 'lucide-react';
 
 // UI Components
 import { Button } from '../ui/button';
@@ -23,11 +17,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
+  FormDescription
 } from '../ui/form';
 
 // Validations and Hooks
-import { createServiceFormSchema, CreateServiceFormData } from '../../validations/service-form-validations';
+import {
+  createServiceFormSchema,
+  CreateServiceFormData
+} from '../../validations/service-form-validations';
 import { useServiceManagement } from '../../hooks/useServiceManagement';
 
 interface AddServiceFormProps {
@@ -42,7 +39,7 @@ export default function AddServiceForm({ setOpen }: AddServiceFormProps) {
     defaultValues: {
       name: '',
       description: '',
-      default_price: '',
+      default_price: ''
     }
   });
 
@@ -52,11 +49,11 @@ export default function AddServiceForm({ setOpen }: AddServiceFormProps) {
       const cleanData = {
         ...values,
         description: values.description?.trim() || undefined,
-        default_price: values.default_price?.trim() || undefined,
+        default_price: values.default_price?.trim() || undefined
       };
 
       await createService.mutateAsync(cleanData);
-      
+
       // Reset form and close sheet on success
       form.reset();
       setOpen(false);
@@ -88,9 +85,7 @@ export default function AddServiceForm({ setOpen }: AddServiceFormProps) {
                       className="w-full"
                     />
                   </FormControl>
-                  <FormDescription>
-                    Enter a clear, descriptive name for the service
-                  </FormDescription>
+                  <FormDescription>Enter a clear, descriptive name for the service</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -140,7 +135,8 @@ export default function AddServiceForm({ setOpen }: AddServiceFormProps) {
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional: Enter a price, rate, or pricing description. Can be a number (150) or text ($300 per sq ft)
+                    Optional: Enter a price, rate, or pricing description. Can be a number (150) or
+                    text ($300 per sq ft)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -165,19 +161,11 @@ export default function AddServiceForm({ setOpen }: AddServiceFormProps) {
           {/* Form Actions */}
           <SheetFooter className="px-4 pt-4 gap-2 border-t">
             <SheetClose asChild>
-              <Button 
-                type="button" 
-                variant="outline"
-                disabled={isCreating}
-              >
+              <Button type="button" variant="outline" disabled={isCreating}>
                 Cancel
               </Button>
             </SheetClose>
-            <Button 
-              type="submit" 
-              disabled={isCreating}
-              className="min-w-[120px]"
-            >
+            <Button type="submit" disabled={isCreating} className="min-w-[120px]">
               {isCreating ? (
                 <>
                   <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />

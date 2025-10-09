@@ -44,9 +44,13 @@ export default function RecordPaymentDialog({
 
   // Calculate amount due
   const subtotal =
-    invoice.invoice_line_service?.reduce((sum: number, item: any) => sum + (item.amount || 0), 0) || 0;
+    invoice.invoice_line_service?.reduce((sum: number, item: any) => sum + (item.amount || 0), 0) ||
+    0;
   const totalPayments =
-    invoice.invoice_payment?.reduce((sum: number, payment: any) => sum + (payment.amount || 0), 0) || 0;
+    invoice.invoice_payment?.reduce(
+      (sum: number, payment: any) => sum + (payment.amount || 0),
+      0
+    ) || 0;
   const amountDue = subtotal - totalPayments;
 
   // Handle payment form changes
@@ -138,17 +142,14 @@ export default function RecordPaymentDialog({
 
   return (
     <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
-      <DialogTrigger asChild>
-        {trigger || defaultTrigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
             Record Payment for INV-{formatNumber(invoice.invoice_number || 0)}
           </DialogTitle>
           <DialogDescription>
-            Add a new payment for this invoice. Outstanding balance: $
-            {formatMoneyValue(amountDue)}
+            Add a new payment for this invoice. Outstanding balance: ${formatMoneyValue(amountDue)}
           </DialogDescription>
         </DialogHeader>
 

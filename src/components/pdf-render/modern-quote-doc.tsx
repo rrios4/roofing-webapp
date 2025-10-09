@@ -1,12 +1,12 @@
 import React from 'react';
 import { Page, Document, StyleSheet } from '@react-pdf/renderer';
 import { Quote, QuoteLineItem, Customer, Service, QuoteStatus } from '../../types/db_types';
-import { 
-  QuoteHeader, 
-  QuoteCustomerInfo, 
-  QuoteItemsTable, 
-  QuoteSummary, 
-  QuoteFooter 
+import {
+  QuoteHeader,
+  QuoteCustomerInfo,
+  QuoteItemsTable,
+  QuoteSummary,
+  QuoteFooter
 } from './quote-doc';
 
 // Extended quote line item with service relation
@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
     backgroundColor: '#ffffff',
     fontFamily: 'Helvetica',
-    lineHeight: 1.3,
-  },
+    lineHeight: 1.3
+  }
 });
 
 export const ModernQuoteDocument: React.FC<ModernQuoteDocumentProps> = ({ quote }) => {
@@ -45,16 +45,16 @@ export const ModernQuoteDocument: React.FC<ModernQuoteDocumentProps> = ({ quote 
       <Page size="A4" style={styles.page}>
         {/* Header with logo, quote info, and status */}
         <QuoteHeader quote={quote} />
-        
+
         {/* Customer and quote information */}
         <QuoteCustomerInfo quote={quote} />
-        
+
         {/* Line items table */}
         <QuoteItemsTable quote={quote} />
-        
+
         {/* Summary with totals and expiration */}
         <QuoteSummary quote={quote} />
-        
+
         {/* Footer with notes and company info */}
         <QuoteFooter quote={quote} />
       </Page>

@@ -17,7 +17,7 @@ import {
   XCircleIcon,
   DownloadIcon,
   UploadIcon,
-  EyeIcon,
+  EyeIcon
 } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
@@ -35,7 +35,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '../components/ui/dialog';
 import {
   Sheet,
@@ -44,7 +44,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from '../components/ui/sheet';
 import {
   Form,
@@ -53,14 +53,14 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from '../components/ui/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '../components/ui/select';
 import {
   DropdownMenu,
@@ -68,7 +68,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '../components/ui/dropdown-menu';
 import { Textarea } from '../components/ui/textarea';
 import { ScrollArea } from '../components/ui/scroll-area';
@@ -81,7 +81,7 @@ import {
   statusTypeSchema,
   COMMON_STATUS_NAMES,
   getStatusSuggestions,
-  STATUS_VALIDATION_MESSAGES,
+  STATUS_VALIDATION_MESSAGES
 } from '../validations/status-management-validations';
 
 // Helper functions for status types
@@ -153,18 +153,16 @@ const StatusFormSheet: React.FC<StatusFormProps> = ({
   onSubmit,
   onCancel,
   isLoading,
-  mode,
+  mode
 }) => {
-  const [selectedType, setSelectedType] = useState<StatusType>(
-    status?.type || 'invoice'
-  );
+  const [selectedType, setSelectedType] = useState<StatusType>(status?.type || 'invoice');
 
   const form = useForm<StatusFormData>({
     resolver: zodResolver(statusFormSchema),
     defaultValues: {
       name: status?.name || '',
-      description: status?.description || '',
-    },
+      description: status?.description || ''
+    }
   });
 
   const handleSubmit = async (data: StatusFormData) => {
@@ -193,42 +191,47 @@ const StatusFormSheet: React.FC<StatusFormProps> = ({
             </div>
             <Select
               value={selectedType}
-              onValueChange={(value) => setSelectedType(value as StatusType)}
-            >
+              onValueChange={(value) => setSelectedType(value as StatusType)}>
               <SelectTrigger className="w-full text-left py-8">
                 <SelectValue placeholder="Select status type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem className='hover:cursor-pointer' value="invoice">
+                <SelectItem className="hover:cursor-pointer" value="invoice">
                   <div className="flex items-center gap-3">
                     <div className="p-1 bg-blue-100 rounded">
                       <FileTextIcon className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
                       <div className="font-medium">Invoice Status</div>
-                      <div className="text-xs text-muted-foreground">For billing and payment tracking</div>
+                      <div className="text-xs text-muted-foreground">
+                        For billing and payment tracking
+                      </div>
                     </div>
                   </div>
                 </SelectItem>
-                <SelectItem className='hover:cursor-pointer' value="quote">
+                <SelectItem className="hover:cursor-pointer" value="quote">
                   <div className="flex items-center gap-3 py-2">
                     <div className="p-1 bg-green-100 rounded">
                       <TagIcon className="h-4 w-4 text-green-600" />
                     </div>
                     <div>
                       <div className="font-medium">Quote Status</div>
-                      <div className="text-xs text-muted-foreground">For estimate and proposal tracking</div>
+                      <div className="text-xs text-muted-foreground">
+                        For estimate and proposal tracking
+                      </div>
                     </div>
                   </div>
                 </SelectItem>
-                <SelectItem className='hover:cursor-pointer' value="quote_request">
+                <SelectItem className="hover:cursor-pointer" value="quote_request">
                   <div className="flex items-center gap-3 py-2">
                     <div className="p-1 bg-purple-100 rounded">
                       <HammerIcon className="h-4 w-4 text-purple-600" />
                     </div>
                     <div>
                       <div className="font-medium">Quote Request Status</div>
-                      <div className="text-xs text-muted-foreground">For lead and inquiry management</div>
+                      <div className="text-xs text-muted-foreground">
+                        For lead and inquiry management
+                      </div>
                     </div>
                   </div>
                 </SelectItem>
@@ -243,7 +246,9 @@ const StatusFormSheet: React.FC<StatusFormProps> = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Status Name <span className='text-red-600'>*</span></FormLabel>
+              <FormLabel>
+                Status Name <span className="text-red-600">*</span>
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder="e.g., Pending Review, In Progress, Completed..."
@@ -251,8 +256,9 @@ const StatusFormSheet: React.FC<StatusFormProps> = ({
                   className="text-base"
                 />
               </FormControl>
-              <FormDescription className='text-xs font-thin'>
-                Choose a clear, descriptive name (2-50 characters). This will be visible throughout the system.
+              <FormDescription className="text-xs font-thin">
+                Choose a clear, descriptive name (2-50 characters). This will be visible throughout
+                the system.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -278,8 +284,7 @@ const StatusFormSheet: React.FC<StatusFormProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className="justify-start text-left text-xs h-auto py-2 px-3"
-                >
+                  className="justify-start text-left text-xs h-auto py-2 px-3">
                   <div className="truncate">{suggestion}</div>
                 </Button>
               ))}
@@ -302,7 +307,7 @@ const StatusFormSheet: React.FC<StatusFormProps> = ({
                   {...field}
                 />
               </FormControl>
-              <FormDescription className='text-xs font-thin'>
+              <FormDescription className="text-xs font-thin">
                 Help your team understand when to use this status (max 200 characters)
               </FormDescription>
               <FormMessage />
@@ -317,17 +322,13 @@ const StatusFormSheet: React.FC<StatusFormProps> = ({
             <div className="p-3 border rounded-lg bg-muted/30">
               <div className="flex items-center gap-2">
                 {getStatusTypeIcon(selectedType)}
-                <span className="font-medium">
-                  {form.watch('name') || 'Status Name'}
-                </span>
+                <span className="font-medium">{form.watch('name') || 'Status Name'}</span>
                 <Badge variant="secondary" className={getStatusTypeColor(selectedType)}>
                   {formatTypeName(selectedType)}
                 </Badge>
               </div>
               {form.watch('description') && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  {form.watch('description')}
-                </p>
+                <p className="text-sm text-muted-foreground mt-2">{form.watch('description')}</p>
               )}
             </div>
           </div>
@@ -359,23 +360,15 @@ const StatusFormSheet: React.FC<StatusFormProps> = ({
 };
 
 // Status form component for dialogs (kept for edit functionality)
-const StatusForm: React.FC<StatusFormProps> = ({
-  status,
-  onSubmit,
-  onCancel,
-  isLoading,
-  mode,
-}) => {
-  const [selectedType, setSelectedType] = useState<StatusType>(
-    status?.type || 'invoice'
-  );
+const StatusForm: React.FC<StatusFormProps> = ({ status, onSubmit, onCancel, isLoading, mode }) => {
+  const [selectedType, setSelectedType] = useState<StatusType>(status?.type || 'invoice');
 
   const form = useForm<StatusFormData>({
     resolver: zodResolver(statusFormSchema),
     defaultValues: {
       name: status?.name || '',
-      description: status?.description || '',
-    },
+      description: status?.description || ''
+    }
   });
 
   const handleSubmit = async (data: StatusFormData) => {
@@ -392,14 +385,9 @@ const StatusForm: React.FC<StatusFormProps> = ({
             <FormItem>
               <FormLabel>Status Name</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Enter status name..."
-                  {...field}
-                />
+                <Input placeholder="Enter status name..." {...field} />
               </FormControl>
-              <FormDescription>
-                A unique name for this status (2-50 characters)
-              </FormDescription>
+              <FormDescription>A unique name for this status (2-50 characters)</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -442,16 +430,8 @@ const StatusForm: React.FC<StatusFormProps> = ({
 };
 
 // Status usage dialog component
-const StatusUsageDialog: React.FC<StatusUsageDialogProps> = ({
-  status,
-  isOpen,
-  onClose,
-}) => {
-  const { data: usage, isLoading } = useFetchStatusUsage(
-    status.type,
-    status.id,
-    isOpen
-  );
+const StatusUsageDialog: React.FC<StatusUsageDialogProps> = ({ status, isOpen, onClose }) => {
+  const { data: usage, isLoading } = useFetchStatusUsage(status.type, status.id, isOpen);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -470,17 +450,13 @@ const StatusUsageDialog: React.FC<StatusUsageDialogProps> = ({
           <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
             <div>
               <p className="font-medium">Current Usage</p>
-              <p className="text-sm text-muted-foreground">
-                Records using this status
-              </p>
+              <p className="text-sm text-muted-foreground">Records using this status</p>
             </div>
             <div className="text-right">
               {isLoading ? (
                 <Skeleton className="h-8 w-16" />
               ) : (
-                <div className="text-2xl font-bold">
-                  {usage?.count ?? 0}
-                </div>
+                <div className="text-2xl font-bold">{usage?.count ?? 0}</div>
               )}
             </div>
           </div>
@@ -514,8 +490,8 @@ const StatusUsageDialog: React.FC<StatusUsageDialogProps> = ({
               <div className="flex items-center gap-2">
                 <AlertTriangleIcon className="h-4 w-4 text-yellow-600" />
                 <p className="text-sm text-yellow-800">
-                  This status is currently in use and cannot be deleted.
-                  You can still edit its name and description.
+                  This status is currently in use and cannot be deleted. You can still edit its name
+                  and description.
                 </p>
               </div>
             </div>
@@ -538,7 +514,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   isOpen,
   onConfirm,
   onCancel,
-  isLoading,
+  isLoading
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onCancel}>
@@ -567,11 +543,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button
-            variant="destructive"
-            onClick={onConfirm}
-            disabled={isLoading}
-          >
+          <Button variant="destructive" onClick={onConfirm} disabled={isLoading}>
             {isLoading && <RefreshCwIcon className="mr-2 h-4 w-4 animate-spin" />}
             Delete Status
           </Button>
@@ -609,7 +581,7 @@ export default function StatusManagementPage() {
     refetchAll,
     resetCreateState,
     resetUpdateState,
-    resetDeleteState,
+    resetDeleteState
   } = useStatusManagement();
 
   // Filter statuses based on search and tab
@@ -618,14 +590,15 @@ export default function StatusManagementPage() {
 
     // Filter by tab
     if (selectedTab !== 'all') {
-      statuses = statuses.filter(status => status.type === selectedTab);
+      statuses = statuses.filter((status) => status.type === selectedTab);
     }
 
     // Filter by search term
     if (searchTerm) {
-      statuses = statuses.filter(status =>
-        status.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        status.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      statuses = statuses.filter(
+        (status) =>
+          status.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          status.description?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -638,7 +611,7 @@ export default function StatusManagementPage() {
       total: allStatuses.length,
       invoice: (groupedStatuses as any).invoice?.length || 0,
       quote: (groupedStatuses as any).quote?.length || 0,
-      quote_request: (groupedStatuses as any).quote_request?.length || 0,
+      quote_request: (groupedStatuses as any).quote_request?.length || 0
     };
   }, [allStatuses, groupedStatuses]);
 
@@ -647,9 +620,9 @@ export default function StatusManagementPage() {
     try {
       const response = await createStatus(data.type, {
         name: data.name,
-        description: data.description,
+        description: data.description
       });
-      
+
       if (response.error) {
         throw new Error(response.error);
       }
@@ -668,9 +641,9 @@ export default function StatusManagementPage() {
     try {
       const response = await updateStatus(selectedStatus.type, selectedStatus.id, {
         name: data.name,
-        description: data.description,
+        description: data.description
       });
-      
+
       if (response.error) {
         throw new Error(response.error);
       }
@@ -688,7 +661,7 @@ export default function StatusManagementPage() {
 
     try {
       const response = await deleteStatus(selectedStatus.type, selectedStatus.id);
-      
+
       if (!response.success) {
         throw new Error(response.error || 'Failed to delete status');
       }
@@ -746,7 +719,7 @@ export default function StatusManagementPage() {
 
   // Format type name for display
   const formatTypeName = (type: StatusType) => {
-    return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    return type.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   return (
@@ -762,12 +735,14 @@ export default function StatusManagementPage() {
       />
 
       {/* Error Display */}
-      {(error || createError || updateError || deleteError) ? (
+      {error || createError || updateError || deleteError ? (
         <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-center gap-2">
             <XCircleIcon className="h-4 w-4 text-red-600" />
             <p className="text-sm text-red-800">
-              {String(error || createError || updateError || deleteError || 'An unexpected error occurred')}
+              {String(
+                error || createError || updateError || deleteError || 'An unexpected error occurred'
+              )}
             </p>
           </div>
         </div>
@@ -782,9 +757,7 @@ export default function StatusManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.total}</div>
-            <p className="text-xs text-muted-foreground">
-              Across all types
-            </p>
+            <p className="text-xs text-muted-foreground">Across all types</p>
           </CardContent>
         </Card>
 
@@ -795,9 +768,7 @@ export default function StatusManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.invoice}</div>
-            <p className="text-xs text-muted-foreground">
-              For invoice management
-            </p>
+            <p className="text-xs text-muted-foreground">For invoice management</p>
           </CardContent>
         </Card>
 
@@ -808,9 +779,7 @@ export default function StatusManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.quote}</div>
-            <p className="text-xs text-muted-foreground">
-              For quote tracking
-            </p>
+            <p className="text-xs text-muted-foreground">For quote tracking</p>
           </CardContent>
         </Card>
 
@@ -821,9 +790,7 @@ export default function StatusManagementPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.quote_request}</div>
-            <p className="text-xs text-muted-foreground">
-              For request workflow
-            </p>
+            <p className="text-xs text-muted-foreground">For request workflow</p>
           </CardContent>
         </Card>
       </div>
@@ -872,7 +839,9 @@ export default function StatusManagementPage() {
               {isLoading ? (
                 <div className="space-y-3">
                   {[...Array(5)].map((_, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={i}
+                      className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="space-y-2">
                         <Skeleton className="h-4 w-32" />
                         <Skeleton className="h-3 w-48" />
@@ -886,13 +855,12 @@ export default function StatusManagementPage() {
                   <TagIcon className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h3 className="mt-2 text-sm font-semibold">No statuses found</h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {searchTerm ? 'Try adjusting your search terms.' : 'Get started by creating your first status.'}
+                    {searchTerm
+                      ? 'Try adjusting your search terms.'
+                      : 'Get started by creating your first status.'}
                   </p>
                   {!searchTerm && (
-                    <Button
-                      className="mt-4"
-                      onClick={() => setCreateDialogOpen(true)}
-                    >
+                    <Button className="mt-4" onClick={() => setCreateDialogOpen(true)}>
                       <PlusIcon className="mr-2 h-4 w-4" />
                       Create Status
                     </Button>
@@ -903,8 +871,7 @@ export default function StatusManagementPage() {
                   {filteredStatuses.map((status) => (
                     <div
                       key={`${status.type}-${status.id}`}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                    >
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-2">
                           {getStatusTypeIcon(status.type)}
@@ -913,8 +880,7 @@ export default function StatusManagementPage() {
                               <h4 className="font-medium">{status.name}</h4>
                               <Badge
                                 variant="secondary"
-                                className={getStatusTypeColor(status.type)}
-                              >
+                                className={getStatusTypeColor(status.type)}>
                                 {formatTypeName(status.type)}
                               </Badge>
                             </div>
@@ -928,25 +894,13 @@ export default function StatusManagementPage() {
                       </div>
 
                       <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openUsageDialog(status)}
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => openUsageDialog(status)}>
                           <EyeIcon className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openEditDialog(status)}
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => openEditDialog(status)}>
                           <EditIcon className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openDeleteDialog(status)}
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => openDeleteDialog(status)}>
                           <TrashIcon className="h-4 w-4" />
                         </Button>
                       </div>
@@ -970,10 +924,11 @@ export default function StatusManagementPage() {
                   Create New Status
                 </SheetTitle>
                 <SheetDescription>
-                  Add a new status to organize your business workflow. Choose the appropriate type and provide a descriptive name.
+                  Add a new status to organize your business workflow. Choose the appropriate type
+                  and provide a descriptive name.
                 </SheetDescription>
               </SheetHeader>
-              
+
               <StatusFormSheet
                 mode="create"
                 onSubmit={handleCreateStatus}
@@ -991,9 +946,7 @@ export default function StatusManagementPage() {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Edit Status</DialogTitle>
-              <DialogDescription>
-                Make changes to "{selectedStatus.name}" status
-              </DialogDescription>
+              <DialogDescription>Make changes to "{selectedStatus.name}" status</DialogDescription>
             </DialogHeader>
             <StatusForm
               mode="edit"

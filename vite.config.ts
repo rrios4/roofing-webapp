@@ -6,19 +6,19 @@ export default defineConfig({
 
   plugins: [react()],
   define: {
-    global: 'globalThis',
+    global: 'globalThis'
   },
   resolve: {
     alias: {
-      buffer: 'buffer',
-    },
+      buffer: 'buffer'
+    }
   },
   optimizeDeps: {
-    include: ['buffer'],
+    include: ['buffer']
   },
   esbuild: {
     target: 'esnext',
-    format: 'esm',
+    format: 'esm'
   },
   server: {
     watch: {
@@ -43,7 +43,7 @@ export default defineConfig({
             if (id.includes('react-dom')) {
               return 'react-dom';
             }
-            
+
             // React Router - routing
             if (id.includes('react-router')) {
               return 'react-router';
@@ -55,7 +55,11 @@ export default defineConfig({
             }
 
             // Chart.js and related charting libraries
-            if (id.includes('chart.js') || id.includes('react-chartjs-2') || id.includes('@tremor/react')) {
+            if (
+              id.includes('chart.js') ||
+              id.includes('react-chartjs-2') ||
+              id.includes('@tremor/react')
+            ) {
               return 'charts';
             }
 
@@ -80,15 +84,19 @@ export default defineConfig({
             }
 
             // Radix UI - split into smaller groups
-            if (id.includes('@radix-ui/react-dialog') || 
-                id.includes('@radix-ui/react-alert-dialog') ||
-                id.includes('@radix-ui/react-popover')) {
+            if (
+              id.includes('@radix-ui/react-dialog') ||
+              id.includes('@radix-ui/react-alert-dialog') ||
+              id.includes('@radix-ui/react-popover')
+            ) {
               return 'radix-overlays';
             }
 
-            if (id.includes('@radix-ui/react-select') || 
-                id.includes('@radix-ui/react-dropdown-menu') ||
-                id.includes('@radix-ui/react-tabs')) {
+            if (
+              id.includes('@radix-ui/react-select') ||
+              id.includes('@radix-ui/react-dropdown-menu') ||
+              id.includes('@radix-ui/react-tabs')
+            ) {
               return 'radix-inputs';
             }
 
@@ -97,12 +105,20 @@ export default defineConfig({
             }
 
             // Date libraries
-            if (id.includes('date-fns') || id.includes('luxon') || id.includes('react-day-picker')) {
+            if (
+              id.includes('date-fns') ||
+              id.includes('luxon') ||
+              id.includes('react-day-picker')
+            ) {
               return 'date-utils';
             }
 
             // Utility libraries
-            if (id.includes('clsx') || id.includes('tailwind-merge') || id.includes('class-variance-authority')) {
+            if (
+              id.includes('clsx') ||
+              id.includes('tailwind-merge') ||
+              id.includes('class-variance-authority')
+            ) {
               return 'style-utils';
             }
 

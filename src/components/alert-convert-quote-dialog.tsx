@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialogTrigger
 } from './ui/alert-dialog';
 import { Button } from './ui/button';
 import { CheckCircleIcon, RefreshCcwIcon } from 'lucide-react';
@@ -30,12 +30,12 @@ export function ConvertQuoteAlertDialog({
   total,
   onConfirm,
   isLoading = false,
-  disabled = false,
+  disabled = false
 }: ConvertQuoteAlertDialogProps) {
   const formatMoney = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'USD'
     }).format(amount);
   };
 
@@ -43,11 +43,7 @@ export function ConvertQuoteAlertDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         {trigger || (
-          <Button 
-            variant="default" 
-            disabled={disabled}
-            className="w-full"
-          >
+          <Button variant="default" disabled={disabled} className="w-full">
             <CheckCircleIcon className="w-4 h-4 mr-2" />
             Convert to Invoice
           </Button>
@@ -75,20 +71,18 @@ export function ConvertQuoteAlertDialog({
             )}
             <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mt-4">
               <p className="text-sm text-amber-800">
-                <strong>⚠️ Important:</strong> This action cannot be undone. Once converted, this quote will become an invoice and cannot be edited as a quote.
+                <strong>⚠️ Important:</strong> This action cannot be undone. Once converted, this
+                quote will become an invoice and cannot be edited as a quote.
               </p>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction 
+          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
+            className="bg-blue-600 hover:bg-blue-700">
             {isLoading ? (
               <>
                 <RefreshCcwIcon className="w-4 h-4 mr-2 animate-spin" />

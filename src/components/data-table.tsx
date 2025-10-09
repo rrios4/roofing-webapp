@@ -105,7 +105,9 @@ export default function DataTable({
         <Table className="">
           <TableHeader className="bg-slate-100 dark:bg-zinc-800">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow className="rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800" key={headerGroup.id}>
+              <TableRow
+                className="rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
@@ -141,9 +143,7 @@ export default function DataTable({
           <div className="flex my-auto w-full justify-center gap-4 md:flex-row flex-col-reverse">
             <div className="flex gap-1 my-auto text-[14px] font-[400] mx-auto md:mx-0">
               <p>Page</p>
-              <p className="font-[700]">
-                {table.getState().pagination.pageIndex + 1}
-              </p>
+              <p className="font-[700]">{table.getState().pagination.pageIndex + 1}</p>
               <p>of</p>
               <p className="font-[600]">{table.getPageCount()}</p>
             </div>

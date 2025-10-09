@@ -6,7 +6,7 @@ import { ChevronLeftIcon, HomeIcon } from 'lucide-react';
 
 type Props = {};
 
-export default function PageNotFound({}: Props) {
+export default function PageNotFound() {
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-2);

@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const EditCard = () => {
-  return (
-    <div>EditCard</div>
-  )
-}
+  return <div>EditCard</div>;
+};
 
-export default EditCard
+export default EditCard;

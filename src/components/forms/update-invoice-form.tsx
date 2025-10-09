@@ -129,7 +129,7 @@ export default function UpdateInvoiceForm({ invoice, invoiceLineItems, onSuccess
       const qty = item.qty || 1;
       const rate = 0; // Always set rate to 0 for fixed pricing
       // Keep the amount as entered by user, don't calculate it
-      
+
       return {
         ...item,
         qty,
@@ -137,15 +137,13 @@ export default function UpdateInvoiceForm({ invoice, invoiceLineItems, onSuccess
         amount: item.amount || 0 // Keep user-entered amount
       };
     });
-    
+
     // Only update if there's an actual change to prevent infinite loops
     const hasChanged = updatedLineItems.some((item, index) => {
       const currentItem = lineItems?.[index];
-      return !currentItem || 
-             item.qty !== currentItem.qty || 
-             item.rate !== currentItem.rate;
+      return !currentItem || item.qty !== currentItem.qty || item.rate !== currentItem.rate;
     });
-    
+
     if (hasChanged) {
       form.setValue('line_items', updatedLineItems, { shouldValidate: false });
     }
@@ -173,7 +171,10 @@ export default function UpdateInvoiceForm({ invoice, invoiceLineItems, onSuccess
   // Function to update invoice line items
   async function updateInvoiceLineItems(invoiceLineItems: any) {
     // Delete existing line items for this invoice
-    await supabase.from(TABLES.INVOICE_LINE_SERVICE).delete().eq('invoice_id', invoice.invoice_number);
+    await supabase
+      .from(TABLES.INVOICE_LINE_SERVICE)
+      .delete()
+      .eq('invoice_id', invoice.invoice_number);
 
     // Prepare line items for insertion (remove id field for new items)
     const itemsToInsert = invoiceLineItems.map((item: any) => {
@@ -469,9 +470,9 @@ export default function UpdateInvoiceForm({ invoice, invoiceLineItems, onSuccess
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="Enter item description" 
-                            value={field.value || ''} 
+                          <Input
+                            placeholder="Enter item description"
+                            value={field.value || ''}
                             onChange={field.onChange}
                             onBlur={field.onBlur}
                             name={field.name}
@@ -557,7 +558,16 @@ export default function UpdateInvoiceForm({ invoice, invoiceLineItems, onSuccess
               <Button
                 type="button"
                 variant={'secondary'}
-                onClick={() => append({ description: '', qty: 1, rate: 0, amount: 0, sq_ft: 0, fixed_item: true })}>
+                onClick={() =>
+                  append({
+                    description: '',
+                    qty: 1,
+                    rate: 0,
+                    amount: 0,
+                    sq_ft: 0,
+                    fixed_item: true
+                  })
+                }>
                 + Add Line Item
               </Button>
             </div>

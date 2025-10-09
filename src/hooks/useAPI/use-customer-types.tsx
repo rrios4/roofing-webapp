@@ -3,7 +3,12 @@ import { fetchAllCustomerTypes } from '../../services/api/customer-type-service'
 import { CustomerType } from '../../types/db_types';
 
 export const useFetchAllCustomerTypes = () => {
-  const { data: response, isError, isLoading, error: queryError } = useQuery({
+  const {
+    data: response,
+    isError,
+    isLoading,
+    error: queryError
+  } = useQuery({
     queryKey: ['customerTypes'],
     queryFn: async () => {
       const response = await fetchAllCustomerTypes();
@@ -13,12 +18,12 @@ export const useFetchAllCustomerTypes = () => {
       return response.data || [];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 2,
+    retry: 2
   });
 
-  return { 
-    data: response || [], 
-    isError, 
+  return {
+    data: response || [],
+    isError,
     isLoading,
     error: (queryError as any)?.message || null
   };

@@ -8,7 +8,7 @@ interface InvoicePaymentsProps {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
+    marginBottom: 10
   },
   sectionTitle: {
     fontSize: 9,
@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginBottom: 6,
     textTransform: 'uppercase',
-    letterSpacing: 0.3,
+    letterSpacing: 0.3
   },
   table: {
     borderWidth: 1,
     borderColor: '#e5e7eb',
-    borderRadius: 4,
+    borderRadius: 4
   },
   tableHeader: {
     flexDirection: 'row',
@@ -29,55 +29,55 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
     paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
   tableHeaderCell: {
     fontSize: 7,
     fontWeight: 'bold',
     color: '#374151',
     textTransform: 'uppercase',
-    letterSpacing: 0.3,
+    letterSpacing: 0.3
   },
   dateHeader: {
-    flex: 2,
+    flex: 2
   },
   methodHeader: {
-    flex: 2,
+    flex: 2
   },
   amountHeader: {
     flex: 1,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   tableRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#f3f4f6',
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 12
   },
   lastRow: {
-    borderBottomWidth: 0,
+    borderBottomWidth: 0
   },
   tableCell: {
     fontSize: 10,
-    color: '#1f2937',
+    color: '#1f2937'
   },
   dateCell: {
-    flex: 2,
+    flex: 2
   },
   methodCell: {
-    flex: 2,
+    flex: 2
   },
   amountCell: {
     flex: 1,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   noPayments: {
     padding: 16,
     textAlign: 'center',
     color: '#6b7280',
     fontSize: 9,
-    fontStyle: 'italic',
+    fontStyle: 'italic'
   },
   totalRow: {
     flexDirection: 'row',
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderTopWidth: 2,
-    borderTopColor: '#f59e0b',
+    borderTopColor: '#f59e0b'
   },
   totalLabel: {
     flex: 4,
@@ -93,22 +93,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#92400e',
     textAlign: 'right',
-    paddingRight: 12,
+    paddingRight: 12
   },
   totalAmount: {
     flex: 1,
     fontSize: 10,
     fontWeight: 'bold',
     color: '#92400e',
-    textAlign: 'right',
-  },
+    textAlign: 'right'
+  }
 });
 
 export const InvoicePayments: React.FC<InvoicePaymentsProps> = ({ invoice }) => {
   const formatMoney = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'USD'
     }).format(amount);
   };
 
@@ -117,7 +117,7 @@ export const InvoicePayments: React.FC<InvoicePaymentsProps> = ({ invoice }) => 
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric',
+      year: 'numeric'
     });
   };
 
@@ -125,7 +125,7 @@ export const InvoicePayments: React.FC<InvoicePaymentsProps> = ({ invoice }) => 
     // Convert snake_case to Title Case
     return method
       .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
   };
 
@@ -149,26 +149,19 @@ export const InvoicePayments: React.FC<InvoicePaymentsProps> = ({ invoice }) => 
       <View style={styles.table}>
         {/* Table Header */}
         <View style={styles.tableHeader}>
-          <Text style={[styles.tableHeaderCell, styles.dateHeader]}>
-            Date
-          </Text>
-          <Text style={[styles.tableHeaderCell, styles.methodHeader]}>
-            Method
-          </Text>
-          <Text style={[styles.tableHeaderCell, styles.amountHeader]}>
-            Amount
-          </Text>
+          <Text style={[styles.tableHeaderCell, styles.dateHeader]}>Date</Text>
+          <Text style={[styles.tableHeaderCell, styles.methodHeader]}>Method</Text>
+          <Text style={[styles.tableHeaderCell, styles.amountHeader]}>Amount</Text>
         </View>
 
         {/* Payment Rows */}
         {invoice.invoice_payment.map((payment, index) => {
           const isLastRow = index === invoice.invoice_payment!.length - 1;
-          
+
           return (
             <View
               key={payment.id}
-              style={[styles.tableRow, ...(isLastRow ? [styles.lastRow] : [])]}
-            >
+              style={[styles.tableRow, ...(isLastRow ? [styles.lastRow] : [])]}>
               <Text style={[styles.tableCell, styles.dateCell]}>
                 {formatDate(payment.date_received)}
               </Text>
@@ -185,12 +178,8 @@ export const InvoicePayments: React.FC<InvoicePaymentsProps> = ({ invoice }) => 
         {/* Total Row */}
         {totalPayments > 0 && (
           <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>
-              Total Payments:
-            </Text>
-            <Text style={styles.totalAmount}>
-              {formatMoney(totalPayments)}
-            </Text>
+            <Text style={styles.totalLabel}>Total Payments:</Text>
+            <Text style={styles.totalAmount}>{formatMoney(totalPayments)}</Text>
           </View>
         )}
       </View>

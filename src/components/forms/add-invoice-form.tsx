@@ -132,7 +132,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
       const qty = item.qty || 1;
       const rate = 0; // Always set rate to 0 for fixed pricing
       // Keep the amount as entered by user, don't calculate it
-      
+
       return {
         ...item,
         qty,
@@ -140,15 +140,13 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
         amount: item.amount || 0 // Keep user-entered amount
       };
     });
-    
+
     // Only update if there's an actual change to prevent infinite loops
     const hasChanged = updatedLineItems.some((item, index) => {
       const currentItem = lineItems?.[index];
-      return !currentItem || 
-             item.qty !== currentItem.qty || 
-             item.rate !== currentItem.rate;
+      return !currentItem || item.qty !== currentItem.qty || item.rate !== currentItem.rate;
     });
-    
+
     if (hasChanged) {
       form.setValue('line_items', updatedLineItems, { shouldValidate: false });
     }
@@ -170,7 +168,9 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
 
   // Function to create invoice line items
   async function createInvoiceLineItems(invoiceLineItems: any) {
-    const { data, error } = await supabase.from(TABLES.INVOICE_LINE_SERVICE).insert(invoiceLineItems);
+    const { data, error } = await supabase
+      .from(TABLES.INVOICE_LINE_SERVICE)
+      .insert(invoiceLineItems);
     if (error) {
       console.error('Error creating invoice line items', error.message);
       throw error;
@@ -273,8 +273,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                       variant="outline"
                       size="icon"
                       onClick={() => setCustomerSheetOpen(true)}
-                      className="shrink-0 h-10 w-10"
-                    >
+                      className="shrink-0 h-10 w-10">
                       <PlusIcon className="h-4 w-4" />
                     </Button>
                   </div>
@@ -315,14 +314,14 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                     <FormLabel>Select Status</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
-                      value={field.value && field.value > 0 ? String(field.value) : ""}>
+                      value={field.value && field.value > 0 ? String(field.value) : ''}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent 
-                        side="bottom" 
+                      <SelectContent
+                        side="bottom"
                         align="start"
                         sideOffset={4}
                         avoidCollisions={true}
@@ -416,14 +415,14 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                   <FormLabel>Select Service</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(Number(value))}
-                    value={field.value && field.value > 0 ? String(field.value) : ""}>
+                    value={field.value && field.value > 0 ? String(field.value) : ''}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select service" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent 
-                      side="bottom" 
+                    <SelectContent
+                      side="bottom"
                       align="start"
                       sideOffset={4}
                       avoidCollisions={true}
@@ -464,9 +463,9 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="Enter item description" 
-                            value={field.value || ''} 
+                          <Input
+                            placeholder="Enter item description"
+                            value={field.value || ''}
                             onChange={field.onChange}
                             onBlur={field.onBlur}
                             name={field.name}
@@ -552,7 +551,16 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
               <Button
                 type="button"
                 variant={'secondary'}
-                onClick={() => append({ description: '', qty: 1, rate: 0, amount: 0, sq_ft: 0, fixed_item: true })}>
+                onClick={() =>
+                  append({
+                    description: '',
+                    qty: 1,
+                    rate: 0,
+                    amount: 0,
+                    sq_ft: 0,
+                    fixed_item: true
+                  })
+                }>
                 + Add Line Item
               </Button>
             </div>
@@ -748,7 +756,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
           </div>
         </form>
       </Form>
-      
+
       {/* Add Customer Sheet */}
       <Sheet open={customerSheetOpen} onOpenChange={setCustomerSheetOpen}>
         <SheetContent className="w-full sm:max-w-lg px-2">

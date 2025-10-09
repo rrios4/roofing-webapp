@@ -18,15 +18,15 @@ export const addQuoteFormSchema = z.object({
         description: z.string().min(1, 'Description is required'),
         qty: z.number().min(1, 'Quantity must be at least 1'), // Ensure quantity is positive
         amount: z.number().positive(), // Ensure amount is positive
-        subtotal: z.number().positive(), // Added subtotal to the schema
+        subtotal: z.number().positive() // Added subtotal to the schema
       })
     )
-    .min(1, "At least one line item is required.") // Enforce at least one item
+    .min(1, 'At least one line item is required.') // Enforce at least one item
     .optional(), // Allow for optional line items
   custom_street_address: z.string().optional(),
   custom_city: z.string().optional(),
   custom_state: z.string().optional(),
-  custom_zipcode: z.string().optional(),
+  custom_zipcode: z.string().optional()
 });
 
 // Schema for updating an existing quote
@@ -49,13 +49,13 @@ export const updateQuoteFormSchema = z.object({
         description: z.string().min(1, 'Description is required'),
         qty: z.number().min(1, 'Quantity must be at least 1'),
         amount: z.number().positive(),
-        subtotal: z.number().positive(),
+        subtotal: z.number().positive()
       })
     )
-    .min(1, "At least one line item is required.")
+    .min(1, 'At least one line item is required.')
     .optional(),
   custom_street_address: z.string().optional(),
   custom_city: z.string().optional(),
   custom_state: z.string().optional(),
-  custom_zipcode: z.string().optional(),
+  custom_zipcode: z.string().optional()
 });

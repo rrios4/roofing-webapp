@@ -34,11 +34,11 @@ export const addInvoiceFormSchema = z.object({
         rate: z.number().nonnegative('Rate must be non-negative'),
         amount: z.number().positive('Amount must be positive'),
         sq_ft: z.number().optional(),
-        fixed_item: z.boolean().default(false),
+        fixed_item: z.boolean().default(false)
       })
     )
-    .min(1, "At least one line item is required.")
-    .optional(), // Allow for optional line items
+    .min(1, 'At least one line item is required.')
+    .optional() // Allow for optional line items
 });
 
 // Schema for updating an existing invoice
@@ -77,9 +77,9 @@ export const updateInvoiceFormSchema = z.object({
         rate: z.number().nonnegative('Rate must be non-negative'),
         amount: z.number().positive('Amount must be positive'),
         sq_ft: z.number().optional(),
-        fixed_item: z.boolean().default(false),
+        fixed_item: z.boolean().default(false)
       })
     )
-    .min(1, "At least one line item is required.")
-    .optional(),
+    .min(1, 'At least one line item is required.')
+    .optional()
 });

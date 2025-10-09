@@ -51,8 +51,11 @@ class GoogleService {
    */
   async initialize(): Promise<boolean> {
     try {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+        error
+      } = await supabase.auth.getSession();
+
       if (error || !session) {
         console.error('No active session found:', error);
         return false;
@@ -60,7 +63,7 @@ class GoogleService {
 
       // Get Google access token from Supabase session
       const googleAccessToken = session.provider_token;
-      
+
       if (!googleAccessToken) {
         console.error('No Google access token found in session');
         return false;
@@ -88,7 +91,7 @@ class GoogleService {
    * Generic method to make authenticated requests to Google APIs
    */
   private async makeGoogleApiRequest(
-    endpoint: string, 
+    endpoint: string,
     options: RequestInit = {}
   ): Promise<Response> {
     await this.refreshTokenIfNeeded();
@@ -100,10 +103,10 @@ class GoogleService {
     const response = await fetch(endpoint, {
       ...options,
       headers: {
-        'Authorization': `Bearer ${this.accessToken}`,
+        Authorization: `Bearer ${this.accessToken}`,
         'Content-Type': 'application/json',
-        ...options.headers,
-      },
+        ...options.headers
+      }
     });
 
     if (!response.ok) {
@@ -119,17 +122,23 @@ class GoogleService {
   /**
    * Send an email via Gmail API
    */
-  async sendEmail(message: EmailMessage): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  async sendEmail(
+    message: EmailMessage
+  ): Promise<{ success: boolean; messageId?: string; error?: string }> {
     try {
       const emailContent = this.createEmailContent(message);
-      
+
       const response = await this.makeGoogleApiRequest(
         'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
         {
           method: 'POST',
           body: JSON.stringify({
-            raw: Buffer.from(emailContent, 'utf-8').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-          }),
+            raw: Buffer.from(emailContent, 'utf-8')
+              .toString('base64')
+              .replace(/\+/g, '-')
+              .replace(/\//g, '_')
+              .replace(/=+$/, '')
+          })
         }
       );
 
@@ -156,7 +165,7 @@ class GoogleService {
       );
 
       const data = await response.json();
-      
+
       if (!data.messages) {
         return [];
       }
@@ -198,7 +207,11 @@ class GoogleService {
   /**
    * Get user's Gmail profile
    */
-  async getUserProfile(): Promise<{ emailAddress?: string; messagesTotal?: number; threadsTotal?: number }> {
+  async getUserProfile(): Promise<{
+    emailAddress?: string;
+    messagesTotal?: number;
+    threadsTotal?: number;
+  }> {
     try {
       const response = await this.makeGoogleApiRequest(
         'https://gmail.googleapis.com/gmail/v1/users/me/profile'
@@ -216,7 +229,10 @@ class GoogleService {
   /**
    * List files from Google Drive
    */
-  async getDriveFiles(query?: string, maxResults: number = 10): Promise<Array<{ id: string; name: string; mimeType: string }>> {
+  async getDriveFiles(
+    query?: string,
+    maxResults: number = 10
+  ): Promise<Array<{ id: string; name: string; mimeType: string }>> {
     try {
       const params = new URLSearchParams({
         pageSize: maxResults.toString(),
@@ -240,8 +256,8 @@ class GoogleService {
    * Upload a file to Google Drive
    */
   async uploadFileToDrive(
-    fileName: string, 
-    fileContent: string, 
+    fileName: string,
+    fileContent: string,
     mimeType: string,
     folderId?: string
   ): Promise<{ success: boolean; fileId?: string; error?: string }> {
@@ -261,9 +277,9 @@ class GoogleService {
           method: 'POST',
           body: form,
           headers: {
-            'Authorization': `Bearer ${this.accessToken}`,
+            Authorization: `Bearer ${this.accessToken}`
             // Don't set Content-Type header, let the browser set it with boundary
-          },
+          }
         }
       );
 
@@ -312,7 +328,7 @@ class GoogleService {
         `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`,
         {
           method: 'POST',
-          body: JSON.stringify(event),
+          body: JSON.stringify(event)
         }
       );
 
@@ -346,7 +362,7 @@ class GoogleService {
 
     if (message.attachments && message.attachments.length > 0) {
       emailContent += `Content-Type: multipart/mixed; boundary="${boundary}"\r\n\r\n`;
-      
+
       // Email body part
       emailContent += `--${boundary}\r\n`;
       emailContent += `Content-Type: text/html; charset="UTF-8"\r\n`;
@@ -354,7 +370,7 @@ class GoogleService {
       emailContent += `${message.htmlBody || message.textBody || ''}\r\n`;
 
       // Attachment parts
-      message.attachments.forEach(attachment => {
+      message.attachments.forEach((attachment) => {
         emailContent += `--${boundary}\r\n`;
         emailContent += `Content-Type: ${attachment.mimeType}; name="${attachment.filename}"\r\n`;
         emailContent += `Content-Disposition: attachment; filename="${attachment.filename}"\r\n`;

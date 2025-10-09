@@ -8,7 +8,7 @@ interface QuoteItemsTableProps {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 15,
+    marginBottom: 15
   },
   sectionTitle: {
     fontSize: 9,
@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginBottom: 6,
     textTransform: 'uppercase',
-    letterSpacing: 0.3,
+    letterSpacing: 0.3
   },
   table: {
     borderWidth: 1,
     borderColor: '#e5e7eb',
-    borderRadius: 4,
+    borderRadius: 4
   },
   tableHeader: {
     flexDirection: 'row',
@@ -29,29 +29,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
     paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
   tableHeaderCell: {
     fontSize: 7,
     fontWeight: 'bold',
     color: '#374151',
     textTransform: 'uppercase',
-    letterSpacing: 0.3,
+    letterSpacing: 0.3
   },
   descriptionHeader: {
-    flex: 3,
+    flex: 3
   },
   quantityHeader: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   rateHeader: {
     flex: 1.2,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   amountHeader: {
     flex: 1.2,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   tableRow: {
     flexDirection: 'row',
@@ -59,47 +59,47 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f3f4f6',
     paddingVertical: 6,
     paddingHorizontal: 8,
-    minHeight: 24,
+    minHeight: 24
   },
   lastRow: {
-    borderBottomWidth: 0,
+    borderBottomWidth: 0
   },
   tableCell: {
     fontSize: 8,
-    color: '#1f2937',
+    color: '#1f2937'
   },
   descriptionCell: {
-    flex: 3,
+    flex: 3
   },
   quantityCell: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   rateCell: {
     flex: 1.2,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   amountCell: {
     flex: 1.2,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   itemDescription: {
     fontSize: 8,
     color: '#1f2937',
     fontWeight: 'medium',
-    marginBottom: 1,
+    marginBottom: 1
   },
   itemDetails: {
     fontSize: 7,
-    color: '#6b7280',
+    color: '#6b7280'
   },
   emptyState: {
     padding: 20,
     textAlign: 'center',
     color: '#6b7280',
     fontSize: 8,
-    fontStyle: 'italic',
-  },
+    fontStyle: 'italic'
+  }
 });
 
 export const QuoteItemsTable: React.FC<QuoteItemsTableProps> = ({ quote }) => {
@@ -107,7 +107,7 @@ export const QuoteItemsTable: React.FC<QuoteItemsTableProps> = ({ quote }) => {
     if (amount === null || amount === undefined) return '$0.00';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'USD'
     }).format(amount);
   };
 
@@ -132,41 +132,23 @@ export const QuoteItemsTable: React.FC<QuoteItemsTableProps> = ({ quote }) => {
         <View style={styles.table}>
           {/* Table Header */}
           <View style={styles.tableHeader}>
-            <Text style={[styles.tableHeaderCell, styles.descriptionHeader]}>
-              Description
-            </Text>
-            <Text style={[styles.tableHeaderCell, styles.quantityHeader]}>
-              Qty
-            </Text>
-            <Text style={[styles.tableHeaderCell, styles.rateHeader]}>
-              Rate
-            </Text>
-            <Text style={[styles.tableHeaderCell, styles.amountHeader]}>
-              Amount
-            </Text>
+            <Text style={[styles.tableHeaderCell, styles.descriptionHeader]}>Description</Text>
+            <Text style={[styles.tableHeaderCell, styles.quantityHeader]}>Qty</Text>
+            <Text style={[styles.tableHeaderCell, styles.rateHeader]}>Rate</Text>
+            <Text style={[styles.tableHeaderCell, styles.amountHeader]}>Amount</Text>
           </View>
 
           {/* Single Service Row */}
           <View style={[styles.tableRow, styles.lastRow]}>
             <View style={styles.descriptionCell}>
-              <Text style={styles.itemDescription}>
-                {quote.service?.name || 'Roofing Service'}
-              </Text>
+              <Text style={styles.itemDescription}>{quote.service?.name || 'Roofing Service'}</Text>
               {quote.measurement_note && (
-                <Text style={styles.itemDetails}>
-                  {quote.measurement_note}
-                </Text>
+                <Text style={styles.itemDetails}>{quote.measurement_note}</Text>
               )}
             </View>
-            <Text style={[styles.tableCell, styles.quantityCell]}>
-              1
-            </Text>
-            <Text style={[styles.tableCell, styles.rateCell]}>
-              Fixed
-            </Text>
-            <Text style={[styles.tableCell, styles.amountCell]}>
-              {formatMoney(quote.total)}
-            </Text>
+            <Text style={[styles.tableCell, styles.quantityCell]}>1</Text>
+            <Text style={[styles.tableCell, styles.rateCell]}>Fixed</Text>
+            <Text style={[styles.tableCell, styles.amountCell]}>{formatMoney(quote.total)}</Text>
           </View>
         </View>
       </View>
@@ -179,18 +161,10 @@ export const QuoteItemsTable: React.FC<QuoteItemsTableProps> = ({ quote }) => {
       <View style={styles.table}>
         {/* Table Header */}
         <View style={styles.tableHeader}>
-          <Text style={[styles.tableHeaderCell, styles.descriptionHeader]}>
-            Description
-          </Text>
-          <Text style={[styles.tableHeaderCell, styles.quantityHeader]}>
-            Qty
-          </Text>
-          <Text style={[styles.tableHeaderCell, styles.rateHeader]}>
-            Rate
-          </Text>
-          <Text style={[styles.tableHeaderCell, styles.amountHeader]}>
-            Amount
-          </Text>
+          <Text style={[styles.tableHeaderCell, styles.descriptionHeader]}>Description</Text>
+          <Text style={[styles.tableHeaderCell, styles.quantityHeader]}>Qty</Text>
+          <Text style={[styles.tableHeaderCell, styles.rateHeader]}>Rate</Text>
+          <Text style={[styles.tableHeaderCell, styles.amountHeader]}>Amount</Text>
         </View>
 
         {/* Table Rows */}
@@ -201,17 +175,12 @@ export const QuoteItemsTable: React.FC<QuoteItemsTableProps> = ({ quote }) => {
           return (
             <View
               key={`${item.id || index}`}
-              style={[styles.tableRow, ...(isLastRow ? [styles.lastRow] : [])]}
-            >
+              style={[styles.tableRow, ...(isLastRow ? [styles.lastRow] : [])]}>
               <View style={styles.descriptionCell}>
                 <Text style={styles.itemDescription}>
                   {item.description || 'No description provided'}
                 </Text>
-                {item.sq_ft && (
-                  <Text style={styles.itemDetails}>
-                    Square feet: {item.sq_ft}
-                  </Text>
-                )}
+                {item.sq_ft && <Text style={styles.itemDetails}>Square feet: {item.sq_ft}</Text>}
               </View>
               <Text style={[styles.tableCell, styles.quantityCell]}>
                 {formatQuantity(item.qty)}
@@ -219,9 +188,7 @@ export const QuoteItemsTable: React.FC<QuoteItemsTableProps> = ({ quote }) => {
               <Text style={[styles.tableCell, styles.rateCell]}>
                 {item.fixed_item ? 'Fixed' : formatMoney(item.rate)}
               </Text>
-              <Text style={[styles.tableCell, styles.amountCell]}>
-                {formatMoney(item.amount)}
-              </Text>
+              <Text style={[styles.tableCell, styles.amountCell]}>{formatMoney(item.amount)}</Text>
             </View>
           );
         })}

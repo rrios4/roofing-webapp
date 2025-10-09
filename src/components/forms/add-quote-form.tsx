@@ -63,7 +63,7 @@ const formSwitches = [
   }
 ];
 
-export default function AddQuoteForm({}: Props) {
+export default function AddQuoteForm() {
   const queryClient = useQueryClient();
   const { quotes } = useFetchQuotes();
   const { customers } = useFetchCustomers();
@@ -80,13 +80,13 @@ export default function AddQuoteForm({}: Props) {
   const [customerNoteSwitch, setCustomerNoteSwitch] = useState(false);
   const [customerSheetOpen, setCustomerSheetOpen] = useState(false);
 
-    const form = useForm<z.infer<typeof addQuoteFormSchema>>({
+  const form = useForm<z.infer<typeof addQuoteFormSchema>>({
     resolver: zodResolver(addQuoteFormSchema),
     defaultValues: {
       quote_number: undefined, // Change from 0 to undefined so placeholder shows
       customer_id: 0,
       service_id: undefined, // Change from 0 to undefined
-      status_id: undefined,  // Change from 0 to undefined
+      status_id: undefined, // Change from 0 to undefined
       quote_date: new Date(),
       expiration_date: new Date(),
       line_items: [{ description: '', qty: 1, amount: 0, subtotal: 0 }], // Start with one empty line item
@@ -127,7 +127,7 @@ export default function AddQuoteForm({}: Props) {
     }));
     form.setValue('line_items', updatedLineItems);
     // calculateNextQuoteNumber(quotes);
-  }, [lineItems, form.setValue]);
+  }, [lineItems, form]);
 
   const calculateSubtotal = () => {
     return (lineItems ?? []).reduce((sum, item) => sum + item.subtotal, 0);
@@ -195,7 +195,7 @@ export default function AddQuoteForm({}: Props) {
     } catch (error) {
       alert('Failed to create quote: ' + error);
     }
-  }
+  };
 
   return (
     <div className="w-full">
@@ -218,8 +218,7 @@ export default function AddQuoteForm({}: Props) {
                       variant="outline"
                       size="icon"
                       onClick={() => setCustomerSheetOpen(true)}
-                      className="shrink-0 h-10 w-10"
-                    >
+                      className="shrink-0 h-10 w-10">
                       <PlusIcon className="h-4 w-4" />
                     </Button>
                   </div>
@@ -258,7 +257,9 @@ export default function AddQuoteForm({}: Props) {
                     <FormLabel>Select Status</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
-                      value={field.value && field.value !== 0 ? String(field.value) : undefined}> {/* Use undefined instead of empty string */}
+                      value={field.value && field.value !== 0 ? String(field.value) : undefined}>
+                      {' '}
+                      {/* Use undefined instead of empty string */}
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select status for quote" />
@@ -347,7 +348,9 @@ export default function AddQuoteForm({}: Props) {
                   <FormLabel>Select Service</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(Number(value))}
-                    value={field.value && field.value !== 0 ? String(field.value) : undefined}> {/* Use undefined instead of empty string */}
+                    value={field.value && field.value !== 0 ? String(field.value) : undefined}>
+                    {' '}
+                    {/* Use undefined instead of empty string */}
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a roofing service..." />
@@ -681,11 +684,11 @@ export default function AddQuoteForm({}: Props) {
           </div>
         </form>
       </Form>
-      
+
       {/* Add Customer Sheet */}
       <Sheet open={customerSheetOpen} onOpenChange={setCustomerSheetOpen}>
-        <SheetContent className='w-full sm:max-w-lg px-2'>
-          <SheetHeader className='px-4'>
+        <SheetContent className="w-full sm:max-w-lg px-2">
+          <SheetHeader className="px-4">
             <SheetTitle>Add New Customer</SheetTitle>
           </SheetHeader>
           <AddCustomerForm setOpen={setCustomerSheetOpen} />

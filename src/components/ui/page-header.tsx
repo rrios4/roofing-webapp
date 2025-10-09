@@ -24,7 +24,14 @@ type Props = {
   showActionButton?: boolean;
   actionButtonText?: string;
   actionButtonIcon?: React.ReactNode;
-  actionButtonVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'primary';
+  actionButtonVariant?:
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'link'
+    | 'primary';
   onActionClick?: () => void;
   // Sheet props (when using sheet for action)
   useSheet?: boolean;
@@ -151,7 +158,7 @@ export function PageHeader({
   const [open, setOpen] = React.useState(false);
 
   // Support legacy prop
-  const buttonText = actionButtonText || addItemTextButton || "Add Item";
+  const buttonText = actionButtonText || addItemTextButton || 'Add Item';
 
   const handleActionClick = () => {
     if (onActionClick) {
@@ -165,20 +172,19 @@ export function PageHeader({
     <div className={`flex flex-col w-full gap-4 ${headerClassName || ''}`}>
       <div className="flex flex-col w-full justify-between mt-4 md:mt-4 md:flex-row gap-4">
         <div>
-          <p className={`text-[24px] md:text-[24px] font-bold ${titleClassName || ''}`}>
-            {title}
-          </p>
+          <p className={`text-[24px] md:text-[24px] font-bold ${titleClassName || ''}`}>{title}</p>
           {subheading && (
-            <p className={`text-[14px] font-[400] text-muted-foreground ${subheadingClassName || ''}`}>
+            <p
+              className={`text-[14px] font-[400] text-muted-foreground ${subheadingClassName || ''}`}>
               {subheading}
             </p>
           )}
         </div>
         <div className="flex gap-2">
           {/* Custom actions take precedence */}
-          {customActions || (
-            showActionButton && (
-              useSheet ? (
+          {customActions ||
+            (showActionButton &&
+              (useSheet ? (
                 <Sheet open={open} onOpenChange={setOpen}>
                   <SheetTrigger asChild>
                     <Button variant={actionButtonVariant} size={'sm'}>
@@ -201,9 +207,7 @@ export function PageHeader({
                   {actionButtonIcon}
                   {buttonText}
                 </Button>
-              )
-            )
-          )}
+              )))}
         </div>
       </div>
       {showSeparator && (

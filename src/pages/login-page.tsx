@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 type Props = {};
 
-export default function LoginPage({}: Props) {
+export default function LoginPage() {
   const navigate = useNavigate();
   const auth = useAuth();
   const { toast } = useToast();
@@ -54,11 +54,7 @@ export default function LoginPage({}: Props) {
           </p>
           <form onSubmit={handleGoogleSignin}>
             <Button variant={'outline'} className="w-full" type="submit">
-              <img
-                src="/assets/google-icon-144.png"
-                alt='Google Icon'
-                className="mr-2 h-4 w-4"
-              />{' '}
+              <img src="/assets/google-icon-144.png" alt="Google Icon" className="mr-2 h-4 w-4" />{' '}
               Sign in with Google
             </Button>
           </form>

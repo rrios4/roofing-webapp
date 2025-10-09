@@ -26,7 +26,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import {
   arrayOfMemojiFileNames,
   formatDateWithAbbreviatedMonth,
-    formatDateTimeWithAbbreviatedMonth,
+  formatDateTimeWithAbbreviatedMonth,
   formatMoneyValue,
   formatNumber
 } from '../lib/utils';
@@ -277,7 +277,9 @@ export const quoteColumns = [
     cell: ({ row }: any) => {
       const quote = row.original;
       return (
-        <p className="font-[400] text-[14px]">{formatDateTimeWithAbbreviatedMonth(quote.updated_at)}</p>
+        <p className="font-[400] text-[14px]">
+          {formatDateTimeWithAbbreviatedMonth(quote.updated_at)}
+        </p>
       );
     },
     header: ({ column }) => (
@@ -300,7 +302,7 @@ export const quoteColumns = [
       const quote = row.original;
       return (
         <div className="flex gap-2">
-          <UpdateQuoteSheet 
+          <UpdateQuoteSheet
             quote={quote}
             trigger={
               <Button variant={'outline'} size={'icon'}>

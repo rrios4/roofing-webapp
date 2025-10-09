@@ -1,6 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { SettingsIcon, HammerIcon, ChevronRightIcon, TagIcon, ListIcon, RefreshCwIcon, ServerIcon, DatabaseIcon, GlobeIcon, ZapIcon, ShieldIcon, UsersIcon, HardDriveIcon, ActivityIcon } from 'lucide-react';
+import {
+  SettingsIcon,
+  HammerIcon,
+  ChevronRightIcon,
+  TagIcon,
+  ListIcon,
+  RefreshCwIcon,
+  ServerIcon,
+  DatabaseIcon,
+  GlobeIcon,
+  ZapIcon,
+  ShieldIcon,
+  UsersIcon,
+  HardDriveIcon,
+  ActivityIcon
+} from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Skeleton } from '../components/ui/skeleton';
@@ -40,7 +55,8 @@ const managementSections: ManagementSection[] = [
 ];
 
 export default function DataManagementPage() {
-  const { stats, isLoadingStats, isErrorStats, isHealthy, refetchAll } = useDataManagementOverview();
+  const { stats, isLoadingStats, isErrorStats, isHealthy, refetchAll } =
+    useDataManagementOverview();
 
   // Helper function to format dates
   const formatLastUpdated = (dateString: string | null) => {
@@ -48,7 +64,7 @@ export default function DataManagementPage() {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
@@ -90,17 +106,16 @@ export default function DataManagementPage() {
       <div className="mt-8">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Quick Overview</h3>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => refetchAll()}
-            disabled={isLoadingStats}
-          >
+            disabled={isLoadingStats}>
             <RefreshCwIcon className={`h-4 w-4 mr-2 ${isLoadingStats ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
         </div>
-        
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -170,7 +185,8 @@ export default function DataManagementPage() {
               {isLoadingStats ? (
                 <Skeleton className="h-8 w-16" />
               ) : (
-                <div className={`text-2xl font-bold ${isHealthy ? 'text-green-600' : 'text-red-600'}`}>
+                <div
+                  className={`text-2xl font-bold ${isHealthy ? 'text-green-600' : 'text-red-600'}`}>
                   {isHealthy ? 'Active' : 'Error'}
                 </div>
               )}
@@ -195,7 +211,7 @@ export default function DataManagementPage() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Infrastructure & Server Info</h3>
         </div>
-        
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -208,7 +224,8 @@ export default function DataManagementPage() {
               ) : isErrorStats ? (
                 <div className="text-2xl font-bold text-destructive">--</div>
               ) : (
-                <div className={`text-2xl font-bold ${stats?.infrastructure.database.connectionStatus === 'Connected' ? 'text-green-600' : 'text-red-600'}`}>
+                <div
+                  className={`text-2xl font-bold ${stats?.infrastructure.database.connectionStatus === 'Connected' ? 'text-green-600' : 'text-red-600'}`}>
                   {stats?.infrastructure.database.connectionStatus || 'Unknown'}
                 </div>
               )}
@@ -259,7 +276,9 @@ export default function DataManagementPage() {
                 <div className="text-2xl font-bold text-destructive">--</div>
               ) : (
                 <div className="text-2xl font-bold">
-                  {stats?.infrastructure.performance.responseTime ? `${Math.round(stats.infrastructure.performance.responseTime)}ms` : '--'}
+                  {stats?.infrastructure.performance.responseTime
+                    ? `${Math.round(stats.infrastructure.performance.responseTime)}ms`
+                    : '--'}
                 </div>
               )}
               <p className="text-xs text-muted-foreground">Response time</p>
@@ -282,11 +301,7 @@ export default function DataManagementPage() {
                 </div>
               )}
               <p className="text-xs text-muted-foreground">
-                {isLoadingStats ? (
-                  <Skeleton className="h-3 w-16" />
-                ) : (
-                  `Project ID`
-                )}
+                {isLoadingStats ? <Skeleton className="h-3 w-16" /> : `Project ID`}
               </p>
             </CardContent>
           </Card>
@@ -298,7 +313,7 @@ export default function DataManagementPage() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Database Usage & Performance</h3>
         </div>
-        
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -352,7 +367,9 @@ export default function DataManagementPage() {
                 <div className="text-2xl font-bold text-destructive">--</div>
               ) : (
                 <div className="text-2xl font-bold">
-                  {stats?.infrastructure.performance.queryTime ? `${Math.round(stats.infrastructure.performance.queryTime)}ms` : '--'}
+                  {stats?.infrastructure.performance.queryTime
+                    ? `${Math.round(stats.infrastructure.performance.queryTime)}ms`
+                    : '--'}
                 </div>
               )}
               <p className="text-xs text-muted-foreground">Average query latency</p>
@@ -375,7 +392,8 @@ export default function DataManagementPage() {
                 </div>
               )}
               <p className="text-xs text-muted-foreground">
-                {stats?.infrastructure.database.poolStats.activeConnections || '--'} active connections
+                {stats?.infrastructure.database.poolStats.activeConnections || '--'} active
+                connections
               </p>
             </CardContent>
           </Card>
@@ -387,7 +405,7 @@ export default function DataManagementPage() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Security & Features</h3>
         </div>
-        
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -400,7 +418,8 @@ export default function DataManagementPage() {
               ) : isErrorStats ? (
                 <div className="text-2xl font-bold text-destructive">--</div>
               ) : (
-                <div className={`text-2xl font-bold ${stats?.infrastructure.security.rls ? 'text-green-600' : 'text-yellow-600'}`}>
+                <div
+                  className={`text-2xl font-bold ${stats?.infrastructure.security.rls ? 'text-green-600' : 'text-yellow-600'}`}>
                   {stats?.infrastructure.security.rls ? 'Enabled' : 'Disabled'}
                 </div>
               )}
@@ -421,7 +440,8 @@ export default function DataManagementPage() {
               ) : isErrorStats ? (
                 <div className="text-2xl font-bold text-destructive">--</div>
               ) : (
-                <div className={`text-2xl font-bold ${stats?.infrastructure.supabase.edgeFunctions ? 'text-green-600' : 'text-gray-600'}`}>
+                <div
+                  className={`text-2xl font-bold ${stats?.infrastructure.supabase.edgeFunctions ? 'text-green-600' : 'text-gray-600'}`}>
                   {stats?.infrastructure.supabase.edgeFunctions ? 'Available' : 'Disabled'}
                 </div>
               )}
@@ -443,7 +463,10 @@ export default function DataManagementPage() {
                 <div className="text-2xl font-bold text-destructive">--</div>
               ) : (
                 <div className="text-2xl font-bold">
-                  {(stats?.infrastructure.security.authUsers !== null && stats?.infrastructure.security.authUsers !== undefined) ? stats.infrastructure.security.authUsers : 'Private'}
+                  {stats?.infrastructure.security.authUsers !== null &&
+                  stats?.infrastructure.security.authUsers !== undefined
+                    ? stats.infrastructure.security.authUsers
+                    : 'Private'}
                 </div>
               )}
               <p className="text-xs text-muted-foreground">Registered users</p>

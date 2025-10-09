@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginBottom: 15,
+    marginBottom: 15
   },
   summaryBox: {
     width: '45%',
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#e5e7eb',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   summaryRow: {
     flexDirection: 'row',
@@ -26,64 +26,64 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: '#f3f4f6'
   },
   subtotalRow: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   taxRow: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   totalRow: {
     backgroundColor: '#dbeafe',
     borderBottomWidth: 0,
     borderTopWidth: 2,
-    borderTopColor: '#3b82f6',
+    borderTopColor: '#3b82f6'
   },
   amountDueRow: {
     backgroundColor: '#f3e8ff',
     borderBottomWidth: 0,
     borderTopWidth: 2,
-    borderTopColor: '#8b5cf6',
+    borderTopColor: '#8b5cf6'
   },
   label: {
     fontSize: 8,
-    color: '#374151',
+    color: '#374151'
   },
   value: {
     fontSize: 8,
     color: '#1f2937',
-    fontWeight: 'medium',
+    fontWeight: 'medium'
   },
   totalLabel: {
     fontSize: 9,
     color: '#1e40af',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   totalValue: {
     fontSize: 9,
     color: '#1e40af',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   amountDueLabel: {
     fontSize: 10,
     color: '#7c3aed',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   amountDueValue: {
     fontSize: 10,
     color: '#7c3aed',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   paidLabel: {
     fontSize: 8,
-    color: '#059669',
+    color: '#059669'
   },
   paidValue: {
     fontSize: 8,
     color: '#059669',
-    fontWeight: 'medium',
-  },
+    fontWeight: 'medium'
+  }
 });
 
 export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({ invoice }) => {
@@ -91,7 +91,7 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({ invoice }) => {
     if (amount === null || amount === undefined) return '$0.00';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'USD'
     }).format(amount);
   };
 
@@ -116,7 +116,7 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({ invoice }) => {
   const total = invoice.total || subtotal; // Use subtotal as total when no tax
   // const taxAmount = total - subtotal; // TODO: Add tax functionality later
   const totalPayments = calculateTotalPayments();
-  const amountDue = invoice.amount_due || (total - totalPayments);
+  const amountDue = invoice.amount_due || total - totalPayments;
 
   return (
     <View style={styles.container}>

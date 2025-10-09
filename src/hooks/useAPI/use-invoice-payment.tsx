@@ -64,7 +64,7 @@ export const useDeleteInvoicePayment = (toast: any) => {
             queryKey: ['invoiceById', data.invoice_number.toString()]
           });
         }
-        
+
         toast({
           position: 'top',
           title: `Successfully Deleted Payment`,

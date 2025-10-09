@@ -49,7 +49,7 @@ export const useFetchCustomerByID = (id: any) => {
     isError
   } = useQuery({
     queryKey: ['fetchCustomerById', id],
-    queryFn: async() => await fetchCustomerById(id)
+    queryFn: async () => await fetchCustomerById(id)
   });
 
   return { customerById, isLoading, isError };
@@ -88,7 +88,7 @@ export const useFetchCustomerQuotes = (customerId: any) => {
 export const useDeleteCustomer = (toast: any) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  return useMutation((itemNumber:number) => deleteCustomer(itemNumber), {
+  return useMutation((itemNumber: number) => deleteCustomer(itemNumber), {
     onError: (error: any) => {
       toast({
         position: 'top',
@@ -117,7 +117,7 @@ export const useDeleteCustomer = (toast: any) => {
 // Custom hook to create a new customer
 export const useCreateCustomer = (toast?: any, setOpen?: any) => {
   const queryClient = useQueryClient();
-  return useMutation((newCustomerObject:CustomerInsert) => createCustomer(newCustomerObject), {
+  return useMutation((newCustomerObject: CustomerInsert) => createCustomer(newCustomerObject), {
     onError: (error: any) => {
       // toast({
       //   position: 'top',

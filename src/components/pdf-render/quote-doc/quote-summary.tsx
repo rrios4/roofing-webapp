@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginBottom: 15,
+    marginBottom: 15
   },
   summaryBox: {
     width: '45%',
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#e5e7eb',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   summaryRow: {
     flexDirection: 'row',
@@ -27,68 +27,68 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: '#f3f4f6'
   },
   subtotalRow: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   totalRow: {
     backgroundColor: '#dbeafe',
     borderBottomWidth: 0,
     borderTopWidth: 2,
-    borderTopColor: '#3b82f6',
+    borderTopColor: '#3b82f6'
   },
   expirationRow: {
     backgroundColor: '#fef3c7',
     borderBottomWidth: 0,
     borderTopWidth: 1,
-    borderTopColor: '#f59e0b',
+    borderTopColor: '#f59e0b'
   },
   expiredRow: {
     backgroundColor: '#fee2e2',
     borderBottomWidth: 0,
     borderTopWidth: 1,
-    borderTopColor: '#ef4444',
+    borderTopColor: '#ef4444'
   },
   label: {
     fontSize: 8,
-    color: '#374151',
+    color: '#374151'
   },
   value: {
     fontSize: 8,
     color: '#1f2937',
-    fontWeight: 'medium',
+    fontWeight: 'medium'
   },
   totalLabel: {
     fontSize: 9,
     color: '#1e40af',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   totalValue: {
     fontSize: 9,
     color: '#1e40af',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   expirationLabel: {
     fontSize: 8,
     color: '#d97706',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   expirationValue: {
     fontSize: 8,
     color: '#d97706',
-    fontWeight: 'medium',
+    fontWeight: 'medium'
   },
   expiredLabel: {
     fontSize: 8,
     color: '#dc2626',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   expiredValue: {
     fontSize: 8,
     color: '#dc2626',
-    fontWeight: 'medium',
-  },
+    fontWeight: 'medium'
+  }
 });
 
 export const QuoteSummary: React.FC<QuoteSummaryProps> = ({ quote }) => {
@@ -96,7 +96,7 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({ quote }) => {
     if (amount === null || amount === undefined) return '$0.00';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'USD'
     }).format(amount);
   };
 
@@ -137,10 +137,7 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({ quote }) => {
         </View>
 
         {/* Expiration Status */}
-        <View style={[
-          styles.summaryRow, 
-          expired ? styles.expiredRow : styles.expirationRow
-        ]}>
+        <View style={[styles.summaryRow, expired ? styles.expiredRow : styles.expirationRow]}>
           <Text style={expired ? styles.expiredLabel : styles.expirationLabel}>
             {expired ? 'Quote Expired:' : 'Valid Until:'}
           </Text>
@@ -152,9 +149,7 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({ quote }) => {
         {/* Quote Status if Converted */}
         {quote.converted && (
           <View style={[styles.summaryRow, { backgroundColor: '#d1fae5' }]}>
-            <Text style={[styles.label, { color: '#059669', fontWeight: 'bold' }]}>
-              Status:
-            </Text>
+            <Text style={[styles.label, { color: '#059669', fontWeight: 'bold' }]}>Status:</Text>
             <Text style={[styles.value, { color: '#059669', fontWeight: 'bold' }]}>
               Converted to Invoice
             </Text>

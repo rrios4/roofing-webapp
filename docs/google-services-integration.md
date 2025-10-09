@@ -63,13 +63,7 @@ https://www.googleapis.com/auth/calendar.events
 import { useGoogleService } from '../hooks/useGoogleService';
 
 function MyComponent() {
-  const { 
-    isInitialized, 
-    isLoading, 
-    error, 
-    sendEmail, 
-    getMessages 
-  } = useGoogleService();
+  const { isInitialized, isLoading, error, sendEmail, getMessages } = useGoogleService();
 
   if (isLoading) return <div>Loading Google services...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -112,10 +106,10 @@ const handleSendEmail = async () => {
 const fetchMessages = async () => {
   // Get latest 10 messages
   const messages = await getMessages();
-  
+
   // Search for specific messages
   const invoiceMessages = await getMessages('subject:invoice', 20);
-  
+
   console.log('Messages:', messages);
 };
 ```
@@ -146,7 +140,7 @@ const fetchDriveFiles = async () => {
 ```tsx
 const createAppointment = async () => {
   const calendars = await getCalendars();
-  const primaryCalendar = calendars.find(cal => cal.primary);
+  const primaryCalendar = calendars.find((cal) => cal.primary);
 
   if (primaryCalendar) {
     const result = await createCalendarEvent(primaryCalendar.id, {
@@ -160,9 +154,7 @@ const createAppointment = async () => {
         dateTime: '2024-01-15T11:00:00-06:00',
         timeZone: 'America/Chicago'
       },
-      attendees: [
-        { email: 'customer@example.com' }
-      ]
+      attendees: [{ email: 'customer@example.com' }]
     });
 
     if (result.success) {
@@ -202,7 +194,7 @@ const { error, reinitialize } = useGoogleService();
 // Check for initialization errors
 if (error) {
   console.error('Google service error:', error);
-  
+
   // Try to reinitialize if needed
   await reinitialize();
 }
@@ -227,6 +219,7 @@ The integration requires the following Google OAuth scopes:
 ## Practical Use Cases for Roofing Business
 
 ### 1. Invoice Email Automation
+
 ```tsx
 // Automatically email invoices to customers
 const emailInvoice = async (invoice, customer) => {
@@ -246,6 +239,7 @@ const emailInvoice = async (invoice, customer) => {
 ```
 
 ### 2. Appointment Scheduling
+
 ```tsx
 // Create calendar events for appointments
 const scheduleInspection = async (customer, datetime) => {
@@ -260,6 +254,7 @@ const scheduleInspection = async (customer, datetime) => {
 ```
 
 ### 3. Document Management
+
 ```tsx
 // Store contracts and estimates in Drive
 const saveContract = async (customerName, contractContent) => {
@@ -311,7 +306,7 @@ function GoogleServiceTest() {
 
   const testEmail = async () => {
     if (!isInitialized) return;
-    
+
     const result = await sendEmail({
       to: ['test@example.com'],
       subject: 'Test Email',

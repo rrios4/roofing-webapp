@@ -6,17 +6,19 @@ export const transformInvoiceForPDF = (invoice: any): InvoiceDocumentData => {
   return {
     ...invoice,
     // Transform invoice_line_service to invoice_line_services with service relation
-    invoice_line_services: invoice.invoice_line_service?.map((item: any) => ({
-      ...item,
-      service: invoice.service
-    })) || [],
+    invoice_line_services:
+      invoice.invoice_line_service?.map((item: any) => ({
+        ...item,
+        service: invoice.service
+      })) || [],
     // Ensure invoice_payment is properly formatted
-    invoice_payment: invoice.invoice_payment?.map((payment: any) => ({
-      id: payment.id,
-      date_received: payment.date_received,
-      payment_method: payment.payment_method,
-      amount: payment.amount
-    })) || []
+    invoice_payment:
+      invoice.invoice_payment?.map((payment: any) => ({
+        id: payment.id,
+        date_received: payment.date_received,
+        payment_method: payment.payment_method,
+        amount: payment.amount
+      })) || []
   };
 };
 
@@ -25,10 +27,11 @@ export const transformQuoteForPDF = (quote: any): QuoteDocumentData => {
   return {
     ...quote,
     // Transform quote_line_item to include service relation if available
-    quote_line_item: quote.quote_line_item?.map((item: any) => ({
-      ...item,
-      service: item.service || quote.service
-    })) || []
+    quote_line_item:
+      quote.quote_line_item?.map((item: any) => ({
+        ...item,
+        service: item.service || quote.service
+      })) || []
   };
 };
 
