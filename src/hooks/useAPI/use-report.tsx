@@ -16,6 +16,7 @@ import {
   fetchBusinessStatusOverview,
   fetchInvoiceStatusTracking,
   getRevenueYears,
+  fetchDashboardMetrics,
   type DashboardMetrics,
   type MonthlyRevenueData,
   type BusinessStatusOverview,
@@ -129,11 +130,7 @@ export const useFetchTotalRejectedQuotes = () => {
 export const useFetchDashboardMetrics = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['dashboardMetrics'],
-    queryFn: async () => {
-      // Import the function dynamically to avoid circular import issues
-      const { fetchDashboardMetrics } = await import('../../services/api/report-service');
-      return await fetchDashboardMetrics();
-    },
+    queryFn: async () => await fetchDashboardMetrics(),
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
   });
