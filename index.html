@@ -2,16 +2,33 @@
 <html lang="en">
   <head>
     <!-- https://medium.com/appscope/changing-the-ios-status-bar-of-your-progressive-web-app-9fc8fbe8e6ab -->
+    <!-- https://medium.com/appscope/designing-native-like-progressive-web-apps-for-ios-1b3cdda1d0e8 -->
     <meta charset="utf-8" />
     <link rel="icon" href="./favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="apple-touch-icon" href="./logo192.png" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- <meta name="apple-mobile-web-app-capable" content="yes">-->
+    <!-- <meta name="apple-mobile-web-app-title" content="TheRoofingApp"> -->
+    <!-- iOS splashscreens -->
+    <link href="./assets/splashscreens/iphone5_splash.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/iphone6_splash.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/iphoneplus_splash.png" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/iphonex_splash.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/iphonexr_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/iphonexsmax_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/ipad_splash.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/ipadpro1_splash.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/ipadpro3_splash.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="./assets/splashscreens/ipadpro2_splash.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
     <!-- White Status Bar for iOS -->
     <!-- <meta name="apple-mobile-web-app-status-bar-style" content="default"> -->
     <!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> -->
+    <!-- Launch splash screen that requires image of -->
+    <!-- <link rel="apple-touch-startup-image" href="launch.png"> -->
     
-    <meta name="theme-color" content="#3182CE" />
-    <meta name="description" content="Web site created using create-react-app"/>
-    <link rel="apple-touch-icon" href="./images/The-Roofing-App-ios-icon.png" />
+    <meta name="theme-color" content="#2463EB" />
+    <meta name="description" content="The Roofing App"/>
 
     <link rel="manifest" href="./manifest.json" />
 
@@ -20,7 +37,16 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="app"></div>
-    <script type="module" src="/src/index.jsx"></script>
+    
+    <!-- Buffer polyfill initialization -->
+    <script>
+      // Initialize Buffer polyfill before the app loads
+      if (typeof global === 'undefined') {
+        var global = globalThis;
+      }
+    </script>
+    
+    <script type="module" src="/src/index.tsx"></script>
 
   </body>
 </html>

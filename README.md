@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/LogoRR-blue-circle.png" width="40%" height="60%" alt="The Roofing App Logo"><br>
+  <img style="border-radius: 20px" src="https://kcasqwspojmlwabzxloe.supabase.co/storage/v1/object/public/nextjs-website-public/The%20Roofing%20App/THR%20Typography%20Logo%20with%20Icon%20(white)%20cropped.png" width="40%" height="40%" alt="The Roofing App Logo"><br>
   <!-- <img src="https://github.com/rrios4/portfolio-v2/blob/master/assets/projects/roofingv2-webapp-poster.png?raw=true"/> -->
 </p>
 <h1 align="center">The Roofing App</h1>
@@ -20,21 +20,27 @@
 </p>
 
 ## Overview
+
 #### My web application is designed to help roofing companies streamline their data management and improve customer communication. It allows businesses to store, manage and access key information such as invoices, quotes, customer details and leads, reducing the time and effort required to create and send invoices and quotes to customers. The application also features a dashboard to easily track company progress and manage leads received through the company website, resulting in more efficient and effective business operations.
+
 </br>
 
 ## Usage
+
 This section will include installation intructions, running the app, additional resources, and deployment guides.
 
 </br>
 
 #### 1. Install npm packages for react-app
+
 ```
   npm install
 ```
+
 </br>
 
 #### 2. Add .env variables to root of react-app folder
+
 ```
   //Create file named .env
   touch .env
@@ -44,8 +50,9 @@ This section will include installation intructions, running the app, additional 
   REACT_APP_SUPABASE_URL=
   REACT_APP_SUPABASE_KEY=
 ```
+
 </br>
-To allow communication between the client-side and the DB, add the Supabase URL and private key to the .env file by copying them over. 
+To allow communication between the client-side and the DB, add the Supabase URL and private key to the .env file by copying them over.
 
 In order to obtain that information you must first start by visiting [Supabase and create an account here](https://app.supabase.com/). Once you create the account [Create a new project](https://app.supabase.com/) in the Supabase Dashboard. You can name the project whatever name you want and for the sake for dev work you can name it roofing-db-dev.
 
@@ -57,33 +64,40 @@ Before you can start the application please go to the Setup Database Schema sect
 </br>
 
 #### 3. Start app from client folder by running this command in the terminal
+
 ```
   npm start
 ```
+
 After installing the necessary packages and creating your Supabase instance, including adding the URL and Key, you can start the app by running the command. The application will be available on localhost:3000 and will prompt you to login. The login credentials can be managed in the settings of the Supabase dashboard. To ensure proper functionality, please use the provided schema for the database, including the names and fields as outlined.
 </br>
 </br>
 
 ### Deploy localy as a docker container
+
 This subsection is meant to be used once you want to deploy just the client app as a docker container.
 
-
 #### 4. Build to docker image for deployment
+
 ```
-  docker build -t my-roofing-app .  
+  docker build -t my-roofing-app .
 ```
+
 </br>
 
 #### 5. Run to docker image for deployment in port 80
+
 ```
   docker run -p 80:80 my-roofing-app
 ```
 
 ## Setting up DB Schema & Core Data
+
 ![The Roofing App v2.0 Schema](public/images/app-v2.0-erd-sketch.png)
 The purpose of this section is to provide SQL scripts that will get you up in running automatically for the app to function correctly. Without this section they app will be empty and might error out since the schema is required.
 
 Currently as for version 2.0 and greater of the application it will rely on a total of 12 tables:
+
 - customer
 - customer_type
 - invoice
@@ -110,8 +124,9 @@ Tables currently under review for v2.2 and greater:
 
 These tables will play in a role of gathering the invoices, quotes, quote request, images, documents into one place. This way we can create multiple invoices for one project and later down the line we can track expense based by a project instead of just using the invoice for the hub for a job.
 
-Below is the code that you must run in the "SQL Editor" section in you project in [Supabase](https://app.supabase.com) by copying it and running that code. 
+Below is the code that you must run in the "SQL Editor" section in you project in [Supabase](https://app.supabase.com) by copying it and running that code.
 (Note that this also includes triggers and functions that have been creating during the development of the app.)
+
 <details>
 <summary>Click here to toggle SQL code for schema only of DB</summary>
 
@@ -165,9 +180,9 @@ WITH current_month_revenue AS (
     WHERE date_received >= date_trunc('month', CURRENT_DATE - INTERVAL '1 month')
     AND date_received < date_trunc('month', CURRENT_DATE)
 )
-SELECT 
+SELECT
     current_month_revenue.monthly_revenue,
-    (current_month_revenue.monthly_revenue / 
+    (current_month_revenue.monthly_revenue /
     CASE
         WHEN last_month_revenue.last_month_revenue = 0 THEN 1
         ELSE last_month_revenue.last_month_revenue
@@ -201,7 +216,7 @@ WITH current_year_revenue AS (
     WHERE date_received >= date_trunc('year', CURRENT_DATE - INTERVAL '1 year')
     AND date_received < date_trunc('year', CURRENT_DATE)
 )
-SELECT 
+SELECT
     current_year_revenue.current_year_revenue,
     (current_year_revenue.current_year_revenue - last_year_revenue.last_year_revenue) /
     CASE
@@ -1857,6 +1872,7 @@ GRANT ALL ON SEQUENCE public.service_type_id_seq TO anon;
 GRANT ALL ON SEQUENCE public.service_type_id_seq TO authenticated;
 GRANT ALL ON SEQUENCE public.service_type_id_seq TO service_role;
 ```
+
 </details>
 </br>
 What this core data is are tables that store select values that the application uses to allow the user to select the status, type, or specific selection that belongs to a table. This are core data that you must include. The tables are:
@@ -1866,7 +1882,7 @@ What this core data is are tables that store select values that the application 
 - service
 - quote_status
 - quote_request_status
-</br>
+  </br>
 
 Note also that due script does not work currently and you can create the data manually through the GUI of Supabase "Table Editor" in your project in [Supabase](https://app.supabase.com). And its only here a reference.
 </br>
@@ -1941,38 +1957,40 @@ COPY public.quote_request_status (id, name, description, updated_at, created_at)
 \.
 
 ```
+
 </details>
 </br>
 
 ## Roadmap
+
 - [x] Initial release, version 1.0, of the Roofing web application, featuring the ability to effectively store and manage invoices, estimates, and customer information..
 - [x] Introduce version 2.0 of the Rios Roofing Company web application, featuring a complete rewrite of the React codebase, a redesigned user experience for optimized data management, the ability to handle leads, a replacement of Node.js backend with Supabase technology, enhanced customer, invoice, quote and dashboard views for improved reporting capabilities, the ability to generate PDF documents for invoices and quotes and much more. [Full changelog here](https://github.com/rrios4/roofing-webapp/releases/tag/v2.0.0)
 - [ ] Introduce version 2.5 of the Roofing Company web application, featuring a variety of improvements such as the implementation of react-tables for all current basic tables within the app, the option to send email directly to customers with just one click, a global search function across leads, quotes, invoices, and customers, a customer details page that lists all associated invoices, quotes, and requests, google maps integration for address fields, and the capability to upload images and documents for each quote and invoice.
 
 ## Package List
 
-|        Package        | Version  |                                                 Description                                                  |
-|-----------------------|----------|--------------------------------------------------------------------------------------------------------------|
-|   @chakra-ui/icons    |  2.0.2   |                         A collection of more than 900 icons for use with Chakra UI.                          |
-|   @chakra-ui/react    |  ^2.4.4  | A set of UI components for React that help you build accessible, responsive, and composable user interfaces. |
-|    @emotion/react     | ^11.10.5 |                            Emotion is a library for styling components in React.                             |
-|    @emotion/styled    | ^11.10.5 |                            Emotion is a library for styling components in React.                             |
-| @supabase/supabase-js | ^1.35.3  |  Supabase is an open-source Firebase alternative, providing realtime and RESTful APIs on top of PostgreSQL.  |
-|         axios         | ^0.21.1  |                        A promise-based HTTP client for making requests in JavaScript.                        |
-|       chart.js        |  ^4.1.1  |                                  A JavaScript library for creating charts.                                   |
-|    emotion-theming    |  11.0.0  |                     A library for theming components in React using the Emotion library.                     |
-|     framer-motion     |  ^6.5.1  |                                  A library for animating React components.                                   |
-|         luxon         |  ^3.2.1  |                          A library for working with dates and times in JavaScript.                           |
-|         react         | ^18.2.0  |                              A JavaScript library for building user interfaces.                              |
-|    react-chartjs-2    |  ^5.1.0  |                                    A wrapper for using Chart.js in React.                                    |
-|       react-dom       | ^18.2.0  |                            A package that allows React to interact with the DOM.                             |
-|    react-hook-form    |  7.33.1  |                                 A library for managing form inputs in React.                                 |
-|      react-icons      |  4.4.0   |                                A library of icons for use in React projects.                                 |
-|   react-router-dom    |  6.3.0   |                                   A library for handling routing in React.                                   |
-|     react-scripts     |  5.0.1   |                              A set of scripts for building React applications.                               |
-|     react-select      |  5.4.0   |                           A library for creating select input components in React.                           |
-|      sweetalert       |  2.1.2   |                          A library for creating customizable alerts in JavaScript.                           |
-|      web-vitals       |  2.1.4   |                               A library for measuring web performance metrics.                               |
+| Package               | Version  | Description                                                                                                  |
+| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------ |
+| @chakra-ui/icons      | 2.0.2    | A collection of more than 900 icons for use with Chakra UI.                                                  |
+| @chakra-ui/react      | ^2.4.4   | A set of UI components for React that help you build accessible, responsive, and composable user interfaces. |
+| @emotion/react        | ^11.10.5 | Emotion is a library for styling components in React.                                                        |
+| @emotion/styled       | ^11.10.5 | Emotion is a library for styling components in React.                                                        |
+| @supabase/supabase-js | ^1.35.3  | Supabase is an open-source Firebase alternative, providing realtime and RESTful APIs on top of PostgreSQL.   |
+| axios                 | ^0.21.1  | A promise-based HTTP client for making requests in JavaScript.                                               |
+| chart.js              | ^4.1.1   | A JavaScript library for creating charts.                                                                    |
+| emotion-theming       | 11.0.0   | A library for theming components in React using the Emotion library.                                         |
+| framer-motion         | ^6.5.1   | A library for animating React components.                                                                    |
+| luxon                 | ^3.2.1   | A library for working with dates and times in JavaScript.                                                    |
+| react                 | ^18.2.0  | A JavaScript library for building user interfaces.                                                           |
+| react-chartjs-2       | ^5.1.0   | A wrapper for using Chart.js in React.                                                                       |
+| react-dom             | ^18.2.0  | A package that allows React to interact with the DOM.                                                        |
+| react-hook-form       | 7.33.1   | A library for managing form inputs in React.                                                                 |
+| react-icons           | 4.4.0    | A library of icons for use in React projects.                                                                |
+| react-router-dom      | 6.3.0    | A library for handling routing in React.                                                                     |
+| react-scripts         | 5.0.1    | A set of scripts for building React applications.                                                            |
+| react-select          | 5.4.0    | A library for creating select input components in React.                                                     |
+| sweetalert            | 2.1.2    | A library for creating customizable alerts in JavaScript.                                                    |
+| web-vitals            | 2.1.4    | A library for measuring web performance metrics.                                                             |
 
 ## Contribution
 
