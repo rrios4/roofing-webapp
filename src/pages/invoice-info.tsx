@@ -570,10 +570,14 @@ export default function InvoiceInfoPage() {
                     {invoice.customer?.first_name || ''} {invoice.customer?.last_name || ''}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-200">
-                    {invoice.customer?.street_address || ''}
-                    {invoice.customer?.city ? `, ${invoice.customer.city}` : ''}
-                    {invoice.customer?.state ? `, ${invoice.customer.state}` : ''}{' '}
-                    {invoice.customer?.zipcode || ''}
+                    {invoice.bill_to_street_address || invoice.customer?.street_address || ''}
+                    {invoice.bill_to_city || invoice.customer?.city
+                      ? `, ${invoice.bill_to_city || invoice.customer?.city}`
+                      : ''}
+                    {invoice.bill_to_state || invoice.customer?.state
+                      ? `, ${invoice.bill_to_state || invoice.customer?.state}`
+                      : ''}{' '}
+                    {invoice.bill_to_zipcode || invoice.customer?.zipcode || ''}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-200">
                     {invoice.customer?.email || ''}

@@ -70,20 +70,11 @@ export const InvoiceCustomerInfo: React.FC<InvoiceCustomerInfoProps> = ({ invoic
 
   const getBillToAddress = () => {
     // Use custom billing address if provided, otherwise use customer address
-    if (invoice.bill_to && invoice.bill_to_street_address) {
-      return {
-        street: invoice.bill_to_street_address,
-        city: invoice.bill_to_city,
-        state: invoice.bill_to_state,
-        zipcode: invoice.bill_to_zipcode
-      };
-    }
-
     return {
-      street: invoice.customer.street_address,
-      city: invoice.customer.city,
-      state: invoice.customer.state,
-      zipcode: invoice.customer.zipcode
+      street: invoice.bill_to_street_address || invoice.customer.street_address,
+      city: invoice.bill_to_city || invoice.customer.city,
+      state: invoice.bill_to_state || invoice.customer.state,
+      zipcode: invoice.bill_to_zipcode || invoice.customer.zipcode
     };
   };
 
@@ -123,7 +114,9 @@ export const InvoiceCustomerInfo: React.FC<InvoiceCustomerInfoProps> = ({ invoic
           <Text style={styles.contactLine}>Phone: {invoice.customer.phone_number}</Text>
           <Text style={styles.contactLine}>Email: {invoice.customer.email}</Text>
 
-          {invoice.bill_to && <Text style={styles.billingNote}>* Custom billing address</Text>}
+          {/* {invoice.bill_to_street_address && (
+            <Text style={styles.billingNote}>* Custom billing address</Text>
+          )} */}
         </View>
       </View>
     </View>
