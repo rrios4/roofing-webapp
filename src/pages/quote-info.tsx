@@ -391,30 +391,21 @@ export default function QuoteInfoPage() {
                   <p className="mb-1 font-medium">
                     {quote.customer?.first_name || ''} {quote.customer?.last_name || ''}
                   </p>
-                  {/* Use custom address if available, otherwise use customer address */}
-                  {quote.custom_address ? (
-                    <p className="text-sm text-gray-600 dark:text-gray-200">
-                      {[
-                        quote.custom_street_address,
-                        [quote.custom_city, quote.custom_state, quote.custom_zipcode]
-                          .filter(Boolean)
-                          .join(', ')
+                  {/* Display custom address if available, otherwise fall back to customer address */}
+                  <p className="text-sm text-gray-600 dark:text-gray-200">
+                    {[
+                      quote.custom_street_address || quote.customer?.street_address,
+                      [
+                        quote.custom_city || quote.customer?.city,
+                        quote.custom_state || quote.customer?.state,
+                        quote.custom_zipcode || quote.customer?.zipcode
                       ]
                         .filter(Boolean)
-                        .join(', ')}
-                    </p>
-                  ) : (
-                    <p className="text-sm text-gray-600 dark:text-gray-200">
-                      {[
-                        quote.customer?.street_address,
-                        [quote.customer?.city, quote.customer?.state, quote.customer?.zipcode]
-                          .filter(Boolean)
-                          .join(', ')
-                      ]
-                        .filter(Boolean)
-                        .join(', ') || 'No address provided'}
-                    </p>
-                  )}
+                        .join(', ')
+                    ]
+                      .filter(Boolean)
+                      .join(', ') || 'No address provided'}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-200">
                     {quote.customer?.email || ''}
                   </p>

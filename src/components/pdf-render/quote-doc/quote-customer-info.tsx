@@ -69,21 +69,12 @@ export const QuoteCustomerInfo: React.FC<QuoteCustomerInfoProps> = ({ quote }) =
   };
 
   const getQuoteToAddress = () => {
-    // Use custom address if provided, otherwise use customer address
-    if (quote.custom_address && quote.custom_street_address) {
-      return {
-        street: quote.custom_street_address,
-        city: quote.custom_city,
-        state: quote.custom_state,
-        zipcode: quote.custom_zipcode
-      };
-    }
-
+    // Prioritize custom address fields, fall back to customer address
     return {
-      street: quote.customer.street_address,
-      city: quote.customer.city,
-      state: quote.customer.state,
-      zipcode: quote.customer.zipcode
+      street: quote.custom_street_address || quote.customer.street_address,
+      city: quote.custom_city || quote.customer.city,
+      state: quote.custom_state || quote.customer.state,
+      zipcode: quote.custom_zipcode || quote.customer.zipcode
     };
   };
 
@@ -117,7 +108,12 @@ export const QuoteCustomerInfo: React.FC<QuoteCustomerInfoProps> = ({ quote }) =
 
           {quote.service && <Text style={styles.serviceNote}>Service: {quote.service.name}</Text>}
 
-          {quote.custom_address && <Text style={styles.serviceNote}>* Custom service address</Text>}
+          {(quote.custom_street_address ||
+            quote.custom_city ||
+            quote.custom_state ||
+            quote.custom_zipcode) && (
+            <Text style={styles.serviceNote}>* Custom service address</Text>
+          )}
         </View>
       </View>
     </View>
