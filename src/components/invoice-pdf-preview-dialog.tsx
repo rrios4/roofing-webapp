@@ -11,8 +11,15 @@ import {
 } from './ui/dialog';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { CloudDownloadIcon, XIcon, FileTextIcon, LoaderIcon } from 'lucide-react';
+import { Checkbox } from './ui/checkbox';
+import { CloudDownloadIcon, XIcon, FileTextIcon, LoaderIcon, CheckIcon } from 'lucide-react';
 import { ModernInvoiceDocument, InvoiceDocumentData } from './pdf-render/modern-invoice-doc';
+
+interface PDFDisplayOptions {
+  showPaymentHistory: boolean;
+  showCustomerNotes: boolean;
+  showPaymentInformation: boolean;
+}
 
 interface InvoicePDFPreviewDialogProps {
   invoice: InvoiceDocumentData;
@@ -25,6 +32,11 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPreviewLoading, setIsPreviewLoading] = useState(true);
+  const [displayOptions, setDisplayOptions] = useState<PDFDisplayOptions>({
+    showPaymentHistory: true,
+    showCustomerNotes: true,
+    showPaymentInformation: true
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -55,11 +67,18 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
     return `INV-${invoiceNumber}_${customerName}.pdf`;
   };
 
+  const toggleOption = (option: keyof PDFDisplayOptions) => {
+    setDisplayOptions((prev) => ({
+      ...prev,
+      [option]: !prev[option]
+    }));
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="w-full h-full max-w-full max-h-full p-0 sm:max-w-5xl sm:max-h-[90vh] sm:p-6 flex flex-col sm:rounded-lg">
-        <DialogHeader className="p-6 sm:p-0">
+      <DialogContent className="w-full h-full max-w-full max-h-full p-0 sm:max-w-6xl sm:max-h-[95vh] sm:p-6 flex flex-col sm:rounded-lg">
+        <DialogHeader className="flex-shrink-0 p-6 sm:p-0">
           <DialogTitle className="flex items-center gap-2">
             <FileTextIcon className="w-5 h-5 text-blue-600" />
             Invoice PDF Preview
@@ -76,26 +95,73 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
           </DialogDescription>
         </DialogHeader>
 
-        {/* PDF Preview Container */}
-        <div className="flex-1 min-h-[500px] relative border-0 sm:border border-gray-200 sm:rounded-lg overflow-hidden bg-gray-50 mx-6 sm:mx-0">
-          {isPreviewLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
-              <div className="flex flex-col items-center gap-3">
-                <LoaderIcon className="w-8 h-8 animate-spin text-blue-600" />
-                <p className="text-sm text-gray-600">Loading PDF preview...</p>
-              </div>
-            </div>
-          )}
+        {/* Scrollable Content Container */}
+        <div className="flex-1 overflow-y-auto px-6 sm:px-0">
+          {/* Display Options */}
+          <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border">
+            <h3 className="text-sm font-medium mb-3 text-gray-900 dark:text-gray-100">
+              PDF Display Options
+            </h3>
+            <div className="flex flex-wrap gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={displayOptions.showPaymentHistory}
+                  onCheckedChange={() => toggleOption('showPaymentHistory')}
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">
+                  Show Payment History
+                </span>
+                {displayOptions.showPaymentHistory && (
+                  <CheckIcon className="w-4 h-4 text-green-600" />
+                )}
+              </label>
 
-          <PDFViewer
-            width="100%"
-            height="100%"
-            className="border-0 min-h-[calc(100vh-200px)] sm:min-h-[500px]">
-            <ModernInvoiceDocument invoice={invoice} />
-          </PDFViewer>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={displayOptions.showCustomerNotes}
+                  onCheckedChange={() => toggleOption('showCustomerNotes')}
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">
+                  Show Customer Notes
+                </span>
+                {displayOptions.showCustomerNotes && (
+                  <CheckIcon className="w-4 h-4 text-green-600" />
+                )}
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={displayOptions.showPaymentInformation}
+                  onCheckedChange={() => toggleOption('showPaymentInformation')}
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">
+                  Show Payment Information
+                </span>
+                {displayOptions.showPaymentInformation && (
+                  <CheckIcon className="w-4 h-4 text-green-600" />
+                )}
+              </label>
+            </div>
+          </div>
+
+          {/* PDF Preview Container */}
+          <div className="min-h-[500px] relative border-0 sm:border border-gray-200 sm:rounded-lg overflow-hidden bg-gray-50 mb-4">
+            {isPreviewLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
+                <div className="flex flex-col items-center gap-3">
+                  <LoaderIcon className="w-8 h-8 animate-spin text-blue-600" />
+                  <p className="text-sm text-gray-600">Loading PDF preview...</p>
+                </div>
+              </div>
+            )}
+
+            <PDFViewer width="100%" height="500px" className="border-0">
+              <ModernInvoiceDocument invoice={invoice} displayOptions={displayOptions} />
+            </PDFViewer>
+          </div>
         </div>
 
-        <DialogFooter className="flex flex-row justify-between items-center pt-4 border-t px-6 sm:px-0">
+        <DialogFooter className="flex-shrink-0 flex flex-row justify-between items-center pt-4 border-t px-6 sm:px-0">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <FileTextIcon className="w-4 h-4" />
             <span>File: {getInvoiceFileName()}</span>
@@ -108,7 +174,7 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
             </Button>
 
             <PDFDownloadLink
-              document={<ModernInvoiceDocument invoice={invoice} />}
+              document={<ModernInvoiceDocument invoice={invoice} displayOptions={displayOptions} />}
               fileName={getInvoiceFileName()}>
               {({ loading }) => (
                 <Button disabled={loading} className="bg-blue-600 hover:bg-blue-700">

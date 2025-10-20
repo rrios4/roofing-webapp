@@ -25,8 +25,15 @@ export interface InvoiceDocumentData extends Invoice {
   }>;
 }
 
+export interface PDFDisplayOptions {
+  showPaymentHistory: boolean;
+  showCustomerNotes: boolean;
+  showPaymentInformation: boolean;
+}
+
 interface ModernInvoiceDocumentProps {
   invoice: InvoiceDocumentData;
+  displayOptions?: PDFDisplayOptions;
 }
 
 const styles = StyleSheet.create({
@@ -42,7 +49,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export const ModernInvoiceDocument: React.FC<ModernInvoiceDocumentProps> = ({ invoice }) => {
+export const ModernInvoiceDocument: React.FC<ModernInvoiceDocumentProps> = ({
+  invoice,
+  displayOptions = {
+    showPaymentHistory: true,
+    showCustomerNotes: true,
+    showPaymentInformation: true
+  }
+}) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -56,13 +70,13 @@ export const ModernInvoiceDocument: React.FC<ModernInvoiceDocumentProps> = ({ in
         <InvoiceItemsTable invoice={invoice} />
 
         {/* Payment history (if any) */}
-        <InvoicePayments invoice={invoice} />
+        {displayOptions.showPaymentHistory && <InvoicePayments invoice={invoice} />}
 
         {/* Summary with totals */}
         <InvoiceSummary invoice={invoice} />
 
         {/* Footer with notes and company info */}
-        <InvoiceFooter invoice={invoice} />
+        <InvoiceFooter invoice={invoice} displayOptions={displayOptions} />
       </Page>
     </Document>
   );

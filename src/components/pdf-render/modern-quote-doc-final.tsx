@@ -45,8 +45,15 @@ export interface QuoteDocumentData {
   converted?: boolean;
 }
 
+export interface PDFDisplayOptions {
+  showServiceDetails: boolean;
+  showMeasurementNote: boolean;
+  showCustomerNotes: boolean;
+}
+
 interface QuoteDocumentProps {
   quote: QuoteDocumentData;
+  displayOptions?: PDFDisplayOptions;
 }
 
 const styles = StyleSheet.create({
@@ -191,7 +198,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export const ModernQuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => {
+export const ModernQuoteDocument: React.FC<QuoteDocumentProps> = ({
+  quote,
+  displayOptions = {
+    showServiceDetails: true,
+    showMeasurementNote: true,
+    showCustomerNotes: true
+  }
+}) => {
   const formatMoney = (amount: number | null | undefined) => {
     if (amount === null || amount === undefined) return '$0.00';
     return new Intl.NumberFormat('en-US', {
@@ -329,35 +343,37 @@ export const ModernQuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => 
           </View>
         </View>
 
-        {/* Notes */}
-        {(quote.public_note || quote.cust_note || quote.measurement_note) && (
+        {/* Customer Notes */}
+        {displayOptions.showCustomerNotes && (quote.public_note || quote.cust_note) && (
           <View style={{ marginBottom: 15 }}>
-            <Text style={styles.sectionTitle}>Notes</Text>
+            <Text style={styles.sectionTitle}>Customer Notes</Text>
             <View style={styles.infoBox}>
               {quote.public_note && (
                 <View style={{ marginBottom: 4 }}>
-                  {/* <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 2 }]}>Public Note:</Text> */}
                   <Text style={styles.text}>{quote.public_note}</Text>
                 </View>
               )}
-              {/* {quote.cust_note && (
+              {quote.cust_note && (
                 <View style={{ marginBottom: 4 }}>
-                  <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 2 }]}>Customer Note:</Text>
                   <Text style={styles.text}>{quote.cust_note}</Text>
                 </View>
-              )} */}
-              {/* {quote.measurement_note && (
-                <View>
-                  <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 2 }]}>Measurement Note:</Text>
-                  <Text style={styles.text}>{quote.measurement_note}</Text>
-                </View>
-              )} */}
+              )}
+            </View>
+          </View>
+        )}
+
+        {/* Measurement Notes */}
+        {displayOptions.showMeasurementNote && quote.measurement_note && (
+          <View style={{ marginBottom: 15 }}>
+            <Text style={styles.sectionTitle}>Measurement Notes</Text>
+            <View style={styles.infoBox}>
+              <Text style={styles.text}>{quote.measurement_note}</Text>
             </View>
           </View>
         )}
 
         {/* Service Details */}
-        {quote.service?.name === 'Roof Installation' && (
+        {displayOptions.showServiceDetails && quote.service?.name === 'Roof Installation' && (
           <View style={{ marginBottom: 15 }}>
             <Text style={styles.sectionTitle}>Service Details</Text>
             <View style={styles.infoBox}>

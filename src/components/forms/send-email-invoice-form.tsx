@@ -20,6 +20,7 @@ import { transformInvoiceForPDF } from '../../lib/pdf-utils';
 import { ModernInvoiceDocument } from '../pdf-render/modern-invoice-doc';
 import { pdf } from '@react-pdf/renderer';
 import { Mail, Loader2, FileText } from 'lucide-react';
+import { Checkbox } from '../ui/checkbox';
 
 interface EmailInvoiceDialogProps {
   invoice: any;
@@ -33,6 +34,12 @@ interface EmailTemplate {
   subject: string;
   message: string;
   description: string;
+}
+
+interface PDFDisplayOptions {
+  showPaymentHistory: boolean;
+  showCustomerNotes: boolean;
+  showPaymentInformation: boolean;
 }
 
 const getEmailTemplates = (invoice: any): EmailTemplate[] => [
@@ -129,6 +136,21 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
   const [isSending, setIsSending] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('standard');
 
+  // PDF Display Options state
+  const [displayOptions, setDisplayOptions] = useState<PDFDisplayOptions>({
+    showPaymentHistory: true,
+    showCustomerNotes: true,
+    showPaymentInformation: true
+  });
+
+  // Toggle display option
+  const toggleOption = (key: keyof PDFDisplayOptions) => {
+    setDisplayOptions((prev) => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
   // Debug: Log the invoice data being passed to the dialog
   console.log('🔍 EmailInvoiceDialog - Invoice data received:', {
     invoice,
@@ -201,8 +223,10 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
         console.warn('Buffer not available, PDF generation may fail');
       }
 
-      // Generate PDF blob
-      const blob = await pdf(<ModernInvoiceDocument invoice={invoiceData} />).toBlob();
+      // Generate PDF blob with display options
+      const blob = await pdf(
+        <ModernInvoiceDocument invoice={invoiceData} displayOptions={displayOptions} />
+      ).toBlob();
 
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -659,6 +683,51 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
             <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
               <span className="font-medium">Template: </span>
               {currentTemplate.description}
+            </div>
+          </div>
+
+          {/* PDF Display Options */}
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm font-medium">PDF Display Options</Label>
+            <div className="space-y-3 p-4 bg-muted/30 rounded-lg border">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="showPaymentHistory"
+                  checked={displayOptions.showPaymentHistory}
+                  onCheckedChange={() => toggleOption('showPaymentHistory')}
+                />
+                <Label htmlFor="showPaymentHistory" className="text-sm font-normal cursor-pointer">
+                  Show payment history
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="showCustomerNotes"
+                  checked={displayOptions.showCustomerNotes}
+                  onCheckedChange={() => toggleOption('showCustomerNotes')}
+                />
+                <Label htmlFor="showCustomerNotes" className="text-sm font-normal cursor-pointer">
+                  Show customer notes
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="showPaymentInformation"
+                  checked={displayOptions.showPaymentInformation}
+                  onCheckedChange={() => toggleOption('showPaymentInformation')}
+                />
+                <Label
+                  htmlFor="showPaymentInformation"
+                  className="text-sm font-normal cursor-pointer">
+                  Show payment information
+                </Label>
+              </div>
+
+              <p className="text-xs text-muted-foreground mt-2">
+                These options control what information is included in the PDF attachment.
+              </p>
             </div>
           </div>
 

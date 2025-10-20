@@ -21,6 +21,7 @@ import { useToast } from '../ui/use-toast';
 import { useGoogleService } from '../../hooks/useGoogleService';
 import { ModernQuoteDocument } from '../pdf-render/modern-quote-doc-final';
 import { formatNumber, formatMoneyValue } from '../../lib/utils';
+import { Checkbox } from '../ui/checkbox';
 
 // Ensure Buffer is available for PDF generation in browser
 if (typeof Buffer === 'undefined') {
@@ -40,6 +41,12 @@ interface EmailTemplate {
   subject: string;
   message: string;
   description: string;
+}
+
+interface PDFDisplayOptions {
+  showServiceDetails: boolean;
+  showMeasurementNote: boolean;
+  showCustomerNotes: boolean;
 }
 
 const getEmailTemplates = (quote: any): EmailTemplate[] => [
@@ -103,6 +110,21 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
   const [isSending, setIsSending] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('standard');
   const [customMessage, setCustomMessage] = useState('');
+
+  // PDF Display Options state
+  const [displayOptions, setDisplayOptions] = useState<PDFDisplayOptions>({
+    showServiceDetails: true,
+    showMeasurementNote: true,
+    showCustomerNotes: true
+  });
+
+  // Toggle display option
+  const toggleOption = (key: keyof PDFDisplayOptions) => {
+    setDisplayOptions((prev) => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
 
   // Debug: Log the quote data being passed to the dialog
   console.log('🔍 EmailQuoteDialog - Quote data received:', {
@@ -207,8 +229,10 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
         throw new Error('Buffer is not available for PDF generation');
       }
 
-      // Generate PDF blob
-      const blob = await pdf(<ModernQuoteDocument quote={quoteData} />).toBlob();
+      // Generate PDF blob with display options
+      const blob = await pdf(
+        <ModernQuoteDocument quote={quoteData} displayOptions={displayOptions} />
+      ).toBlob();
 
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -601,6 +625,51 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
               </p>
             </div>
           )}
+
+          <Separator />
+
+          {/* PDF Display Options */}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">PDF Display Options</Label>
+            <div className="space-y-3 p-4 bg-muted/30 rounded-lg border">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="showServiceDetails"
+                  checked={displayOptions.showServiceDetails}
+                  onCheckedChange={() => toggleOption('showServiceDetails')}
+                />
+                <Label htmlFor="showServiceDetails" className="text-sm font-normal cursor-pointer">
+                  Show service details
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="showMeasurementNote"
+                  checked={displayOptions.showMeasurementNote}
+                  onCheckedChange={() => toggleOption('showMeasurementNote')}
+                />
+                <Label htmlFor="showMeasurementNote" className="text-sm font-normal cursor-pointer">
+                  Show measurement note
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="showCustomerNotes"
+                  checked={displayOptions.showCustomerNotes}
+                  onCheckedChange={() => toggleOption('showCustomerNotes')}
+                />
+                <Label htmlFor="showCustomerNotes" className="text-sm font-normal cursor-pointer">
+                  Show customer notes
+                </Label>
+              </div>
+
+              <p className="text-xs text-muted-foreground mt-2">
+                These options control what information is included in the PDF attachment.
+              </p>
+            </div>
+          </div>
 
           <Separator />
 

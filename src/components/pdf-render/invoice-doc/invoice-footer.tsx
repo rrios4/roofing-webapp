@@ -1,9 +1,10 @@
 import React from 'react';
 import { Text, View, StyleSheet } from '@react-pdf/renderer';
-import { InvoiceDocumentData } from '../modern-invoice-doc';
+import { InvoiceDocumentData, PDFDisplayOptions } from '../modern-invoice-doc';
 
 interface InvoiceFooterProps {
   invoice: InvoiceDocumentData;
+  displayOptions?: PDFDisplayOptions;
 }
 
 const styles = StyleSheet.create({
@@ -82,11 +83,18 @@ const styles = StyleSheet.create({
   }
 });
 
-export const InvoiceFooter: React.FC<InvoiceFooterProps> = ({ invoice }) => {
+export const InvoiceFooter: React.FC<InvoiceFooterProps> = ({
+  invoice,
+  displayOptions = {
+    showPaymentHistory: true,
+    showCustomerNotes: true,
+    showPaymentInformation: true
+  }
+}) => {
   return (
     <View style={styles.container}>
       {/* Notes Section */}
-      {(invoice.public_note || invoice.cust_note) && (
+      {displayOptions.showCustomerNotes && (invoice.public_note || invoice.cust_note) && (
         <View style={styles.notesSection}>
           <Text style={styles.notesTitle}>Notes:</Text>
           <Text style={styles.notesText}>{invoice.public_note || invoice.cust_note}</Text>
@@ -117,15 +125,19 @@ export const InvoiceFooter: React.FC<InvoiceFooterProps> = ({ invoice }) => {
         </View>
 
         {/* Payment Information */}
-        <View style={styles.paymentInfo}>
-          <Text style={styles.paymentTitle}>Payment Information</Text>
-          <Text style={styles.paymentText}>Payment is due within 30 days</Text>
-          <Text style={styles.paymentText}>Please reference Invoice #{invoice.invoice_number}</Text>
-          <Text style={styles.paymentText}>Questions? Contact us at:</Text>
-          <Text style={styles.paymentText}>
-            {invoice.bill_from_email || 'info@riosroofing.com'}
-          </Text>
-        </View>
+        {displayOptions.showPaymentInformation && (
+          <View style={styles.paymentInfo}>
+            <Text style={styles.paymentTitle}>Payment Information</Text>
+            <Text style={styles.paymentText}>Payment is due within 30 days</Text>
+            <Text style={styles.paymentText}>
+              Please reference Invoice #{invoice.invoice_number}
+            </Text>
+            <Text style={styles.paymentText}>Questions? Contact us at:</Text>
+            <Text style={styles.paymentText}>
+              {invoice.bill_from_email || 'info@riosroofing.com'}
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
