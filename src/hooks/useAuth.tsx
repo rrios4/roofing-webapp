@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: Props) => {
           'https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.readonly',
         queryParams: {
           access_type: 'offline',
-          prompt: 'consent'
+          prompt: 'select_account'
         }
       }
     });
