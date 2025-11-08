@@ -45,6 +45,7 @@ export interface GmailMessage {
 
 class GoogleService {
   private accessToken: string | null = null;
+  private tokenExpiry: number | null = null; // Track token expiry
 
   /**
    * Initialize the service with user's Google access token
@@ -58,6 +59,7 @@ class GoogleService {
 
       if (error || !session) {
         console.error('No active session found:', error);
+        this.clearTokens();
         return false;
       }
 
@@ -66,25 +68,85 @@ class GoogleService {
 
       if (!googleAccessToken) {
         console.error('No Google access token found in session');
+        this.clearTokens();
         return false;
       }
 
       this.accessToken = googleAccessToken;
+      // Set expiry to 50 minutes from now (tokens usually expire in 1 hour)
+      this.tokenExpiry = Date.now() + 50 * 60 * 1000;
+      console.log('Google service initialized successfully');
       return true;
     } catch (error) {
       console.error('Failed to initialize Google service:', error);
+      this.clearTokens();
       return false;
     }
+  }
+
+  /**
+   * Clear cached tokens
+   */
+  clearTokens(): void {
+    this.accessToken = null;
+    this.tokenExpiry = null;
+    console.log('Google service tokens cleared');
+  }
+
+  /**
+   * Check if current token is expired or about to expire
+   */
+  private isTokenExpired(): boolean {
+    if (!this.tokenExpiry || !this.accessToken) {
+      return true;
+    }
+    // Consider expired if less than 5 minutes remaining
+    return Date.now() >= this.tokenExpiry - 5 * 60 * 1000;
   }
 
   /**
    * Refresh the access token if needed
    */
   private async refreshTokenIfNeeded(): Promise<boolean> {
-    if (!this.accessToken) {
-      return await this.initialize();
+    // Check if we need to refresh the token
+    if (!this.isTokenExpired()) {
+      return true; // Token is still valid
     }
-    return true;
+
+    console.log('Token expired or missing, refreshing...');
+
+    try {
+      // Always get the latest session to ensure we have fresh tokens
+      const {
+        data: { session },
+        error
+      } = await supabase.auth.getSession();
+
+      if (error || !session) {
+        console.error('No active session found during token refresh:', error);
+        this.clearTokens();
+        return false;
+      }
+
+      // Get Google access token from current session
+      const googleAccessToken = session.provider_token;
+
+      if (!googleAccessToken) {
+        console.error('No Google access token found in current session');
+        this.clearTokens();
+        return false;
+      }
+
+      // Update our cached token with the latest one
+      this.accessToken = googleAccessToken;
+      this.tokenExpiry = Date.now() + 50 * 60 * 1000; // 50 minutes from now
+      console.log('Google token refreshed successfully');
+      return true;
+    } catch (error) {
+      console.error('Failed to refresh Google token:', error);
+      this.clearTokens();
+      return false;
+    }
   }
 
   /**
@@ -94,27 +156,54 @@ class GoogleService {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<Response> {
-    await this.refreshTokenIfNeeded();
+    // Always refresh token before making request
+    const tokenRefreshed = await this.refreshTokenIfNeeded();
 
-    if (!this.accessToken) {
-      throw new Error('No access token available');
+    if (!tokenRefreshed || !this.accessToken) {
+      throw new Error('No access token available - please log in again');
     }
 
-    const response = await fetch(endpoint, {
-      ...options,
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        'Content-Type': 'application/json',
-        ...options.headers
+    const makeRequest = async (isRetry: boolean = false): Promise<Response> => {
+      const response = await fetch(endpoint, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+          'Content-Type': 'application/json',
+          ...options.headers
+        }
+      });
+
+      // Handle token expiration errors
+      if (!response.ok && response.status === 401 && !isRetry) {
+        console.log('Received 401 error, refreshing token and retrying...');
+
+        // Force refresh the token
+        this.accessToken = null;
+        const refreshed = await this.refreshTokenIfNeeded();
+
+        if (refreshed && this.accessToken) {
+          console.log('Token refreshed, retrying request...');
+          return makeRequest(true); // Retry with fresh token
+        } else {
+          throw new Error('Token refresh failed - please log in again');
+        }
       }
-    });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Google API request failed: ${response.status} - ${errorText}`);
-    }
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Google API request failed:`, {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText,
+          endpoint
+        });
+        throw new Error(`Google API request failed: ${response.status} - ${errorText}`);
+      }
 
-    return response;
+      return response;
+    };
+
+    return makeRequest();
   }
 
   // ===== GMAIL SERVICES =====
@@ -404,6 +493,32 @@ class GoogleService {
       console.error('Gmail permissions not available:', error);
       return false;
     }
+  }
+
+  /**
+   * Get debug information about the current token state
+   */
+  getTokenDebugInfo(): {
+    hasToken: boolean;
+    isExpired: boolean;
+    expiresIn: number | null;
+    tokenPreview: string | null;
+  } {
+    return {
+      hasToken: !!this.accessToken,
+      isExpired: this.isTokenExpired(),
+      expiresIn: this.tokenExpiry ? Math.max(0, this.tokenExpiry - Date.now()) : null,
+      tokenPreview: this.accessToken ? `${this.accessToken.substring(0, 10)}...` : null
+    };
+  }
+
+  /**
+   * Force refresh token (useful for debugging)
+   */
+  async forceRefreshToken(): Promise<boolean> {
+    console.log('Forcing token refresh...');
+    this.clearTokens();
+    return await this.refreshTokenIfNeeded();
   }
 }
 

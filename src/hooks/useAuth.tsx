@@ -1,6 +1,7 @@
 import React from 'react';
 import { useContext, useState, useEffect, createContext } from 'react';
 import supabase from '../lib/supabase-client';
+import { googleService } from '../services/google-service';
 
 type Props = {
   children: React.ReactNode;
@@ -68,10 +69,26 @@ export const AuthProvider = ({ children }: Props) => {
     };
   }, []);
 
+  const signOut = async () => {
+    try {
+      // Clear Google service tokens first
+      googleService.clearTokens();
+
+      // Then sign out from Supabase
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        console.error('Error during sign out:', error);
+      }
+    } catch (error) {
+      console.error('Failed to sign out:', error);
+    }
+  };
+
   const value: AuthValueTypes = {
     session,
     user,
-    signOut: () => supabase.auth.signOut(),
+    signOut,
     googleLogin
   };
 
