@@ -218,8 +218,8 @@ export default function QuoteInfoPage() {
       </div> */}
 
       {/* Menu Action Bar */}
-      <div className="flex justify-between gap-4 mb-2 pb-2">
-        <div className="w-full flex gap-2 mt-auto">
+      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between sm:gap-4 sm:mb-2 pb-2">
+        <div className="w-full flex justify-end sm:justify-start gap-2 mt-auto">
           {/* Update Quote Button */}
           <UpdateQuoteSheet
             quote={quote}
@@ -276,12 +276,12 @@ export default function QuoteInfoPage() {
 
         <div className="w-full flex justify-end gap-4">
           <div className="w-fit">
-            <Label>Status</Label>
+            <Label className="text-xs sm:text-md">Status</Label>
             <Select
               value={quote?.status_id?.toString() || ''}
               onValueChange={handleStatusChange}
               disabled={isUpdatingStatus || isStatusesLoading}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="sm:w-[180px] w-fit h-fit">
                 <SelectValue placeholder={isUpdatingStatus ? 'Updating...' : 'Select a status'} />
               </SelectTrigger>
               <SelectContent position="popper">
@@ -329,7 +329,7 @@ export default function QuoteInfoPage() {
           <CardContent>
             {/* Quote Info */}
             <div className="flex flex-col sm:px-6 pb-6 w-full">
-              <div className="flex w-full justify-between gap-4">
+              <div className="flex flex-col sm:flex-row w-full justify-between gap-4 mb-4">
                 <div>
                   {/* Customer Avatar */}
                   <div className="flex gap-2">
@@ -337,17 +337,17 @@ export default function QuoteInfoPage() {
                     <p className="text-sm text-gray-500 align-middle">Customer</p>
                   </div>
 
-                  <div className="flex my-2 pt-1 pb-2 gap-4">
+                  <div className="flex mt-2 pt-1 gap-4">
                     <Link
                       to={`/customers/${quote.customer_id}`}
                       className="cursor-pointer hover:opacity-80 transition-opacity flex gap-4"
                       title="View customer details">
-                      <Avatar>
-                        <AvatarFallback>
+                      <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
+                        <AvatarFallback className="text-xs sm:text-sm">
                           {`${(quote.customer?.first_name || '').substring(0, 1)}${(quote.customer?.last_name || '').substring(0, 1)}`}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="text-sm">
+                      <div className="text-xs sm:text-sm">
                         <p className="font-medium">
                           {quote.customer?.first_name || ''} {quote.customer?.last_name || ''}
                         </p>
@@ -356,7 +356,7 @@ export default function QuoteInfoPage() {
                     </Link>
                   </div>
                 </div>
-                <div className="text-sm text-right">
+                <div className="text-sm text-left sm:text-right">
                   <div className="flex gap-2">
                     <PackageIcon className="w-4 h-4 my-auto" />
                     <p className="text-sm text-gray-500 mb-0">Service</p>
