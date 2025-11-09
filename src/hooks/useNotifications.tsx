@@ -22,7 +22,7 @@ export const useNotifications = () => {
     try {
       // Simulate API call - replace with actual backend integration
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      
+
       // Example notification counts - replace with actual data
       const mockNotifications = {
         leads: 3, // 3 new leads
@@ -30,7 +30,7 @@ export const useNotifications = () => {
         quotes: 1, // 1 pending quote
         customers: 0 // No new customer updates
       };
-      
+
       setNotifications(mockNotifications);
     } catch (error) {
       console.error('Failed to fetch notifications:', error);
