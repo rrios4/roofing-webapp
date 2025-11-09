@@ -16,7 +16,6 @@ import NavLinkTooltip from '../navlink-tooltip';
 import { Separator } from '../ui/separator';
 import { ModeToggle } from './mode-toggle';
 import { Button } from '../ui/button';
-import MobileNavbar from './mobile-navbar';
 import { navLinks } from './nav-links';
 import { IGoogleUser } from '../../types/global_types';
 import { useAuth } from '../../hooks/useAuth';
@@ -152,7 +151,6 @@ export default function SideNavbar({ userData }: Props) {
           </div>
         </div>
       </div>
-      <MobileNavbar userData={userData} />
 
       {/* Customer Form Sheet */}
       <Sheet open={customerSheetOpen} onOpenChange={setCustomerSheetOpen}>

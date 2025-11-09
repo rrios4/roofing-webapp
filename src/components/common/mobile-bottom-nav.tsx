@@ -180,7 +180,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ className = ''
 
                 {/* Active Indicator - iOS Style */}
                 {isActive && (
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full opacity-75" />
+                  <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full opacity-75" />
                 )}
               </Link>
             );
