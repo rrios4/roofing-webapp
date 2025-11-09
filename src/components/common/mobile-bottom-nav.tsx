@@ -69,7 +69,7 @@ const navItems: NavItem[] = [
   {
     id: 'settings',
     label: 'Settings',
-    path: '/data-management',
+    path: '/settings',
     icon: SettingsIcon,
     activeIcon: SettingsIcon
   }

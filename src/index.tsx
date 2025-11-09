@@ -29,7 +29,8 @@ import {
   CustomerInfoPage,
   DataManagementPage,
   ServicesManagementPage,
-  StatusManagementPage
+  StatusManagementPage,
+  SettingsPage
 } from './pages';
 import CustomerTypesPage from './pages/customer-types-page';
 import ProfilePage from './pages/profile-page';
@@ -162,6 +163,14 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <SettingsPage />
                   </ProtectedRoute>
                 }
               />
