@@ -63,22 +63,22 @@ export default function QuotesPage() {
         sheetDescription="Create a new quote that will help track potential new work."
         SheetContentBody={AddQuoteForm}
       />
-      <div className="flex w-full gap-4 flex-col md:flex-row">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
         <CountStatCard
           title="Accepted"
-          icon={<CheckCircleIcon size={'25px'} />}
+          icon={<CheckCircleIcon size={'18px'} />}
           totalCount={totalAcceptedQuotesCount ?? 0}
           isLoading={isTotalAcceptedQuoteCountLoading}
         />
         <CountStatCard
           title="Pending"
-          icon={<CircleDotIcon size={'25px'} />}
+          icon={<CircleDotIcon size={'18px'} />}
           totalCount={totalPendingQuotesCount ?? 0}
           isLoading={isTotalPendingQuoteCountLoading}
         />
         <CountStatCard
           title="Rejected"
-          icon={<MinusCircleIcon size={'25px'} />}
+          icon={<MinusCircleIcon size={'18px'} />}
           totalCount={totalRejectedQuotesCount ?? 0}
           isLoading={isTotalRejectedQuoteCountLoading}
         />

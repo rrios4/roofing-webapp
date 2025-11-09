@@ -1,7 +1,14 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Badge } from '../ui/badge';
-import { HomeIcon, SpeechIcon, SendIcon, ClipboardSignatureIcon, UsersIcon } from 'lucide-react';
+import {
+  HomeIcon,
+  SpeechIcon,
+  SendIcon,
+  ClipboardSignatureIcon,
+  UsersIcon,
+  SettingsIcon
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useAuth } from '../../hooks/useAuth';
@@ -58,6 +65,13 @@ const navItems: NavItem[] = [
     icon: UsersIcon,
     activeIcon: UsersIcon,
     notificationKey: 'customers'
+  },
+  {
+    id: 'settings',
+    label: 'Settings',
+    path: '/data-management',
+    icon: SettingsIcon,
+    activeIcon: SettingsIcon
   }
 ];
 
@@ -156,7 +170,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ className = ''
 
                 {/* Label */}
                 <span
-                  className={`text-[10px] font-medium transition-all duration-200 truncate max-w-full ${
+                  className={`text-[9px] font-medium transition-all duration-200 truncate max-w-full ${
                     isActive
                       ? 'text-blue-600 dark:text-blue-400 font-semibold'
                       : 'text-gray-600 dark:text-gray-400'

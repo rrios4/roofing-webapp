@@ -182,20 +182,36 @@ export default function DashboardPage() {
       {/* Dashboard Content */}
       <div className="flex flex-col w-full gap-4 my-4">
         {/* Key Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           {/* Total Customers */}
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Customers</p>
-                  <p className="text-2xl font-bold">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                    Total Customers
+                  </p>
+                  <p className="text-md sm:text-2xl font-bold truncate">
                     {dashboardMetrics.totalCustomers.toLocaleString()}
                   </p>
-                  {getTrendIndicator(dashboardMetrics.customerPercentChange)}
+                  <div className="hidden sm:block">
+                    {getTrendIndicator(dashboardMetrics.customerPercentChange)}
+                  </div>
+                  {/* Mobile trend indicator */}
+                  <div className="flex items-center mt-1 sm:hidden">
+                    <span
+                      className={`text-xs ${
+                        dashboardMetrics.customerPercentChange >= 0
+                          ? 'text-green-600'
+                          : 'text-red-600'
+                      }`}>
+                      {dashboardMetrics.customerPercentChange >= 0 ? '+' : ''}
+                      {dashboardMetrics.customerPercentChange}%
+                    </span>
+                  </div>
                 </div>
-                <div className="p-3 bg-blue-100 rounded-full">
-                  <UsersIcon className="h-6 w-6 text-blue-600" />
+                <div className="p-2 sm:p-3 bg-blue-100 rounded-full flex-shrink-0 ml-2">
+                  <UsersIcon className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
               </div>
             </CardContent>
@@ -203,17 +219,31 @@ export default function DashboardPage() {
 
           {/* Active Quotes */}
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Active Quotes</p>
-                  <p className="text-2xl font-bold">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                    Active Quotes
+                  </p>
+                  <p className="text-md sm:text-2xl font-bold truncate">
                     {dashboardMetrics.activeQuotes.toLocaleString()}
                   </p>
-                  {getTrendIndicator(dashboardMetrics.quotePercentChange)}
+                  <div className="hidden sm:block">
+                    {getTrendIndicator(dashboardMetrics.quotePercentChange)}
+                  </div>
+                  {/* Mobile trend indicator */}
+                  <div className="flex items-center mt-1 sm:hidden">
+                    <span
+                      className={`text-xs ${
+                        dashboardMetrics.quotePercentChange >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                      {dashboardMetrics.quotePercentChange >= 0 ? '+' : ''}
+                      {dashboardMetrics.quotePercentChange}%
+                    </span>
+                  </div>
                 </div>
-                <div className="p-3 bg-green-100 rounded-full">
-                  <FileTextIcon className="h-6 w-6 text-green-600" />
+                <div className="p-2 sm:p-3 bg-green-100 rounded-full flex-shrink-0 ml-2">
+                  <FileTextIcon className="h-4 w-4 sm:h-6 sm:w-6 text-green-600" />
                 </div>
               </div>
             </CardContent>
@@ -221,17 +251,33 @@ export default function DashboardPage() {
 
           {/* Monthly Revenue */}
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Monthly Revenue</p>
-                  <p className="text-2xl font-bold">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                    Monthly Revenue
+                  </p>
+                  <p className="text-sm sm:text-2xl font-bold truncate">
                     {formatCurrency(dashboardMetrics.monthlyRevenue)}
                   </p>
-                  {getTrendIndicator(dashboardMetrics.revenuePercentChange)}
+                  <div className="hidden sm:block">
+                    {getTrendIndicator(dashboardMetrics.revenuePercentChange)}
+                  </div>
+                  {/* Mobile trend indicator */}
+                  <div className="flex items-center mt-1 sm:hidden">
+                    <span
+                      className={`text-xs ${
+                        dashboardMetrics.revenuePercentChange >= 0
+                          ? 'text-green-600'
+                          : 'text-red-600'
+                      }`}>
+                      {dashboardMetrics.revenuePercentChange >= 0 ? '+' : ''}
+                      {dashboardMetrics.revenuePercentChange}%
+                    </span>
+                  </div>
                 </div>
-                <div className="p-3 bg-purple-100 rounded-full">
-                  <DollarSignIcon className="h-6 w-6 text-purple-600" />
+                <div className="p-2 sm:p-3 bg-purple-100 rounded-full flex-shrink-0 ml-2">
+                  <DollarSignIcon className="h-4 w-4 sm:h-6 sm:w-6 text-purple-600" />
                 </div>
               </div>
             </CardContent>
@@ -239,17 +285,31 @@ export default function DashboardPage() {
 
           {/* Pending Leads */}
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Pending Leads</p>
-                  <p className="text-2xl font-bold">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                    Pending Leads
+                  </p>
+                  <p className="text-md sm:text-2xl font-bold truncate">
                     {dashboardMetrics.pendingLeads.toLocaleString()}
                   </p>
-                  {getTrendIndicator(dashboardMetrics.leadPercentChange)}
+                  <div className="hidden sm:block">
+                    {getTrendIndicator(dashboardMetrics.leadPercentChange)}
+                  </div>
+                  {/* Mobile trend indicator */}
+                  <div className="flex items-center mt-1 sm:hidden">
+                    <span
+                      className={`text-xs ${
+                        dashboardMetrics.leadPercentChange >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                      {dashboardMetrics.leadPercentChange >= 0 ? '+' : ''}
+                      {dashboardMetrics.leadPercentChange}%
+                    </span>
+                  </div>
                 </div>
-                <div className="p-3 bg-orange-100 rounded-full">
-                  <PhoneIcon className="h-6 w-6 text-orange-600" />
+                <div className="p-2 sm:p-3 bg-orange-100 rounded-full flex-shrink-0 ml-2">
+                  <PhoneIcon className="h-4 w-4 sm:h-6 sm:w-6 text-orange-600" />
                 </div>
               </div>
             </CardContent>

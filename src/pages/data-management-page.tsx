@@ -79,20 +79,26 @@ export default function DataManagementPage() {
         showActionButton={false}
       />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
         {managementSections.map((section) => (
           <Link key={section.id} to={section.path}>
             <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] border-border hover:border-primary/20">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:pb-2 sm:p-6">
                 <div className="flex items-center space-x-2">
-                  <div className="p-2 bg-primary/100 text-white rounded-lg">{section.icon}</div>
+                  <div className="p-1.5 sm:p-2 bg-primary/100 text-white rounded-lg">
+                    {React.cloneElement(section.icon as React.ReactElement, {
+                      className: 'h-4 w-4 sm:h-6 sm:w-6'
+                    })}
+                  </div>
                 </div>
-                <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
+                <ChevronRightIcon className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <CardTitle className="text-xl">{section.title}</CardTitle>
-                  <CardDescription className="text-sm leading-relaxed">
+              <CardContent className="p-3 sm:p-6 pt-0">
+                <div className="space-y-1 sm:space-y-2">
+                  <CardTitle className="text-sm sm:text-lg lg:text-xl truncate">
+                    {section.title}
+                  </CardTitle>
+                  <CardDescription className="text-xs sm:text-sm leading-relaxed line-clamp-2">
                     {section.description}
                   </CardDescription>
                 </div>
@@ -116,81 +122,100 @@ export default function DataManagementPage() {
           </Button>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Statuses</CardTitle>
-              <ListIcon className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-6 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium truncate pr-2">
+                Total Statuses
+              </CardTitle>
+              <ListIcon className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-3 sm:p-6 pt-0">
               {isLoadingStats ? (
-                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-6 sm:h-8 w-12 sm:w-16" />
               ) : isErrorStats ? (
-                <div className="text-2xl font-bold text-destructive">--</div>
+                <div className="text-lg sm:text-2xl font-bold text-destructive">--</div>
               ) : (
-                <div className="text-2xl font-bold">{stats?.totalStatuses.total || 0}</div>
+                <div className="text-lg sm:text-2xl font-bold">
+                  {stats?.totalStatuses.total || 0}
+                </div>
               )}
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 leading-tight">
                 {isLoadingStats ? (
-                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-2 sm:h-3 w-16 sm:w-20" />
                 ) : (
-                  `Quote: ${stats?.totalStatuses.quote || 0} • Invoice: ${stats?.totalStatuses.invoice || 0} • Request: ${stats?.totalStatuses.quoteRequest || 0}`
+                  <span className="hidden sm:inline">
+                    {`Quote: ${stats?.totalStatuses.quote || 0} • Invoice: ${stats?.totalStatuses.invoice || 0} • Request: ${stats?.totalStatuses.quoteRequest || 0}`}
+                  </span>
                 )}
+                <span className="sm:hidden">All types</span>
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Services</CardTitle>
-              <HammerIcon className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-6 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium truncate pr-2">
+                Active Services
+              </CardTitle>
+              <HammerIcon className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-3 sm:p-6 pt-0">
               {isLoadingStats ? (
-                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-6 sm:h-8 w-12 sm:w-16" />
               ) : isErrorStats ? (
-                <div className="text-2xl font-bold text-destructive">--</div>
+                <div className="text-lg sm:text-2xl font-bold text-destructive">--</div>
               ) : (
-                <div className="text-2xl font-bold">{stats?.activeServices || 0}</div>
+                <div className="text-lg sm:text-2xl font-bold">{stats?.activeServices || 0}</div>
               )}
-              <p className="text-xs text-muted-foreground">Available service types</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+                Available service types
+              </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Last Updated</CardTitle>
-              <SettingsIcon className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-6 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium truncate pr-2">
+                Last Updated
+              </CardTitle>
+              <SettingsIcon className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-3 sm:p-6 pt-0">
               {isLoadingStats ? (
-                <Skeleton className="h-8 w-20" />
+                <Skeleton className="h-6 sm:h-8 w-16 sm:w-20" />
               ) : isErrorStats ? (
-                <div className="text-2xl font-bold text-destructive">--</div>
+                <div className="text-lg sm:text-2xl font-bold text-destructive">--</div>
               ) : (
-                <div className="text-2xl font-bold">
+                <div className="text-sm sm:text-2xl font-bold truncate">
                   {formatLastUpdated(stats?.lastUpdated.mostRecent || null)}
                 </div>
               )}
-              <p className="text-xs text-muted-foreground">Most recent change</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+                Most recent change
+              </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">System Status</CardTitle>
-              <TagIcon className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-6 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium truncate pr-2">
+                System Status
+              </CardTitle>
+              <TagIcon className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-3 sm:p-6 pt-0">
               {isLoadingStats ? (
-                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-6 sm:h-8 w-12 sm:w-16" />
               ) : (
                 <div
-                  className={`text-2xl font-bold ${isHealthy ? 'text-green-600' : 'text-red-600'}`}>
+                  className={`text-lg sm:text-2xl font-bold ${
+                    isHealthy ? 'text-green-600' : 'text-red-600'
+                  }`}>
                   {isHealthy ? 'Active' : 'Error'}
                 </div>
               )}
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                 {isHealthy ? 'All systems operational' : 'Connection issues detected'}
               </p>
             </CardContent>
@@ -212,29 +237,42 @@ export default function DataManagementPage() {
           <h3 className="text-lg font-semibold">Infrastructure & Server Info</h3>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Database</CardTitle>
-              <DatabaseIcon className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-6 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium truncate pr-2">
+                Database
+              </CardTitle>
+              <DatabaseIcon className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-3 sm:p-6 pt-0">
               {isLoadingStats ? (
-                <Skeleton className="h-8 w-20" />
+                <Skeleton className="h-6 sm:h-8 w-16 sm:w-20" />
               ) : isErrorStats ? (
-                <div className="text-2xl font-bold text-destructive">--</div>
+                <div className="text-lg sm:text-2xl font-bold text-destructive">--</div>
               ) : (
                 <div
-                  className={`text-2xl font-bold ${stats?.infrastructure.database.connectionStatus === 'Connected' ? 'text-green-600' : 'text-red-600'}`}>
+                  className={`text-sm sm:text-2xl font-bold truncate ${
+                    stats?.infrastructure.database.connectionStatus === 'Connected'
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  }`}>
                   {stats?.infrastructure.database.connectionStatus || 'Unknown'}
                 </div>
               )}
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 leading-tight">
                 {isLoadingStats ? (
-                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-2 sm:h-3 w-20 sm:w-24" />
                 ) : (
-                  `${stats?.infrastructure.database.latency ? `${Math.round(stats.infrastructure.database.latency)}ms` : '--'} • ${stats?.infrastructure.database.region || 'Unknown region'}`
+                  <span className="hidden sm:inline">
+                    {`${
+                      stats?.infrastructure.database.latency
+                        ? `${Math.round(stats.infrastructure.database.latency)}ms`
+                        : '--'
+                    } • ${stats?.infrastructure.database.region || 'Unknown region'}`}
+                  </span>
                 )}
+                <span className="sm:hidden">Status</span>
               </p>
             </CardContent>
           </Card>
@@ -314,7 +352,7 @@ export default function DataManagementPage() {
           <h3 className="text-lg font-semibold">Database Usage & Performance</h3>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Tables</CardTitle>
@@ -406,7 +444,7 @@ export default function DataManagementPage() {
           <h3 className="text-lg font-semibold">Security & Features</h3>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Row Level Security</CardTitle>

@@ -37,23 +37,23 @@ export default function CustomersPage() {
         sheetDescription="Create a new customer to track their content."
         SheetContentBody={AddCustomerForm}
       />
-      <div className="flex w-full gap-4 flex-col md:flex-row">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
         <CountStatCard
           title="Total Customers"
           totalCount={totalCustomersCount ?? 0}
-          icon={<UserIcon size={'25px'} />}
+          icon={<UserIcon size={'18px'} />}
           isLoading={isTotalCustomerCountLoading}
         />
         <CountStatCard
           title="Residential"
           totalCount={totalResidentialCustomers ?? 0}
-          icon={<StoreIcon size={'25px'} />}
+          icon={<StoreIcon size={'18px'} />}
           isLoading={isTotalResidentialCustomersLoading}
         />
         <CountStatCard
           title="Commercial"
           totalCount={totalCommercialCustomers ?? 0}
-          icon={<BuildingIcon size={'25px'} />}
+          icon={<BuildingIcon size={'18px'} />}
           isLoading={isTotalCommercialCustomersLoading}
         />
       </div>

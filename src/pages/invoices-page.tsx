@@ -52,22 +52,22 @@ export default function InvoicesPage() {
         sheetTitle="Add invoice"
         sheetDescription="Create a new invoice to track income."
       />
-      <div className="flex w-full gap-4 flex-col md:flex-row">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
         <CountStatCard
           title="Overdue"
           totalCount={totalOverdueInvoicesCount ?? 0}
-          icon={<MinusCircleIcon size={'25px'} />}
+          icon={<MinusCircleIcon size={'18px'} />}
           isLoading={isTotalOverdueInvoicesLoading}
         />
         <CountStatCard
           title="Pending"
-          icon={<CircleDotIcon size={'25px'} />}
+          icon={<CircleDotIcon size={'18px'} />}
           totalCount={totalPendingInvoicesCount ?? 0}
           isLoading={isTotalPendingInvoicesLoading}
         />
         <CountStatCard
           title="Paid"
-          icon={<CheckCircleIcon size={'25px'} />}
+          icon={<CheckCircleIcon size={'18px'} />}
           totalCount={totalPaidInvoicesCount ?? 0}
           isLoading={isTotalPaidInvoicesLoading}
         />

@@ -49,24 +49,24 @@ export default function InboxPage() {
         sheetDescription="Manually create a new lead when getting a new potential customer."
         SheetContentBody={AddLeadRequestForm}
       />
-      <div className="flex w-full gap-4 flex-col md:flex-row">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
         <CountStatCard
           title="New"
           totalCount={totalNewLeadsCount ?? 0}
-          icon={<InboxIcon size={'25px'} />}
+          icon={<InboxIcon size={'18px'} />}
           isLoading={isTotalNewLeadsLoading}
         />
         <CountStatCard
           title="Scheduled"
           totalCount={totalScheduledLeadsCount ?? 0}
           isLoading={isTotalScheduledLeadsLoading}
-          icon={<CalendarIcon size={'25px'} />}
+          icon={<CalendarIcon size={'18px'} />}
         />
         <CountStatCard
           title="Closed"
           totalCount={totalClosedLeadsCount ?? 0}
           isLoading={isTotalClosedLeadsLoading}
-          icon={<ArchiveIcon size={'25px'} />}
+          icon={<ArchiveIcon size={'18px'} />}
         />
       </div>
       <DataTable
