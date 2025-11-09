@@ -94,7 +94,9 @@ const handleEmailValidation = (object: any) => {};
 const leadsTableColumns = [
   columnHelper.accessor('id', {
     cell: ({ row }) => (
-      <p className="text-center text-[14px]">RQ-{formatNumber(row.getValue('id'))}</p>
+      <p className="text-center text-xs sm:text-sm text-nowrap">
+        RQ-{formatNumber(row.getValue('id'))}
+      </p>
     ),
     header: ({ column }) => (
       <div className="w-full justify-center flex">

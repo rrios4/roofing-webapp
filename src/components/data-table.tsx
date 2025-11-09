@@ -102,14 +102,16 @@ export default function DataTable({
         thirdSelectName={thirdSelectName}
       />
       <div className="w-full border rounded-lg overflow-hidden">
-        <Table className="">
-          <TableHeader className="bg-slate-100 dark:bg-zinc-800">
+        <Table className="text-xs sm:text-sm">
+          <TableHeader className="bg-slate-50 dark:bg-zinc-800/50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
-                className="rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                className="bg-slate-50 dark:bg-zinc-800/50 hover:bg-slate-50 dark:hover:bg-zinc-800/50 border-b border-slate-200 dark:border-zinc-700"
                 key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className="h-8 sm:h-10 px-2 sm:px-3 text-xs sm:text-sm font-medium">
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -119,10 +121,15 @@ export default function DataTable({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} className="hover:bg-transparent">
+            {table.getRowModel().rows.map((row, index) => (
+              <TableRow
+                key={row.id}
+                className={`
+                  hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors duration-150
+                  ${index % 2 === 0 ? 'bg-white dark:bg-zinc-900' : 'bg-slate-50/30 dark:bg-zinc-800/20'}
+                `}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="p-2 sm:p-3 text-xs sm:text-sm align-middle">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -130,45 +137,49 @@ export default function DataTable({
             ))}
           </TableBody>
         </Table>
-        <div className="grid grid-flow-row grid-cols-3 gap-4 w-full p-4 border-t rounded-b-lg ">
-          <div className="">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full p-2 sm:p-4 border-t bg-slate-50/50 dark:bg-zinc-800/50">
+          <div>
             <Button
               variant={'secondary'}
+              size={'sm'}
               disabled={!table.getCanPreviousPage()}
-              onClick={() => table.previousPage()}>
-              <ChevronLeftIcon className="mr-2 h-4 w-4" />{' '}
-              <p className="font-[500] hidden md:flex">Previous</p>
+              onClick={() => table.previousPage()}
+              className="text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-9">
+              <ChevronLeftIcon className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="font-medium hidden sm:inline">Previous</span>
+              <span className="font-medium sm:hidden">Prev</span>
             </Button>
           </div>
-          <div className="flex my-auto w-full justify-center gap-4 md:flex-row flex-col-reverse">
-            <div className="flex gap-1 my-auto text-[14px] font-[400] mx-auto md:mx-0">
-              <p>Page</p>
-              <p className="font-[700]">{table.getState().pagination.pageIndex + 1}</p>
-              <p>of</p>
-              <p className="font-[600]">{table.getPageCount()}</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+            <div className="flex gap-1 text-xs sm:text-sm font-normal">
+              <span>Page</span>
+              <span className="font-semibold">{table.getState().pagination.pageIndex + 1}</span>
+              <span>of</span>
+              <span className="font-semibold">{table.getPageCount()}</span>
             </div>
-            <div className="flex my-auto gap-2">
-              <Select onValueChange={(e) => table.setPageSize(Number(e))}>
-                <SelectTrigger>
-                  <SelectValue placeholder={'Select page size'} />
-                </SelectTrigger>
-                <SelectContent>
-                  {['10', '20', '30', '40', '50', '100'].map((pageSize, index) => (
-                    <SelectItem key={index} value={pageSize}>
-                      Show {pageSize}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Select onValueChange={(e) => table.setPageSize(Number(e))}>
+              <SelectTrigger className="w-auto min-w-0 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3">
+                <SelectValue placeholder="10" />
+              </SelectTrigger>
+              <SelectContent>
+                {['10', '20', '30', '40', '50'].map((pageSize, index) => (
+                  <SelectItem key={index} value={pageSize} className="text-xs sm:text-sm">
+                    {pageSize}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex justify-end">
             <Button
               variant={'secondary'}
+              size={'sm'}
               onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}>
-              <p className="font-[500] hidden md:flex">Next</p>{' '}
-              <ChevronRightIcon className="md:ml-4 h-4 w-4" />
+              disabled={!table.getCanNextPage()}
+              className="text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-9">
+              <span className="font-medium hidden sm:inline">Next</span>
+              <span className="font-medium sm:hidden">Next</span>
+              <ChevronRightIcon className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </div>

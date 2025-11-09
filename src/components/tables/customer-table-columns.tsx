@@ -26,24 +26,18 @@ export const customerColumns = [
       cell: ({ row }: Props) => {
         const customer = row.original;
         return (
-          <div className="flex gap-4">
-            <div></div>
-            <Avatar className="border w-[45px] h-[45px] bg-blue-100 dark:bg-blue-700/30">
-              {/*<AvatarImage*/}
-              {/*  src={`https://raw.githubusercontent.com/alohe/memojis/main/png/${*/}
-              {/*    arrayOfMemojiFileNames[Math.floor(Math.random() * arrayOfMemojiFileNames.length)]*/}
-              {/*  }`}*/}
-              {/*/>*/}
-              <AvatarFallback>
+          <div className="flex gap-2 sm:gap-3">
+            <Avatar className="border w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 dark:bg-blue-700/30 flex-shrink-0">
+              <AvatarFallback className="text-xs sm:text-sm font-medium">
                 {`${customer.first_name.substring(0, 1)}${customer.last_name.substring(0, 1)}`}
               </AvatarFallback>
             </Avatar>
-            <div className="text-[14px]">
-              <div className="flex gap-1 font-[600]">
-                <p>{customer.first_name}</p>
-                <p>{customer.last_name}</p>
+            <div className="text-xs sm:text-sm min-w-0">
+              <div className="flex gap-1 font-semibold text-xs sm:text-sm">
+                <p className="truncate">{customer.first_name}</p>
+                <p className="truncate">{customer.last_name}</p>
               </div>
-              <p className="font-[300]">{customer.email}</p>
+              <p className="font-normal text-xs text-muted-foreground truncate">{customer.email}</p>
             </div>
           </div>
         );
@@ -51,15 +45,18 @@ export const customerColumns = [
       header: ({ column }) => {
         return (
           <Button
-            className="py-0 gap-2"
+            className="py-0 gap-1 sm:gap-2 text-xs sm:text-sm px-0"
             variant={'ghost'}
+            size={'sm'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Customer
             {column.getIsSorted() === 'asc' ? (
-              <ArrowUpIcon className="h-3 w-3 ml-2" />
+              <ArrowUpIcon className="h-3 w-3" />
             ) : column.getIsSorted() === 'desc' ? (
-              <ArrowDownIcon className="h-3 w-3 ml-2" />
-            ) : null}
+              <ArrowDownIcon className="h-3 w-3" />
+            ) : (
+              <ArrowUpDown className="h-3 w-3" />
+            )}
           </Button>
         );
       }
@@ -79,14 +76,17 @@ export const customerColumns = [
     header: ({ column }) => (
       <Button
         variant={'ghost'}
-        className="px-0 gap-2"
+        size={'sm'}
+        className="px-0 gap-1 sm:gap-2 text-xs sm:text-sm"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Type
         {column.getIsSorted() === 'asc' ? (
-          <ArrowUpIcon className="h-3 w-3 ml-2" />
+          <ArrowUpIcon className="h-3 w-3" />
         ) : column.getIsSorted() === 'desc' ? (
-          <ArrowDownIcon className="h-3 w-3 ml-2" />
-        ) : null}
+          <ArrowDownIcon className="h-3 w-3" />
+        ) : (
+          <ArrowUpDown className="h-3 w-3" />
+        )}
       </Button>
     )
   }),
@@ -104,37 +104,46 @@ export const customerColumns = [
         />
       );
     },
-    header: () => <p className="min-w-[300px]">Address</p>
+    header: () => (
+      <p className="text-xs sm:text-sm font-medium min-w-[200px] sm:min-w-[250px]">Address</p>
+    )
   }),
   columnHelper.accessor('phone_number', {
     cell: ({ row }) => {
       const customer = row.original;
-      return <p className="font-[400] text-[14px] min-w-[150px]">{customer.phone_number}</p>;
+      return (
+        <p className="font-normal text-xs sm:text-sm min-w-[120px] sm:min-w-[150px]">
+          {customer.phone_number}
+        </p>
+      );
     },
-    header: () => <p>Phone Number</p>
+    header: () => <p className="text-xs sm:text-sm font-medium">Phone</p>
   }),
   columnHelper.accessor('created_at', {
     cell: ({ row }: Props) => {
       const customer = row.original;
       return (
-        <p className="text-[14px]">
+        <p className="text-xs sm:text-sm">
           {/* @ts-ignore */}
           {new Date(customer.created_at).toLocaleDateString('en-us', options)}
         </p>
       );
     },
     header: ({ column }) => (
-      <div className="flex gap-4 min-w-[180px]">
+      <div className="flex gap-2 sm:gap-4 min-w-[140px] sm:min-w-[180px]">
         <Button
-          className="gap-2 px-0"
+          className="gap-1 sm:gap-2 px-0 text-xs sm:text-sm"
+          size={'sm'}
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Registered Since
+          Registered
           {column.getIsSorted() === 'asc' ? (
-            <ArrowUpIcon className="h-3 w-3 ml-2" />
+            <ArrowUpIcon className="h-3 w-3" />
           ) : column.getIsSorted() === 'desc' ? (
-            <ArrowDownIcon className="h-3 w-3 ml-2" />
-          ) : null}
+            <ArrowDownIcon className="h-3 w-3" />
+          ) : (
+            <ArrowUpDown className="h-3 w-3" />
+          )}
         </Button>
       </div>
     )
@@ -144,13 +153,13 @@ export const customerColumns = [
       const customer = row.original;
       return (
         <Link to={`/customers/${customer.id}`}>
-          <Button variant={'secondary'}>
-            <ChevronRight size={'15px'} />
+          <Button variant={'secondary'} size={'sm'} className="h-7 w-7 p-0">
+            <ChevronRight size={'14px'} />
           </Button>
         </Link>
       );
     },
-    header: () => <p>Actions</p>
+    header: () => <p className="text-xs sm:text-sm font-medium">Actions</p>
   })
 ];
 

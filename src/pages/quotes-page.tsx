@@ -106,7 +106,11 @@ export const quoteColumns = [
   columnHelper.accessor('quote_number', {
     cell: ({ row }) => {
       const quote = row.original;
-      return <p className="text-center text-[14px]">QT-{formatNumber(quote.quote_number)}</p>;
+      return (
+        <p className="text-center text-xs sm:text-sm text-nowrap">
+          QT-{formatNumber(quote.quote_number)}
+        </p>
+      );
     },
     header: ({ column }) => (
       <div className="w-full justify-center flex">

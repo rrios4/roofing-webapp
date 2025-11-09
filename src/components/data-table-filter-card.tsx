@@ -22,51 +22,65 @@ export default function DataTableFilterCard({
   return (
     <>
       <div className="w-full">
-        <div className="flex w-full shadow-xs gap-4 border px-[1rem] py-6 rounded-lg flex-col md:flex-row bg-slate-100 dark:bg-zinc-800">
-          <div className="w-full md:w-[40%]">
-            <p className="mb-1 text-muted-foreground text-[14px]">Search for {entity}</p>
+        <div className="flex w-full shadow-sm gap-3 sm:gap-4 border px-3 sm:px-4 py-3 sm:py-4 rounded-lg flex-col bg-slate-50 dark:bg-zinc-800/50">
+          <div className="w-full">
+            <p className="mb-2 text-muted-foreground text-xs sm:text-sm font-medium">
+              Search for {entity}
+            </p>
             <Input
-              className={'bg-white dark:bg-zinc-900'}
+              className="bg-white dark:bg-zinc-900 text-xs sm:text-sm h-8 sm:h-9"
               name={`search_${entity}`}
               type="search"
-              placeholder={`Enter ${entity} information here...`}
+              placeholder={`Enter ${entity} information...`}
               onChange={(event) =>
                 rootTable?.getColumn(columnEntity)?.setFilterValue(event.target.value)
               }
               value={rootTable?.getColumn(columnEntity)?.getFilterValue() ?? ''}
             />
           </div>
-          <div className="grid grid-flow-row grid-cols-1 gap-4 w-full md:w-[60%] md:grid-cols-3">
-            <div className="text-[14px] font-[500]">
-              <p className="mb-1 text-muted-foreground text-[14px]">{firstSelectName}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full">
+            <div className="text-xs sm:text-sm">
+              <p className="mb-2 text-muted-foreground text-xs sm:text-sm font-medium">
+                {firstSelectName}
+              </p>
               <Select>
-                <SelectTrigger className={'bg-white dark:bg-zinc-900'}>
+                <SelectTrigger className="bg-white dark:bg-zinc-900 text-xs sm:text-sm h-8 sm:h-9">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="all" className="text-xs sm:text-sm">
+                    All
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="text-[14px] font-[500]">
-              <p className="mb-1 text-muted-foreground text-[14px]">{secondSelectName}</p>
+            <div className="text-xs sm:text-sm">
+              <p className="mb-2 text-muted-foreground text-xs sm:text-sm font-medium">
+                {secondSelectName}
+              </p>
               <Select>
-                <SelectTrigger className={'bg-white dark:bg-zinc-900'}>
+                <SelectTrigger className="bg-white dark:bg-zinc-900 text-xs sm:text-sm h-8 sm:h-9">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="all" className="text-xs sm:text-sm">
+                    All
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="text-[14px] font-[500]">
-              <p className="mb-1 text-muted-foreground text-[14px]">{thirdSelectName}</p>
+            <div className="text-xs sm:text-sm">
+              <p className="mb-2 text-muted-foreground text-xs sm:text-sm font-medium">
+                {thirdSelectName}
+              </p>
               <Select>
-                <SelectTrigger className={'bg-white dark:bg-zinc-900'}>
+                <SelectTrigger className="bg-white dark:bg-zinc-900 text-xs sm:text-sm h-8 sm:h-9">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="all" className="text-xs sm:text-sm">
+                    All
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>

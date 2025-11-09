@@ -3,6 +3,7 @@ import DefaultPageHeader from '../components/ui/page-header';
 import CountStatCard from '../components/count-stat-card';
 import {
   ArrowDownIcon,
+  ArrowUpDown,
   ArrowUpIcon,
   CheckCircleIcon,
   ChevronRightIcon,
@@ -98,21 +99,26 @@ export const invoiceTableColumns = [
     cell: ({ row }: any) => {
       const invoice = row.original;
       return (
-        <p className="text-center text-[14px]">INV-{formatNumber(invoice.invoice_number || 0)}</p>
+        <p className="text-center text-xs sm:text-sm text-nowrap font-medium">
+          INV-{formatNumber(invoice.invoice_number || 0)}
+        </p>
       );
     },
     header: ({ column }) => (
       <div className="flex justify-center w-full">
         <Button
-          className="px-1"
+          className="px-1 text-xs sm:text-sm gap-1"
+          size={'sm'}
           variant={'ghost'}
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Invoice
           {column.getIsSorted() === 'asc' ? (
-            <ArrowUpIcon className="h-3 w-3 ml-2" />
+            <ArrowUpIcon className="h-3 w-3" />
           ) : column.getIsSorted() === 'desc' ? (
-            <ArrowDownIcon className="h-3 w-3 ml-2" />
-          ) : null}
+            <ArrowDownIcon className="h-3 w-3" />
+          ) : (
+            <ArrowUpDown className="h-3 w-3" />
+          )}
         </Button>
       </div>
     )
@@ -145,15 +151,18 @@ export const invoiceTableColumns = [
       header: ({ column }) => (
         <div className="flex">
           <Button
-            className="px-1"
+            className="px-1 text-xs sm:text-sm gap-1"
+            size={'sm'}
             variant={'ghost'}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Customer
             {column.getIsSorted() === 'asc' ? (
-              <ArrowUpIcon className="h-3 w-3 ml-2" />
+              <ArrowUpIcon className="h-3 w-3" />
             ) : column.getIsSorted() === 'desc' ? (
-              <ArrowDownIcon className="h-3 w-3 ml-2" />
-            ) : null}
+              <ArrowDownIcon className="h-3 w-3" />
+            ) : (
+              <ArrowUpDown className="h-3 w-3" />
+            )}
           </Button>
         </div>
       )
@@ -193,7 +202,7 @@ export const invoiceTableColumns = [
     cell: ({ row }: any) => {
       const invoice = row.original;
       return (
-        <p className="text-[14px] font-[400]">
+        <p className="text-xs sm:text-sm font-[400]">
           {invoice.invoice_date ? formatDateWithAbbreviatedMonth(invoice.invoice_date) : 'N/A'}
         </p>
       );
@@ -310,7 +319,7 @@ export const invoiceTableColumns = [
           <UpdateInvoiceSheet
             invoice={invoice}
             trigger={
-              <Button variant={'outline'} className="px-3">
+              <Button size={'icon'} variant={'outline'} className="px-3">
                 <PencilIcon size={'15px'} />
               </Button>
             }
@@ -325,7 +334,7 @@ export const invoiceTableColumns = [
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link to={`/invoices/${invoice.invoice_number}`}>
-                  <Button className="px-3" variant={'primary'}>
+                  <Button size={'icon'} className="px-3" variant={'primary'}>
                     <ChevronRightIcon size={'15px'} />
                   </Button>
                 </Link>
