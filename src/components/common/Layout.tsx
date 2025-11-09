@@ -1,5 +1,6 @@
 import React from 'react';
 import SideNavbar from './side-navbar';
+import MobileBottomNav from './mobile-bottom-nav';
 import { Toaster } from '../ui/toaster';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -39,11 +40,12 @@ const Layout = ({ children }: Props) => {
         <SideNavbar userData={loggedInUserData} />
       </header>
       <div className="flex justify-center lg:ml-[5rem] py-2 px-3 sm:px-6">
-        <div className="flex w-full mt-[66px] lg:mt-[0rem] justify-center max-w-screen-3xl">
+        <div className="flex w-full mt-[66px] lg:mt-[0rem] justify-center max-w-screen-3xl pb-16 lg:pb-2">
           {children}
         </div>
         <Toaster />
       </div>
+      <MobileBottomNav />
     </>
   );
 };
