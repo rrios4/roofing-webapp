@@ -114,3 +114,21 @@
 .dark .tremor-DonutChart-root text {
   fill: hsl(var(--foreground)) !important;
 }
+
+/* Prevent mobile zoom on input focus */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
