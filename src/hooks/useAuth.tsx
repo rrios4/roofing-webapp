@@ -1,5 +1,6 @@
 import React from 'react';
 import { useContext, useState, useEffect, createContext } from 'react';
+import type { User, Session } from '@supabase/supabase-js';
 import supabase from '../lib/supabase-client';
 import { googleService } from '../services/google-service';
 
@@ -8,19 +9,24 @@ type Props = {
 };
 
 export type AuthValueTypes = {
-  session: any;
-  user: any;
-  signOut: any;
-  googleLogin: any;
+  session: Session | null;
+  user: User | null;
+  signOut: () => Promise<void>;
+  googleLogin: () => Promise<{ error: any }>;
 };
 
 // create a context for authentication
-const AuthContext = createContext({ session: null, user: null, signOut: () => {} });
+const AuthContext = createContext<AuthValueTypes>({ 
+  session: null, 
+  user: null, 
+  signOut: async () => {},
+  googleLogin: async () => ({ error: null })
+});
 
 export const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState();
-  const [session, setSession] = useState<any>();
-  const [loading, setLoading] = useState<any>(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const googleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -50,15 +56,13 @@ export const AuthProvider = ({ children }: Props) => {
       } = await supabase.auth.getSession();
       if (error) throw error;
       setSession(session);
-      // @ts-expect-error needs to address session info here
-      setUser(session?.user);
+      setUser(session?.user ?? null);
       setLoading(false);
     };
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      // @ts-expect-error need to address session info here
-      setUser(session?.user);
+      setUser(session?.user ?? null);
       setLoading(false);
     });
 

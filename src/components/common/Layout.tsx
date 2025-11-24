@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import SideNavbar from './side-navbar';
 import MobileBottomNav from './mobile-bottom-nav';
 import { Toaster } from '../ui/toaster';
 import { useAuth } from '../../hooks/useAuth';
+
+type UserData = {
+  avatar_url: string;
+  email: string;
+  email_verified: boolean;
+  full_name: string;
+  iss: string;
+  name: string;
+  picture: string;
+  provider_id: string;
+  sub: string;
+};
 
 type Props = {
   children: React.ReactNode;
@@ -10,30 +22,41 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const auth = useAuth();
-  const [loggedInUserData, setLoggedInUserData] = React.useState({
-    avatar_url: '',
-    email: '',
-    email_verified: false,
-    full_name: '',
-    iss: '',
-    name: '',
-    picture: '',
-    provider_id: '',
-    sub: ''
-  });
 
-  // const bg = useColorModeValue('#fcfcfd', 'gray.800');
-  const fetchLoggedInUserData = React.useCallback(async () => {
-    if (auth.user) {
-      // @ts-ignore
-      setLoggedInUserData(auth.user.user_metadata);
-      // console.log(loggedInUserData)
+  // Memoize the initial user data structure
+  const initialUserData: UserData = useMemo(
+    () => ({
+      avatar_url: '',
+      email: '',
+      email_verified: false,
+      full_name: '',
+      iss: '',
+      name: '',
+      picture: '',
+      provider_id: '',
+      sub: ''
+    }),
+    []
+  );
+
+  const [loggedInUserData, setLoggedInUserData] = React.useState<UserData>(initialUserData);
+
+  // Memoize the user data to prevent unnecessary re-renders
+  const userData = useMemo(() => {
+    if (auth.user && 'user_metadata' in auth.user && auth.user.user_metadata) {
+      return {
+        ...initialUserData,
+        ...auth.user.user_metadata
+      } as UserData;
     }
-  }, [auth.user]);
+    return initialUserData;
+  }, [auth.user, initialUserData]);
 
+  // Update user data only when auth.user changes
   React.useEffect(() => {
-    fetchLoggedInUserData();
-  }, [fetchLoggedInUserData]);
+    setLoggedInUserData(userData);
+  }, [userData]);
+
   return (
     <>
       <header>
