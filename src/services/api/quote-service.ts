@@ -296,18 +296,18 @@ export const convertQuoteToInvoice = async (
   // Get next invoice number
   const nextInvoiceNumber = await getNextInvoiceNumber();
 
-  // Get default invoice status (typically "Pending" or "Draft")
+  // Get default invoice status - set to "Draft"
   const { data: invoiceStatuses, error: statusError } = await supabase
     .from(TABLES.INVOICE_STATUS)
     .select('*')
-    .order('id', { ascending: true })
+    .eq('name', 'Draft')
     .limit(1);
 
   if (statusError) {
     throw statusError;
   }
 
-  const defaultStatusId = invoiceStatuses && invoiceStatuses.length > 0 ? invoiceStatuses[0].id : 1;
+  const defaultStatusId = invoiceStatuses && invoiceStatuses.length > 0 ? invoiceStatuses[0].id : 4; // Default to 4 if not found
 
   // Create the invoice
   const today = new Date().toISOString().split('T')[0];
