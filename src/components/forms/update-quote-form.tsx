@@ -333,7 +333,12 @@ export default function UpdateQuoteForm({ quote, quoteLineItems, onSuccess }: Pr
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0 text-start">
-                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} />
+                        <Calendar 
+                          mode="single" 
+                          selected={field.value} 
+                          onSelect={field.onChange}
+                          disabled={(date) => date < new Date('1900-01-01')}
+                        />
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
@@ -362,7 +367,12 @@ export default function UpdateQuoteForm({ quote, quoteLineItems, onSuccess }: Pr
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0 text-start">
-                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} />
+                        <Calendar 
+                          mode="single" 
+                          selected={field.value} 
+                          onSelect={field.onChange}
+                          disabled={(date) => date < new Date('1900-01-01')}
+                        />
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
