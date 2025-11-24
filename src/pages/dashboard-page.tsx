@@ -125,7 +125,7 @@ export default function DashboardPage() {
           {isPositive ? '+' : ''}
           {percentChange}%
         </span>
-        <span className="text-sm text-gray-500 ml-1">vs last month</span>
+        <span className="text-sm text-muted-foreground ml-1">vs last month</span>
       </div>
     );
   };
@@ -149,9 +149,9 @@ export default function DashboardPage() {
     return (
       <div className="w-full">
         <DashboardPageHeader />
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-          <span className="ml-2 text-gray-500">Loading dashboard data...</span>
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <span className="ml-2 text-muted-foreground">Loading dashboard data...</span>
         </div>
       </div>
     );
@@ -370,9 +370,9 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               {isBusinessStatusLoading ? (
-                <div className="flex items-center justify-center h-32">
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
-                  <span className="ml-2 text-gray-500">Loading business status...</span>
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  <span className="ml-2 text-muted-foreground">Loading business status...</span>
                 </div>
               ) : isBusinessStatusError || !businessStatusData ? (
                 <div className="flex items-center justify-center h-32">
@@ -384,26 +384,26 @@ export default function DashboardPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-4">
-                    <h4 className="font-medium text-gray-700 dark:text-gray-300">Quote Status</h4>
+                    <h4 className="font-medium text-foreground">Quote Status</h4>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">Accepted</span>
+                          <span className="text-sm text-muted-foreground">Accepted</span>
                         </div>
                         <Badge variant="green">{businessStatusData.quoteStatus.accepted}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <ClockIcon className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">Pending</span>
+                          <span className="text-sm text-muted-foreground">Pending</span>
                         </div>
                         <Badge variant="yellow">{businessStatusData.quoteStatus.pending}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <XCircleIcon className="h-4 w-4 text-red-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">Rejected</span>
+                          <span className="text-sm text-muted-foreground">Rejected</span>
                         </div>
                         <Badge variant="red">{businessStatusData.quoteStatus.rejected}</Badge>
                       </div>
@@ -411,26 +411,26 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="font-medium text-gray-700 dark:text-gray-300">Invoice Status</h4>
+                    <h4 className="font-medium text-foreground">Invoice Status</h4>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <CheckIcon className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">Paid</span>
+                          <span className="text-sm text-muted-foreground">Paid</span>
                         </div>
                         <Badge variant="green">{businessStatusData.invoiceStatus.paid}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <Clock4Icon className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">Pending</span>
+                          <span className="text-sm text-muted-foreground">Pending</span>
                         </div>
                         <Badge variant="yellow">{businessStatusData.invoiceStatus.pending}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <AlertTriangleIcon className="h-4 w-4 text-red-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">Overdue</span>
+                          <span className="text-sm text-muted-foreground">Overdue</span>
                         </div>
                         <Badge variant="red">{businessStatusData.invoiceStatus.overdue}</Badge>
                       </div>
@@ -438,26 +438,26 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="font-medium text-gray-700 dark:text-gray-300">Project Status</h4>
+                    <h4 className="font-medium text-foreground">Project Status</h4>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <PlayIcon className="h-4 w-4 text-blue-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">Active</span>
+                          <span className="text-sm text-muted-foreground">Active</span>
                         </div>
                         <Badge variant="blue">{businessStatusData.projectStatus.active}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <PauseIcon className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">On Hold</span>
+                          <span className="text-sm text-muted-foreground">On Hold</span>
                         </div>
                         <Badge variant="yellow">{businessStatusData.projectStatus.onHold}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                          <span className="text-sm text-muted-foreground">
                             Completed
                           </span>
                         </div>
@@ -469,66 +469,66 @@ export default function DashboardPage() {
               )}
 
               {/* Customer Types - Horizontal Layout */}
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-4">
+              <div className="mt-6 pt-6 border-t border-border">
+                <h4 className="font-medium text-foreground mb-4">
                   Customer Types
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
+                      <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
                         <HomeIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm font-medium text-foreground">
                           Residential
                         </p>
-                        <p className="text-xs text-gray-500">Active customers</p>
+                        <p className="text-xs text-muted-foreground">Active customers</p>
                       </div>
                     </div>
                     <Badge variant="blue">189</Badge>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-full">
+                      <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
                         <BuildingIcon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm font-medium text-foreground">
                           Commercial
                         </p>
-                        <p className="text-xs text-gray-500">Business clients</p>
+                        <p className="text-xs text-muted-foreground">Business clients</p>
                       </div>
                     </div>
                     <Badge variant="default">58</Badge>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-green-100 dark:bg-green-900 rounded-full">
+                      <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full">
                         <UsersIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm font-medium text-foreground">
                           Referrals
                         </p>
-                        <p className="text-xs text-gray-500">Word of mouth</p>
+                        <p className="text-xs text-muted-foreground">Word of mouth</p>
                       </div>
                     </div>
                     <Badge variant="green">34</Badge>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-full">
+                      <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full">
                         <TrendingUpIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm font-medium text-foreground">
                           New Leads
                         </p>
-                        <p className="text-xs text-gray-500">This month</p>
+                        <p className="text-xs text-muted-foreground">This month</p>
                       </div>
                     </div>
                     <Badge variant="yellow">42</Badge>
@@ -544,16 +544,16 @@ export default function DashboardPage() {
           {/* Monthly Revenue Trend */}
           <div className="lg:col-span-2">
             <Card className="p-6">
-              <Title className="text-gray-900 dark:text-white">
+              <Title className="text-foreground">
                 {years.length}-Year Revenue Trend
               </Title>
-              <Subtitle className="text-gray-600 dark:text-gray-400">
+              <Subtitle className="text-muted-foreground">
                 Monthly revenue growth from {years[0]} to current ({years[years.length - 1]})
               </Subtitle>
               {isRevenueLoading ? (
                 <div className="mt-6 h-96 flex items-center justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-                  <span className="ml-2 text-gray-500">Loading revenue data...</span>
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  <span className="ml-2 text-muted-foreground">Loading revenue data...</span>
                 </div>
               ) : isRevenueError || !multiYearRevenueData ? (
                 <div className="mt-6 h-96 flex items-center justify-center">
@@ -563,30 +563,32 @@ export default function DashboardPage() {
                   </div>
                 </div>
               ) : (
-                <AreaChart
-                  data={multiYearRevenueData}
-                  index="month"
-                  categories={years}
-                  colors={['gray', 'red', 'yellow', 'blue', 'green'].slice(0, years.length)}
-                  className="mt-6 h-96"
-                  valueFormatter={(value: number) => `$${(value / 1000).toFixed(0)}K`}
-                  showAnimation={true}
-                  showLegend={true}
-                  showGridLines={true}
-                  connectNulls={false}
-                />
+                <div className="text-foreground">
+                  <AreaChart
+                    data={multiYearRevenueData}
+                    index="month"
+                    categories={years}
+                    colors={['gray', 'red', 'yellow', 'blue', 'green'].slice(0, years.length)}
+                    className="mt-6 h-96"
+                    valueFormatter={(value: number) => `$${(value / 1000).toFixed(0)}K`}
+                    showAnimation={true}
+                    showLegend={true}
+                    showGridLines={true}
+                    connectNulls={false}
+                  />
+                </div>
               )}
             </Card>
           </div>
 
           {/* Invoice Status */}
           <Card className="p-6">
-            <Title className="text-gray-900 dark:text-white">Invoice Status</Title>
-            <Subtitle className="text-gray-600 dark:text-gray-400">Payment tracking</Subtitle>
+            <Title className="text-foreground">Invoice Status</Title>
+            <Subtitle className="text-muted-foreground">Payment tracking</Subtitle>
             {isInvoiceStatusLoading ? (
-              <div className="mt-6 flex items-center justify-center h-32">
-                <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
-                <span className="ml-2 text-gray-500">Loading invoice data...</span>
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                <span className="ml-2 text-muted-foreground">Loading invoice data...</span>
               </div>
             ) : isInvoiceStatusError || !invoiceStatusData ? (
               <div className="mt-6 flex items-center justify-center h-32">
@@ -600,13 +602,13 @@ export default function DashboardPage() {
                 {Object.entries(invoiceStatusData).map(([key, item]) => (
                   <div
                     key={key}
-                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-white">{item.status}</p>
-                      <p className="text-sm text-gray-500">{item.count} invoices</p>
+                      <p className="font-medium text-foreground">{item.status}</p>
+                      <p className="text-sm text-muted-foreground">{item.count} invoices</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="font-medium text-foreground">
                         {item.amount >= 1000
                           ? `$${(item.amount / 1000).toFixed(0)}K`
                           : `$${item.amount}`}
@@ -635,8 +637,8 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Quote Status Distribution */}
           {/* <Card className="p-6">
-            <Title className="text-gray-900 dark:text-white">Quote Status Distribution</Title>
-            <Subtitle className="text-gray-600 dark:text-gray-400">
+            <Title className="text-foreground">Quote Status Distribution</Title>
+            <Subtitle className="text-muted-foreground">
               Current month breakdown
             </Subtitle>
             <DonutChart
@@ -657,8 +659,8 @@ export default function DashboardPage() {
 
           {/* Lead Pipeline */}
           {/* <Card className="p-6">
-            <Title className="text-gray-900 dark:text-white">Lead Pipeline</Title>
-            <Subtitle className="text-gray-600 dark:text-gray-400">
+            <Title className="text-foreground">Lead Pipeline</Title>
+            <Subtitle className="text-muted-foreground">
               Current lead status breakdown
             </Subtitle>
             <BarChart
@@ -677,36 +679,36 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Key Performance Indicators */}
           {/* <Card className="p-6">
-            <Title className="text-gray-900 dark:text-white">Key Performance Indicators</Title>
+            <Title className="text-foreground">Key Performance Indicators</Title>
             <div className="mt-6 space-y-6">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Text className="text-gray-600 dark:text-gray-400">Quote Conversion Rate</Text>
-                  <Text className="font-medium text-gray-900 dark:text-white">68.2%</Text>
+                  <Text className="text-muted-foreground">Quote Conversion Rate</Text>
+                  <Text className="font-medium text-foreground">68.2%</Text>
                 </div>
                 <CategoryBar values={[68.2, 31.8]} colors={['emerald', 'gray']} className="h-2" />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Text className="text-gray-600 dark:text-gray-400">Customer Satisfaction</Text>
-                  <Text className="font-medium text-gray-900 dark:text-white">94.5%</Text>
+                  <Text className="text-muted-foreground">Customer Satisfaction</Text>
+                  <Text className="font-medium text-foreground">94.5%</Text>
                 </div>
                 <CategoryBar values={[94.5, 5.5]} colors={['green', 'gray']} className="h-2" />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Text className="text-gray-600 dark:text-gray-400">On-Time Completion</Text>
-                  <Text className="font-medium text-gray-900 dark:text-white">89.3%</Text>
+                  <Text className="text-muted-foreground">On-Time Completion</Text>
+                  <Text className="font-medium text-foreground">89.3%</Text>
                 </div>
                 <CategoryBar values={[89.3, 10.7]} colors={['blue', 'gray']} className="h-2" />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Text className="text-gray-600 dark:text-gray-400">Revenue Target Progress</Text>
-                  <Text className="font-medium text-gray-900 dark:text-white">78.4%</Text>
+                  <Text className="text-muted-foreground">Revenue Target Progress</Text>
+                  <Text className="font-medium text-foreground">78.4%</Text>
                 </div>
                 <CategoryBar values={[78.4, 21.6]} colors={['purple', 'gray']} className="h-2" />
               </div>
@@ -741,22 +743,22 @@ export default function DashboardPage() {
               <div className="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     New Customer Added
                   </p>
-                  <p className="text-xs text-gray-500">Sarah Johnson - Commercial</p>
-                  <p className="text-xs text-gray-400">4 hours ago</p>
+                  <p className="text-xs text-muted-foreground">Sarah Johnson - Commercial</p>
+                  <p className="text-xs text-muted-foreground">4 hours ago</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
                 <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     Payment Received
                   </p>
-                  <p className="text-xs text-gray-500">Invoice #INV-456 - $8,200</p>
-                  <p className="text-xs text-gray-400">6 hours ago</p>
+                  <p className="text-xs text-muted-foreground">Invoice #INV-456 - $8,200</p>
+                  <p className="text-xs text-muted-foreground">6 hours ago</p>
                 </div>
               </div>
 

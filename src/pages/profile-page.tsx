@@ -242,7 +242,7 @@ export default function ProfilePage() {
                     Confirmed
                   </Badge>
                 ) : (
-                  <Badge variant="secondary" className="text-gray-700 bg-gray-100">
+                  <Badge variant="secondary" className="text-muted-foreground bg-muted">
                     <AlertCircleIcon className="h-3 w-3 mr-1" />
                     Not Set
                   </Badge>

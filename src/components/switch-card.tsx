@@ -39,7 +39,7 @@ export function SwitchCardTwo({
         {icon}
         <div>
           <p className="font-semibold text-[14px]">{title}</p>
-          <p className="text-[14px] text-gray-500">{description}</p>
+          <p className="text-[14px] text-muted-foreground">{description}</p>
         </div>
       </div>
       <div className="my-auto">

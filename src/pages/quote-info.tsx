@@ -300,7 +300,7 @@ export default function QuoteInfoPage() {
       </div>
 
       <div className="w-full flex lg:flex-row flex-col gap-4">
-        <Card className="dark:bg-zinc-900 w-full">
+        <Card className="bg-card w-full">
           <CardHeader>
             <div className="w-full flex flex-col sm:flex-row sm:justify-between md:px-6 md:pt-5">
               <div className="flex gap-4">
@@ -309,7 +309,7 @@ export default function QuoteInfoPage() {
                     <img src="/company-logo.png" className="shadow-xs p-[0px] rounded-2xl" />
                   </Link>
                 </div>
-                <div className="text-md sm:text-lg font-semibold text-gray-700 dark:text-zinc-100">
+                <div className="text-md sm:text-lg font-semibold text-foreground">
                   <p className="">Rios Roofing</p>
                   <p className="-mt-2">Services</p>
                 </div>
@@ -427,7 +427,7 @@ export default function QuoteInfoPage() {
               {/* Line Items Table */}
               <div className="overflow-hidden border border-gray-200 dark:border-zinc-800 rounded-lg">
                 <Table>
-                  <TableHeader className="bg-gray-50 dark:bg-zinc-800">
+                  <TableHeader className="bg-secondary">
                     <TableRow>
                       <TableHead className="w-[100px]">#</TableHead>
                       <TableHead>Description</TableHead>
@@ -557,7 +557,7 @@ export default function QuoteInfoPage() {
 
                 {/* Quote Status & Dates */}
                 <div className="space-y-4">
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                  <div className="bg-secondary rounded-lg p-4">
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Status:</span>

@@ -64,7 +64,7 @@ export default function UpdateQuoteSheet({ quote, trigger }: Props) {
             quoteLineItems={(quoteById as any).quote_line_item || []}
           />
         ) : (
-          <div className="text-gray-500 text-sm py-4">Quote not found</div>
+          <div className="text-muted-foreground text-sm py-4">Quote not found</div>
         )}
       </SheetContent>
     </Sheet>

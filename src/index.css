@@ -90,3 +90,27 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Tremor chart dark mode support */
+.dark .tremor-base {
+  color: hsl(var(--foreground));
+}
+
+.dark .recharts-text {
+  fill: hsl(var(--foreground)) !important;
+}
+
+.dark .recharts-cartesian-axis-tick-value {
+  fill: hsl(var(--muted-foreground)) !important;
+}
+
+.dark .recharts-legend-wrapper .recharts-legend-item .recharts-surface text {
+  fill: hsl(var(--foreground)) !important;
+}
+
+.dark .tremor-AreaChart-root text,
+.dark .tremor-LineChart-root text,
+.dark .tremor-BarChart-root text,
+.dark .tremor-DonutChart-root text {
+  fill: hsl(var(--foreground)) !important;
+}

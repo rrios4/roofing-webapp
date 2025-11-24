@@ -64,7 +64,7 @@ export default function UpdateInvoiceSheet({ invoice, trigger }: Props) {
             invoiceLineItems={(invoiceById as any).invoice_line_service || []}
           />
         ) : (
-          <div className="text-gray-500 text-sm py-4">Invoice not found</div>
+          <div className="text-muted-foreground text-sm py-4">Invoice not found</div>
         )}
       </SheetContent>
     </Sheet>

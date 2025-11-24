@@ -475,7 +475,7 @@ export default function InvoiceInfoPage() {
         </div>
       </div>
       <div className="w-full flex lg:flex-row flex-col gap-4">
-        <Card className="dark:bg-zinc-900 w-full">
+        <Card className="bg-card w-full">
           <CardHeader>
             <div className="w-full flex flex-col sm:flex-row sm:justify-between md:px-6 md:pt-5">
               <div className="flex gap-4">
@@ -484,7 +484,7 @@ export default function InvoiceInfoPage() {
                     <img src="/company-logo.png" className="shadow-xs p-[0px] rounded-2xl" />
                   </Link>
                 </div>
-                <div className="text-md sm:text-lg font-semibold text-gray-700 dark:text-zinc-100">
+                <div className="text-md sm:text-lg font-semibold text-foreground">
                   <p className="">Rios Roofing</p>
                   <p className="-mt-2">Services</p>
                 </div>
@@ -510,7 +510,7 @@ export default function InvoiceInfoPage() {
                   {/* Customer Avatar */}
                   <div className="flex gap-2">
                     <UserIcon className="w-4 h-4 my-auto" />
-                    <p className="text-sm text-gray-500 align-middle">Customer</p>
+                    <p className="text-sm text-muted-foreground align-middle">Customer</p>
                   </div>
 
                   <div className="flex mt-2 pt-1 gap-4">
@@ -535,7 +535,7 @@ export default function InvoiceInfoPage() {
                 <div className="text-sm text-left sm:text-right">
                   <div className="flex gap-2">
                     <PackageIcon className="w-4 h-4 my-auto" />
-                    <p className="text-sm text-gray-500 mb-0">Service</p>
+                    <p className="text-sm text-muted-foreground mb-0">Service</p>
                   </div>
 
                   <p className="font-medium">{invoice.service?.name || 'Unknown Service'}</p>
@@ -545,18 +545,18 @@ export default function InvoiceInfoPage() {
               {/* Invoice From / To */}
               <div className="w-full flex flex-col sm:flex-row justify-between gap-4 py-2">
                 <div className="w-full text-left">
-                  <p className="text-sm text-gray-500 mb-1">Invoice From</p>
+                  <p className="text-sm text-muted-foreground mb-1">Invoice From</p>
                   <p className="mb-1 font-medium">Rios Roofing</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-200">
+                  <p className="text-sm text-muted-foreground">
                     150 Tallant St, Houston TX 77076
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-200">
+                  <p className="text-sm text-muted-foreground">
                     rrios.roofing@gmail.com
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-200">832-310-3593</p>
+                  <p className="text-sm text-muted-foreground">832-310-3593</p>
 
                   <div className="my-6 text-left">
-                    <p className="text-sm text-gray-500">Date Create</p>
+                    <p className="text-sm text-muted-foreground">Date Create</p>
                     <p className="font-medium">
                       {invoice.invoice_date
                         ? formatDateWithAbbreviatedMonth(invoice.invoice_date)
@@ -565,11 +565,11 @@ export default function InvoiceInfoPage() {
                   </div>
                 </div>
                 <div className="w-full text-left">
-                  <p className="text-sm text-gray-500 mb-1">Invoice To</p>
+                  <p className="text-sm text-muted-foreground mb-1">Invoice To</p>
                   <p className="mb-1 font-medium">
                     {invoice.customer?.first_name || ''} {invoice.customer?.last_name || ''}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-200">
+                  <p className="text-sm text-muted-foreground">
                     {invoice.bill_to_street_address || invoice.customer?.street_address || ''}
                     {invoice.bill_to_city || invoice.customer?.city
                       ? `, ${invoice.bill_to_city || invoice.customer?.city}`
@@ -579,15 +579,15 @@ export default function InvoiceInfoPage() {
                       : ''}{' '}
                     {invoice.bill_to_zipcode || invoice.customer?.zipcode || ''}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-200">
+                  <p className="text-sm text-muted-foreground">
                     {invoice.customer?.email || ''}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-200">
+                  <p className="text-sm text-muted-foreground">
                     {invoice.customer?.phone_number || ''}
                   </p>
 
                   <div className="text-left my-6">
-                    <p className="text-sm text-gray-500">Due Date</p>
+                    <p className="text-sm text-muted-foreground">Due Date</p>
                     <p className="font-medium">
                       {invoice.due_date ? formatDateWithAbbreviatedMonth(invoice.due_date) : 'N/A'}
                     </p>
@@ -598,7 +598,7 @@ export default function InvoiceInfoPage() {
               {/* Table */}
               <div className="overflow-hidden border border-gray-200 dark:border-zinc-800 rounded-lg">
                 <Table>
-                  <TableHeader className="bg-gray-50 dark:bg-zinc-800">
+                  <TableHeader className="bg-secondary">
                     <TableRow>
                       <TableHead className="w-[100px]">#</TableHead>
                       <TableHead>Description</TableHead>
@@ -614,7 +614,7 @@ export default function InvoiceInfoPage() {
                         <TableCell>
                           <p className="font-medium">{lineItem.description || 'No description'}</p>
                           {/* {lineItem.sq_ft && (
-                            <p className="text-sm text-gray-500">Square feet: {lineItem.sq_ft}</p>
+                            <p className="text-sm text-muted-foreground">Square feet: {lineItem.sq_ft}</p>
                           )} */}
                         </TableCell>
                         <TableCell className="text-right">{lineItem.qty || 0}</TableCell>
@@ -627,7 +627,7 @@ export default function InvoiceInfoPage() {
                       </TableRow>
                     )) || (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center text-gray-500">
+                        <TableCell colSpan={5} className="text-center text-muted-foreground">
                           No line items found
                         </TableCell>
                       </TableRow>
@@ -640,12 +640,12 @@ export default function InvoiceInfoPage() {
               <div className="flex justify-end mt-6">
                 <div className="w-72 space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Subtotal</span>
+                    <span className="text-foreground">Subtotal</span>
                     <span className="font-medium">${formatMoneyValue(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-base border-t border-gray-200 dark:border-gray-700 pt-2">
                     <span className="font-semibold">Total</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
+                    <span className="font-semibold text-foreground">
                       ${formatMoneyValue(invoice.total || subtotal)}
                     </span>
                   </div>
@@ -655,13 +655,13 @@ export default function InvoiceInfoPage() {
               {/* Notes */}
               <div className="mt-8">
                 <p className="text-sm font-medium">NOTES</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-muted-foreground">
                   {invoice.public_note || invoice.cust_note || 'No customer notes added'}
                 </p>
               </div>
 
               {/* Footer */}
-              <div className="flex justify-between items-center mt-10 text-sm text-gray-600">
+              <div className="flex justify-between items-center mt-10 text-sm text-muted-foreground">
                 <div></div>
                 <div>
                   <p>Have a Question?</p>
@@ -724,7 +724,7 @@ export default function InvoiceInfoPage() {
                             Amount *
                           </Label>
                           <div className="col-span-3 relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
                               $
                             </span>
                             <Input
@@ -799,7 +799,7 @@ export default function InvoiceInfoPage() {
                             Amount *
                           </Label>
                           <div className="col-span-3 relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
                               $
                             </span>
                             <Input
@@ -875,7 +875,7 @@ export default function InvoiceInfoPage() {
                       {invoice.invoice_payment.map((payment, index) => (
                         <div
                           key={payment.id}
-                          className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border">
+                          className="flex items-center justify-between p-3 bg-secondary rounded-lg border">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
                               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -933,7 +933,7 @@ export default function InvoiceInfoPage() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-center py-4 text-gray-500">No payments recorded yet</div>
+                    <div className="text-center py-4 text-muted-foreground">No payments recorded yet</div>
                   )}
                 </div>
               </div>

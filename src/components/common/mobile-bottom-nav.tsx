@@ -113,10 +113,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ className = ''
         }
         
         /* Dark Mode Support */
-        @media (prefers-color-scheme: dark) {
-          .mobile-nav-ios {
-            background-color: rgba(39, 39, 42, 0.85) !important;
-          }
+        .dark .mobile-nav-ios {
+          background-color: hsl(var(--background) / 0.85) !important;
         }
         
         /* Enhanced tap targets for iOS */
@@ -127,7 +125,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ className = ''
         }
       `}</style>
       <nav
-        className={`mobile-nav-ios fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 dark:border-zinc-700 lg:hidden ${className}`}
+        className={`mobile-nav-ios fixed bottom-0 left-0 right-0 z-50 border-t border-border lg:hidden ${className}`}
         style={{
           paddingBottom: 'max(env(safe-area-inset-bottom), 20px)',
           paddingLeft: 'env(safe-area-inset-left)',
@@ -150,18 +148,18 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ className = ''
                     size={20}
                     className={`transition-all duration-200 ${
                       isActive
-                        ? 'text-blue-600 dark:text-blue-400 scale-105'
-                        : 'text-gray-600 dark:text-gray-400'
+                        ? 'text-primary scale-105'
+                        : 'text-muted-foreground'
                     }`}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
 
                   {/* Notification Badge - Following iOS Badge Guidelines */}
-                  {badgeCount != null && badgeCount > 0 && (
+                      {badgeCount != null && badgeCount > 0 && (
                     <div className="absolute -top-2 -right-2">
                       <Badge
                         variant="destructive"
-                        className="h-5 w-5 p-0 flex items-center justify-center text-[10px] font-semibold rounded-full border-2 border-white dark:border-zinc-900 shadow-sm">
+                        className="h-5 w-5 p-0 flex items-center justify-center text-[10px] font-semibold rounded-full border-2 border-background shadow-sm">
                         {badgeCount > 99 ? '99+' : badgeCount}
                       </Badge>
                     </div>
@@ -172,15 +170,15 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ className = ''
                 <span
                   className={`text-[9px] font-medium transition-all duration-200 truncate max-w-full ${
                     isActive
-                      ? 'text-blue-600 dark:text-blue-400 font-semibold'
-                      : 'text-gray-600 dark:text-gray-400'
+                      ? 'text-primary font-semibold'
+                      : 'text-muted-foreground'
                   }`}>
                   {item.label}
                 </span>
 
                 {/* Active Indicator - iOS Style */}
                 {isActive && (
-                  <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full opacity-75" />
+                  <div className="absolute -bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full opacity-75" />
                 )}
               </Link>
             );

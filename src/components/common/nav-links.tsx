@@ -17,7 +17,7 @@ import { title } from 'process';
 export const navLinks = [
   {
     title: 'Home',
-    icon: <HomeIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
+    icon: <HomeIcon size={'20px'} className="text-foreground" />,
     path: '/',
     group: 1,
     lastOfGroup: true
@@ -31,7 +31,7 @@ export const navLinks = [
   // },
   {
     title: 'Sales Leads',
-    icon: <SpeechIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
+    icon: <SpeechIcon size={'20px'} className="text-foreground" />,
     path: '/inbox',
     group: 2
   },
@@ -43,7 +43,7 @@ export const navLinks = [
   // },
   {
     title: 'Invoices',
-    icon: <SendIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
+    icon: <SendIcon size={'20px'} className="text-foreground" />,
     path: '/invoices',
     group: 2
   },
@@ -62,7 +62,7 @@ export const navLinks = [
   },
   {
     title: 'Data Management',
-    icon: <ServerCogIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
+    icon: <ServerCogIcon size={'20px'} className="text-foreground" />,
     path: '/data-management',
     group: 3
   }

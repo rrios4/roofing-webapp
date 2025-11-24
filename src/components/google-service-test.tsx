@@ -73,7 +73,7 @@ export const GoogleServiceTest: React.FC = () => {
       case 'error':
         return <XCircle className="w-4 h-4 text-red-500" />;
       default:
-        return <AlertCircle className="w-4 h-4 text-gray-400" />;
+        return <AlertCircle className="w-4 h-4 text-muted-foreground" />;
     }
   };
 
@@ -295,7 +295,7 @@ export const GoogleServiceTest: React.FC = () => {
               {testOutputs[test.name] && (
                 <div className="mt-4 p-3 bg-gray-50 rounded-md">
                   <h4 className="text-sm font-medium mb-2">Test Output:</h4>
-                  <pre className="text-xs text-gray-700 overflow-x-auto">
+                  <pre className="text-xs text-muted-foreground overflow-x-auto">
                     {JSON.stringify(testOutputs[test.name], null, 2)}
                   </pre>
                 </div>

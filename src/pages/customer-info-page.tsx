@@ -179,21 +179,21 @@ export default function CustomerInfoPage() {
           <div>
             <div className="flex gap-2">
               <MailIcon className="w-3 h-3 my-auto" />
-              <p className="text-gray-500 font-semibold text-[14px]">Email</p>
+              <p className="text-muted-foreground font-semibold text-[14px]">Email</p>
             </div>
             <p className="text-sm font-light">{customerById?.email}</p>
           </div>
           <div>
             <div className="flex gap-2">
               <PhoneIcon className="w-3 h-3 my-auto" />
-              <p className="text-gray-500 font-semibold text-[14px]">Phone Number</p>
+              <p className="text-muted-foreground font-semibold text-[14px]">Phone Number</p>
             </div>
             <p className="text-sm font-light">{formatPhoneNumber(customerById?.phone_number)}</p>
           </div>
           <div>
             <div className="flex gap-2">
               <MapIcon className="w-3 h-3 my-auto" />
-              <p className="text-gray-500 font-semibold text-[14px]">Main Address</p>
+              <p className="text-muted-foreground font-semibold text-[14px]">Main Address</p>
             </div>
             <GoogleMapsAddressPreviewPopover
               streetAddress={customerById?.street_address || ''}
@@ -211,7 +211,7 @@ export default function CustomerInfoPage() {
           <div>
             <div className="flex gap-2">
               <EarthIcon className="w-3 h-3 my-auto" />
-              <p className="text-gray-500 font-semibold text-[14px]">Market</p>
+              <p className="text-muted-foreground font-semibold text-[14px]">Market</p>
             </div>
             <p className="text-sm font-light">
               {customerById?.city}, {customerById?.state} 🇺🇸
@@ -220,7 +220,7 @@ export default function CustomerInfoPage() {
           <div>
             <div className="flex gap-2">
               <SquarePenIcon className="w-3 h-3 my-auto" />
-              <p className="text-gray-500 font-semibold text-[14px]">Registed At</p>
+              <p className="text-muted-foreground font-semibold text-[14px]">Registed At</p>
             </div>
             <p className="text-sm font-light">Tuesday, Dec 19, 2023</p>
           </div>
@@ -253,7 +253,7 @@ export default function CustomerInfoPage() {
                 </div>
                 {customerInvoices?.length === 0 && (
                   <>
-                    <p className="text-gray-500 dark:text-gray-300 text-center font-light mb-2">
+                    <p className="text-muted-foreground text-center font-light mb-2">
                       No invoices found for this customer.
                     </p>
                     {/* <EmptyStateItemsNotFound
@@ -377,7 +377,7 @@ export default function CustomerInfoPage() {
                 </div>
                 {customerQuotes?.length === 0 && (
                   <>
-                    <p className="text-gray-500 dark:text-gray-300 text-center font-light mb-2">
+                    <p className="text-muted-foreground text-center font-light mb-2">
                       No quotes found for this customer.
                     </p>
                     {/* <EmptyStateItemsNotFound

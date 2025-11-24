@@ -85,14 +85,14 @@ const formatCustomerTypeName = (name: string): string => {
 
 const getCustomerTypeColor = (name: string): string => {
   const colors = [
-    'bg-blue-100 text-blue-800',
-    'bg-green-100 text-green-800',
-    'bg-purple-100 text-purple-800',
-    'bg-orange-100 text-orange-800',
-    'bg-red-100 text-red-800',
-    'bg-yellow-100 text-yellow-800',
-    'bg-indigo-100 text-indigo-800',
-    'bg-pink-100 text-pink-800'
+    'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300',
+    'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300',
+    'bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300',
+    'bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300',
+    'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300',
+    'bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300',
+    'bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300',
+    'bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300'
   ];
 
   // Use name hash to consistently assign colors
@@ -251,7 +251,7 @@ const CustomerTypeUsageDialog: React.FC<CustomerTypeUsageDialogProps> = ({
             </div>
           ) : usage ? (
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-secondary rounded-lg">
                 <span className="text-sm font-medium">Customers using this type:</span>
                 <Badge variant="secondary" className="text-lg px-3 py-1">
                   {usage.customerCount}
@@ -277,7 +277,7 @@ const CustomerTypeUsageDialog: React.FC<CustomerTypeUsageDialogProps> = ({
               </div>
             </div>
           ) : (
-            <p className="text-sm text-gray-500">Unable to load usage information.</p>
+            <p className="text-sm text-muted-foreground">Unable to load usage information.</p>
           )}
         </div>
 
@@ -473,7 +473,7 @@ const CustomerTypesPage: React.FC = () => {
             <div className="flex items-center space-x-2">
               <UsersIcon className="h-5 w-5 text-blue-600" />
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Types</p>
+                <p className="text-sm font-medium text-muted-foreground">Total Types</p>
                 <p className="text-2xl font-bold">{customerTypes.length}</p>
               </div>
             </div>
@@ -484,7 +484,7 @@ const CustomerTypesPage: React.FC = () => {
             <div className="flex items-center space-x-2">
               <SearchIcon className="h-5 w-5 text-green-600" />
               <div>
-                <p className="text-sm font-medium text-gray-600">Filtered Results</p>
+                <p className="text-sm font-medium text-muted-foreground">Filtered Results</p>
                 <p className="text-2xl font-bold">{filteredCustomerTypes.length}</p>
               </div>
             </div>
@@ -495,7 +495,7 @@ const CustomerTypesPage: React.FC = () => {
             <div className="flex items-center space-x-2">
               <CheckCircleIcon className="h-5 w-5 text-purple-600" />
               <div>
-                <p className="text-sm font-medium text-gray-600">Active</p>
+                <p className="text-sm font-medium text-muted-foreground">Active</p>
                 <p className="text-2xl font-bold">{customerTypes.length}</p>
               </div>
             </div>
@@ -523,7 +523,7 @@ const CustomerTypesPage: React.FC = () => {
         <CardContent className="space-y-4">
           {/* Search Input */}
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search customer types by name or description..."
               value={searchTerm}
@@ -562,11 +562,11 @@ const CustomerTypesPage: React.FC = () => {
             </div>
           ) : filteredCustomerTypes.length === 0 ? (
             <div className="text-center py-12">
-              <UsersIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
+              <UsersIcon className="mx-auto h-12 w-12 text-muted-foreground" />
+              <h3 className="mt-2 text-sm font-medium text-foreground">
                 {searchTerm ? 'No customer types found' : 'No customer types yet'}
               </h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {searchTerm
                   ? 'Try adjusting your search terms'
                   : 'Get started by creating your first customer type'}

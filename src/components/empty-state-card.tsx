@@ -35,9 +35,9 @@ export default function EmptyStateCard({
 }: Props) {
   const [open, setOpen] = React.useState(false);
   return (
-    <div className="flex w-full justify-center p-8 mx-auto mt-4 max-w-[600px] shadow-sm border rounded-lg dark:bg-zinc-800">
+    <div className="flex w-full justify-center p-8 mx-auto mt-4 max-w-[600px] shadow-sm border rounded-lg bg-card">
       <div className="flex flex-col gap-2">
-        <div className="mx-auto p-3 border rounded-lg w-max dark:border-zinc-700">{icon}</div>
+        <div className="mx-auto p-3 border rounded-lg w-max border-border">{icon}</div>
         <p className="font-[600] text-18px text-center">No {entity}s found</p>
         <p className="text-[14px] font-[400] mb-6">
           Click on the button below to add a new {entity} to system.

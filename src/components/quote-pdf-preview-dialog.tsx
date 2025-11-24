@@ -89,7 +89,7 @@ export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({ qu
         <div className="flex-1 overflow-y-auto px-6 sm:px-0">
           {/* Display Options */}
           <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border">
-            <h3 className="text-sm font-medium mb-3 text-gray-900 dark:text-gray-100">
+            <h3 className="text-sm font-medium mb-3 text-foreground">
               PDF Display Options
             </h3>
             <div className="flex flex-wrap gap-4">
@@ -98,7 +98,7 @@ export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({ qu
                   checked={displayOptions.showServiceDetails}
                   onCheckedChange={() => toggleOption('showServiceDetails')}
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-sm text-muted-foreground">
                   Show Service Details
                 </span>
                 {displayOptions.showServiceDetails && (
@@ -111,7 +111,7 @@ export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({ qu
                   checked={displayOptions.showMeasurementNote}
                   onCheckedChange={() => toggleOption('showMeasurementNote')}
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-sm text-muted-foreground">
                   Show Measurement Notes
                 </span>
                 {displayOptions.showMeasurementNote && (
@@ -124,7 +124,7 @@ export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({ qu
                   checked={displayOptions.showCustomerNotes}
                   onCheckedChange={() => toggleOption('showCustomerNotes')}
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-sm text-muted-foreground">
                   Show Customer Notes
                 </span>
                 {displayOptions.showCustomerNotes && (
@@ -140,7 +140,7 @@ export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({ qu
               <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
                 <div className="flex flex-col items-center gap-3">
                   <LoaderIcon className="w-8 h-8 animate-spin text-blue-600" />
-                  <p className="text-sm text-gray-600">Loading PDF preview...</p>
+                  <p className="text-sm text-muted-foreground">Loading PDF preview...</p>
                 </div>
               </div>
             )}
@@ -152,7 +152,7 @@ export const QuotePDFPreviewDialog: React.FC<QuotePDFPreviewDialogProps> = ({ qu
         </div>
 
         <DialogFooter className="flex-shrink-0 flex flex-row justify-between items-center pt-4 border-t px-6 sm:px-0">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <FileTextIcon className="w-4 h-4" />
             <span>File: {getQuoteFileName()}</span>
           </div>

@@ -516,7 +516,7 @@ export default function UpdateInvoiceForm({ invoice, invoiceLineItems, onSuccess
                               type="text"
                               value="Fixed Pricing"
                               disabled
-                              className="bg-gray-100 dark:bg-gray-700 opacity-50 text-center"
+                              className="bg-muted opacity-50 text-center"
                               placeholder="Fixed rate (future feature)"
                             />
                           </FormControl>

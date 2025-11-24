@@ -60,12 +60,12 @@ export function ConvertQuoteAlertDialog({
               Are you sure you want to convert <strong>Quote #{quoteNumber}</strong> to an invoice?
             </p>
             {customerName && (
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 <strong>Customer:</strong> {customerName}
               </p>
             )}
             {total !== undefined && (
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 <strong>Amount:</strong> {formatMoney(total)}
               </p>
             )}
