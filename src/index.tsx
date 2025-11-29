@@ -38,6 +38,7 @@ import { Layout, ProtectedRoute } from './components';
 import { AuthProvider } from './hooks/useAuth';
 import InvoiceInfoPage from './pages/invoice-info';
 import QuoteInfoPage from './pages/quote-info';
+import ProjectsDemo from './components/projects/projects-demo';
 
 const container = document.getElementById('app');
 if (!container) throw new Error('Failed to find the root element');
@@ -171,6 +172,14 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <SettingsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects-demo"
+                element={
+                  <ProtectedRoute>
+                    <ProjectsDemo />
                   </ProtectedRoute>
                 }
               />
