@@ -12,5 +12,8 @@
   "aliases": {
     "components": "src/components",
     "utils": "src/lib/utils"
+  },
+  "registries": {
+    "@svgl": "https://svgl.app/r/{name}.json"
   }
 }

@@ -112,3 +112,50 @@ export type IDbQuoteRequestStatus = {
   updated_at: Date;
   created_at: Date;
 };
+
+// Connected Accounts Types
+export interface ConnectedAccount {
+  id: string;
+  user_id: string;
+  provider: 'google' | 'microsoft' | 'other';
+  account_email: string;
+  account_name: string;
+  account_id: string; // Provider's unique identifier
+  access_token: string;
+  refresh_token?: string;
+  token_expires_at?: string;
+  scopes: string[]; // Permissions granted
+  is_default: boolean; // Default account for sending emails
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ConnectedAccountCreate {
+  provider: 'google' | 'microsoft' | 'other';
+  account_email: string;
+  account_name: string;
+  account_id: string;
+  access_token: string;
+  refresh_token?: string;
+  token_expires_at?: string;
+  scopes: string[];
+  is_default?: boolean;
+}
+
+export interface EmailSendOptions {
+  from_account_id?: string; // ID of connected account to send from
+  to: string[];
+  cc?: string[];
+  bcc?: string[];
+  subject: string;
+  htmlBody?: string;
+  textBody?: string;
+  attachments?: EmailAttachment[];
+}
+
+export interface EmailAttachment {
+  filename: string;
+  content: string; // Base64 encoded content
+  mimeType: string;
+}

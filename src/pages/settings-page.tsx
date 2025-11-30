@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button';
 import { Switch } from '../components/ui/switch';
 import { Label } from '../components/ui/label';
 import { Separator } from '../components/ui/separator';
+import ConnectedAccountsSection from '../components/settings/connected-accounts-section';
 import {
   ChevronRightIcon,
   DatabaseIcon,
@@ -120,6 +121,9 @@ export default function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Connected Accounts Section */}
+        <ConnectedAccountsSection />
 
         {/* Quick Actions */}
         <Card className="w-full">

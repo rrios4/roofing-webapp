@@ -21,3 +21,5 @@ export { default as ServicesManagementPage } from './services-management-page';
 export { default as StatusManagementPage } from './status-management-page';
 export { default as SettingsPage } from './settings-page';
 export { default as PageNotFound } from './page-not-found';
+export { default as GoogleAuthCallback } from './google-auth-callback';
+// export { default as ProjectsPage } from './projects-page';

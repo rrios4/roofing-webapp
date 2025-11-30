@@ -20,5 +20,8 @@ export const TABLES = {
   QUOTE_STATUS: 'quote_status',
 
   // Service related tables
-  SERVICE: 'service'
+  SERVICE: 'service',
+
+  // Connected accounts table
+  CONNECTED_ACCOUNTS: 'connected_accounts'
 };
