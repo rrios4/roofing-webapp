@@ -58,13 +58,14 @@ export const navLinks = [
     icon: <UsersIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
     path: '/customers',
     group: 2,
-    lastOfGroup: false
+    lastOfGroup: true
   },
   {
-    title: 'Data Management',
-    icon: <ServerCogIcon size={'20px'} className="text-foreground" />,
-    path: '/data-management',
-    group: 3
+    title: 'Settings',
+    icon: <SettingsIcon size={'20px'} className="text-foreground" />,
+    path: '/settings',
+    group: 3,
+    lastOfGroup: false
   }
   // {
   //   title: "Profile",
