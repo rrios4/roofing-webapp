@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import SideNavbar from './side-navbar';
 import MobileBottomNav from './mobile-bottom-nav';
 import { Toaster } from '../ui/toaster';
+import { CommandPalette } from './command-palette';
 import { useAuth } from '../../hooks/useAuth';
 
 type UserData = {
@@ -67,6 +68,7 @@ const Layout = ({ children }: Props) => {
           {children}
         </div>
         <Toaster />
+        <CommandPalette />
       </div>
       <MobileBottomNav />
     </>

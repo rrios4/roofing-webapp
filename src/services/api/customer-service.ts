@@ -179,6 +179,20 @@ export const fetchCustomerQuotes = async (customerId: number): Promise<QuoteWith
 };
 
 // GET request to API to search for customer
+export const fetchRecentlyCreatedCustomers = async (limit: number): Promise<Customer[]> => {
+  const { data, error } = await supabase
+    .from(TABLES.CUSTOMER)
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+  return data;
+};
+
 export const fetchSearchCustomers = async (query: string): Promise<Customer[]> => {
   const { data, error } = await supabase
     .from(TABLES.CUSTOMER)

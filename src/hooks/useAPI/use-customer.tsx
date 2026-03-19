@@ -9,7 +9,8 @@ import {
   updateCustomerById,
   fetchCustomerInvoices,
   fetchCustomerQuotes,
-  fetchSearchCustomers
+  fetchSearchCustomers,
+  fetchRecentlyCreatedCustomers
   // @ts-ignore
 } from '../../services/api/customer-service';
 import { fetchCustomers } from '../../services/api/customer-service';
@@ -28,6 +29,16 @@ export const useFetchCustomers = () => {
   });
 
   return { customers, isLoading, isError };
+};
+
+// Custom hook to get recently updated customers
+export const useRecentlyCreatedCustomers = (limit: number) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['recentlyUpdatedCustomers', limit],
+    queryFn: () => fetchRecentlyCreatedCustomers(limit)
+  });
+
+  return { data, isLoading, isError };
 };
 
 // Custom hook to search for customers
