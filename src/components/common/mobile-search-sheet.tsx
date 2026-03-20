@@ -26,7 +26,7 @@ export const MobileSearchSheet: React.FC<MobileSearchSheetProps> = ({ open, onOp
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
         side="bottom"
-        className="rounded-t-[2rem] p-0 h-[82svh] flex flex-col"
+        className="rounded-t-[2rem] p-0 h-[90svh] flex flex-col"
         style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         {/* a11y */}
         <SheetTitle className="sr-only">Search</SheetTitle>
