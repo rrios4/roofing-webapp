@@ -51,6 +51,7 @@ import { QuotePDFPreviewDialog } from '../components/quote-pdf-preview-dialog';
 import { EmailQuoteDialog } from '../components/forms/send-email-quote-form';
 import { transformQuoteForPDF } from '../lib/pdf-utils';
 import ConvertQuoteAlertDialog from '../components/alert-convert-quote-dialog';
+import GoogleMapsAddressPreviewPopover from '../components/google-maps-preview';
 
 type Props = {};
 
@@ -371,9 +372,14 @@ export default function QuoteInfoPage() {
                 <div className="w-full text-left">
                   <p className="text-sm text-gray-500 mb-1">Quote From</p>
                   <p className="mb-1 font-medium">Rios Roofing</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-200">
-                    150 Tallant St, Houston TX 77076
-                  </p>
+                  <GoogleMapsAddressPreviewPopover
+                    streetAddress="150 Tallant St"
+                    city="Houston"
+                    state="TX"
+                    zipcode="77076"
+                    addressQuery="150+Tallant+St+Houston+TX+77076"
+                    textSize="sm"
+                  />
                   <p className="text-sm text-gray-600 dark:text-gray-200">
                     rrios.roofing@gmail.com
                   </p>
@@ -391,21 +397,16 @@ export default function QuoteInfoPage() {
                   <p className="mb-1 font-medium">
                     {quote.customer?.first_name || ''} {quote.customer?.last_name || ''}
                   </p>
-                  {/* Display custom address if available, otherwise fall back to customer address */}
-                  <p className="text-sm text-gray-600 dark:text-gray-200">
-                    {[
-                      quote.custom_street_address || quote.customer?.street_address,
-                      [
-                        quote.custom_city || quote.customer?.city,
-                        quote.custom_state || quote.customer?.state,
-                        quote.custom_zipcode || quote.customer?.zipcode
-                      ]
-                        .filter(Boolean)
-                        .join(', ')
-                    ]
-                      .filter(Boolean)
-                      .join(', ') || 'No address provided'}
-                  </p>
+                  <GoogleMapsAddressPreviewPopover
+                    streetAddress={
+                      quote.custom_street_address || quote.customer?.street_address || ''
+                    }
+                    city={quote.custom_city || quote.customer?.city || ''}
+                    state={quote.custom_state || quote.customer?.state || ''}
+                    zipcode={quote.custom_zipcode || quote.customer?.zipcode || ''}
+                    addressQuery={`${quote.custom_street_address || quote.customer?.street_address || ''}+${quote.custom_city || quote.customer?.city || ''}+${quote.custom_state || quote.customer?.state || ''}+${quote.custom_zipcode || quote.customer?.zipcode || ''}`}
+                    textSize="sm"
+                  />
                   <p className="text-sm text-gray-600 dark:text-gray-200">
                     {quote.customer?.email || ''}
                   </p>

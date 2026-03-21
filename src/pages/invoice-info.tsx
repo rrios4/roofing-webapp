@@ -61,6 +61,7 @@ import {
 import { EmailInvoiceDialog } from '../components/forms/send-email-invoice-form';
 import { InvoicePDFPreviewDialog } from '../components/invoice-pdf-preview-dialog';
 import { transformInvoiceForPDF } from '../lib/pdf-utils';
+import GoogleMapsAddressPreviewPopover from '../components/google-maps-preview';
 
 type Props = {};
 
@@ -547,12 +548,15 @@ export default function InvoiceInfoPage() {
                 <div className="w-full text-left">
                   <p className="text-sm text-muted-foreground mb-1">Invoice From</p>
                   <p className="mb-1 font-medium">Rios Roofing</p>
-                  <p className="text-sm text-muted-foreground">
-                    150 Tallant St, Houston TX 77076
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    rrios.roofing@gmail.com
-                  </p>
+                  <GoogleMapsAddressPreviewPopover
+                    streetAddress="150 Tallant St"
+                    city="Houston"
+                    state="TX"
+                    zipcode="77076"
+                    addressQuery="150+Tallant+St+Houston+TX+77076"
+                    textSize="sm"
+                  />
+                  <p className="text-sm text-muted-foreground">rrios.roofing@gmail.com</p>
                   <p className="text-sm text-muted-foreground">832-310-3593</p>
 
                   <div className="my-6 text-left">
@@ -569,19 +573,17 @@ export default function InvoiceInfoPage() {
                   <p className="mb-1 font-medium">
                     {invoice.customer?.first_name || ''} {invoice.customer?.last_name || ''}
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    {invoice.bill_to_street_address || invoice.customer?.street_address || ''}
-                    {invoice.bill_to_city || invoice.customer?.city
-                      ? `, ${invoice.bill_to_city || invoice.customer?.city}`
-                      : ''}
-                    {invoice.bill_to_state || invoice.customer?.state
-                      ? `, ${invoice.bill_to_state || invoice.customer?.state}`
-                      : ''}{' '}
-                    {invoice.bill_to_zipcode || invoice.customer?.zipcode || ''}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {invoice.customer?.email || ''}
-                  </p>
+                  <GoogleMapsAddressPreviewPopover
+                    streetAddress={
+                      invoice.bill_to_street_address || invoice.customer?.street_address || ''
+                    }
+                    city={invoice.bill_to_city || invoice.customer?.city || ''}
+                    state={invoice.bill_to_state || invoice.customer?.state || ''}
+                    zipcode={invoice.bill_to_zipcode || invoice.customer?.zipcode || ''}
+                    addressQuery={`${invoice.bill_to_street_address || invoice.customer?.street_address || ''}+${invoice.bill_to_city || invoice.customer?.city || ''}+${invoice.bill_to_state || invoice.customer?.state || ''}+${invoice.bill_to_zipcode || invoice.customer?.zipcode || ''}`}
+                    textSize="sm"
+                  />
+                  <p className="text-sm text-muted-foreground">{invoice.customer?.email || ''}</p>
                   <p className="text-sm text-muted-foreground">
                     {invoice.customer?.phone_number || ''}
                   </p>
@@ -933,7 +935,9 @@ export default function InvoiceInfoPage() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-center py-4 text-muted-foreground">No payments recorded yet</div>
+                    <div className="text-center py-4 text-muted-foreground">
+                      No payments recorded yet
+                    </div>
                   )}
                 </div>
               </div>
