@@ -71,8 +71,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ className = ''
       className={`fixed z-50 lg:hidden ${className}`}
       style={{
         bottom: 'calc(env(safe-area-inset-bottom, 0px) + 0px)',
-        left: 'calc(env(safe-area-inset-left, 0px) + 6px)',
-        right: 'calc(env(safe-area-inset-right, 0px) + 6px)'
+        left: 'calc(env(safe-area-inset-left, 0px) + 16px)',
+        right: 'calc(env(safe-area-inset-right, 0px) + 16px)'
       }}>
       {/* Mobile search bottom sheet */}
       <MobileSearchSheet open={searchOpen} onOpenChange={setSearchOpen} />
