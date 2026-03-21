@@ -81,6 +81,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
     "uuid": "^11.1.0",
+    "vcard-parser": "^1.0.0",
     "vite-plugin-env-compatible": "^2.0.1",
     "web-vitals": "^4.2.4",
     "zod": "^3.25.76"

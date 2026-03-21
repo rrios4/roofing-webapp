@@ -59,6 +59,7 @@ import { ScrollArea } from '../components/ui/scroll-area';
 import AddCustomerForm from '../components/forms/add-customer-form';
 import AddQuoteForm from '../components/forms/add-quote-form';
 import AddInvoiceForm from '../components/forms/add-invoice-form';
+import { ImportContactDialog } from '../components/import-contact-dialog';
 import { count } from 'console';
 
 type Props = {};
@@ -93,6 +94,7 @@ export default function DashboardPage() {
   const [customerSheetOpen, setCustomerSheetOpen] = React.useState(false);
   const [quoteSheetOpen, setQuoteSheetOpen] = React.useState(false);
   const [invoiceSheetOpen, setInvoiceSheetOpen] = React.useState(false);
+  const [importContactOpen, setImportContactOpen] = React.useState(false);
 
   // Helper function to format currency
   const formatCurrency = (amount: number): string => {
@@ -349,6 +351,13 @@ export default function DashboardPage() {
                   <Receipt className="h-4 w-4 mr-3" />
                   Generate Invoice
                 </Button>
+                <Button
+                  className="w-full justify-start"
+                  variant="outline"
+                  onClick={() => setImportContactOpen(true)}>
+                  <UserPlusIcon className="h-4 w-4 mr-3" />
+                  Import Contact
+                </Button>
                 <Button disabled className="w-full justify-start" variant="outline">
                   <KanbanSquareIcon className="h-4 w-4 mr-3" />
                   Update Kanban{' '}
@@ -457,9 +466,7 @@ export default function DashboardPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">
-                            Completed
-                          </span>
+                          <span className="text-sm text-muted-foreground">Completed</span>
                         </div>
                         <Badge variant="green">{businessStatusData.projectStatus.completed}</Badge>
                       </div>
@@ -470,9 +477,7 @@ export default function DashboardPage() {
 
               {/* Customer Types - Horizontal Layout */}
               <div className="mt-6 pt-6 border-t border-border">
-                <h4 className="font-medium text-foreground mb-4">
-                  Customer Types
-                </h4>
+                <h4 className="font-medium text-foreground mb-4">Customer Types</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
                     <div className="flex items-center gap-3">
@@ -480,9 +485,7 @@ export default function DashboardPage() {
                         <HomeIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Residential
-                        </p>
+                        <p className="text-sm font-medium text-foreground">Residential</p>
                         <p className="text-xs text-muted-foreground">Active customers</p>
                       </div>
                     </div>
@@ -495,9 +498,7 @@ export default function DashboardPage() {
                         <BuildingIcon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Commercial
-                        </p>
+                        <p className="text-sm font-medium text-foreground">Commercial</p>
                         <p className="text-xs text-muted-foreground">Business clients</p>
                       </div>
                     </div>
@@ -510,9 +511,7 @@ export default function DashboardPage() {
                         <UsersIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Referrals
-                        </p>
+                        <p className="text-sm font-medium text-foreground">Referrals</p>
                         <p className="text-xs text-muted-foreground">Word of mouth</p>
                       </div>
                     </div>
@@ -525,9 +524,7 @@ export default function DashboardPage() {
                         <TrendingUpIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-foreground">
-                          New Leads
-                        </p>
+                        <p className="text-sm font-medium text-foreground">New Leads</p>
                         <p className="text-xs text-muted-foreground">This month</p>
                       </div>
                     </div>
@@ -544,9 +541,7 @@ export default function DashboardPage() {
           {/* Monthly Revenue Trend */}
           <div className="lg:col-span-2">
             <Card className="p-6">
-              <Title className="text-foreground">
-                {years.length}-Year Revenue Trend
-              </Title>
+              <Title className="text-foreground">{years.length}-Year Revenue Trend</Title>
               <Subtitle className="text-muted-foreground">
                 Monthly revenue growth from {years[0]} to current ({years[years.length - 1]})
               </Subtitle>
@@ -824,6 +819,9 @@ export default function DashboardPage() {
           </ScrollArea>
         </SheetContent>
       </Sheet>
+
+      {/* Import Contact Dialog */}
+      <ImportContactDialog open={importContactOpen} onOpenChange={setImportContactOpen} />
     </div>
   );
 }

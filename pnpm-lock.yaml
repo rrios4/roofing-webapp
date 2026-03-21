@@ -161,6 +161,9 @@ importers:
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
+      vcard-parser:
+        specifier: ^1.0.0
+        version: 1.0.0
       vite-plugin-env-compatible:
         specifier: ^2.0.1
         version: 2.0.1
@@ -3654,6 +3657,9 @@ packages:
   uuid@11.1.0:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
     hasBin: true
+
+  vcard-parser@1.0.0:
+    resolution: {integrity: sha512-rSEjrjBK3of4VimMR5vBjLLcN5ZCSp9yuVzyx5i4Fwx74Yd0s+DnHtSit/wAAtj1a7/T/qQc0ykwXADoD0+fTQ==}
 
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
@@ -7581,6 +7587,8 @@ snapshots:
       which-typed-array: 1.1.20
 
   uuid@11.1.0: {}
+
+  vcard-parser@1.0.0: {}
 
   victory-vendor@36.9.2:
     dependencies:
