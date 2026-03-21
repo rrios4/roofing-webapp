@@ -15,6 +15,7 @@ import listOfUSStates from '../../data/state_titlecase.json';
 import { useCreateCustomer } from '../../hooks/useAPI/use-customer';
 import DefaultSelectDataItems from '../select-data-items';
 import ButtonLoading from '../button-states';
+import { AddressAutocomplete } from '../common/address-autocomplete';
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { ScrollArea } from '../ui/scroll-area';
 
@@ -287,7 +288,17 @@ export default function AddCustomerForm({ setOpen }: Props) {
                 <FormItem className="w-full">
                   <FormLabel>Street Address</FormLabel>
                   <FormControl>
-                    <Input {...field} className="w-full" />
+                    <AddressAutocomplete
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                      onAddressSelect={(parts) => {
+                        field.onChange(parts.street_address);
+                        form.setValue('city', parts.city, { shouldValidate: true });
+                        form.setValue('state', parts.state, { shouldValidate: true });
+                        form.setValue('zipcode', parts.zipcode, { shouldValidate: true });
+                      }}
+                      placeholder="Start typing a street address..."
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -313,7 +324,7 @@ export default function AddCustomerForm({ setOpen }: Props) {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>State</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select US state" />

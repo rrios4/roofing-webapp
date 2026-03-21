@@ -30,6 +30,7 @@
     ]
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^2.0.2",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -87,6 +88,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@faker-js/faker": "^9.9.0",
+    "@types/google.maps": "^3.58.1",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.57.1",
     "@vitejs/plugin-react": "^4.7.0",
