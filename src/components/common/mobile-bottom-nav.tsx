@@ -70,7 +70,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ className = ''
     <div
       className={`fixed z-50 lg:hidden ${className}`}
       style={{
-        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 6px)',
+        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 2px)',
         left: 'calc(env(safe-area-inset-left, 0px) + 6px)',
         right: 'calc(env(safe-area-inset-right, 0px) + 6px)'
       }}>
