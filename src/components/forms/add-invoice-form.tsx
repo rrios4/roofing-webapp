@@ -19,6 +19,7 @@ import {
   DollarSignIcon
 } from 'lucide-react';
 import { SwitchCardTwo } from '../switch-card';
+import { AddressAutocomplete } from '../common/address-autocomplete';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import DefaultSelectDataItems from '../select-data-items';
@@ -604,7 +605,17 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                       <FormItem className="col-span-2">
                         <FormLabel>Street Address</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter billing street address" {...field} />
+                          <AddressAutocomplete
+                            value={field.value ?? ''}
+                            onChange={field.onChange}
+                            onAddressSelect={(parts) => {
+                              field.onChange(parts.street_address);
+                              form.setValue('bill_to_city', parts.city, { shouldValidate: true });
+                              form.setValue('bill_to_state', parts.state, { shouldValidate: true });
+                              form.setValue('bill_to_zipcode', parts.zipcode, { shouldValidate: true });
+                            }}
+                            placeholder="Start typing a street address..."
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

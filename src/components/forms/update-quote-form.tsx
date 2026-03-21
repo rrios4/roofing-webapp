@@ -17,6 +17,7 @@ import {
   User2Icon
 } from 'lucide-react';
 import { SwitchCardTwo } from '../switch-card';
+import { AddressAutocomplete } from '../common/address-autocomplete';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Calendar } from '../ui/calendar';
@@ -512,7 +513,17 @@ export default function UpdateQuoteForm({ quote, quoteLineItems, onSuccess }: Pr
                         <FormItem>
                           <FormLabel>Street Address</FormLabel>
                           <FormControl>
-                            <Input placeholder={'Enter address'} {...field} />
+                            <AddressAutocomplete
+                              value={field.value ?? ''}
+                              onChange={field.onChange}
+                              onAddressSelect={(parts) => {
+                                field.onChange(parts.street_address);
+                                form.setValue('custom_city', parts.city, { shouldValidate: true });
+                                form.setValue('custom_state', parts.state, { shouldValidate: true });
+                                form.setValue('custom_zipcode', parts.zipcode, { shouldValidate: true });
+                              }}
+                              placeholder="Start typing a street address..."
+                            />
                           </FormControl>
                         </FormItem>
                       )}
