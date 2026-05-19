@@ -193,7 +193,7 @@ export default function AddCustomerForm({ setOpen }: Props) {
                   <FormLabel>Customer Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                     disabled={customerTypesLoading}>
                     <FormControl>
                       <SelectTrigger>

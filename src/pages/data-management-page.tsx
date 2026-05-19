@@ -140,7 +140,7 @@ export default function DataManagementPage() {
                   {stats?.totalStatuses.total || 0}
                 </div>
               )}
-              <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 leading-tight">
+              <div className="text-[10px] sm:text-xs text-muted-foreground mt-1 leading-tight">
                 {isLoadingStats ? (
                   <Skeleton className="h-2 sm:h-3 w-16 sm:w-20" />
                 ) : (
@@ -149,7 +149,7 @@ export default function DataManagementPage() {
                   </span>
                 )}
                 <span className="sm:hidden">All types</span>
-              </p>
+              </div>
             </CardContent>
           </Card>
 

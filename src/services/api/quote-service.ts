@@ -394,10 +394,29 @@ export const convertQuoteToInvoice = async (
     invoiceLineItems = lineItemResults || [];
   }
 
-  // Mark the quote as converted
+  // Fetch the "Accepted" quote status ID
+  const { data: acceptedStatuses, error: acceptedStatusError } = await supabase
+    .from(TABLES.QUOTE_STATUS)
+    .select('id')
+    .eq('name', 'Accepted')
+    .limit(1);
+
+  if (acceptedStatusError) {
+    throw acceptedStatusError;
+  }
+
+  if (!acceptedStatuses || acceptedStatuses.length === 0) {
+    throw new Error(
+      `No "Accepted" quote status found in your system. Please define one before converting a quote. Visit /data-management/statuses to add it.`
+    );
+  }
+
+  const acceptedStatusId = acceptedStatuses[0].id;
+
+  // Mark the quote as converted and set status to "Accepted"
   const { data: updatedQuote, error: updateError } = await supabase
     .from(TABLES.QUOTE)
-    .update({ converted: true })
+    .update({ converted: true, status_id: acceptedStatusId })
     .eq('quote_number', quote_number)
     .select()
     .single();

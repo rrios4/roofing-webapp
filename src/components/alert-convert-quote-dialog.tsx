@@ -55,25 +55,28 @@ export function ConvertQuoteAlertDialog({
             <RefreshCcwIcon className="w-5 h-5 text-blue-600" />
             Convert Quote to Invoice
           </AlertDialogTitle>
-          <AlertDialogDescription className="space-y-2">
-            <p>
-              Are you sure you want to convert <strong>Quote #{quoteNumber}</strong> to an invoice?
-            </p>
-            {customerName && (
-              <p className="text-sm text-muted-foreground">
-                <strong>Customer:</strong> {customerName}
+          <AlertDialogDescription className="space-y-2" asChild>
+            <div>
+              <p>
+                Are you sure you want to convert <strong>Quote #{quoteNumber}</strong> to an
+                invoice?
               </p>
-            )}
-            {total !== undefined && (
-              <p className="text-sm text-muted-foreground">
-                <strong>Amount:</strong> {formatMoney(total)}
-              </p>
-            )}
-            <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mt-4">
-              <p className="text-sm text-amber-800">
-                <strong>⚠️ Important:</strong> This action cannot be undone. Once converted, this
-                quote will become an invoice and cannot be edited as a quote.
-              </p>
+              {customerName && (
+                <p className="text-sm text-muted-foreground">
+                  <strong>Customer:</strong> {customerName}
+                </p>
+              )}
+              {total !== undefined && (
+                <p className="text-sm text-muted-foreground">
+                  <strong>Amount:</strong> {formatMoney(total)}
+                </p>
+              )}
+              <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mt-4">
+                <p className="text-sm text-amber-800">
+                  <strong>⚠️ Important:</strong> This action cannot be undone. Once converted, this
+                  quote will become an invoice and cannot be edited as a quote.
+                </p>
+              </div>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>

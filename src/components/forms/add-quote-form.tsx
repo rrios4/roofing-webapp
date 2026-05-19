@@ -89,7 +89,7 @@ export default function AddQuoteForm() {
       service_id: undefined, // Change from 0 to undefined
       status_id: undefined, // Change from 0 to undefined
       quote_date: new Date(),
-      expiration_date: new Date(),
+      expiration_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       line_items: [{ description: '', qty: 1, amount: 0, subtotal: 0 }], // Start with one empty line item
       custom_street_address: '',
       custom_city: '',
