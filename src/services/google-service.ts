@@ -43,6 +43,17 @@ export interface GmailMessage {
   };
 }
 
+export interface GmailMessageMetadata {
+  id: string;
+  threadId: string;
+  snippet: string;
+  labelIds: string[];
+  subject: string;
+  from: string;
+  to: string;
+  date: string;
+}
+
 class GoogleService {
   private accessToken: string | null = null;
   private tokenExpiry: number | null = null; // Track token expiry
@@ -163,7 +174,7 @@ class GoogleService {
       throw new Error('No access token available - please log in again');
     }
 
-    const makeRequest = async (isRetry: boolean = false): Promise<Response> => {
+    const makeRequest = async (retryCount: number = 0): Promise<Response> => {
       const response = await fetch(endpoint, {
         ...options,
         headers: {
@@ -173,20 +184,27 @@ class GoogleService {
         }
       });
 
-      // Handle token expiration errors
-      if (!response.ok && response.status === 401 && !isRetry) {
+      // Handle token expiration — refresh once and retry
+      if (!response.ok && response.status === 401 && retryCount === 0) {
         console.log('Received 401 error, refreshing token and retrying...');
 
-        // Force refresh the token
         this.accessToken = null;
         const refreshed = await this.refreshTokenIfNeeded();
 
         if (refreshed && this.accessToken) {
           console.log('Token refreshed, retrying request...');
-          return makeRequest(true); // Retry with fresh token
+          return makeRequest(1);
         } else {
           throw new Error('Token refresh failed - please log in again');
         }
+      }
+
+      // Handle rate limiting — wait and retry once with exponential back-off
+      if (!response.ok && response.status === 429 && retryCount < 2) {
+        const waitMs = retryCount === 0 ? 1000 : 2000;
+        console.warn(`Rate limit hit (429), retrying in ${waitMs}ms (attempt ${retryCount + 1})...`);
+        await new Promise((resolve) => setTimeout(resolve, waitMs));
+        return makeRequest(retryCount + 1);
       }
 
       if (!response.ok) {
@@ -480,6 +498,60 @@ class GoogleService {
     }
 
     return emailContent;
+  }
+
+  /**
+   * Get metadata for the latest 50 messages matching a query.
+   * Fetches are processed in batches of 10 to avoid burst rate limits.
+   */
+  async getMessagesMetadata(query?: string): Promise<GmailMessageMetadata[]> {
+    const params = new URLSearchParams({ maxResults: '50' });
+    if (query) params.set('q', query);
+
+    const listResponse = await this.makeGoogleApiRequest(
+      `https://gmail.googleapis.com/gmail/v1/users/me/messages?${params}`
+    );
+    const listData = await listResponse.json();
+
+    if (!listData.messages || listData.messages.length === 0) return [];
+
+    const fetchMetadata = async (msg: { id: string }): Promise<GmailMessageMetadata> => {
+      const msgResponse = await this.makeGoogleApiRequest(
+        `https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata` +
+          `&metadataHeaders=Subject&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Date`
+      );
+      const msgData = await msgResponse.json();
+      const headers: Array<{ name: string; value: string }> = msgData.payload?.headers || [];
+      const getHeader = (name: string) =>
+        headers.find((h) => h.name.toLowerCase() === name.toLowerCase())?.value || '';
+
+      return {
+        id: msgData.id as string,
+        threadId: msgData.threadId as string,
+        snippet: (msgData.snippet as string) || '',
+        labelIds: (msgData.labelIds as string[]) || [],
+        subject: getHeader('Subject') || '(no subject)',
+        from: getHeader('From'),
+        to: getHeader('To'),
+        date: getHeader('Date')
+      } satisfies GmailMessageMetadata;
+    };
+
+    // Process in batches of 10 with a 150 ms pause between batches
+    const BATCH_SIZE = 10;
+    const BATCH_DELAY_MS = 150;
+    const results: GmailMessageMetadata[] = [];
+
+    for (let i = 0; i < listData.messages.length; i += BATCH_SIZE) {
+      const batch = (listData.messages as { id: string }[]).slice(i, i + BATCH_SIZE);
+      const batchResults = await Promise.all(batch.map(fetchMetadata));
+      results.push(...batchResults);
+      if (i + BATCH_SIZE < listData.messages.length) {
+        await new Promise((resolve) => setTimeout(resolve, BATCH_DELAY_MS));
+      }
+    }
+
+    return results;
   }
 
   /**

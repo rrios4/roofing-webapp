@@ -28,16 +28,20 @@ import {
 import GoogleMapsAddressPreviewPopover from '../components/google-maps-preview';
 import {
   BoxIcon,
+  BellIcon,
   CalendarIcon,
   ChevronRightIcon,
   CircleDashedIcon,
   CircleDollarSignIcon,
   ClipboardSignatureIcon,
+  CreditCardIcon,
   EarthIcon,
   FileIcon,
   HashIcon,
+  LayoutDashboardIcon,
   MailIcon,
   MapIcon,
+  MapPinIcon,
   MousePointerClickIcon,
   PaperclipIcon,
   PencilIcon,
@@ -62,6 +66,7 @@ import {
 } from '../components/ui/sheet';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { PageBreadcrumb } from '../components/ui/breadcrumb';
+import CustomerEmailsTab from '../components/customer-emails-tab';
 
 type Props = {};
 
@@ -229,20 +234,41 @@ export default function CustomerInfoPage() {
       <div className="w-full">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="flex w-full justify-start py-6 px-2">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="financials" disabled>
+            <TabsTrigger value="overview" className="flex items-center gap-1.5">
+              <LayoutDashboardIcon className="w-3.5 h-3.5" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="emails" className="flex items-center gap-1.5">
+              <MailIcon className="w-3.5 h-3.5" />
+              Emails
+            </TabsTrigger>
+            <TabsTrigger value="financials" disabled className="flex items-center gap-1.5">
+              <CircleDollarSignIcon className="w-3.5 h-3.5" />
               Financials
             </TabsTrigger>
-            <TabsTrigger value="payment-methods" disabled>
+            <TabsTrigger value="payment-methods" disabled className="flex items-center gap-1.5">
+              <CreditCardIcon className="w-3.5 h-3.5" />
               Payment Methods
             </TabsTrigger>
-            <TabsTrigger value="locations" disabled>
+            <TabsTrigger value="locations" disabled className="flex items-center gap-1.5">
+              <MapPinIcon className="w-3.5 h-3.5" />
               Locations
             </TabsTrigger>
-            <TabsTrigger value="notifications" disabled>
+            <TabsTrigger value="notifications" disabled className="flex items-center gap-1.5">
+              <BellIcon className="w-3.5 h-3.5" />
               Notifications
             </TabsTrigger>
           </TabsList>
+          <TabsContent value="emails" className="border rounded-md p-4">
+            <CustomerEmailsTab
+              customerEmail={customerById?.email}
+              customerName={
+                customerById
+                  ? `${customerById.first_name} ${customerById.last_name}`
+                  : ''
+              }
+            />
+          </TabsContent>
           <TabsContent value="overview" className="border rounded-md p-4">
             {/* <p>This will display customers invoices and quotes...</p> */}
             <div className="flex flex-col gap-4 p-2">

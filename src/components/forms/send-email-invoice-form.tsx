@@ -21,6 +21,7 @@ import { ModernInvoiceDocument } from '../pdf-render/modern-invoice-doc';
 import { pdf } from '@react-pdf/renderer';
 import { Mail, Loader2, FileText } from 'lucide-react';
 import { Checkbox } from '../ui/checkbox';
+import { GoogleReconnectDialog } from '../google-reconnect-dialog';
 
 interface EmailInvoiceDialogProps {
   invoice: any;
@@ -135,6 +136,7 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
   const [isOpen, setIsOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('standard');
+  const [reconnectOpen, setReconnectOpen] = useState(false);
 
   // PDF Display Options state
   const [displayOptions, setDisplayOptions] = useState<PDFDisplayOptions>({
@@ -617,6 +619,7 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
   const hasError = serviceError !== null;
 
   return (
+    <>
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger || (
@@ -648,12 +651,17 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
 
         {hasError && (
           <div className="bg-red-50 border border-red-200 rounded-md p-3 mb-4">
-            <p className="text-sm text-red-800">
+            <p className="text-sm text-red-800 mb-2">
               <strong>Service Error:</strong> {serviceError}
             </p>
-            <p className="text-xs text-red-600 mt-1">
-              Please ensure you have granted Gmail permissions when signing in with Google.
-            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-red-700 border-red-300"
+              onClick={() => setReconnectOpen(true)}>
+              <Mail className="w-3 h-3 mr-1.5" />
+              Re-connect with Google
+            </Button>
           </div>
         )}
 
@@ -803,5 +811,7 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    <GoogleReconnectDialog open={reconnectOpen} onOpenChange={setReconnectOpen} />
+    </>
   );
 };

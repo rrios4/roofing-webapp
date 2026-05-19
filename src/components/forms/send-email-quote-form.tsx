@@ -22,6 +22,7 @@ import { useGoogleService } from '../../hooks/useGoogleService';
 import { ModernQuoteDocument } from '../pdf-render/modern-quote-doc-final';
 import { formatNumber, formatMoneyValue } from '../../lib/utils';
 import { Checkbox } from '../ui/checkbox';
+import { GoogleReconnectDialog } from '../google-reconnect-dialog';
 
 // Ensure Buffer is available for PDF generation in browser
 if (typeof Buffer === 'undefined') {
@@ -109,6 +110,7 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
   const [isOpen, setIsOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('standard');
+  const [reconnectOpen, setReconnectOpen] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
 
   // PDF Display Options state
@@ -553,6 +555,7 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
   const hasError = serviceError !== null;
 
   return (
+    <>
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger || (
@@ -576,15 +579,31 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
 
         {hasError && (
           <div className="p-4 border border-red-200 rounded-lg bg-red-50">
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-red-600 mb-2">
               Gmail service error: {serviceError}. Please check your authentication.
             </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-red-700 border-red-300"
+              onClick={() => setReconnectOpen(true)}>
+              <Mail className="w-3 h-3 mr-1.5" />
+              Re-connect with Google
+            </Button>
           </div>
         )}
 
         {!isReady && !hasError && (
-          <div className="p-4 border border-yellow-200 rounded-lg bg-yellow-50">
-            <p className="text-sm text-yellow-600">Gmail service is initializing... Please wait.</p>
+          <div className="p-4 border border-yellow-200 rounded-lg bg-yellow-50 flex items-center justify-between gap-3">
+            <p className="text-sm text-yellow-600">Gmail is not connected.</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-yellow-700 border-yellow-400"
+              onClick={() => setReconnectOpen(true)}>
+              <Mail className="w-3 h-3 mr-1.5" />
+              Connect Google
+            </Button>
           </div>
         )}
 
@@ -763,5 +782,7 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
         </div>
       </DialogContent>
     </Dialog>
+    <GoogleReconnectDialog open={reconnectOpen} onOpenChange={setReconnectOpen} />
+    </>
   );
 };
