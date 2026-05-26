@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -41,6 +42,7 @@ export default function ProjectKanbanCard({
   onDragEnd,
   isDragging
 }: Props) {
+  const navigate = useNavigate();
   const customer = project.customer_details;
   const hasCustomer = !!customer;
   const displayName = hasCustomer
@@ -69,39 +71,49 @@ export default function ProjectKanbanCard({
       onDragEnd={() => onDragEnd?.()}>
       {/* Header row */}
       <div className="flex items-center gap-2 min-w-0">
-        {hasCustomer ? (
-          (() => {
-            const { bg, text } = getAvatarColor(displayName!);
-            return (
-              <Avatar className="h-7 w-7 flex-shrink-0 text-[11px]">
-                <AvatarFallback className={`text-[10px] font-semibold ${bg} ${text}`}>
-                  {abbreviateName(displayName!)}
-                </AvatarFallback>
-              </Avatar>
-            );
-          })()
-        ) : (
-          <div className="h-7 w-7 flex-shrink-0 rounded-full border border-dashed border-border flex items-center justify-center text-muted-foreground bg-muted">
-            <svg
-              viewBox="0 0 24 24"
-              className="h-3.5 w-3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.6}
-              strokeLinecap="round"
-              strokeLinejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-          </div>
-        )}
-        <span
-          className={`flex-1 min-w-0 text-sm font-semibold truncate ${!hasCustomer ? 'text-muted-foreground italic' : ''}`}
-          title={displayName ?? 'No customer assigned'}>
-          {displayName ?? 'No customer assigned'}
-        </span>
+        <button
+          type="button"
+          disabled={!hasCustomer}
+          onClick={(e) => {
+            if (!hasCustomer) return;
+            e.stopPropagation();
+            navigate(`/customers/${customer!.id}`);
+          }}
+          className={`flex items-center gap-2 min-w-0 flex-1 text-left ${hasCustomer ? 'hover:opacity-75 transition-opacity' : ''}`}>
+          {hasCustomer ? (
+            (() => {
+              const { bg, text } = getAvatarColor(displayName!);
+              return (
+                <Avatar className="h-7 w-7 flex-shrink-0 text-[11px]">
+                  <AvatarFallback className={`text-[10px] font-semibold ${bg} ${text}`}>
+                    {abbreviateName(displayName!)}
+                  </AvatarFallback>
+                </Avatar>
+              );
+            })()
+          ) : (
+            <div className="h-7 w-7 flex-shrink-0 rounded-full border border-dashed border-border flex items-center justify-center text-muted-foreground bg-muted">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.6}
+                strokeLinecap="round"
+                strokeLinejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+          )}
+          <span
+            className={`flex-1 min-w-0 text-sm font-semibold truncate ${!hasCustomer ? 'text-muted-foreground italic' : ''}`}
+            title={displayName ?? 'No customer assigned'}>
+            {displayName ?? 'No customer assigned'}
+          </span>
+        </button>
         {typeName && (
           <Badge
             variant={typeName === 'Commercial' ? 'secondary' : 'default'}
