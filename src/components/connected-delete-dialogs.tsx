@@ -7,6 +7,7 @@ import { useDeleteAllInvoiceLineItemsByInvoiceNumber } from '../hooks/useAPI/use
 import { useDeleteAllInvoicePaymentsByInvoiceNumber } from '../hooks/useAPI/use-invoice-payment';
 import { useDeleteAllQuoteLineItemsWithQuote } from '../hooks/useAPI/use-quote-lineitems';
 import { useDeleteCustomer } from '../hooks/useAPI/use-customer';
+import { useDeleteProject } from '../hooks/useAPI/use-projects';
 
 type Props = {
   title: string;
@@ -95,6 +96,27 @@ export function ConnectedDeleteQuoteAlertDialog({ title, description, itemId }: 
       onOpenChange={setOpen}
       onSubmit={handleSubmit}
       itemId={itemId}
+      buttonTextEnabled={false}
+      buttonVariant={'outline'}
+    />
+  );
+}
+
+export function ConnectedDeleteProjectAlertDialog({ title, description, itemId }: Props) {
+  const [open, setOpen] = React.useState(false);
+  const { mutate: deleteProjectMutation, isLoading } = useDeleteProject(setOpen);
+  const handleSubmit = () => {
+    deleteProjectMutation(itemId.toString());
+  };
+  return (
+    <DefaultDeleteAlertDialog
+      isLoading={isLoading}
+      title={title}
+      description={description}
+      itemId={itemId}
+      open={open}
+      onOpenChange={setOpen}
+      onSubmit={handleSubmit}
       buttonTextEnabled={false}
       buttonVariant={'outline'}
     />

@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: Props) => {
       provider: 'google',
       options: {
         scopes:
-          'https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.readonly',
+          'https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/drive.readonly',
         queryParams: {
           access_type: 'offline',
           prompt: 'select_account'

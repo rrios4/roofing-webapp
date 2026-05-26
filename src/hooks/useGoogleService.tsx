@@ -146,14 +146,11 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
 
   // Drive functions
   const getDriveFiles = useCallback(
-    async (query?: string, maxResults?: number) => {
-      const result = await handleServiceCall(
-        () => googleService.getDriveFiles(query, maxResults),
-        'Failed to get Drive files'
-      );
-      return result || [];
+    async (query?: string, maxResults?: number): Promise<Array<{ id: string; name: string; mimeType: string; modifiedTime?: string; webViewLink?: string }>> => {
+      if (!isInitialized) throw new Error('Google service not initialized');
+      return googleService.getDriveFiles(query, maxResults);
     },
-    [handleServiceCall]
+    [isInitialized]
   );
 
   const uploadFileToDrive = useCallback(

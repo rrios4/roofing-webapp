@@ -20,14 +20,15 @@ type Props = {
   entity: string;
   activateModal: any;
   columns: any;
-  EntityFilterBar: any;
-  firstSelectName: string;
-  secondSelectName: string;
-  thirdSelectName: string;
-  filterBarEntity: string;
+  EntityFilterBar?: any;
+  firstSelectName?: string;
+  secondSelectName?: string;
+  thirdSelectName?: string;
+  filterBarEntity?: string;
   emptyStateSheetTitle?: string;
   emptyStateSheetDescription?: string;
   EmptyStateSheetBody?: any;
+  EmptyStateAction?: React.ReactNode;
 };
 
 export default function DataTable({
@@ -43,7 +44,8 @@ export default function DataTable({
   filterBarEntity,
   emptyStateSheetTitle,
   emptyStateSheetDescription,
-  EmptyStateSheetBody
+  EmptyStateSheetBody,
+  EmptyStateAction
 }: Props) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -88,19 +90,22 @@ export default function DataTable({
         sheetTitle={emptyStateSheetTitle ? emptyStateSheetTitle : ''}
         sheetDescription={emptyStateSheetDescription ? emptyStateSheetDescription : ''}
         SheetContentBody={EmptyStateSheetBody}
+        EmptyStateAction={EmptyStateAction}
       />
     );
   }
   return (
     <>
-      <EntityFilterBar
-        rootTable={table}
-        entity={filterBarEntity}
-        columnEntity={filterBarEntity}
-        firstSelectName={firstSelectName}
-        secondSelectName={secondSelectName}
-        thirdSelectName={thirdSelectName}
-      />
+      {EntityFilterBar && (
+        <EntityFilterBar
+          rootTable={table}
+          entity={filterBarEntity}
+          columnEntity={filterBarEntity}
+          firstSelectName={firstSelectName}
+          secondSelectName={secondSelectName}
+          thirdSelectName={thirdSelectName}
+        />
+      )}
       <div className="w-full border rounded-lg overflow-hidden">
         <Table className="text-xs sm:text-sm">
           <TableHeader className="bg-slate-50 dark:bg-zinc-800/50">

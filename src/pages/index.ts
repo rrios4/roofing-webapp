@@ -15,6 +15,8 @@ export { default as JobsPage } from './jobs-page';
 export { default as QuotesPage } from './quotes-page';
 export { default as InvoicesPage } from './invoices-page';
 export { default as InboxPage } from './sales-leads-page';
+export { default as ProjectsPage } from './projects-page';
+export { default as ProjectSettingsPage } from './project-settings-page';
 export { default as CustomerInfoPage } from './customer-info-page';
 export { default as DataManagementPage } from './data-management-page';
 export { default as ServicesManagementPage } from './services-management-page';

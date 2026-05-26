@@ -54,9 +54,9 @@ export default function SearchCustomerCombobox({ data, form, field }: Props) {
                 <React.Fragment key={index}>
                   <CommandItem
                     key={item.id}
-                    value={item.id}
+                    value={`${item.first_name} ${item.last_name} ${item.email}`}
                     onSelect={() => {
-                      form.setValue('customer_id', item.id);
+                      field.onChange(item.id);
                       setOpen(false);
                     }}
                     className="gap-4 hover:cursor-pointer">

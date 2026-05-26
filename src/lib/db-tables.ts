@@ -11,6 +11,9 @@ export const TABLES = {
 
   // Project related tables
   PROJECTS: 'projects',
+  PROJECT_STATUS: 'project_status',
+  PROJECT_TYPE: 'project_type',
+  PROJECT_SOURCE: 'project_source',
 
   // Quote related tables
   QUOTE: 'quote',

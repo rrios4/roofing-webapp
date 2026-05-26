@@ -4,9 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { addCustomerFormSchema } from '../../validations/customer-form-validations';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Select, SelectTrigger, SelectValue } from '../ui/select';
 import { useFetchAllCustomerTypes } from '../../hooks/useAPI/use-customer-types';
-import { SheetClose, SheetFooter } from '../ui/sheet';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { toast } from '../ui/use-toast';
@@ -14,31 +13,20 @@ import { formatPhoneNumber } from '../../lib/utils';
 import listOfUSStates from '../../data/state_titlecase.json';
 import { useCreateCustomer } from '../../hooks/useAPI/use-customer';
 import DefaultSelectDataItems from '../select-data-items';
-import ButtonLoading from '../button-states';
 import { AddressAutocomplete } from '../common/address-autocomplete';
-import { Avatar, AvatarImage } from '../ui/avatar';
 import { ScrollArea } from '../ui/scroll-area';
+import { SectionCard } from '../ui/section-card';
+import { Loader2Icon, MapPinIcon, UsersIcon } from 'lucide-react';
 
 type Props = {
   setOpen?: any;
 };
 
 export default function AddCustomerForm({ setOpen }: Props) {
-  const {
-    data: customerTypes,
-    isLoading: customerTypesLoading,
-    error: customerTypesError
-  } = useFetchAllCustomerTypes();
+  const { data: customerTypes, isLoading: customerTypesLoading } = useFetchAllCustomerTypes();
   const { mutate: addCustomerMutation, isLoading: isAddCustomerMutationLoading } =
     useCreateCustomer(toast, setOpen);
 
-  React.useEffect(() => {
-    console.log('Customer Types Data:', customerTypes);
-    console.log('Customer Types Loading:', customerTypesLoading);
-    console.log('Customer Types Error:', customerTypesError);
-  }, [customerTypes, customerTypesLoading, customerTypesError]);
-
-  // Define form
   const form = useForm<z.infer<typeof addCustomerFormSchema>>({
     resolver: zodResolver(addCustomerFormSchema),
     defaultValues: {
@@ -52,10 +40,8 @@ export default function AddCustomerForm({ setOpen }: Props) {
       zipcode: ''
     }
   });
-  // Define submit handler
+
   function onSubmit(values: z.infer<typeof addCustomerFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     const structuredData = {
       first_name: values.first_name,
       last_name: values.last_name,
@@ -70,305 +56,205 @@ export default function AddCustomerForm({ setOpen }: Props) {
     // @ts-ignore
     addCustomerMutation(structuredData);
   }
-  return (
-    <div className="w-full mb-4">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          {/* <div className="space-y-2 my-4">
-            <FormLabel>Choose an avatar</FormLabel>
-            <div className="grid w-full grid-cols-6 grid-flow-row gap-2">
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/1627.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/1949.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/2529.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/2738.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/2821.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/3201.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/3359.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/3379.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/3552.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/4122.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/4314.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/4937.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/5186.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/5228.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/5372.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/5506.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/5696.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/6287.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/6367.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/6437.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/6474.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/6643.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/6775.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/7016.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/7263.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/7474.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/7644.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/7684.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/7924.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/8145.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/8603.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/9519.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/9575.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/9811.png?raw=true" />
-              </Avatar>
-              <Avatar className="border w-[60px] h-[60px] mx-auto p-[2px]">
-                <AvatarImage src="https://github.com/alohe/memojis/blob/main/png/9933.png?raw=true" />
-              </Avatar>
-            </div>
-          </div> */}
-          <div className="space-y-4 h-full px-4 pb-6">
-            <FormField
-              control={form.control}
-              name="customer_type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Customer Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    disabled={customerTypesLoading}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            customerTypesLoading
-                              ? 'Loading customer types...'
-                              : customerTypesError
-                                ? 'Error loading customer types'
-                                : 'Select the type of customer'
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <DefaultSelectDataItems
-                      data={customerTypes}
-                      valueKey="id"
-                      labelKey="name"
-                      emptyMessage={
-                        customerTypesError
-                          ? `Error: ${customerTypesError}`
-                          : 'No customer types available'
-                      }
-                    />
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex gap-6 w-full">
-              <FormField
-                control={form.control}
-                name="first_name"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="w-full" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="last_name"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="email" className="w-full" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone_number"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="tel"
-                      className="w-full"
-                      onChange={(e) => field.onChange(formatPhoneNumber(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="street_address"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Street Address</FormLabel>
-                  <FormControl>
-                    <AddressAutocomplete
-                      value={field.value ?? ''}
-                      onChange={field.onChange}
-                      onAddressSelect={(parts) => {
-                        field.onChange(parts.street_address);
-                        form.setValue('city', parts.city, { shouldValidate: true });
-                        form.setValue('state', parts.state, { shouldValidate: true });
-                        form.setValue('zipcode', parts.zipcode, { shouldValidate: true });
-                      }}
-                      placeholder="Start typing a street address..."
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex gap-6 w-full">
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>City</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="w-full" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>State</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select US state" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <DefaultSelectDataItems
-                        data={listOfUSStates || []}
-                        valueKey="abbreviation"
-                        labelKey="name"
-                      />
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="zipcode"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Zipcode</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="numeric" pattern="[0-9]*" inputMode="numeric" />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <SheetFooter className="pt-8 gap-2">
-              <SheetClose asChild>
-                <Button variant={'secondary'}>Cancel</Button>
-              </SheetClose>
-              {isAddCustomerMutationLoading ? (
-                <ButtonLoading variant="primary" />
-              ) : (
-                <Button variant={'primary'} type="submit">
-                  Save changes
-                </Button>
-              )}
 
-              {/* <SheetClose>
-              <Button variant={'primary'}>Save changes</Button>
-            </SheetClose> */}
-            </SheetFooter>
+  return (
+    <div className="flex flex-col flex-1 min-h-0">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
+          <ScrollArea className="flex-1">
+            <div className="flex flex-col gap-4 px-5 py-4">
+
+              {/* ── Contact Info ─────────────────────────────── */}
+              <SectionCard
+                iconBg="bg-violet-500/10"
+                iconText="text-violet-600"
+                icon={<UsersIcon className="h-3.5 w-3.5" />}
+                label="Contact Info"
+              >
+                <FormField
+                  control={form.control}
+                  name="customer_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Customer Type</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={customerTypesLoading}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={
+                                customerTypesLoading
+                                  ? 'Loading...'
+                                  : 'Select customer type'
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <DefaultSelectDataItems
+                          data={customerTypes}
+                          valueKey="id"
+                          labelKey="name"
+                        />
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField
+                    control={form.control}
+                    name="first_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name <span className="text-destructive">*</span></FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="First name" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="last_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name <span className="text-destructive">*</span></FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Last name" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email <span className="text-destructive">*</span></FormLabel>
+                      <FormControl>
+                        <Input {...field} type="email" placeholder="email@example.com" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone_number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="tel"
+                          placeholder="(555) 555-5555"
+                          onChange={(e) => field.onChange(formatPhoneNumber(e.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </SectionCard>
+
+              {/* ── Address ──────────────────────────────────── */}
+              <SectionCard
+                iconBg="bg-emerald-500/10"
+                iconText="text-emerald-600"
+                icon={<MapPinIcon className="h-3.5 w-3.5" />}
+                label="Address"
+              >
+                <FormField
+                  control={form.control}
+                  name="street_address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Street Address</FormLabel>
+                      <FormControl>
+                        <AddressAutocomplete
+                          value={field.value ?? ''}
+                          onChange={field.onChange}
+                          onAddressSelect={(parts) => {
+                            field.onChange(parts.street_address);
+                            form.setValue('city', parts.city, { shouldValidate: true });
+                            form.setValue('state', parts.state, { shouldValidate: true });
+                            form.setValue('zipcode', parts.zipcode, { shouldValidate: true });
+                          }}
+                          placeholder="Start typing a street address..."
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>City</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="City" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="state"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>State</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="State" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <DefaultSelectDataItems
+                            data={listOfUSStates || []}
+                            valueKey="abbreviation"
+                            labelKey="name"
+                          />
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="zipcode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Zip Code</FormLabel>
+                      <FormControl>
+                        <Input {...field} inputMode="numeric" pattern="[0-9]*" placeholder="Zip code" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </SectionCard>
+
+            </div>
+          </ScrollArea>
+
+          {/* ── Sticky footer ────────────────────────────────── */}
+          <div className="flex-shrink-0 px-5 py-4 border-t bg-card">
+            <Button type="submit" disabled={isAddCustomerMutationLoading} className="w-full">
+              {isAddCustomerMutationLoading && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
+              Save Customer
+            </Button>
           </div>
         </form>
       </Form>

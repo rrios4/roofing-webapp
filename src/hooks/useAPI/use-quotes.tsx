@@ -4,7 +4,9 @@ import {
   deleteQuoteById,
   fetchQuoteById,
   fetchQuotes,
+  fetchQuotesByProjectId,
   fetchSearchQuotes,
+  setQuoteProject,
   updateQuoteById,
   updateQuoteStatusById,
   convertQuoteToInvoice
@@ -49,6 +51,38 @@ export const useSearchQuote = (query: any) => {
     queryFn: () => fetchSearchQuotes(query)
   });
   return { quoteSearchResult, quoteSearchIsLoading, isError };
+};
+
+// Custom hook to fetch quotes linked to a project
+export const useFetchQuotesByProjectId = (projectId?: string) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['quotes', 'project', projectId],
+    queryFn: () => fetchQuotesByProjectId(projectId!),
+    enabled: !!projectId
+  });
+  return { data: data ?? [], isLoading, isError };
+};
+
+// Custom hook to link a quote to a project
+export const useLinkQuoteToProject = (projectId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation((quoteNumber: number) => setQuoteProject(quoteNumber, projectId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['quotes', 'project', projectId] });
+      queryClient.invalidateQueries({ queryKey: ['quotes'] });
+    }
+  });
+};
+
+// Custom hook to unlink a quote from a project
+export const useUnlinkQuoteFromProject = (projectId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation((quoteNumber: number) => setQuoteProject(quoteNumber, null), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['quotes', 'project', projectId] });
+      queryClient.invalidateQueries({ queryKey: ['quotes'] });
+    }
+  });
 };
 
 // Custom hook to create quote

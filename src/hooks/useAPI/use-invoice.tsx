@@ -4,6 +4,8 @@ import {
   deleteInvoiceById,
   fetchAllInvoices,
   fetchInvoiceById,
+  fetchInvoicesByProjectId,
+  setInvoiceProject,
   updateInvoice,
   updateInvoiceStatusById
   // @ts-ignore
@@ -112,6 +114,38 @@ export const useUpdateInvoice = (toast: any) => {
         duration: 5000,
         isClosable: true
       });
+    }
+  });
+};
+
+// Custom hook to fetch invoices linked to a project
+export const useFetchInvoicesByProjectId = (projectId?: string) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['invoices', 'project', projectId],
+    queryFn: () => fetchInvoicesByProjectId(projectId!),
+    enabled: !!projectId
+  });
+  return { data: data ?? [], isLoading, isError };
+};
+
+// Custom hook to link an invoice to a project
+export const useLinkInvoiceToProject = (projectId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation((invoiceNumber: number) => setInvoiceProject(invoiceNumber, projectId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['invoices', 'project', projectId] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+    }
+  });
+};
+
+// Custom hook to unlink an invoice from a project
+export const useUnlinkInvoiceFromProject = (projectId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation((invoiceNumber: number) => setInvoiceProject(invoiceNumber, null), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['invoices', 'project', projectId] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
     }
   });
 };

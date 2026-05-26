@@ -22,13 +22,13 @@ export const navLinks = [
     group: 1,
     lastOfGroup: true
   },
-  // {
-  //   title: 'Projects',
-  //   icon: <KanbanSquareIcon size={'20px'} className="text-zinc-900 dark:text-zinc-300" />,
-  //   path: '/projects',
-  //   group: 1,
-  //   lastOfGroup: true
-  // },
+  {
+    title: 'Projects',
+    icon: <KanbanSquareIcon size={'20px'} className="text-foreground" />,
+    path: '/projects',
+    group: 1,
+    lastOfGroup: true
+  },
   {
     title: 'Sales Leads',
     icon: <SpeechIcon size={'20px'} className="text-foreground" />,

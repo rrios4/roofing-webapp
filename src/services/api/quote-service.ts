@@ -139,6 +139,61 @@ export const fetchSearchQuotes = async (query: string): Promise<QuoteWithRelatio
   return data as QuoteWithRelations[];
 };
 
+// GET quotes linked to a project
+export const fetchQuotesByProjectId = async (projectId: string): Promise<QuoteWithRelations[]> => {
+  const { data, error } = await supabase
+    .from(TABLES.QUOTE)
+    .select(
+      `
+      *,
+      customer (
+        id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        street_address,
+        city,
+        state,
+        zipcode
+      ),
+      quote_status (
+        id,
+        name,
+        description,
+        created_at,
+        updated_at
+      ),
+      service (
+        id,
+        name,
+        description,
+        default_price,
+        created_at,
+        updated_at
+      )
+    `
+    )
+    .eq('project_id', projectId)
+    .order('quote_number', { ascending: false });
+
+  if (error) throw error;
+  return data as QuoteWithRelations[];
+};
+
+// Set or clear project_id on a quote
+export const setQuoteProject = async (
+  quoteNumber: number,
+  projectId: string | null
+): Promise<void> => {
+  const { error } = await supabase
+    .from(TABLES.QUOTE)
+    .update({ project_id: projectId })
+    .eq('quote_number', quoteNumber);
+
+  if (error) throw error;
+};
+
 // PATCH request to API to update a quote
 export const updateQuoteById = async (quoteObject: Partial<Quote>): Promise<Quote | null> => {
   const { data, error } = await supabase

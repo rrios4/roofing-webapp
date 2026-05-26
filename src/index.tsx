@@ -30,7 +30,9 @@ import {
   DataManagementPage,
   ServicesManagementPage,
   StatusManagementPage,
-  SettingsPage
+  SettingsPage,
+  ProjectsPage,
+  ProjectSettingsPage
 } from './pages';
 import CustomerTypesPage from './pages/customer-types-page';
 import ProfilePage from './pages/profile-page';
@@ -115,6 +117,22 @@ root.render(
                 element={
                   <ProtectedRoute>
                     <InboxPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <ProtectedRoute>
+                    <ProjectsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects/settings"
+                element={
+                  <ProtectedRoute>
+                    <ProjectSettingsPage />
                   </ProtectedRoute>
                 }
               />

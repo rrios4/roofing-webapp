@@ -339,24 +339,19 @@ class GoogleService {
   async getDriveFiles(
     query?: string,
     maxResults: number = 10
-  ): Promise<Array<{ id: string; name: string; mimeType: string }>> {
-    try {
-      const params = new URLSearchParams({
-        pageSize: maxResults.toString(),
-        fields: 'files(id,name,mimeType,createdTime,modifiedTime)',
-        ...(query && { q: query })
-      });
+  ): Promise<Array<{ id: string; name: string; mimeType: string; modifiedTime?: string; webViewLink?: string }>> {
+    const params = new URLSearchParams({
+      pageSize: maxResults.toString(),
+      fields: 'files(id,name,mimeType,modifiedTime,webViewLink)',
+      ...(query && { q: query })
+    });
 
-      const response = await this.makeGoogleApiRequest(
-        `https://www.googleapis.com/drive/v3/files?${params}`
-      );
+    const response = await this.makeGoogleApiRequest(
+      `https://www.googleapis.com/drive/v3/files?${params}`
+    );
 
-      const data = await response.json();
-      return data.files || [];
-    } catch (error) {
-      console.error('Failed to get Drive files:', error);
-      return [];
-    }
+    const data = await response.json();
+    return data.files || [];
   }
 
   /**

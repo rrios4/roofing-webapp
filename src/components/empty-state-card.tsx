@@ -18,6 +18,7 @@ type Props = {
   sheetTitle: string;
   sheetDescription: string;
   SheetContentBody?: any;
+  EmptyStateAction?: React.ReactNode;
 };
 
 type EmptyItemNotFoundProps = {
@@ -31,7 +32,8 @@ export default function EmptyStateCard({
   activateModal,
   sheetTitle,
   sheetDescription,
-  SheetContentBody
+  SheetContentBody,
+  EmptyStateAction
 }: Props) {
   const [open, setOpen] = React.useState(false);
   return (
@@ -43,22 +45,26 @@ export default function EmptyStateCard({
           Click on the button below to add a new {entity} to system.
         </p>
         <div className="flex justify-center text-[16px]">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button variant={'primary'} onClick={activateModal}>
-                <PlusCircleIcon className="mr-2 h-4 w-4" /> Add {entity}
-              </Button>
-            </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-xl overflow-y-auto px-2">
-              <SheetHeader className="px-4 space-y-0">
-                <SheetTitle>{sheetTitle}</SheetTitle>
-                <SheetDescription>{sheetDescription}</SheetDescription>
-              </SheetHeader>
-              <ScrollArea className="w-full h-full pb-8 pt-6">
-                <SheetContentBody open={open} />
-              </ScrollArea>
-            </SheetContent>
-          </Sheet>
+          {EmptyStateAction ? (
+            EmptyStateAction
+          ) : (
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button variant={'primary'} onClick={activateModal}>
+                  <PlusCircleIcon className="mr-2 h-4 w-4" /> Add {entity}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-xl overflow-y-auto px-2">
+                <SheetHeader className="px-4 space-y-0">
+                  <SheetTitle>{sheetTitle}</SheetTitle>
+                  <SheetDescription>{sheetDescription}</SheetDescription>
+                </SheetHeader>
+                <ScrollArea className="w-full h-full pb-8 pt-6">
+                  <SheetContentBody open={open} />
+                </ScrollArea>
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
       </div>
     </div>

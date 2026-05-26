@@ -80,6 +80,7 @@ export type InvoiceInsert = {
   converted_from_quote_number?: number;
   private_note?: string; // Internal-only note
   public_note?: string; // Customer-visible note
+  project_id?: string | null;
 };
 
 // Full invoice type including generated fields
@@ -190,6 +191,7 @@ export type QuoteInsert = {
   converted: boolean; // Flag indicating if quote was converted to invoice
   private_note?: string; // Internal-only note
   public_note?: string; // Customer-visible note
+  project_id?: string | null;
 };
 
 // Full quote type including generated fields
@@ -318,30 +320,94 @@ export type QuoteRequestStatus = QuoteRequestStatusInsert & {
   updated_at: string; // timestamp stored as ISO string
 };
 
-// Currently under development and not yet implemented
 // ---------------------------------------------------------
-// Base type for project creation/updates (excludes generated fields)
+// Project lookup types
 // ---------------------------------------------------------
 
-export type ProjectInsert = {
-  project_number: number;
+export type ProjectStatus = {
+  id: number;
+  name: string;
+  description: string | null;
+  sort_order: number;
+};
+
+export type ProjectType = {
+  id: number;
+  name: string;
+  description: string | null;
+};
+
+export type ProjectSource = {
+  id: number;
+  name: string;
+  description: string | null;
+};
+
+// ---------------------------------------------------------
+// Project types
+// ---------------------------------------------------------
+
+export type Project = {
+  id: string;
+  project_number: number | null;
+  // Legacy address column (keep in sync with structured address)
   address: string;
-  start_date: string; // date stored as ISO string
-  end_date: string; // date stored as ISO string
+  // Structured address (canonical — populated via Places autocomplete)
+  street_address: string | null;
+  city: string | null;
+  state: string | null;
+  zipcode: string | null;
+  property_owner_name: string | null;
+  // Dates
+  start_date: string | null;
+  end_date: string | null;
+  // Legacy status text
   status: string;
-  service: number; // Foreign key to service table
-  customer: number; // Foreign key to customer table
+  // Lookup FKs
+  project_status_id: number | null;
+  project_type_id: number | null;
+  source_id: number | null;
+  // Customer / Service FKs (optional — address-first model)
+  customer: number | null;
+  service: number | null;
+  // Text / Scope
+  description: string | null;
+  notes: string | null;
+  sq_ft_measurement: string | null;
+  // Financial
+  estimated_value: number | null;
+  contract_amount: number | null;
+  // Insurance claim
+  is_insurance_claim: boolean;
+  claim_number: string | null;
+  insurance_company: string | null;
+  adjuster_name: string | null;
+  adjuster_phone: string | null;
+  date_of_loss: string | null;
+  // Permit
+  permit_required: boolean;
+  permit_number: string | null;
+  permit_issued_date: string | null;
+  // Google Drive
+  drive_folder_id: string | null;
+  drive_folder_name: string | null;
+  drive_folder_url: string | null;
+  // Quote request origin
+  quote_request_id: number | null;
+  // Timestamps
+  created_at: string;
+  updated_at: string;
 };
 
-// Full project type including generated fields
-export type Project = ProjectInsert & {
-  id: string; // uuid stored as string
-  created_at: string; // timestamptz stored as ISO string
-  updated_at: string; // timestamp stored as ISO string
-};
-
-// Type for project with joined relations
 export type ProjectWithRelations = Project & {
-  service_details: Service;
-  customer_details: Customer;
+  customer_details: Customer | null;
+  service_details: Service | null;
+  project_status: ProjectStatus | null;
+  project_type: ProjectType | null;
+  project_source: ProjectSource | null;
 };
+
+export type ProjectInsert = Omit<Project, 'id' | 'project_number' | 'created_at' | 'updated_at'> & {
+  project_number?: number | null;
+};
+export type ProjectUpdate = Partial<ProjectInsert>;

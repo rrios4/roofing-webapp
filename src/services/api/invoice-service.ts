@@ -172,6 +172,61 @@ export const updateInvoice = async (
   return updateInvoiceObject[1].invoice_number;
 };
 
+// GET invoices linked to a project
+export const fetchInvoicesByProjectId = async (projectId: string): Promise<InvoiceWithRelations[]> => {
+  const { data, error } = await supabase
+    .from(TABLES.INVOICE)
+    .select(
+      `
+      *,
+      customer (
+        id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        street_address,
+        city,
+        state,
+        zipcode
+      ),
+      service (
+        id,
+        name,
+        description,
+        default_price,
+        created_at,
+        updated_at
+      ),
+      invoice_status (
+        id,
+        name,
+        description,
+        created_at,
+        updated_at
+      )
+    `
+    )
+    .eq('project_id', projectId)
+    .order('invoice_number', { ascending: false });
+
+  if (error) throw error;
+  return data as InvoiceWithRelations[];
+};
+
+// Set or clear project_id on an invoice
+export const setInvoiceProject = async (
+  invoiceNumber: number,
+  projectId: string | null
+): Promise<void> => {
+  const { error } = await supabase
+    .from(TABLES.INVOICE)
+    .update({ project_id: projectId })
+    .eq('invoice_number', invoiceNumber);
+
+  if (error) throw error;
+};
+
 // PUT request to update invoice status
 export const updateInvoiceStatusById = async (updateInvoiceStatusObject: {
   status_id: number;
