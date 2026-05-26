@@ -224,7 +224,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
             </div>
             <div className="flex-1 min-w-0">
               <SheetTitle>
-                Edit Project{project.project_number ? ` #${project.project_number}` : ''}
+                Edit Project{project.project_number ? ` PRJ-${project.project_number}` : ''}
               </SheetTitle>
               <SheetDescription className="mt-0.5 truncate">
                 {project.street_address || project.address || 'Update project details'}

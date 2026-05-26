@@ -404,7 +404,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                 )}
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">
-                #{formatNumber(project.project_number ?? 0)}
+                PRJ-{formatNumber(project.project_number ?? 0)}
                 {project.service_details?.name ? ` · ${project.service_details.name}` : ''}
                 {' · '}
                 {fmtRange(project.start_date, project.end_date)}
@@ -800,10 +800,14 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                 (inv.project_id == null || inv.project_id === project.id)
                             ) ?? []).map((inv) => {
                               const alreadyLinked = inv.project_id === project.id;
+                              const serviceName = inv.service?.name ?? inv.service_type?.name ?? null;
+                              const issueDate = inv.issue_date
+                                ? new Date(inv.issue_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+                                : null;
                               return (
                                 <CommandItem
                                   key={inv.invoice_number}
-                                  value={`${inv.invoice_number}`}
+                                  value={`${inv.invoice_number} ${serviceName ?? ''}`}
                                   disabled={alreadyLinked}
                                   onSelect={() => {
                                     if (!alreadyLinked) {
@@ -812,19 +816,24 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                     }
                                   }}
                                 >
-                                  <div className="flex items-center justify-between w-full gap-2">
-                                    <span className="text-sm font-medium">
-                                      INV-{formatNumber(inv.invoice_number)}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground flex-1 truncate">
-                                      {inv.invoice_status?.name}
-                                    </span>
-                                    <span className="text-xs font-semibold tabular-nums">
+                                  <div className="flex items-center justify-between w-full gap-2 py-0.5">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="text-sm font-semibold">INV-{formatNumber(inv.invoice_number)}</span>
+                                        {inv.invoice_status?.name && (
+                                          <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                            {inv.invoice_status.name}
+                                          </span>
+                                        )}
+                                        {alreadyLinked && <LinkIcon className="h-3 w-3 text-primary flex-shrink-0" />}
+                                      </div>
+                                      <p className="text-xs text-muted-foreground truncate mt-0.5">
+                                        {[serviceName, issueDate].filter(Boolean).join(' · ')}
+                                      </p>
+                                    </div>
+                                    <span className="text-xs font-semibold tabular-nums flex-shrink-0">
                                       ${formatMoneyValue(inv.total)}
                                     </span>
-                                    {alreadyLinked && (
-                                      <LinkIcon className="h-3 w-3 text-primary flex-shrink-0" />
-                                    )}
                                   </div>
                                 </CommandItem>
                               );
@@ -940,10 +949,14 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                 (q.project_id == null || q.project_id === project.id)
                             ) ?? []).map((q) => {
                               const alreadyLinked = q.project_id === project.id;
+                              const serviceName = q.service?.name ?? null;
+                              const issueDate = q.quote_date
+                                ? new Date(q.quote_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+                                : null;
                               return (
                                 <CommandItem
                                   key={q.quote_number}
-                                  value={`${q.quote_number}`}
+                                  value={`${q.quote_number} ${serviceName ?? ''}`}
                                   disabled={alreadyLinked}
                                   onSelect={() => {
                                     if (!alreadyLinked) {
@@ -952,19 +965,24 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                     }
                                   }}
                                 >
-                                  <div className="flex items-center justify-between w-full gap-2">
-                                    <span className="text-sm font-medium">
-                                      QT-{formatNumber(q.quote_number)}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground flex-1 truncate">
-                                      {q.status?.name}
-                                    </span>
-                                    <span className="text-xs font-semibold tabular-nums">
+                                  <div className="flex items-center justify-between w-full gap-2 py-0.5">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="text-sm font-semibold">QT-{formatNumber(q.quote_number)}</span>
+                                        {q.status?.name && (
+                                          <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                            {q.status.name}
+                                          </span>
+                                        )}
+                                        {alreadyLinked && <LinkIcon className="h-3 w-3 text-primary flex-shrink-0" />}
+                                      </div>
+                                      <p className="text-xs text-muted-foreground truncate mt-0.5">
+                                        {[serviceName, issueDate].filter(Boolean).join(' · ')}
+                                      </p>
+                                    </div>
+                                    <span className="text-xs font-semibold tabular-nums flex-shrink-0">
                                       ${formatMoneyValue(q.total)}
                                     </span>
-                                    {alreadyLinked && (
-                                      <LinkIcon className="h-3 w-3 text-primary flex-shrink-0" />
-                                    )}
                                   </div>
                                 </CommandItem>
                               );

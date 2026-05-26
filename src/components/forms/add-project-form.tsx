@@ -34,6 +34,7 @@ const schema = z.object({
   project_type_id: z.number().nullable().optional(),
   project_status_id: z.number().nullable().optional(),
   estimated_value: z.string().optional(),
+  contract_amount: z.string().optional(),
   start_date: z.string().optional(),
   end_date: z.string().optional()
 });
@@ -91,12 +92,12 @@ export default function AddProjectForm({ setOpen, defaultProjectNumber, defaultP
       status: 'Lead',
       project_status_id: values.project_status_id ?? defaultProjectStatusId ?? 1,
       estimated_value: values.estimated_value ? parseFloat(values.estimated_value) : null,
+      contract_amount: values.contract_amount ? parseFloat(values.contract_amount) : null,
       start_date: values.start_date || null,
       end_date: values.end_date || null,
       description: null,
       notes: null,
       sq_ft_measurement: null,
-      contract_amount: null,
       is_insurance_claim: false,
       claim_number: null,
       insurance_company: null,
@@ -262,23 +263,42 @@ export default function AddProjectForm({ setOpen, defaultProjectNumber, defaultP
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="estimated_value"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Estimated Value</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium select-none">
-                        $
-                      </span>
-                      <Input {...field} type="number" min="0" step="0.01" className="pl-7" placeholder="0.00" />
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-3">
+              <FormField
+                control={form.control}
+                name="estimated_value"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estimated Value</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium select-none">
+                          $
+                        </span>
+                        <Input {...field} type="number" min="0" step="0.01" className="pl-7" placeholder="0.00" />
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="contract_amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contract Amount</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium select-none">
+                          $
+                        </span>
+                        <Input {...field} type="number" min="0" step="0.01" className="pl-7" placeholder="0.00" />
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <div className="grid grid-cols-2 gap-3">
               <FormField
