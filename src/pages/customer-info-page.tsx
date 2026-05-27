@@ -1,8 +1,6 @@
-import React from 'react';
+import { useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
 import {
   Table,
   TableBody,
@@ -17,7 +15,8 @@ import {
   useFetchCustomerInvoices,
   useFetchCustomerQuotes
 } from '../hooks/useAPI/use-customer';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useFetchProjects } from '../hooks/useAPI/use-projects';
+import { Link, useParams } from 'react-router-dom';
 import {
   abbreviateName,
   formatDate,
@@ -27,33 +26,23 @@ import {
 } from '../lib/utils';
 import GoogleMapsAddressPreviewPopover from '../components/google-maps-preview';
 import {
-  BoxIcon,
-  BellIcon,
+  ActivityIcon,
   CalendarIcon,
   ChevronRightIcon,
-  CircleDashedIcon,
-  CircleDollarSignIcon,
   ClipboardSignatureIcon,
-  CreditCardIcon,
-  EarthIcon,
-  FileIcon,
+  FolderKanbanIcon,
   HashIcon,
   LayoutDashboardIcon,
+  Loader2,
   MailIcon,
-  MapIcon,
   MapPinIcon,
-  MousePointerClickIcon,
-  PaperclipIcon,
   PencilIcon,
   PhoneIcon,
-  PinIcon,
   SendIcon,
-  SquarePenIcon,
-  TrashIcon
+  TrendingUpIcon
 } from 'lucide-react';
 import { Skeleton } from '../components/ui/skeleton';
 import DefaultStatusBadge from '../components/status-badges';
-import EmptyStateCard, { EmptyStateItemsNotFound } from '../components/empty-state-card';
 import { ConnectedDeleteCustomerAlertDialog } from '../components/connected-delete-dialogs';
 import EditCustomerForm from '../components/forms/edit-customer-form';
 import {
@@ -68,95 +57,110 @@ import { ScrollArea } from '../components/ui/scroll-area';
 import { PageBreadcrumb } from '../components/ui/breadcrumb';
 import CustomerEmailsTab from '../components/customer-emails-tab';
 
-type Props = {};
+function stringHue(s: string): number {
+  let h = 0;
+  for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360;
+  return h;
+}
+
+function avatarBg(name: string): string {
+  return `oklch(0.78 0.08 ${stringHue(name)})`;
+}
+
+function invoiceStatusVariant(name: string): 'red' | 'yellow' | 'green' | 'gray' {
+  if (name === 'Overdue') return 'red';
+  if (name === 'Pending') return 'yellow';
+  if (name === 'Paid') return 'green';
+  return 'gray';
+}
+
+function quoteStatusVariant(name: string): 'red' | 'yellow' | 'green' | 'gray' {
+  if (name === 'Rejected') return 'red';
+  if (name === 'Pending') return 'yellow';
+  if (name === 'Accepted') return 'green';
+  return 'gray';
+}
+
+const GLASS = 'bg-card border border-border rounded-2xl';
 
 export default function CustomerInfoPage() {
   const { id } = useParams();
-  const location = useLocation();
-  const { customerById, isError, isLoading } = useFetchCustomerByID(id);
+  const { customerById, isLoading } = useFetchCustomerByID(id);
   const { customerInvoices, isLoading: isCustomerInvoicesLoading } = useFetchCustomerInvoices(id);
   const { customerQuotes } = useFetchCustomerQuotes(id);
+  const { data: allProjects, isLoading: projectsLoading } = useFetchProjects();
 
-  // React.useEffect(() => {
-  //   console.log(customerQuotes);
-  //   console.log(customerById);
-  // }, []);
+  const customerProjects = useMemo(
+    () => allProjects?.filter((p) => p.customer === Number(id)) ?? [],
+    [allProjects, id]
+  );
+
+  const lifetimeValue = useMemo(
+    () => customerInvoices?.reduce((sum: number, inv: any) => sum + (inv.total ?? 0), 0) ?? 0,
+    [customerInvoices]
+  );
+
+  const fullName = customerById ? `${customerById.first_name} ${customerById.last_name}` : '';
 
   if (isLoading || isCustomerInvoicesLoading) {
     return (
-      <div className="flex flex-col w-full gap-4">
-        <div className="flex w-full mt-2 gap-2">
-          {/* <Link to={'/'}>Home</Link>
-        <p>/</p> */}
-          <Link to={'/customers'}>Customers</Link>
-          <p>/</p>
-          <Link to={location.pathname}>Customer-{id}</Link>
+      <div className="flex flex-col w-full gap-4 pt-4">
+        <Skeleton className="h-6 w-48" />
+        <Skeleton className="h-[180px] rounded-2xl" />
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-[80px] rounded-2xl" />
+          ))}
         </div>
-        <Skeleton className="h-[161px] rounded-md" />
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-[48px] rounded-md" />
-          <Skeleton className="h-[400px]" />
-        </div>
+        <Skeleton className="h-[400px] rounded-2xl" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col w-full gap-4">
-      {/* Breadcrumb Navigation */}
-      <div className="pt-4 pb-2">
+    <div className="flex flex-col w-full gap-4 pb-10">
+      {/* Breadcrumb */}
+      <div className="pt-4 pb-1">
         <PageBreadcrumb
           currentPage={`Customer #${id}`}
           parentPages={[{ label: 'Customers', href: '/customers' }]}
           homeHref="/"
         />
       </div>
-      <div className="flex flex-col border py-4 px-4 rounded-md gap-8">
-        <div className="flex flex-col md:flex-row w-full gap-4 justify-between">
-          <div className="flex gap-4">
-            <div>
-              <Avatar className="w-[50px] h-[50px]">
-                {/*<AvatarImage src="https://github.com/shadcn.png" />*/}
-                <AvatarFallback>
-                  {abbreviateName(`${customerById?.first_name} ${customerById?.last_name}`)}
-                </AvatarFallback>
-              </Avatar>
-            </div>
-            <div className="my-auto">
-              <p className="font-bold text-[24px] my-auto">
-                {customerById?.first_name} {customerById?.last_name}
-              </p>
-            </div>
-            <div className="my-auto">
-              {customerById?.customer_type.name === 'Residential' && (
-                <>
-                  <DefaultStatusBadge title={customerById?.customer_type.name} variant="blue" />
-                </>
-              )}
-              {customerById?.customer_type.name === 'Commercial' && (
-                <>
-                  <DefaultStatusBadge title={customerById.customer_type.name} variant="green" />
-                </>
-              )}
-              {customerById?.customer_type.name !== 'Commercial' &&
-                customerById?.customer_type.name !== 'Residential' && (
-                  <>
-                    <DefaultStatusBadge
-                      title={customerById?.customer_type.name || 'N/A'}
-                      variant="gray"
-                    />
-                  </>
-                )}
 
-              {/* <Badge variant={'gray'}>{customerById.customer_type.name}</Badge> */}
+      {/* ── Hero Header ── */}
+      <div className={`${GLASS} p-5 flex flex-col gap-4`}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-4 min-w-0">
+            <div
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-lg font-bold flex-shrink-0"
+              style={{ background: avatarBg(fullName), color: '#1a1a1d' }}>
+              {abbreviateName(fullName)}
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold tracking-tight truncate">{fullName}</h1>
+              {customerById?.customer_type && (
+                <div className="mt-1">
+                  <DefaultStatusBadge
+                    title={customerById.customer_type.name}
+                    variant={
+                      customerById.customer_type.name === 'Residential'
+                        ? 'blue'
+                        : customerById.customer_type.name === 'Commercial'
+                          ? 'green'
+                          : 'gray'
+                    }
+                  />
+                </div>
+              )}
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant={'outline'}>
-                  <PencilIcon className="w-4 h-4 mr-4" />
-                  Edit Info
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <PencilIcon className="w-3.5 h-3.5" />
+                  Edit
                 </Button>
               </SheetTrigger>
               <SheetContent className="w-full sm:max-w-xl px-2">
@@ -172,361 +176,502 @@ export default function CustomerInfoPage() {
               </SheetContent>
             </Sheet>
             <ConnectedDeleteCustomerAlertDialog
-              title={'Delete Customer'}
-              description={
-                'This action cannot be undone. This will permanently delete customer data from our server and cannot be retrieved back.'
-              }
+              title="Delete Customer"
+              description="This action cannot be undone. This will permanently delete customer data from our server and cannot be retrieved back."
               itemId={id || ''}
             />
           </div>
         </div>
-        <div className="grid grid-flow-col grid-rows-3 md:grid-rows-1 gap-6 px-1">
-          <div>
-            <div className="flex gap-2">
-              <MailIcon className="w-3 h-3 my-auto" />
-              <p className="text-muted-foreground font-semibold text-[14px]">Email</p>
+
+        {/* Contact strip */}
+        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm pt-3 border-t border-black/5 dark:border-white/5">
+          {customerById?.email && (
+            <a
+              href={`mailto:${customerById.email}`}
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
+              <MailIcon className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>{customerById.email}</span>
+            </a>
+          )}
+          {customerById?.phone_number && (
+            <a
+              href={`tel:${customerById.phone_number}`}
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
+              <PhoneIcon className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>{formatPhoneNumber(customerById.phone_number)}</span>
+            </a>
+          )}
+          {customerById?.street_address && (
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <MapPinIcon className="w-3.5 h-3.5 flex-shrink-0" />
+              <GoogleMapsAddressPreviewPopover
+                streetAddress={customerById.street_address}
+                city={customerById.city || ''}
+                state={customerById.state || ''}
+                zipcode={customerById.zipcode || ''}
+                addressQuery={`${customerById.street_address} ${customerById.city} ${customerById.state} ${customerById.zipcode}`}
+                textSize="sm"
+              />
             </div>
-            <p className="text-sm font-light">{customerById?.email}</p>
-          </div>
-          <div>
-            <div className="flex gap-2">
-              <PhoneIcon className="w-3 h-3 my-auto" />
-              <p className="text-muted-foreground font-semibold text-[14px]">Phone Number</p>
-            </div>
-            <p className="text-sm font-light">{formatPhoneNumber(customerById?.phone_number)}</p>
-          </div>
-          <div>
-            <div className="flex gap-2">
-              <MapIcon className="w-3 h-3 my-auto" />
-              <p className="text-muted-foreground font-semibold text-[14px]">Main Address</p>
-            </div>
-            <GoogleMapsAddressPreviewPopover
-              streetAddress={customerById?.street_address || ''}
-              city={customerById?.city || ''}
-              state={customerById?.state || ''}
-              zipcode={customerById?.zipcode || ''}
-              addressQuery={`${customerById?.street_address || ''} ${customerById?.city || ''} ${customerById?.state || ''} ${customerById?.zipcode || ''}`}
-              textSize={'sm'}
-            />
-            {/* <p>
-              {customerById?.street_address} {customerById?.city}, {customerById?.state}{' '}
-              {customerById?.zipcode}
-            </p> */}
-          </div>
-          <div>
-            <div className="flex gap-2">
-              <EarthIcon className="w-3 h-3 my-auto" />
-              <p className="text-muted-foreground font-semibold text-[14px]">Market</p>
-            </div>
-            <p className="text-sm font-light">
-              {customerById?.city}, {customerById?.state} 🇺🇸
-            </p>
-          </div>
-          <div>
-            <div className="flex gap-2">
-              <SquarePenIcon className="w-3 h-3 my-auto" />
-              <p className="text-muted-foreground font-semibold text-[14px]">Registed At</p>
-            </div>
-            <p className="text-sm font-light">Tuesday, Dec 19, 2023</p>
-          </div>
+          )}
         </div>
       </div>
-      <div className="w-full">
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="flex w-full justify-start py-6 px-2">
-            <TabsTrigger value="overview" className="flex items-center gap-1.5">
-              <LayoutDashboardIcon className="w-3.5 h-3.5" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="emails" className="flex items-center gap-1.5">
-              <MailIcon className="w-3.5 h-3.5" />
-              Emails
-            </TabsTrigger>
-            <TabsTrigger value="financials" disabled className="flex items-center gap-1.5">
-              <CircleDollarSignIcon className="w-3.5 h-3.5" />
-              Financials
-            </TabsTrigger>
-            <TabsTrigger value="payment-methods" disabled className="flex items-center gap-1.5">
-              <CreditCardIcon className="w-3.5 h-3.5" />
-              Payment Methods
-            </TabsTrigger>
-            <TabsTrigger value="locations" disabled className="flex items-center gap-1.5">
-              <MapPinIcon className="w-3.5 h-3.5" />
-              Locations
-            </TabsTrigger>
-            <TabsTrigger value="notifications" disabled className="flex items-center gap-1.5">
-              <BellIcon className="w-3.5 h-3.5" />
-              Notifications
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="emails" className="border rounded-md p-4">
-            <CustomerEmailsTab
-              customerEmail={customerById?.email}
-              customerName={
-                customerById
-                  ? `${customerById.first_name} ${customerById.last_name}`
-                  : ''
-              }
-            />
-          </TabsContent>
-          <TabsContent value="overview" className="border rounded-md p-4">
-            {/* <p>This will display customers invoices and quotes...</p> */}
-            <div className="flex flex-col gap-4 p-2">
-              <div>
-                <div className="flex gap-4 mb-2">
-                  <SendIcon className="w-5 h-5 my-auto" />
-                  <p className="text-[22px] font-semibold">Invoices</p>
+
+      {/* ── Stats Row ── */}
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+        {[
+          {
+            label: 'Lifetime Value',
+            value: `$${formatMoneyValue(lifetimeValue)}`,
+            icon: <TrendingUpIcon className="w-4 h-4 text-emerald-500" />
+          },
+          {
+            label: 'Projects',
+            value: projectsLoading ? '—' : String(customerProjects.length),
+            icon: <FolderKanbanIcon className="w-4 h-4 text-blue-500" />
+          },
+          {
+            label: 'Invoices',
+            value: String(customerInvoices?.length ?? 0),
+            icon: <SendIcon className="w-4 h-4 text-violet-500" />
+          },
+          {
+            label: 'Quotes',
+            value: String(customerQuotes?.length ?? 0),
+            icon: <ClipboardSignatureIcon className="w-4 h-4 text-orange-500" />
+          },
+          {
+            label: 'Member Since',
+            value: customerById?.created_at ? formatDate(customerById.created_at) : '—',
+            icon: <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+          },
+          {
+            label: 'Market',
+            value:
+              customerById?.city && customerById.state
+                ? `${customerById.city}, ${customerById.state}`
+                : '—',
+            icon: <MapPinIcon className="w-4 h-4 text-muted-foreground" />
+          }
+        ].map((stat) => (
+          <div key={stat.label} className={`${GLASS} px-3 py-3 flex flex-col gap-1.5`}>
+            <div className="flex items-center gap-1.5">
+              {stat.icon}
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground truncate">
+                {stat.label}
+              </span>
+            </div>
+            <span className="text-base font-bold leading-none truncate">{stat.value}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Tabs ── */}
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="flex w-full justify-start overflow-x-auto py-6 px-2 gap-1">
+          <TabsTrigger value="overview" className="flex items-center gap-1.5">
+            <LayoutDashboardIcon className="w-3.5 h-3.5" />
+            Overview
+          </TabsTrigger>
+          <TabsTrigger value="projects" className="flex items-center gap-1.5">
+            <FolderKanbanIcon className="w-3.5 h-3.5" />
+            Projects
+          </TabsTrigger>
+          <TabsTrigger value="invoices" className="flex items-center gap-1.5">
+            <SendIcon className="w-3.5 h-3.5" />
+            Invoices
+          </TabsTrigger>
+          <TabsTrigger value="quotes" className="flex items-center gap-1.5">
+            <ClipboardSignatureIcon className="w-3.5 h-3.5" />
+            Quotes
+          </TabsTrigger>
+          <TabsTrigger value="emails" className="flex items-center gap-1.5">
+            <MailIcon className="w-3.5 h-3.5" />
+            Emails
+          </TabsTrigger>
+          <TabsTrigger value="activity" disabled className="flex items-center gap-1.5">
+            <ActivityIcon className="w-3.5 h-3.5" />
+            Activity
+          </TabsTrigger>
+        </TabsList>
+
+        {/* ── Overview Tab ── */}
+        <TabsContent value="overview">
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Left column */}
+            <div className="flex flex-col gap-4">
+              {/* Customer details */}
+              <div className={`${GLASS} p-4 flex flex-col gap-3`}>
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                  Details
+                </p>
+                <div className="flex flex-col gap-2 text-sm">
+                  {customerById?.company_name && (
+                    <div className="flex justify-between gap-2">
+                      <span className="text-muted-foreground">Company</span>
+                      <span className="font-medium text-right truncate">
+                        {customerById.company_name}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between gap-2">
+                    <span className="text-muted-foreground">Type</span>
+                    <span className="font-medium">{customerById?.customer_type?.name ?? '—'}</span>
+                  </div>
+                  <div className="flex justify-between gap-2">
+                    <span className="text-muted-foreground">Email</span>
+                    <span className="font-medium truncate">{customerById?.email ?? '—'}</span>
+                  </div>
+                  <div className="flex justify-between gap-2">
+                    <span className="text-muted-foreground">Phone</span>
+                    <span className="font-medium">
+                      {formatPhoneNumber(customerById?.phone_number) || '—'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between gap-2">
+                    <span className="text-muted-foreground">Address</span>
+                    <span className="font-medium text-right">
+                      {[
+                        customerById?.street_address,
+                        customerById?.city,
+                        customerById?.state,
+                        customerById?.zipcode
+                      ]
+                        .filter(Boolean)
+                        .join(', ') || '—'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between gap-2">
+                    <span className="text-muted-foreground">Registered</span>
+                    <span className="font-medium">
+                      {customerById?.created_at ? formatDate(customerById.created_at) : '—'}
+                    </span>
+                  </div>
                 </div>
-                {customerInvoices?.length === 0 && (
-                  <>
-                    <p className="text-muted-foreground text-center font-light mb-2">
-                      No invoices found for this customer.
-                    </p>
-                    {/* <EmptyStateItemsNotFound
-                      title="No Invoices Found"
-                      description="This customer currently does not have any invoices in our system saved."
-                    /> */}
-                  </>
-                )}
-                {customerInvoices && customerInvoices.length > 0 && (
-                  <>
-                    <Table>
-                      <TableCaption>
-                        A list of {customerById?.first_name}&#39;s recent invoices.
-                      </TableCaption>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="flex w-[100px]">
-                            <HashIcon className="w-4 h-4 mr-2 my-auto" />
-                            <p className="my-auto">Invoice</p>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex">
-                              <CircleDashedIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Status</p>
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex">
-                              <CalendarIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Date</p>
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex">
-                              <BoxIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Service</p>
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex w-full justify-end">
-                              <CircleDollarSignIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Amount</p>
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex w-full justify-end">
-                              <MousePointerClickIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Action</p>
-                            </div>
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {customerInvoices?.map((item: any, index: number) => {
-                          return (
-                            <React.Fragment key={index}>
-                              <TableRow>
-                                <TableCell className="font-medium">
-                                  INV-
-                                  {formatNumber(item.invoice_number)}
-                                </TableCell>
-                                <TableCell>
-                                  {item.invoice_status.name === 'Overdue' && (
-                                    <>
-                                      <DefaultStatusBadge
-                                        title={item.invoice_status.name}
-                                        variant="red"
-                                      />
-                                    </>
-                                  )}
-                                  {item.invoice_status.name === 'Pending' && (
-                                    <>
-                                      <DefaultStatusBadge
-                                        title={item.invoice_status.name}
-                                        variant="yellow"
-                                      />
-                                    </>
-                                  )}
-                                  {item.invoice_status.name === 'Paid' && (
-                                    <>
-                                      <DefaultStatusBadge
-                                        title={item.invoice_status.name}
-                                        variant="green"
-                                      />
-                                    </>
-                                  )}
-                                  {item.invoice_status.name === 'Draft' && (
-                                    <>
-                                      <DefaultStatusBadge
-                                        title={item.invoice_status.name}
-                                        variant="gray"
-                                      />
-                                    </>
-                                  )}
-                                </TableCell>
-                                <TableCell>{formatDate(item.invoice_date)}</TableCell>
-                                <TableCell>{item.service.name}</TableCell>
-                                <TableCell className="text-right">
-                                  ${formatMoneyValue(item.total)}
-                                </TableCell>
-                                <TableCell className="flex">
-                                  <Button variant={'secondary'} className="ml-auto" asChild>
-                                    <Link to={`/invoices/${item.invoice_number}`}>
-                                      <ChevronRightIcon className="w-4 h-4" />
-                                    </Link>
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            </React.Fragment>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </>
-                )}
               </div>
-              <div>
-                <div className="flex gap-4 mb-2">
-                  <ClipboardSignatureIcon className="w-5 h-5 my-auto" />
-                  <p className="text-[22px] font-semibold">Quotes</p>
+
+              {/* Recent invoices preview */}
+              <div className={`${GLASS} p-4 flex flex-col gap-3`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                    Recent Invoices
+                  </p>
+                  <span className="text-xs text-muted-foreground">
+                    {customerInvoices?.length ?? 0} total
+                  </span>
                 </div>
-                {customerQuotes?.length === 0 && (
-                  <>
-                    <p className="text-muted-foreground text-center font-light mb-2">
-                      No quotes found for this customer.
-                    </p>
-                    {/* <EmptyStateItemsNotFound
-                      title="No Quotes Found"
-                      description="This customer currently does not have any quotes in our system saved."
-                    /> */}
-                  </>
-                )}
-                {customerQuotes && customerQuotes.length > 0 && (
-                  <>
-                    <Table>
-                      <TableCaption>
-                        A list of {customerById?.first_name}&#39;s recent quotes.
-                      </TableCaption>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="flex w-[100px]">
-                            <HashIcon className="w-4 h-4 mr-2 my-auto" />
-                            <p className="my-auto">Quote</p>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex">
-                              <CircleDashedIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Status</p>
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex">
-                              <CalendarIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Date</p>
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex">
-                              <BoxIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Service</p>
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex w-full justify-end">
-                              <CircleDollarSignIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Amount</p>
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex w-full justify-end">
-                              <MousePointerClickIcon className="w-4 h-4 mr-2 my-auto" />
-                              <p className="my-auto">Action</p>
-                            </div>
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {customerQuotes?.map((item: any, index: number) => {
-                          return (
-                            <React.Fragment key={index}>
-                              <TableRow>
-                                <TableCell className="font-medium">
-                                  QT-
-                                  {formatNumber(item.quote_number)}
-                                </TableCell>
-                                <TableCell>
-                                  {item.quote_status.name === 'Rejected' && (
-                                    <>
-                                      <DefaultStatusBadge
-                                        title={item.quote_status.name}
-                                        variant="red"
-                                      />
-                                    </>
-                                  )}
-                                  {item.quote_status.name === 'Pending' && (
-                                    <>
-                                      <DefaultStatusBadge
-                                        title={item.quote_status.name}
-                                        variant="yellow"
-                                      />
-                                    </>
-                                  )}
-                                  {item.quote_status.name === 'Accepted' && (
-                                    <>
-                                      <DefaultStatusBadge
-                                        title={item.quote_status.name}
-                                        variant="green"
-                                      />
-                                    </>
-                                  )}
-                                  {item.quote_status.name === 'Draft' && (
-                                    <>
-                                      <DefaultStatusBadge
-                                        title={item.quote_status.name}
-                                        variant="gray"
-                                      />
-                                    </>
-                                  )}
-                                </TableCell>
-                                <TableCell>{formatDate(item.quote_date)}</TableCell>
-                                <TableCell>{item.service.name}</TableCell>
-                                <TableCell className="text-right">
-                                  ${formatMoneyValue(item.total)}
-                                </TableCell>
-                                <TableCell className="flex">
-                                  <Button variant={'secondary'} className="ml-auto" asChild>
-                                    <Link to={`/quotes/${item.quote_number}`}>
-                                      <ChevronRightIcon className="w-4 h-4" />
-                                    </Link>
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            </React.Fragment>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </>
+                {!customerInvoices || customerInvoices.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-3">No invoices yet</p>
+                ) : (
+                  <div className="flex flex-col divide-y divide-black/5 dark:divide-white/5">
+                    {customerInvoices.slice(0, 3).map((inv: any, i: number) => (
+                      <div key={i} className="flex items-center justify-between py-2.5 gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <DefaultStatusBadge
+                            title={inv.invoice_status?.name ?? ''}
+                            variant={invoiceStatusVariant(inv.invoice_status?.name ?? '')}
+                          />
+                          <span className="text-xs text-muted-foreground truncate">
+                            INV-{formatNumber(inv.invoice_number)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className="text-sm font-semibold">
+                            ${formatMoneyValue(inv.total)}
+                          </span>
+                          <Button variant="ghost" size="icon" className="h-6 w-6" asChild>
+                            <Link to={`/invoices/${inv.invoice_number}`}>
+                              <ChevronRightIcon className="w-3.5 h-3.5" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
-          </TabsContent>
-          <TabsContent value="locations">
-            This is a location where the customer can add multiple addresses to their account.
-          </TabsContent>
-        </Tabs>
-      </div>
+
+            {/* Right column */}
+            <div className="flex flex-col gap-4">
+              {/* Recent quotes preview */}
+              <div className={`${GLASS} p-4 flex flex-col gap-3`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                    Recent Quotes
+                  </p>
+                  <span className="text-xs text-muted-foreground">
+                    {customerQuotes?.length ?? 0} total
+                  </span>
+                </div>
+                {!customerQuotes || customerQuotes.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-3">No quotes yet</p>
+                ) : (
+                  <div className="flex flex-col divide-y divide-black/5 dark:divide-white/5">
+                    {customerQuotes.slice(0, 3).map((q: any, i: number) => (
+                      <div key={i} className="flex items-center justify-between py-2.5 gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <DefaultStatusBadge
+                            title={q.quote_status?.name ?? ''}
+                            variant={quoteStatusVariant(q.quote_status?.name ?? '')}
+                          />
+                          <span className="text-xs text-muted-foreground truncate">
+                            QT-{formatNumber(q.quote_number)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className="text-sm font-semibold">
+                            ${formatMoneyValue(q.total)}
+                          </span>
+                          <Button variant="ghost" size="icon" className="h-6 w-6" asChild>
+                            <Link to={`/quotes/${q.quote_number}`}>
+                              <ChevronRightIcon className="w-3.5 h-3.5" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Recent projects preview */}
+              <div className={`${GLASS} p-4 flex flex-col gap-3`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                    Recent Projects
+                  </p>
+                  {!projectsLoading && (
+                    <span className="text-xs text-muted-foreground">
+                      {customerProjects.length} total
+                    </span>
+                  )}
+                </div>
+                {projectsLoading ? (
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  </div>
+                ) : customerProjects.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-3">No projects yet</p>
+                ) : (
+                  <div className="flex flex-col divide-y divide-black/5 dark:divide-white/5">
+                    {customerProjects.slice(0, 3).map((p: any, i: number) => (
+                      <div key={i} className="flex items-center justify-between py-2.5 gap-3">
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-sm font-medium truncate">
+                            {p.street_address || p.address || '—'}
+                          </span>
+                          {p.project_status?.name && (
+                            <span className="text-xs text-muted-foreground">
+                              {p.project_status.name}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs text-muted-foreground flex-shrink-0">
+                          PRJ-{String(p.project_number ?? '').padStart(4, '0')}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* ── Projects Tab ── */}
+        <TabsContent value="projects">
+          <div className={`${GLASS} p-4`}>
+            {projectsLoading ? (
+              <div className="flex items-center justify-center py-10">
+                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              </div>
+            ) : customerProjects.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-10">
+                No projects linked to this customer.
+              </p>
+            ) : (
+              <Table>
+                <TableCaption>All projects linked to {customerById?.first_name}.</TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>
+                      <div className="flex items-center gap-1.5">
+                        <HashIcon className="w-3.5 h-3.5" />
+                        Project
+                      </div>
+                    </TableHead>
+                    <TableHead>Address</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Start Date</TableHead>
+                    <TableHead className="text-right">Contract</TableHead>
+                    <TableHead />
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {customerProjects.map((p: any, i: number) => (
+                    <TableRow key={i}>
+                      <TableCell className="font-medium">
+                        PRJ-{String(p.project_number ?? '').padStart(4, '0')}
+                      </TableCell>
+                      <TableCell className="max-w-[180px] truncate">
+                        {p.street_address || p.address || '—'}
+                      </TableCell>
+                      <TableCell>
+                        {p.project_status?.name ? (
+                          <DefaultStatusBadge title={p.project_status.name} variant="blue" />
+                        ) : (
+                          '—'
+                        )}
+                      </TableCell>
+                      <TableCell>{p.start_date ? formatDate(p.start_date) : '—'}</TableCell>
+                      <TableCell className="text-right">
+                        {p.contract_amount != null
+                          ? `$${formatMoneyValue(p.contract_amount)}`
+                          : '—'}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="h-7 w-7 ml-auto flex"
+                          asChild>
+                          <Link to="/projects">
+                            <ChevronRightIcon className="w-3.5 h-3.5" />
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </TabsContent>
+
+        {/* ── Invoices Tab ── */}
+        <TabsContent value="invoices">
+          <div className={`${GLASS} p-4`}>
+            {!customerInvoices || customerInvoices.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-10">
+                No invoices found for this customer.
+              </p>
+            ) : (
+              <Table>
+                <TableCaption>A list of {customerById?.first_name}&apos;s invoices.</TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[120px]">
+                      <div className="flex items-center gap-1.5">
+                        <HashIcon className="w-3.5 h-3.5" />
+                        Invoice
+                      </div>
+                    </TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Service</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead />
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {customerInvoices.map((item: any, index: number) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">
+                        INV-{formatNumber(item.invoice_number)}
+                      </TableCell>
+                      <TableCell>
+                        <DefaultStatusBadge
+                          title={item.invoice_status?.name ?? ''}
+                          variant={invoiceStatusVariant(item.invoice_status?.name ?? '')}
+                        />
+                      </TableCell>
+                      <TableCell>{formatDate(item.invoice_date)}</TableCell>
+                      <TableCell>{item.service?.name ?? '—'}</TableCell>
+                      <TableCell className="text-right">${formatMoneyValue(item.total)}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="h-7 w-7 ml-auto flex"
+                          asChild>
+                          <Link to={`/invoices/${item.invoice_number}`}>
+                            <ChevronRightIcon className="w-3.5 h-3.5" />
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </TabsContent>
+
+        {/* ── Quotes Tab ── */}
+        <TabsContent value="quotes">
+          <div className={`${GLASS} p-4`}>
+            {!customerQuotes || customerQuotes.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-10">
+                No quotes found for this customer.
+              </p>
+            ) : (
+              <Table>
+                <TableCaption>A list of {customerById?.first_name}&apos;s quotes.</TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[120px]">
+                      <div className="flex items-center gap-1.5">
+                        <HashIcon className="w-3.5 h-3.5" />
+                        Quote
+                      </div>
+                    </TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Service</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead />
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {customerQuotes.map((item: any, index: number) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">
+                        QT-{formatNumber(item.quote_number)}
+                      </TableCell>
+                      <TableCell>
+                        <DefaultStatusBadge
+                          title={item.quote_status?.name ?? ''}
+                          variant={quoteStatusVariant(item.quote_status?.name ?? '')}
+                        />
+                      </TableCell>
+                      <TableCell>{formatDate(item.quote_date)}</TableCell>
+                      <TableCell>{item.service?.name ?? '—'}</TableCell>
+                      <TableCell className="text-right">${formatMoneyValue(item.total)}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="h-7 w-7 ml-auto flex"
+                          asChild>
+                          <Link to={`/quotes/${item.quote_number}`}>
+                            <ChevronRightIcon className="w-3.5 h-3.5" />
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </TabsContent>
+
+        {/* ── Emails Tab ── */}
+        <TabsContent value="emails" className="border rounded-2xl p-4">
+          <CustomerEmailsTab customerEmail={customerById?.email} customerName={fullName} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

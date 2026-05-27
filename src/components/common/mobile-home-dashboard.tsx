@@ -53,8 +53,7 @@ function getFirstName(user: any): string {
   return full.split(' ')[0];
 }
 
-const GLASS =
-  'backdrop-blur-xl bg-white/60 dark:bg-slate-900/60 border border-white/50 dark:border-white/10 rounded-3xl shadow-xl shadow-black/10';
+const GLASS = 'bg-card border border-border rounded-3xl';
 
 export function MobileHomeDashboard({
   onAddCustomer,
