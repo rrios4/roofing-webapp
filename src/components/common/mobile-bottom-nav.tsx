@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { Badge } from '../ui/badge';
-import { HomeIcon, SendIcon, ClipboardSignatureIcon, UsersIcon, SearchIcon } from 'lucide-react';
+import {
+  HomeIcon,
+  SendIcon,
+  ClipboardSignatureIcon,
+  UsersIcon,
+  SearchIcon,
+  KanbanSquareIcon
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useAuth } from '../../hooks/useAuth';
@@ -23,6 +30,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'home', label: 'Home', path: '/', icon: HomeIcon },
   // { id: 'leads', label: 'Leads', path: '/inbox', icon: SpeechIcon, notificationKey: 'leads' },
+  { id: 'projects', label: 'Projects', path: '/projects', icon: KanbanSquareIcon },
   {
     id: 'invoices',
     label: 'Invoices',
