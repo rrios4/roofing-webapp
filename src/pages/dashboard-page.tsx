@@ -61,6 +61,7 @@ import AddQuoteForm from '../components/forms/add-quote-form';
 import AddInvoiceForm from '../components/forms/add-invoice-form';
 import { ImportContactDialog } from '../components/import-contact-dialog';
 import { count } from 'console';
+import MobileHomeDashboard from '../components/common/mobile-home-dashboard';
 
 type Props = {};
 
@@ -146,24 +147,26 @@ export default function DashboardPage() {
     { name: 'Converted', value: 8 }
   ];
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="w-full">
-        <DashboardPageHeader />
+  return (
+    <div className="w-full">
+      {/* Mobile Home Dashboard — rendered only on mobile screens */}
+      <div className="lg:hidden">
+        <MobileHomeDashboard
+          onAddCustomer={() => setCustomerSheetOpen(true)}
+          onAddQuote={() => setQuoteSheetOpen(true)}
+          onAddInvoice={() => setInvoiceSheetOpen(true)}
+        />
+      </div>
+
+      {/* Desktop Dashboard — hidden on mobile */}
+      <div className="hidden lg:block">
+      <DashboardPageHeader />
+      {isLoading ? (
         <div className="flex items-center justify-center py-8">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           <span className="ml-2 text-muted-foreground">Loading dashboard data...</span>
         </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (isError || !dashboardMetrics) {
-    return (
-      <div className="w-full">
-        <DashboardPageHeader />
+      ) : isError || !dashboardMetrics ? (
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <AlertTriangleIcon className="h-8 w-8 text-red-500 mx-auto mb-2" />
@@ -173,15 +176,7 @@ export default function DashboardPage() {
             </Button>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="w-full">
-      <DashboardPageHeader />
-
-      {/* Dashboard Content */}
+      ) : (
       <div className="flex flex-col w-full gap-4 my-4">
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
@@ -782,6 +777,8 @@ export default function DashboardPage() {
             </CardContent>
           </Card> */}
         </div>
+      </div>
+      )}
       </div>
 
       {/* Customer Form Sheet */}
