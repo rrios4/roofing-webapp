@@ -30,7 +30,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'home', label: 'Home', path: '/', icon: HomeIcon },
   // { id: 'leads', label: 'Leads', path: '/inbox', icon: SpeechIcon, notificationKey: 'leads' },
-  { id: 'projects', label: 'Projects', path: '/projects', icon: KanbanSquareIcon },
+  // { id: 'projects', label: 'Projects', path: '/projects', icon: KanbanSquareIcon },
   {
     id: 'invoices',
     label: 'Invoices',
