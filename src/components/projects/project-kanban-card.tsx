@@ -193,8 +193,15 @@ export default function ProjectKanbanCard({
         </a>
       )}
 
-      {/* Footer: value */}
-      <div className="pt-2 mt-0.5 border-t border-border flex items-center justify-end">
+      {/* Footer: project number + value */}
+      <div className="pt-2 mt-0.5 border-t border-border flex items-center justify-between">
+        {project.project_number != null ? (
+          <span className="text-xs font-mono text-muted-foreground">
+            PRJ-{String(project.project_number).padStart(3, '0')}
+          </span>
+        ) : (
+          <span />
+        )}
         {project.estimated_value != null ? (
           <span className="text-xs font-semibold tabular-nums">
             ${formatMoneyValue(project.estimated_value)}
