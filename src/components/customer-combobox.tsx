@@ -19,9 +19,10 @@ type Props = {
   data: any;
   form: any;
   field: any;
+  onSelectCustomer?: (item: any) => void;
 };
 
-export default function SearchCustomerCombobox({ data, form, field }: Props) {
+export default function SearchCustomerCombobox({ data, form, field, onSelectCustomer }: Props) {
   const [open, setOpen] = React.useState(false);
   // const [value, setValue] = React.useState('');
   React.useEffect(() => {
@@ -57,6 +58,7 @@ export default function SearchCustomerCombobox({ data, form, field }: Props) {
                     value={`${item.first_name} ${item.last_name} ${item.email}`}
                     onSelect={() => {
                       field.onChange(item.id);
+                      onSelectCustomer?.(item);
                       setOpen(false);
                     }}
                     className="gap-4 hover:cursor-pointer">

@@ -121,65 +121,23 @@ function getStatusVariant(
 
 export function makeProjectTableColumns(onExpand: (p: ProjectWithRelations) => void) {
   return [
-  columnHelper.accessor('project_number', {
-    cell: ({ row }: any) => {
-      const project: ProjectWithRelations = row.original;
-      return (
-        <p className="text-center text-xs sm:text-sm text-nowrap font-medium text-muted-foreground">
-          PRJ-{formatNumber(project.project_number || 0)}
-        </p>
-      );
-    },
-    header: ({ column }: any) => (
-      <div className="flex justify-center w-full">
-        <Button
-          className="px-1 text-xs sm:text-sm gap-1"
-          size="sm"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          <HashIcon className="h-3 w-3" />
-          {column.getIsSorted() === 'asc' ? (
-            <ArrowUpIcon className="h-3 w-3" />
-          ) : column.getIsSorted() === 'desc' ? (
-            <ArrowDownIcon className="h-3 w-3" />
-          ) : (
-            <ArrowUpDown className="h-3 w-3" />
-          )}
-        </Button>
-      </div>
-    )
-  }),
-  columnHelper.accessor(
-    (row: any) =>
-      `${row.street_address || row.address || ''} ${row.city || ''} ${row.state || ''} ${row.zipcode || ''} ${row.property_owner_name || ''} ${row.customer_details?.first_name || ''} ${row.customer_details?.last_name || ''} ${row.project_status?.name || ''} ${row.project_type?.name || ''}`,
-    {
-      id: 'address',
+    columnHelper.accessor('project_number', {
       cell: ({ row }: any) => {
         const project: ProjectWithRelations = row.original;
-        const address = project.street_address || project.address || '';
-        const secondLine = [project.city, project.state, project.zipcode]
-          .filter(Boolean)
-          .join(', ');
         return (
-          <div className="flex flex-col min-w-[160px]">
-            <p className="text-xs sm:text-sm font-medium leading-tight">
-              {address || 'No address'}
-            </p>
-            {secondLine && (
-              <p className="text-xs text-muted-foreground leading-tight">{secondLine}</p>
-            )}
-          </div>
+          <p className="text-center text-xs sm:text-sm text-nowrap font-medium text-muted-foreground">
+            PRJ-{formatNumber(project.project_number || 0)}
+          </p>
         );
       },
       header: ({ column }: any) => (
-        <div className="flex">
+        <div className="flex justify-center w-full">
           <Button
             className="px-1 text-xs sm:text-sm gap-1"
             size="sm"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            <MapPinIcon className="h-3 w-3" />
-            Address
+            <HashIcon className="h-3 w-3" />
             {column.getIsSorted() === 'asc' ? (
               <ArrowUpIcon className="h-3 w-3" />
             ) : column.getIsSorted() === 'desc' ? (
@@ -190,207 +148,250 @@ export function makeProjectTableColumns(onExpand: (p: ProjectWithRelations) => v
           </Button>
         </div>
       )
-    }
-  ),
-  columnHelper.accessor(
-    (row: any) =>
-      `${row.customer_details?.first_name || ''} ${row.customer_details?.last_name || ''} ${row.property_owner_name || ''}`,
-    {
-      id: 'owner',
+    }),
+    columnHelper.accessor(
+      (row: any) =>
+        `${row.street_address || row.address || ''} ${row.city || ''} ${row.state || ''} ${row.zipcode || ''} ${row.property_owner_name || ''} ${row.customer_details?.first_name || ''} ${row.customer_details?.last_name || ''} ${row.project_status?.name || ''} ${row.project_type?.name || ''}`,
+      {
+        id: 'address',
+        cell: ({ row }: any) => {
+          const project: ProjectWithRelations = row.original;
+          const address = project.street_address || project.address || '';
+          const secondLine = [project.city, project.state, project.zipcode]
+            .filter(Boolean)
+            .join(', ');
+          return (
+            <div className="flex flex-col min-w-[160px]">
+              <p className="text-xs sm:text-sm font-medium leading-tight">
+                {address || 'No address'}
+              </p>
+              {secondLine && (
+                <p className="text-xs text-muted-foreground leading-tight">{secondLine}</p>
+              )}
+            </div>
+          );
+        },
+        header: ({ column }: any) => (
+          <div className="flex">
+            <Button
+              className="px-1 text-xs sm:text-sm gap-1"
+              size="sm"
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              <MapPinIcon className="h-3 w-3" />
+              Address
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowUpIcon className="h-3 w-3" />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowDownIcon className="h-3 w-3" />
+              ) : (
+                <ArrowUpDown className="h-3 w-3" />
+              )}
+            </Button>
+          </div>
+        )
+      }
+    ),
+    columnHelper.accessor(
+      (row: any) =>
+        `${row.customer_details?.first_name || ''} ${row.customer_details?.last_name || ''} ${row.property_owner_name || ''}`,
+      {
+        id: 'owner',
+        cell: ({ row }: any) => {
+          const project: ProjectWithRelations = row.original;
+          if (project.customer_details) {
+            return (
+              <CustomerPreviewPopover
+                firstName={project.customer_details.first_name || ''}
+                lastName={project.customer_details.last_name || ''}
+                email={project.customer_details.email || ''}
+                phoneNumber={(project.customer_details as any).phone_number || ''}
+                streetAddress={project.customer_details.street_address || ''}
+                city={project.customer_details.city || ''}
+                state={project.customer_details.state || ''}
+                zipcode={project.customer_details.zipcode || ''}
+                customerId={(project.customer_details as any).id || 0}
+              />
+            );
+          }
+          return (
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              {project.property_owner_name || <span className="italic">Unassigned</span>}
+            </p>
+          );
+        },
+        header: () => (
+          <div className="flex items-center gap-1 px-1 text-xs sm:text-sm font-medium">
+            <UserIcon className="h-3 w-3" />
+            Owner
+          </div>
+        )
+      }
+    ),
+    columnHelper.accessor('project_status_id', {
       cell: ({ row }: any) => {
         const project: ProjectWithRelations = row.original;
-        if (project.customer_details) {
-          return (
-            <CustomerPreviewPopover
-              firstName={project.customer_details.first_name || ''}
-              lastName={project.customer_details.last_name || ''}
-              email={project.customer_details.email || ''}
-              phoneNumber={(project.customer_details as any).phone_number || ''}
-              streetAddress={project.customer_details.street_address || ''}
-              city={project.customer_details.city || ''}
-              state={project.customer_details.state || ''}
-              zipcode={project.customer_details.zipcode || ''}
-              customerId={(project.customer_details as any).id || 0}
-            />
-          );
-        }
         return (
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            {project.property_owner_name || <span className="italic">Unassigned</span>}
+          <DefaultStatusBadge
+            title={project.project_status?.name || 'Unknown'}
+            variant={getStatusVariant(project.project_status?.name)}
+          />
+        );
+      },
+      header: ({ column }: any) => (
+        <div className="flex">
+          <Button
+            className="px-1 gap-1"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            <CircleDotIcon className="h-3 w-3" />
+            Status
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className="h-3 w-3" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className="h-3 w-3" />
+            ) : null}
+          </Button>
+        </div>
+      )
+    }),
+    columnHelper.accessor('project_type_id', {
+      cell: ({ row }: any) => {
+        const project: ProjectWithRelations = row.original;
+        return (
+          <p className="text-xs sm:text-sm text-nowrap">
+            {project.project_type?.name || <span className="text-muted-foreground italic">—</span>}
           </p>
         );
       },
       header: () => (
         <div className="flex items-center gap-1 px-1 text-xs sm:text-sm font-medium">
-          <UserIcon className="h-3 w-3" />
-          Owner
+          <TagIcon className="h-3 w-3" />
+          Type
         </div>
       )
-    }
-  ),
-  columnHelper.accessor('project_status_id', {
-    cell: ({ row }: any) => {
-      const project: ProjectWithRelations = row.original;
-      return (
-        <DefaultStatusBadge
-          title={project.project_status?.name || 'Unknown'}
-          variant={getStatusVariant(project.project_status?.name)}
-        />
-      );
-    },
-    header: ({ column }: any) => (
-      <div className="flex">
-        <Button
-          className="px-1 gap-1"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          <CircleDotIcon className="h-3 w-3" />
-          Status
-          {column.getIsSorted() === 'asc' ? (
-            <ArrowUpIcon className="h-3 w-3" />
-          ) : column.getIsSorted() === 'desc' ? (
-            <ArrowDownIcon className="h-3 w-3" />
-          ) : null}
-        </Button>
-      </div>
-    )
-  }),
-  columnHelper.accessor('project_type_id', {
-    cell: ({ row }: any) => {
-      const project: ProjectWithRelations = row.original;
-      return (
-        <p className="text-xs sm:text-sm text-nowrap">
-          {project.project_type?.name || <span className="text-muted-foreground italic">—</span>}
-        </p>
-      );
-    },
-    header: () => (
-      <div className="flex items-center gap-1 px-1 text-xs sm:text-sm font-medium">
-        <TagIcon className="h-3 w-3" />
-        Type
-      </div>
-    )
-  }),
-  columnHelper.accessor('service', {
-    cell: ({ row }: any) => {
-      const project: ProjectWithRelations = row.original;
-      return (
-        <p className="text-xs sm:text-sm text-nowrap">
-          {project.service_details?.name || <span className="text-muted-foreground italic">—</span>}
-        </p>
-      );
-    },
-    header: () => (
-      <div className="flex items-center gap-1 px-1 text-xs sm:text-sm font-medium">
-        <WrenchIcon className="h-3 w-3" />
-        Service
-      </div>
-    )
-  }),
-  columnHelper.accessor('start_date', {
-    cell: ({ row }: any) => {
-      const project: ProjectWithRelations = row.original;
-      return (
-        <p className="text-xs sm:text-sm">
-          {project.start_date ? formatDateWithAbbreviatedMonth(project.start_date) : '—'}
-        </p>
-      );
-    },
-    header: ({ column }: any) => (
-      <div className="flex">
-        <Button
-          className="px-1 gap-1"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          <CalendarIcon className="h-3 w-3" />
-          Start
-          {column.getIsSorted() === 'asc' ? (
-            <ArrowUpIcon className="h-3 w-3" />
-          ) : column.getIsSorted() === 'desc' ? (
-            <ArrowDownIcon className="h-3 w-3" />
-          ) : null}
-        </Button>
-      </div>
-    )
-  }),
-  columnHelper.accessor('estimated_value', {
-    cell: ({ row }: any) => {
-      const project: ProjectWithRelations = row.original;
-      return project.estimated_value != null ? (
-        <p className="text-xs sm:text-sm">${formatMoneyValue(project.estimated_value)}</p>
-      ) : (
-        <p className="text-xs sm:text-sm text-muted-foreground italic">—</p>
-      );
-    },
-    header: ({ column }: any) => (
-      <div className="flex">
-        <Button
-          className="px-1 gap-1"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          <DollarSignIcon className="h-3 w-3" />
-          Est. Value
-          {column.getIsSorted() === 'asc' ? (
-            <ArrowUpIcon className="h-3 w-3" />
-          ) : column.getIsSorted() === 'desc' ? (
-            <ArrowDownIcon className="h-3 w-3" />
-          ) : null}
-        </Button>
-      </div>
-    )
-  }),
-  columnHelper.accessor('drive_folder_id', {
-    cell: ({ row }: any) => {
-      const project: ProjectWithRelations = row.original;
-      const url =
-        project.drive_folder_url ||
-        (project.drive_folder_id
-          ? `https://drive.google.com/drive/folders/${project.drive_folder_id}`
-          : null);
-      if (!url) return <p className="text-xs text-muted-foreground italic px-1">—</p>;
-      return (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs sm:text-sm text-blue-600 dark:text-blue-400 hover:underline max-w-[160px]">
-          <GoogleDriveIcon className="h-3.5 w-3.5 flex-shrink-0" />
-          <span className="truncate">{project.drive_folder_name || 'Open folder'}</span>
-        </a>
-      );
-    },
-    header: () => (
-      <div className="flex items-center gap-1.5 px-1 text-xs sm:text-sm font-medium">
-        <GoogleDriveIcon className="h-3.5 w-3.5" />
-        Drive
-      </div>
-    )
-  }),
-  columnHelper.accessor('actions', {
-    cell: ({ row }: any) => {
-      const project: ProjectWithRelations = row.original;
-      return (
-        <div className="flex gap-2">
-          <UpdateProjectSheet project={project} />
-          <ConnectedDeleteProjectAlertDialog
-            title="Delete project?"
-            description="This will permanently delete the project and all associated data."
-            itemId={project.id}
-          />
+    }),
+    columnHelper.accessor('service', {
+      cell: ({ row }: any) => {
+        const project: ProjectWithRelations = row.original;
+        return (
+          <p className="text-xs sm:text-sm text-nowrap">
+            {project.service_details?.name || (
+              <span className="text-muted-foreground italic">—</span>
+            )}
+          </p>
+        );
+      },
+      header: () => (
+        <div className="flex items-center gap-1 px-1 text-xs sm:text-sm font-medium">
+          <WrenchIcon className="h-3 w-3" />
+          Service
+        </div>
+      )
+    }),
+    columnHelper.accessor('start_date', {
+      cell: ({ row }: any) => {
+        const project: ProjectWithRelations = row.original;
+        return (
+          <p className="text-xs sm:text-sm">
+            {project.start_date ? formatDateWithAbbreviatedMonth(project.start_date) : '—'}
+          </p>
+        );
+      },
+      header: ({ column }: any) => (
+        <div className="flex">
           <Button
-            variant="primary"
-            size="icon"
-            className="px-3"
-            title="View full details"
-            onClick={() => onExpand(project)}
-          >
-            <ExpandIcon size="15px" />
+            className="px-1 gap-1"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            <CalendarIcon className="h-3 w-3" />
+            Start
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className="h-3 w-3" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className="h-3 w-3" />
+            ) : null}
           </Button>
         </div>
-      );
-    },
-    header: () => <p>Actions</p>
-  })
+      )
+    }),
+    columnHelper.accessor('estimated_value', {
+      cell: ({ row }: any) => {
+        const project: ProjectWithRelations = row.original;
+        return project.estimated_value != null ? (
+          <p className="text-xs sm:text-sm">${formatMoneyValue(project.estimated_value)}</p>
+        ) : (
+          <p className="text-xs sm:text-sm text-muted-foreground italic">—</p>
+        );
+      },
+      header: ({ column }: any) => (
+        <div className="flex">
+          <Button
+            className="px-1 gap-1"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            <DollarSignIcon className="h-3 w-3" />
+            Est. Value
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className="h-3 w-3" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className="h-3 w-3" />
+            ) : null}
+          </Button>
+        </div>
+      )
+    }),
+    columnHelper.accessor('drive_folder_id', {
+      cell: ({ row }: any) => {
+        const project: ProjectWithRelations = row.original;
+        const url =
+          project.drive_folder_url ||
+          (project.drive_folder_id
+            ? `https://drive.google.com/drive/folders/${project.drive_folder_id}`
+            : null);
+        if (!url) return <p className="text-xs text-muted-foreground italic px-1">—</p>;
+        return (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs sm:text-sm text-blue-600 dark:text-blue-400 hover:underline max-w-[160px]">
+            <GoogleDriveIcon className="h-3.5 w-3.5 flex-shrink-0" />
+            <span className="truncate">{project.drive_folder_name || 'Open folder'}</span>
+          </a>
+        );
+      },
+      header: () => (
+        <div className="flex items-center gap-1.5 px-1 text-xs sm:text-sm font-medium">
+          <GoogleDriveIcon className="h-3.5 w-3.5" />
+          Drive
+        </div>
+      )
+    }),
+    columnHelper.accessor('actions', {
+      cell: ({ row }: any) => {
+        const project: ProjectWithRelations = row.original;
+        return (
+          <div className="flex gap-2">
+            <UpdateProjectSheet project={project} />
+            <ConnectedDeleteProjectAlertDialog
+              title="Delete project?"
+              description="This will permanently delete the project and all associated data."
+              itemId={project.id}
+            />
+            <Button
+              variant="primary"
+              size="icon"
+              className="px-3"
+              title="View full details"
+              onClick={() => onExpand(project)}>
+              <ExpandIcon size="15px" />
+            </Button>
+          </div>
+        );
+      },
+      header: () => <p>Actions</p>
+    })
   ];
 }
 

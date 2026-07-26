@@ -181,7 +181,28 @@ export default function AddProjectForm({ setOpen, defaultProjectNumber, defaultP
                   Optional
                 </span>
               </div>
-              <SearchCustomerCombobox data={customers} form={form} field={field} />
+              <SearchCustomerCombobox
+                data={customers}
+                form={form}
+                field={field}
+                onSelectCustomer={(customer) => {
+                  if (form.getValues('street_address')?.trim()) return;
+                  const cityStateZip = [
+                    customer.city,
+                    [customer.state, customer.zipcode].filter(Boolean).join(' ')
+                  ]
+                    .filter(Boolean)
+                    .join(', ');
+                  const full = [customer.street_address, cityStateZip].filter(Boolean).join(', ');
+                  setDisplayAddress(full);
+                  form.setValue('street_address', customer.street_address || '', {
+                    shouldValidate: true
+                  });
+                  form.setValue('city', customer.city || '');
+                  form.setValue('state', customer.state || '');
+                  form.setValue('zipcode', customer.zipcode || '');
+                }}
+              />
               <FormMessage />
             </FormItem>
           )}
