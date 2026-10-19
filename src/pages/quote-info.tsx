@@ -26,6 +26,7 @@ import {
   PackageIcon,
   CalendarIcon,
   FileTextIcon,
+  FileBadgeIcon,
   CheckCircleIcon,
   XCircleIcon
 } from 'lucide-react';
@@ -48,6 +49,7 @@ import { useToast } from '../components/ui/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import UpdateQuoteSheet from '../components/forms/update-quote-sheet';
 import { QuotePDFPreviewDialog } from '../components/quote-pdf-preview-dialog';
+import { ProposalPDFPreviewDialog } from '../components/proposal-pdf-preview-dialog';
 import { EmailQuoteDialog } from '../components/forms/send-email-quote-form';
 import { transformQuoteForPDF } from '../lib/pdf-utils';
 import ConvertQuoteAlertDialog from '../components/alert-convert-quote-dialog';
@@ -244,6 +246,15 @@ export default function QuoteInfoPage() {
             trigger={
               <Button size={'icon'} variant={'secondary'} title="Download PDF">
                 <CloudDownloadIcon className="w-[16px]" />
+              </Button>
+            }
+          />
+
+          <ProposalPDFPreviewDialog
+            quote={transformQuoteForPDF(quote)}
+            trigger={
+              <Button size={'icon'} variant={'secondary'} title="Generate Proposal">
+                <FileBadgeIcon className="w-[16px]" />
               </Button>
             }
           />

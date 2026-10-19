@@ -192,6 +192,9 @@ export type QuoteInsert = {
   private_note?: string; // Internal-only note
   public_note?: string; // Customer-visible note
   project_id?: string | null;
+  shingle_brand?: string; // Selected shingle manufacturer for the roofing proposal
+  shingle_model?: string; // Selected shingle product line/model for the roofing proposal
+  shingle_color?: string; // Selected shingle color for the roofing proposal; defaults to 'TBD'
 };
 
 // Full quote type including generated fields
@@ -203,7 +206,7 @@ export type Quote = QuoteInsert & {
 
 // Type for quote with joined relations
 export type QuoteWithRelations = Quote & {
-  customer: Customer;
+  customer: CustomerWithType;
   status: QuoteStatus; // You'll need to define QuoteStatus type
   service: Service; // You'll need to define Service type
 };

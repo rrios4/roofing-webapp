@@ -241,7 +241,7 @@ export const ModernQuoteDocument: React.FC<QuoteDocumentProps> = ({
         {/* Header */}
         <View style={styles.headerContainer}>
           <View style={styles.logoSection}>
-            <Image style={styles.logo} src="/public/company-logo.png" />
+            <Image style={styles.logo} src="/company-logo.png" />
             <Text style={styles.companyName}>RIOS ROOFING</Text>
             <Text style={styles.companyTagline}>Professional Roofing Services</Text>
           </View>

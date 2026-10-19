@@ -803,7 +803,10 @@ CREATE TABLE IF NOT EXISTS "public"."quote" (
     "custom_address" boolean,
     "converted" boolean DEFAULT false NOT NULL,
     "private_note" "text",
-    "public_note" "text"
+    "public_note" "text",
+    "shingle_brand" "text",
+    "shingle_model" "text",
+    "shingle_color" "text" DEFAULT 'TBD'::"text"
 );
 
 

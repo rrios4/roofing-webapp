@@ -69,7 +69,11 @@ export const fetchQuoteById = async (quote_number: number): Promise<QuoteWithRel
         street_address,
         city,
         state,
-        zipcode
+        zipcode,
+        customer_type (
+          id,
+          name
+        )
       ),
       quote_status (
         id,
