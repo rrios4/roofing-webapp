@@ -34,7 +34,8 @@ export const useFetchQuoteById = (quote_number: any) => {
     isError
   } = useQuery({
     queryKey: ['quoteById', quote_number],
-    queryFn: () => fetchQuoteById(quote_number)
+    queryFn: () => fetchQuoteById(quote_number),
+    enabled: !!quote_number && quote_number > 0 // Only run query if we have a valid quote number
   });
   return { quoteById, isLoading, isError };
 };

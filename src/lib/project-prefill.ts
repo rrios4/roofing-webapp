@@ -107,3 +107,27 @@ export function findStatusIdByName(
   }
   return undefined;
 }
+
+// For proposals generated from a project: when the quote has no custom address,
+// show the project's job-site address instead of the customer's home address.
+// Only affects the in-memory PDF data — the quote row itself is untouched.
+export function applyProjectAddressToProposal<
+  T extends {
+    custom_address?: boolean | null;
+    custom_street_address?: string | null;
+    custom_city?: string | null;
+    custom_state?: string | null;
+    custom_zipcode?: string | null;
+  }
+>(quoteData: T, project: ProjectWithRelations): T {
+  const addr = projectAddress(project);
+  if (quoteData.custom_address || !addr.street) return quoteData;
+  return {
+    ...quoteData,
+    custom_address: true,
+    custom_street_address: addr.street,
+    custom_city: addr.city,
+    custom_state: addr.state,
+    custom_zipcode: addr.zipcode
+  };
+}

@@ -17,14 +17,21 @@ import { formatNumber } from '../lib/utils';
 
 interface ProposalPDFPreviewDialogProps {
   quote: ProposalDocumentData;
-  trigger: React.ReactNode;
+  trigger?: React.ReactNode;
+  // Optional controlled mode — when provided, the dialog can be opened without a trigger
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const ProposalPDFPreviewDialog: React.FC<ProposalPDFPreviewDialogProps> = ({
   quote,
-  trigger
+  trigger,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = controlledOpen ?? internalOpen;
+  const setIsOpen = controlledOnOpenChange ?? setInternalOpen;
   const [isPreviewLoading, setIsPreviewLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +47,7 @@ export const ProposalPDFPreviewDialog: React.FC<ProposalPDFPreviewDialogProps> =
 
   // Don't render if quote is missing required data
   if (!quote || !quote.customer) {
-    return trigger;
+    return <>{trigger ?? null}</>;
   }
 
   const getProposalFileName = () => {
@@ -53,7 +60,7 @@ export const ProposalPDFPreviewDialog: React.FC<ProposalPDFPreviewDialogProps> =
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="w-full h-full max-w-full max-h-full p-0 sm:max-w-6xl sm:max-h-[95vh] sm:p-6 flex flex-col sm:rounded-lg">
         <DialogHeader className="flex-shrink-0 p-6 sm:p-0">
           <DialogTitle className="flex items-center gap-2">
@@ -91,13 +98,13 @@ export const ProposalPDFPreviewDialog: React.FC<ProposalPDFPreviewDialogProps> =
           </div>
         </div>
 
-        <DialogFooter className="flex-shrink-0 flex flex-row justify-between items-center pt-4 border-t px-6 sm:px-0">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <FileBadgeIcon className="w-4 h-4" />
-            <span>File: {getProposalFileName()}</span>
+        <DialogFooter className="flex-shrink-0 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-0 border-t px-6 sm:px-0 sm:space-x-0">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-0">
+            <FileBadgeIcon className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">File: {getProposalFileName()}</span>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 justify-end">
             <Button variant="outline" onClick={() => setIsOpen(false)}>
               <XIcon className="w-4 h-4 mr-2" />
               Cancel

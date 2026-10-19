@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Badge } from '../ui/badge';
@@ -36,6 +37,8 @@ import {
   PlusIcon,
   DownloadIcon,
   ChevronDownIcon,
+  ChevronRightIcon,
+  FileBadgeIcon,
   MoreHorizontalIcon
 } from 'lucide-react';
 import {
@@ -78,9 +81,13 @@ import {
 import AddQuoteForm from '../forms/add-quote-form';
 import AddInvoiceForm from '../forms/add-invoice-form';
 import {
+  applyProjectAddressToProposal,
   buildInvoiceDefaultsFromProject,
   buildQuoteDefaultsFromProject
 } from '../../lib/project-prefill';
+import { ProposalPDFPreviewDialog } from '../proposal-pdf-preview-dialog';
+import DocumentPreviewSheet, { DocumentRef } from './document-preview-sheet';
+import { ProposalDocumentData } from '../pdf-render/modern-proposal-doc';
 import { pdf } from '@react-pdf/renderer';
 import { ModernInvoiceDocument } from '../pdf-render/modern-invoice-doc';
 import { ModernQuoteDocument } from '../pdf-render/modern-quote-doc-final';
@@ -91,6 +98,13 @@ import {
 } from '../../lib/pdf-utils';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '../ui/command';
+
+// Supabase returns the joined status as `quote_status`; `status` is what the type declares
+function quoteStatusName(q: { status?: { name?: string } | null }): string {
+  return (
+    (q as { quote_status?: { name?: string } | null }).quote_status?.name ?? q.status?.name ?? ''
+  );
+}
 
 type Props = {
   project: ProjectWithRelations | null;
@@ -264,6 +278,68 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
+  const [proposalQuote, setProposalQuote] = React.useState<ProposalDocumentData | null>(null);
+  const [proposalOpen, setProposalOpen] = React.useState(false);
+  const [loadingProposalId, setLoadingProposalId] = React.useState<number | null>(null);
+
+  const navigate = useNavigate();
+  const [previewDoc, setPreviewDoc] = React.useState<DocumentRef | null>(null);
+  const [previewOpen, setPreviewOpen] = React.useState(false);
+
+  function openPreview(doc: DocumentRef) {
+    setPreviewDoc(doc);
+    setPreviewOpen(true);
+  }
+
+  function handleOpenFull(doc: DocumentRef) {
+    setPreviewOpen(false);
+    onClose();
+    navigate(doc.kind === 'quote' ? `/quotes/${doc.number}` : `/invoices/${doc.number}`);
+  }
+
+  // Row is a big tap target; inner buttons stop propagation so they don't open the preview
+  function rowProps(doc: DocumentRef) {
+    return {
+      role: 'button' as const,
+      tabIndex: 0,
+      onClick: () => openPreview(doc),
+      onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openPreview(doc);
+        }
+      }
+    };
+  }
+
+  async function handleOpenProposal(quoteNumber: number) {
+    if (!project) return;
+    setLoadingProposalId(quoteNumber);
+    try {
+      const full = await fetchQuoteById(quoteNumber);
+      if (!full?.customer) {
+        toast({
+          title: 'Cannot generate proposal',
+          description: `QT-${formatNumber(quoteNumber)} needs a customer before a proposal can be generated.`,
+          variant: 'destructive'
+        });
+        return;
+      }
+      const data = transformQuoteForPDF(full) as ProposalDocumentData;
+      setProposalQuote(applyProjectAddressToProposal(data, project));
+      setProposalOpen(true);
+    } catch (e) {
+      toast({
+        title: 'Error loading quote',
+        description: e instanceof Error ? e.message : 'Failed to load quote for the proposal.',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoadingProposalId(null);
+    }
+  }
+
   async function handleConvertQuote(quoteNumber: number) {
     setConvertingQuoteId(quoteNumber);
     try {
@@ -396,7 +472,10 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
   // Linked quotes that can still become an invoice — accepted ones first
   const convertibleQuotes = (linkedQuotes ?? [])
     .filter((q) => !q.converted)
-    .sort((a, b) => Number(b.status?.name === 'Accepted') - Number(a.status?.name === 'Accepted'));
+    .sort(
+      (a, b) =>
+        Number(quoteStatusName(b) === 'Accepted') - Number(quoteStatusName(a) === 'Accepted')
+    );
 
   return (
     <Dialog
@@ -891,9 +970,9 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                 className="flex items-center justify-between gap-2">
                                 <span className="text-sm">
                                   From QT-{formatNumber(q.quote_number)}
-                                  {q.status?.name && (
+                                  {quoteStatusName(q) && (
                                     <span className="ml-1.5 text-[10px] text-muted-foreground">
-                                      {q.status.name}
+                                      {quoteStatusName(q)}
                                     </span>
                                   )}
                                 </span>
@@ -1019,7 +1098,8 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       return (
                         <div
                           key={inv.invoice_number}
-                          className="bg-card border border-border rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2">
+                          {...rowProps({ kind: 'invoice', number: inv.invoice_number })}
+                          className="bg-card border border-border rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2 cursor-pointer transition-colors [@media(hover:hover)]:hover:bg-muted/40 active:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                           <div className="h-9 w-9 rounded-lg bg-teal-500/10 text-teal-600 flex items-center justify-center flex-shrink-0">
                             <ReceiptIcon className="h-4 w-4" />
                           </div>
@@ -1048,14 +1128,12 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                             ${formatMoneyValue(inv.total)}
                           </span>
                           <div className="flex items-center justify-end gap-1 sm:gap-3 w-full sm:w-auto pl-12 sm:pl-0 border-t sm:border-0 border-border pt-1 sm:pt-0 flex-shrink-0">
-                            <a
-                              href={`/invoices/${inv.invoice_number}`}
-                              className="inline-flex items-center gap-1 h-9 px-2 sm:h-auto sm:px-0 text-xs font-medium text-primary hover:underline flex-shrink-0">
-                              View <ExternalLinkIcon className="h-3 w-3" />
-                            </a>
                             <button
                               title="Download PDF"
-                              onClick={() => handleDownloadInvoice(inv.invoice_number)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDownloadInvoice(inv.invoice_number);
+                              }}
                               disabled={downloadingInvoiceId === inv.invoice_number}
                               className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
                               {downloadingInvoiceId === inv.invoice_number ? (
@@ -1066,10 +1144,17 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                             </button>
                             <button
                               title="Unlink invoice"
-                              onClick={() => unlinkInvoice.mutate(inv.invoice_number)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                unlinkInvoice.mutate(inv.invoice_number);
+                              }}
                               className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors">
                               <XIcon className="h-3 w-3" />
                             </button>
+                            <ChevronRightIcon
+                              aria-hidden
+                              className="h-4 w-4 text-muted-foreground flex-shrink-0 hidden sm:block"
+                            />
                           </div>
                         </div>
                       );
@@ -1144,9 +1229,9 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                           <span className="text-sm font-semibold">
                                             QT-{formatNumber(q.quote_number)}
                                           </span>
-                                          {q.status?.name && (
+                                          {quoteStatusName(q) && (
                                             <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                                              {q.status.name}
+                                              {quoteStatusName(q)}
                                             </span>
                                           )}
                                           {alreadyLinked && (
@@ -1183,7 +1268,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       </div>
                     )}
                     {linkedQuotes?.map((q) => {
-                      const statusName = q.status?.name ?? '';
+                      const statusName = quoteStatusName(q);
                       const statusColor =
                         statusName === 'Accepted'
                           ? 'bg-emerald-500/10 text-emerald-700 border-emerald-200'
@@ -1193,7 +1278,8 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       return (
                         <div
                           key={q.quote_number}
-                          className="bg-card border border-border rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2">
+                          {...rowProps({ kind: 'quote', number: q.quote_number })}
+                          className="bg-card border border-border rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2 cursor-pointer transition-colors [@media(hover:hover)]:hover:bg-muted/40 active:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                           <div className="h-9 w-9 rounded-lg bg-sky-500/10 text-sky-600 flex items-center justify-center flex-shrink-0">
                             <FileTextIcon className="h-4 w-4" />
                           </div>
@@ -1227,14 +1313,26 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                             ${formatMoneyValue(q.total)}
                           </span>
                           <div className="flex items-center justify-end gap-1 sm:gap-3 w-full sm:w-auto pl-12 sm:pl-0 border-t sm:border-0 border-border pt-1 sm:pt-0 flex-shrink-0">
-                            <a
-                              href={`/quotes/${q.quote_number}`}
-                              className="inline-flex items-center gap-1 h-9 px-2 sm:h-auto sm:px-0 text-xs font-medium text-primary hover:underline flex-shrink-0">
-                              View <ExternalLinkIcon className="h-3 w-3" />
-                            </a>
+                            <button
+                              title="Generate proposal"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenProposal(q.quote_number);
+                              }}
+                              disabled={loadingProposalId === q.quote_number}
+                              className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
+                              {loadingProposalId === q.quote_number ? (
+                                <Loader2Icon className="h-4 w-4 sm:h-3 sm:w-3 animate-spin" />
+                              ) : (
+                                <FileBadgeIcon className="h-4 w-4 sm:h-3 sm:w-3" />
+                              )}
+                            </button>
                             <button
                               title="Download PDF"
-                              onClick={() => handleDownloadQuote(q.quote_number)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDownloadQuote(q.quote_number);
+                              }}
                               disabled={downloadingQuoteId === q.quote_number}
                               className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
                               {downloadingQuoteId === q.quote_number ? (
@@ -1245,10 +1343,17 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                             </button>
                             <button
                               title="Unlink quote"
-                              onClick={() => unlinkQuote.mutate(q.quote_number)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                unlinkQuote.mutate(q.quote_number);
+                              }}
                               className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors">
                               <XIcon className="h-3 w-3" />
                             </button>
+                            <ChevronRightIcon
+                              aria-hidden
+                              className="h-4 w-4 text-muted-foreground flex-shrink-0 hidden sm:block"
+                            />
                           </div>
                         </div>
                       );
@@ -1378,6 +1483,38 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
             />
           </SheetContent>
         </Sheet>
+
+        <DocumentPreviewSheet
+          doc={previewDoc}
+          open={previewOpen}
+          onOpenChange={setPreviewOpen}
+          onOpenFull={handleOpenFull}
+          onDownload={(doc) =>
+            doc.kind === 'quote'
+              ? handleDownloadQuote(doc.number)
+              : handleDownloadInvoice(doc.number)
+          }
+          onProposal={handleOpenProposal}
+          isDownloading={
+            previewDoc?.kind === 'quote'
+              ? downloadingQuoteId === previewDoc.number
+              : downloadingInvoiceId === previewDoc?.number
+          }
+          isProposalLoading={
+            previewDoc?.kind === 'quote' && loadingProposalId === previewDoc.number
+          }
+        />
+
+        {proposalQuote && (
+          <ProposalPDFPreviewDialog
+            quote={proposalQuote}
+            open={proposalOpen}
+            onOpenChange={(v) => {
+              setProposalOpen(v);
+              if (!v) setProposalQuote(null);
+            }}
+          />
+        )}
 
         <Sheet open={invoiceSheetOpen} onOpenChange={setInvoiceSheetOpen}>
           <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
