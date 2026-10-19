@@ -13,6 +13,12 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { cn } from '../lib/utils';
+
+// Optional per-column classes (e.g. `hidden lg:table-cell`) applied to both header and body cells
+function columnClassName(column: any): string | undefined {
+  return column.columnDef.meta?.className;
+}
 
 type Props = {
   data: any;
@@ -116,7 +122,10 @@ export default function DataTable({
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="h-8 sm:h-10 px-2 sm:px-3 text-xs sm:text-sm font-medium">
+                    className={cn(
+                      'h-8 sm:h-10 px-2 sm:px-3 text-xs sm:text-sm font-medium',
+                      columnClassName(header.column)
+                    )}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -134,7 +143,12 @@ export default function DataTable({
                   ${index % 2 === 0 ? 'bg-white dark:bg-zinc-900' : 'bg-slate-50/30 dark:bg-zinc-800/20'}
                 `}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="p-2 sm:p-3 text-xs sm:text-sm align-middle">
+                  <TableCell
+                    key={cell.id}
+                    className={cn(
+                      'p-2 sm:p-3 text-xs sm:text-sm align-middle',
+                      columnClassName(cell.column)
+                    )}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

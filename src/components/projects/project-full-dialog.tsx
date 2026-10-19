@@ -35,7 +35,8 @@ import {
   LinkIcon,
   PlusIcon,
   DownloadIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  MoreHorizontalIcon
 } from 'lucide-react';
 import {
   abbreviateName,
@@ -123,15 +124,15 @@ function InfoCard({
 }) {
   return (
     <div className={cn('rounded-xl border border-border overflow-hidden flex flex-col', className)}>
-      <div className="px-4 py-2.5 border-b border-border bg-muted/40 flex items-center gap-2.5 flex-shrink-0">
+      <div className="px-3 sm:px-4 py-2.5 border-b border-border bg-muted/40 flex items-center gap-2 sm:gap-2.5 flex-shrink-0 min-w-0">
         <div
           className={`h-6 w-6 rounded-md flex items-center justify-center flex-shrink-0 ${iconBg} ${iconText}`}>
           {icon}
         </div>
-        <span className="text-sm font-semibold flex-1">{title}</span>
+        <span className="text-sm font-semibold flex-1 truncate">{title}</span>
         {headerExtra}
       </div>
-      <div className="p-4 flex-1">{children}</div>
+      <div className="p-3 sm:p-4 flex-1 min-w-0">{children}</div>
     </div>
   );
 }
@@ -403,19 +404,19 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
       onOpenChange={(v) => {
         if (!v) onClose();
       }}>
-      <DialogContent className="w-[92vw] max-w-[92vw] h-[90vh] max-h-[90vh] p-0 flex flex-col gap-0 overflow-hidden [&>button.absolute]:hidden">
+      <DialogContent className="w-full max-w-full h-[100dvh] max-h-[100dvh] rounded-none pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] max-sm:data-[state=open]:zoom-in-100 max-sm:data-[state=closed]:zoom-out-100 sm:w-[92vw] sm:max-w-[92vw] sm:h-[90vh] sm:max-h-[90vh] sm:rounded-lg sm:pt-0 sm:pb-0 p-0 flex flex-col gap-0 overflow-hidden [&>button.absolute]:hidden">
         {/* ── Header ───────────────────────────────────────── */}
-        <DialogHeader className="flex-shrink-0 px-6 py-4 border-b bg-card">
-          <div className="flex items-center gap-4 min-w-0">
+        <DialogHeader className="flex-shrink-0 px-4 py-3 sm:px-6 sm:py-4 border-b bg-card text-left">
+          <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0">
             {hasCustomer ? (
-              <Avatar className="h-11 w-11 flex-shrink-0">
+              <Avatar className="h-9 w-9 sm:h-11 sm:w-11 flex-shrink-0">
                 <AvatarFallback
                   className={`text-sm font-semibold ${avatarColors?.bg ?? ''} ${avatarColors?.text ?? ''}`}>
                   {abbreviateName(displayName!)}
                 </AvatarFallback>
               </Avatar>
             ) : (
-              <div className="h-11 w-11 flex-shrink-0 rounded-full border border-dashed border-border bg-muted flex items-center justify-center text-muted-foreground">
+              <div className="h-9 w-9 sm:h-11 sm:w-11 flex-shrink-0 rounded-full border border-dashed border-border bg-muted flex items-center justify-center text-muted-foreground">
                 <svg
                   viewBox="0 0 24 24"
                   className="h-4 w-4"
@@ -434,7 +435,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <DialogTitle
-                  className={`text-lg leading-tight ${!hasCustomer ? 'text-muted-foreground italic font-normal' : ''}`}>
+                  className={`text-base sm:text-lg leading-tight truncate max-w-full ${!hasCustomer ? 'text-muted-foreground italic font-normal' : ''}`}>
                   {displayName ?? 'No customer assigned'}
                 </DialogTitle>
                 {typeName && (
@@ -457,28 +458,54 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                 {fmtRange(project.start_date, project.end_date)}
               </p>
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <Button variant="outline" size="sm">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+              {/* Secondary actions — full buttons from md up, overflow menu below */}
+              <Button variant="outline" size="sm" className="hidden md:inline-flex">
                 <CalendarIcon className="h-4 w-4 mr-2" />
                 Reschedule
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hidden md:inline-flex">
                 <MailIcon className="h-4 w-4 mr-2" />
                 Message
               </Button>
               <UpdateProjectSheet
                 project={project}
                 trigger={
-                  <Button variant="outline" size="sm">
-                    <PencilIcon className="h-4 w-4 mr-2" />
-                    Edit project
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 w-9 p-0 md:h-9 md:w-auto md:px-3"
+                    title="Edit project">
+                    <PencilIcon className="h-4 w-4 md:mr-2" />
+                    <span className="hidden md:inline">Edit project</span>
                   </Button>
                 }
               />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 w-9 p-0 md:hidden"
+                    title="More actions">
+                    <MoreHorizontalIcon className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-44">
+                  <DropdownMenuItem>
+                    <CalendarIcon className="h-4 w-4 mr-2" />
+                    Reschedule
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <MailIcon className="h-4 w-4 mr-2" />
+                    Message
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <DialogClose asChild>
-                <Button size="sm">
-                  <XIcon className="h-4 w-4 mr-2" />
-                  Close
+                <Button size="sm" className="h-9 w-9 p-0 sm:w-auto sm:px-3" title="Close">
+                  <XIcon className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Close</span>
                 </Button>
               </DialogClose>
             </div>
@@ -487,12 +514,12 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
 
         {/* ── Tabs ─────────────────────────────────────────── */}
         <Tabs value={tab} onValueChange={handleTabChange} className="flex flex-col flex-1 min-h-0">
-          <TabsList className="flex-shrink-0 w-full justify-start rounded-none border-b bg-card px-4 h-auto py-0 gap-1">
+          <TabsList className="flex-shrink-0 w-full justify-start rounded-none border-b bg-card px-2 sm:px-4 h-auto py-0 gap-0 sm:gap-1 overflow-x-auto overflow-y-hidden no-scrollbar">
             {TABS.map((t) => (
               <TabsTrigger
                 key={t.id}
                 value={t.id}
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent text-sm py-3 px-3">
+                className="flex-shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent text-sm py-3 px-2.5 sm:px-3">
                 {t.label}
               </TabsTrigger>
             ))}
@@ -500,16 +527,16 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
 
           <div className="flex-1 overflow-y-auto bg-background">
             {/* ── Overview ───────────────────────────────────── */}
-            <TabsContent value="overview" className="mt-0 p-6">
-              <div className="max-w-5xl mx-auto grid grid-cols-3 gap-4">
+            <TabsContent value="overview" className="mt-0 p-4 sm:p-6">
+              <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:grid-flow-row-dense gap-3 sm:gap-4">
                 {/* Customer — col-span-2 */}
                 <InfoCard
-                  className="col-span-2"
+                  className="md:col-span-2"
                   iconBg="bg-violet-500/10"
                   iconText="text-violet-600"
                   icon={<UsersIcon className="h-3.5 w-3.5" />}
                   title="Customer">
-                  <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                     <KVRow
                       icon={<UserIcon className="h-3 w-3" />}
                       label="Name"
@@ -555,7 +582,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                         </span>
                       }
                     />
-                    <div className="col-span-2">
+                    <div className="sm:col-span-2">
                       <KVRow
                         icon={<HomeIcon className="h-3 w-3" />}
                         label="Property Owner"
@@ -599,12 +626,12 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
 
                 {/* Project Details — col-span-2 */}
                 <InfoCard
-                  className="col-span-2"
+                  className="md:col-span-2"
                   iconBg="bg-sky-500/10"
                   iconText="text-sky-600"
                   icon={<Settings2Icon className="h-3.5 w-3.5" />}
                   title="Project Details">
-                  <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                     <KVRow
                       icon={<WrenchIcon className="h-3 w-3" />}
                       label="Service"
@@ -626,7 +653,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       value={project.sq_ft_measurement ?? dash}
                     />
                     {project.description && (
-                      <div className="col-span-2">
+                      <div className="sm:col-span-2">
                         <KVRow
                           icon={<AlignLeftIcon className="h-3 w-3" />}
                           label="Description"
@@ -669,41 +696,48 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   )}
                 </InfoCard>
 
-                {/* Mini stat — Open Tasks */}
-                <InfoCard
-                  iconBg="bg-indigo-500/10"
-                  iconText="text-indigo-600"
-                  icon={<ListChecksIcon className="h-3.5 w-3.5" />}
-                  title="Open Tasks">
-                  <p className="text-4xl font-bold leading-none">0</p>
-                  <p className="text-xs text-muted-foreground mt-1.5">No tasks yet</p>
-                </InfoCard>
+                {/* Mini stats — always one row of three */}
+                <div className="md:col-span-2 lg:col-span-3 grid grid-cols-3 gap-3 sm:gap-4">
+                  {/* Mini stat — Open Tasks */}
+                  <InfoCard
+                    iconBg="bg-indigo-500/10"
+                    iconText="text-indigo-600"
+                    icon={<ListChecksIcon className="h-3.5 w-3.5" />}
+                    title="Open Tasks">
+                    <p className="text-3xl sm:text-4xl font-bold leading-none">0</p>
+                    <p className="text-[11px] sm:text-xs text-muted-foreground mt-1.5 leading-snug">
+                      No tasks yet
+                    </p>
+                  </InfoCard>
 
-                {/* Mini stat — Photos */}
-                <InfoCard
-                  iconBg="bg-pink-500/10"
-                  iconText="text-pink-600"
-                  icon={<ImageIcon className="h-3.5 w-3.5" />}
-                  title="Photos">
-                  <p className="text-4xl font-bold leading-none">0</p>
-                  <p className="text-xs text-muted-foreground mt-1.5">No photos yet</p>
-                </InfoCard>
+                  {/* Mini stat — Photos */}
+                  <InfoCard
+                    iconBg="bg-pink-500/10"
+                    iconText="text-pink-600"
+                    icon={<ImageIcon className="h-3.5 w-3.5" />}
+                    title="Photos">
+                    <p className="text-3xl sm:text-4xl font-bold leading-none">0</p>
+                    <p className="text-[11px] sm:text-xs text-muted-foreground mt-1.5 leading-snug">
+                      No photos yet
+                    </p>
+                  </InfoCard>
 
-                {/* Mini stat — Documents */}
-                <InfoCard
-                  iconBg="bg-teal-500/10"
-                  iconText="text-teal-600"
-                  icon={<FileTextIcon className="h-3.5 w-3.5" />}
-                  title="Documents">
-                  <p className="text-4xl font-bold leading-none">{docCount}</p>
-                  <p className="text-xs text-muted-foreground mt-1.5">
-                    {docCount > 0 ? 'Linked quotes & invoices' : 'No documents yet'}
-                  </p>
-                </InfoCard>
+                  {/* Mini stat — Documents */}
+                  <InfoCard
+                    iconBg="bg-teal-500/10"
+                    iconText="text-teal-600"
+                    icon={<FileTextIcon className="h-3.5 w-3.5" />}
+                    title="Documents">
+                    <p className="text-3xl sm:text-4xl font-bold leading-none">{docCount}</p>
+                    <p className="text-[11px] sm:text-xs text-muted-foreground mt-1.5 leading-snug">
+                      {docCount > 0 ? 'Linked quotes & invoices' : 'No documents yet'}
+                    </p>
+                  </InfoCard>
+                </div>
 
                 {/* Notes — col-span-3 */}
                 <InfoCard
-                  className="col-span-3"
+                  className="md:col-span-2 lg:col-span-3"
                   iconBg="bg-muted"
                   iconText="text-muted-foreground"
                   icon={<StickyNoteIcon className="h-3.5 w-3.5" />}
@@ -717,7 +751,10 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
 
                 {/* Insurance Claim — always visible */}
                 <InfoCard
-                  className={project.permit_required ? 'col-span-2' : 'col-span-3'}
+                  className={cn(
+                    'md:col-span-2',
+                    project.permit_required ? 'lg:col-span-2' : 'lg:col-span-3'
+                  )}
                   iconBg={project.is_insurance_claim ? 'bg-orange-500/10' : 'bg-muted'}
                   iconText={
                     project.is_insurance_claim ? 'text-orange-600' : 'text-muted-foreground'
@@ -725,7 +762,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   icon={<ShieldIcon className="h-3.5 w-3.5" />}
                   title="Insurance Claim">
                   {project.is_insurance_claim ? (
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                       <KVRow
                         icon={<HashIcon className="h-3 w-3" />}
                         label="Claim number"
@@ -763,7 +800,10 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
 
                 {/* Permit — always visible */}
                 <InfoCard
-                  className={project.is_insurance_claim ? 'col-span-1' : 'col-span-3'}
+                  className={cn(
+                    'md:col-span-2',
+                    project.is_insurance_claim ? 'lg:col-span-1' : 'lg:col-span-3'
+                  )}
                   iconBg={project.permit_required ? 'bg-slate-500/10' : 'bg-muted'}
                   iconText={project.permit_required ? 'text-slate-600' : 'text-muted-foreground'}
                   icon={<FileCheckIcon className="h-3.5 w-3.5" />}
@@ -792,7 +832,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
 
                 {/* Recent Activity — col-span-3 */}
                 <InfoCard
-                  className="col-span-3"
+                  className="md:col-span-2 lg:col-span-3"
                   iconBg="bg-primary/10"
                   iconText="text-primary"
                   icon={<ClockIcon className="h-3.5 w-3.5" />}
@@ -803,18 +843,18 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
             </TabsContent>
 
             {/* ── Photos ─────────────────────────────────────── */}
-            <TabsContent value="photos" className="mt-0 p-6">
+            <TabsContent value="photos" className="mt-0 p-4 sm:p-6">
               <div className="max-w-5xl mx-auto">
                 <EmptyTab label="No photos uploaded yet" />
               </div>
             </TabsContent>
 
             {/* ── Documents ──────────────────────────────────── */}
-            <TabsContent value="documents" className="mt-0 p-6">
+            <TabsContent value="documents" className="mt-0 p-4 sm:p-6">
               <div className="max-w-3xl mx-auto flex flex-col gap-6">
                 {/* ── Invoices section ─── */}
                 <div>
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-3">
                     <p className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">
                       Invoices{' '}
                       {linkedInvoices && linkedInvoices.length > 0
@@ -827,18 +867,20 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                           <DropdownMenuTrigger asChild>
                             <Button
                               size="sm"
-                              className="h-7 text-xs gap-1.5"
+                              className="h-8 sm:h-7 text-xs gap-1.5"
                               disabled={convertingQuoteId !== null}>
                               {convertingQuoteId !== null ? (
                                 <Loader2Icon className="h-3 w-3 animate-spin" />
                               ) : (
                                 <PlusIcon className="h-3 w-3" />
                               )}
-                              New Invoice
+                              New<span className="hidden sm:inline"> Invoice</span>
                               <ChevronDownIcon className="h-3 w-3" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-60">
+                          <DropdownMenuContent
+                            align="end"
+                            className="w-[calc(100vw-2rem)] max-w-[16rem] sm:w-60">
                             <DropdownMenuLabel className="text-xs">
                               Convert a linked quote
                             </DropdownMenuLabel>
@@ -869,20 +911,25 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       ) : (
                         <Button
                           size="sm"
-                          className="h-7 text-xs gap-1.5"
+                          className="h-8 sm:h-7 text-xs gap-1.5"
                           onClick={() => setInvoiceSheetOpen(true)}>
                           <PlusIcon className="h-3 w-3" />
-                          New Invoice
+                          New<span className="hidden sm:inline"> Invoice</span>
                         </Button>
                       )}
                       <Popover open={invoicePickerOpen} onOpenChange={setInvoicePickerOpen}>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 sm:h-7 text-xs gap-1.5">
                             <LinkIcon className="h-3 w-3" />
-                            Link Invoice
+                            Link<span className="hidden sm:inline"> Invoice</span>
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="p-0 w-72" align="end">
+                        <PopoverContent
+                          className="p-0 w-[calc(100vw-2rem)] max-w-[18rem] sm:w-72"
+                          align="end">
                           <Command>
                             <CommandInput placeholder="Search invoices..." className="h-9" />
                             <CommandList>
@@ -972,7 +1019,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       return (
                         <div
                           key={inv.invoice_number}
-                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
+                          className="bg-card border border-border rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2">
                           <div className="h-9 w-9 rounded-lg bg-teal-500/10 text-teal-600 flex items-center justify-center flex-shrink-0">
                             <ReceiptIcon className="h-4 w-4" />
                           </div>
@@ -1000,28 +1047,30 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                           <span className="text-sm font-bold tabular-nums flex-shrink-0">
                             ${formatMoneyValue(inv.total)}
                           </span>
-                          <a
-                            href={`/invoices/${inv.invoice_number}`}
-                            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline flex-shrink-0">
-                            View <ExternalLinkIcon className="h-3 w-3" />
-                          </a>
-                          <button
-                            title="Download PDF"
-                            onClick={() => handleDownloadInvoice(inv.invoice_number)}
-                            disabled={downloadingInvoiceId === inv.invoice_number}
-                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
-                            {downloadingInvoiceId === inv.invoice_number ? (
-                              <Loader2Icon className="h-3 w-3 animate-spin" />
-                            ) : (
-                              <DownloadIcon className="h-3 w-3" />
-                            )}
-                          </button>
-                          <button
-                            title="Unlink invoice"
-                            onClick={() => unlinkInvoice.mutate(inv.invoice_number)}
-                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors">
-                            <XIcon className="h-3 w-3" />
-                          </button>
+                          <div className="flex items-center justify-end gap-1 sm:gap-3 w-full sm:w-auto pl-12 sm:pl-0 border-t sm:border-0 border-border pt-1 sm:pt-0 flex-shrink-0">
+                            <a
+                              href={`/invoices/${inv.invoice_number}`}
+                              className="inline-flex items-center gap-1 h-9 px-2 sm:h-auto sm:px-0 text-xs font-medium text-primary hover:underline flex-shrink-0">
+                              View <ExternalLinkIcon className="h-3 w-3" />
+                            </a>
+                            <button
+                              title="Download PDF"
+                              onClick={() => handleDownloadInvoice(inv.invoice_number)}
+                              disabled={downloadingInvoiceId === inv.invoice_number}
+                              className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
+                              {downloadingInvoiceId === inv.invoice_number ? (
+                                <Loader2Icon className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <DownloadIcon className="h-4 w-4 sm:h-3 sm:w-3" />
+                              )}
+                            </button>
+                            <button
+                              title="Unlink invoice"
+                              onClick={() => unlinkInvoice.mutate(inv.invoice_number)}
+                              className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors">
+                              <XIcon className="h-3 w-3" />
+                            </button>
+                          </div>
                         </div>
                       );
                     })}
@@ -1030,7 +1079,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
 
                 {/* ── Quotes section ─── */}
                 <div>
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-3">
                     <p className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">
                       Quotes{' '}
                       {linkedQuotes && linkedQuotes.length > 0 ? `(${linkedQuotes.length})` : ''}
@@ -1038,19 +1087,24 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                     <div className="flex items-center gap-2">
                       <Button
                         size="sm"
-                        className="h-7 text-xs gap-1.5"
+                        className="h-8 sm:h-7 text-xs gap-1.5"
                         onClick={() => setQuoteSheetOpen(true)}>
                         <PlusIcon className="h-3 w-3" />
-                        New Quote
+                        New<span className="hidden sm:inline"> Quote</span>
                       </Button>
                       <Popover open={quotePickerOpen} onOpenChange={setQuotePickerOpen}>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 sm:h-7 text-xs gap-1.5">
                             <LinkIcon className="h-3 w-3" />
-                            Link Quote
+                            Link<span className="hidden sm:inline"> Quote</span>
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="p-0 w-72" align="end">
+                        <PopoverContent
+                          className="p-0 w-[calc(100vw-2rem)] max-w-[18rem] sm:w-72"
+                          align="end">
                           <Command>
                             <CommandInput placeholder="Search quotes..." className="h-9" />
                             <CommandList>
@@ -1139,7 +1193,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       return (
                         <div
                           key={q.quote_number}
-                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
+                          className="bg-card border border-border rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2">
                           <div className="h-9 w-9 rounded-lg bg-sky-500/10 text-sky-600 flex items-center justify-center flex-shrink-0">
                             <FileTextIcon className="h-4 w-4" />
                           </div>
@@ -1172,28 +1226,30 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                           <span className="text-sm font-bold tabular-nums flex-shrink-0">
                             ${formatMoneyValue(q.total)}
                           </span>
-                          <a
-                            href={`/quotes/${q.quote_number}`}
-                            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline flex-shrink-0">
-                            View <ExternalLinkIcon className="h-3 w-3" />
-                          </a>
-                          <button
-                            title="Download PDF"
-                            onClick={() => handleDownloadQuote(q.quote_number)}
-                            disabled={downloadingQuoteId === q.quote_number}
-                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
-                            {downloadingQuoteId === q.quote_number ? (
-                              <Loader2Icon className="h-3 w-3 animate-spin" />
-                            ) : (
-                              <DownloadIcon className="h-3 w-3" />
-                            )}
-                          </button>
-                          <button
-                            title="Unlink quote"
-                            onClick={() => unlinkQuote.mutate(q.quote_number)}
-                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors">
-                            <XIcon className="h-3 w-3" />
-                          </button>
+                          <div className="flex items-center justify-end gap-1 sm:gap-3 w-full sm:w-auto pl-12 sm:pl-0 border-t sm:border-0 border-border pt-1 sm:pt-0 flex-shrink-0">
+                            <a
+                              href={`/quotes/${q.quote_number}`}
+                              className="inline-flex items-center gap-1 h-9 px-2 sm:h-auto sm:px-0 text-xs font-medium text-primary hover:underline flex-shrink-0">
+                              View <ExternalLinkIcon className="h-3 w-3" />
+                            </a>
+                            <button
+                              title="Download PDF"
+                              onClick={() => handleDownloadQuote(q.quote_number)}
+                              disabled={downloadingQuoteId === q.quote_number}
+                              className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
+                              {downloadingQuoteId === q.quote_number ? (
+                                <Loader2Icon className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <DownloadIcon className="h-4 w-4 sm:h-3 sm:w-3" />
+                              )}
+                            </button>
+                            <button
+                              title="Unlink quote"
+                              onClick={() => unlinkQuote.mutate(q.quote_number)}
+                              className="h-9 w-9 sm:h-6 sm:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors">
+                              <XIcon className="h-3 w-3" />
+                            </button>
+                          </div>
                         </div>
                       );
                     })}
@@ -1252,7 +1308,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       return (
                         <div
                           key={file.id}
-                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
+                          className="bg-card border border-border rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2">
                           <div
                             className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
                               isPdf
@@ -1291,14 +1347,14 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
             </TabsContent>
 
             {/* ── Tasks ──────────────────────────────────────── */}
-            <TabsContent value="tasks" className="mt-0 p-6">
+            <TabsContent value="tasks" className="mt-0 p-4 sm:p-6">
               <div className="max-w-5xl mx-auto">
                 <EmptyTab label="No open tasks" />
               </div>
             </TabsContent>
 
             {/* ── Activity ───────────────────────────────────── */}
-            <TabsContent value="activity" className="mt-0 p-6">
+            <TabsContent value="activity" className="mt-0 p-4 sm:p-6">
               <div className="max-w-3xl mx-auto flex flex-col gap-3">
                 <ActivityEntry title="Project created" timestamp={project.created_at} />
               </div>

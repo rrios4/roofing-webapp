@@ -3,13 +3,31 @@ import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { CalendarIcon, MapPinIcon, ExpandIcon, PackageIcon } from 'lucide-react';
-import { abbreviateName, formatMoneyValue, getAvatarColor } from '../../lib/utils';
-import { ProjectWithRelations } from '../../types/db_types';
+import {
+  CalendarIcon,
+  MapPinIcon,
+  ExpandIcon,
+  PackageIcon,
+  ArrowRightLeftIcon,
+  CheckIcon
+} from 'lucide-react';
+import { abbreviateName, cn, formatMoneyValue, getAvatarColor } from '../../lib/utils';
+import { ProjectStatus, ProjectWithRelations } from '../../types/db_types';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '../ui/dropdown-menu';
 
 type Props = {
   project: ProjectWithRelations;
+  statuses?: ProjectStatus[];
   onExpand: (project: ProjectWithRelations) => void;
+  onMoveStatus?: (projectId: string, newStatusId: number) => void;
+  draggable?: boolean;
   onDragStart?: (project: ProjectWithRelations) => void;
   onDragEnd?: () => void;
   isDragging?: boolean;
@@ -37,7 +55,10 @@ function formatDateRange(start: string | null, end: string | null): string {
 
 export default function ProjectKanbanCard({
   project,
+  statuses,
   onExpand,
+  onMoveStatus,
+  draggable = true,
   onDragStart,
   onDragEnd,
   isDragging
@@ -55,14 +76,23 @@ export default function ProjectKanbanCard({
 
   return (
     <div
-      className={`
-        group bg-card border border-border rounded-xl p-4 flex flex-col gap-2.5 cursor-grab
-        transition-all duration-150
-        hover:border-border/80 hover:shadow-md hover:-translate-y-px
-        active:cursor-grabbing
-        ${isDragging ? 'opacity-40' : ''}
-      `}
-      draggable
+      role="button"
+      tabIndex={0}
+      className={cn(
+        'group bg-card border border-border rounded-xl p-4 flex flex-col gap-2.5 transition-all duration-150 select-none',
+        '[@media(hover:hover)]:hover:border-border/80 [@media(hover:hover)]:hover:shadow-md [@media(hover:hover)]:hover:-translate-y-px',
+        draggable ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer active:scale-[0.99]',
+        isDragging && 'opacity-40'
+      )}
+      draggable={draggable}
+      onClick={() => onExpand(project)}
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onExpand(project);
+        }
+      }}
       onDragStart={(e) => {
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', project.id);
@@ -73,7 +103,8 @@ export default function ProjectKanbanCard({
       <div className="flex items-center gap-2 min-w-0">
         <button
           type="button"
-          disabled={!hasCustomer}
+          // Without a customer this isn't a link — let the tap fall through to open the card
+          tabIndex={hasCustomer ? 0 : -1}
           onClick={(e) => {
             if (!hasCustomer) return;
             e.stopPropagation();
@@ -122,7 +153,7 @@ export default function ProjectKanbanCard({
           </Badge>
         )}
         <button
-          className="flex-shrink-0 h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted hover:text-foreground transition-opacity"
+          className="flex-shrink-0 h-8 w-8 lg:h-6 lg:w-6 rounded-md flex items-center justify-center text-muted-foreground lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100 hover:bg-muted hover:text-foreground transition-opacity"
           title="Expand"
           onClick={(e) => {
             e.stopPropagation();
@@ -193,8 +224,8 @@ export default function ProjectKanbanCard({
         </a>
       )}
 
-      {/* Footer: project number + value */}
-      <div className="pt-2 mt-0.5 border-t border-border flex items-center justify-between">
+      {/* Footer: project number + value + move menu */}
+      <div className="pt-2 mt-0.5 border-t border-border flex items-center gap-2">
         {project.project_number != null ? (
           <span className="text-xs font-mono text-muted-foreground">
             PRJ-{String(project.project_number).padStart(3, '0')}
@@ -202,12 +233,44 @@ export default function ProjectKanbanCard({
         ) : (
           <span />
         )}
+        <span className="flex-1" />
         {project.estimated_value != null ? (
           <span className="text-xs font-semibold tabular-nums">
             ${formatMoneyValue(project.estimated_value)}
           </span>
         ) : (
           <span className="text-xs text-muted-foreground italic">No value set</span>
+        )}
+        {onMoveStatus && statuses && statuses.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                title="Move to status"
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
+                className="flex-shrink-0 -mr-1 h-8 w-8 lg:h-6 lg:w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+                <ArrowRightLeftIcon className="h-3.5 w-3.5 lg:h-3 lg:w-3" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56" onClick={(e) => e.stopPropagation()}>
+              <DropdownMenuLabel className="text-xs">Move to…</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {statuses.map((s) => {
+                const current = s.id === project.project_status_id;
+                return (
+                  <DropdownMenuItem
+                    key={s.id}
+                    disabled={current}
+                    onSelect={() => onMoveStatus(project.id, s.id)}
+                    className="flex items-center justify-between">
+                    {s.name}
+                    {current && <CheckIcon className="h-3.5 w-3.5 text-primary" />}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
     </div>

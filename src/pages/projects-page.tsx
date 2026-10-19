@@ -88,36 +88,15 @@ import {
 import { ScrollArea } from '../components/ui/scroll-area';
 import { cn } from '../lib/utils';
 import ProjectKanbanView from '../components/projects/project-kanban-view';
-import ProjectDetailSheet from '../components/projects/project-detail-sheet';
+import ProjectListMobile from '../components/projects/project-list-mobile';
+import { getStatusVariant } from '../lib/project-utils';
+import { useIsMobile } from '../hooks/useMediaQuery';
 import ProjectFullDialog from '../components/projects/project-full-dialog';
 import ProjectFilterPopover, {
   ProjectFilters
 } from '../components/projects/project-filter-popover';
 
 const columnHelper = createColumnHelper<any>();
-
-function getStatusVariant(
-  statusName: string | undefined
-): 'gray' | 'blue' | 'orange' | 'yellow' | 'green' | 'red' | 'default' {
-  switch (statusName) {
-    case 'Lead':
-      return 'gray';
-    case 'Estimate Sent':
-      return 'blue';
-    case 'Approved / Booked':
-      return 'orange';
-    case 'In Progress':
-      return 'yellow';
-    case 'Inspection / Punch List':
-      return 'orange';
-    case 'Invoice Sent':
-      return 'blue';
-    case 'Completed':
-      return 'green';
-    default:
-      return 'gray';
-  }
-}
 
 export function makeProjectTableColumns(onExpand: (p: ProjectWithRelations) => void) {
   return [
@@ -256,6 +235,7 @@ export function makeProjectTableColumns(onExpand: (p: ProjectWithRelations) => v
       )
     }),
     columnHelper.accessor('project_type_id', {
+      meta: { className: 'hidden lg:table-cell' },
       cell: ({ row }: any) => {
         const project: ProjectWithRelations = row.original;
         return (
@@ -272,6 +252,7 @@ export function makeProjectTableColumns(onExpand: (p: ProjectWithRelations) => v
       )
     }),
     columnHelper.accessor('service', {
+      meta: { className: 'hidden lg:table-cell' },
       cell: ({ row }: any) => {
         const project: ProjectWithRelations = row.original;
         return (
@@ -342,6 +323,7 @@ export function makeProjectTableColumns(onExpand: (p: ProjectWithRelations) => v
       )
     }),
     columnHelper.accessor('drive_folder_id', {
+      meta: { className: 'hidden lg:table-cell' },
       cell: ({ row }: any) => {
         const project: ProjectWithRelations = row.original;
         const url =
@@ -419,8 +401,8 @@ function AddProjectDialog({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="max-w-2xl w-full max-h-[90vh] flex flex-col p-0">
-        <DialogHeader className="px-6 pt-6 pb-2">
+      <DialogContent className="w-full max-w-full h-[100dvh] max-h-[100dvh] rounded-none flex flex-col p-0 gap-0 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] sm:max-w-2xl sm:h-auto sm:max-h-[90vh] sm:rounded-lg sm:pt-0 sm:pb-0">
+        <DialogHeader className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-2 text-left">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg border bg-muted">
               <FolderKanbanIcon size={18} className="text-muted-foreground" />
@@ -433,7 +415,7 @@ function AddProjectDialog({
             </div>
           </div>
         </DialogHeader>
-        <ScrollArea className="flex-1 overflow-y-auto px-6 pb-6">
+        <ScrollArea className="flex-1 overflow-y-auto px-4 sm:px-6 pb-6">
           <AddProjectForm
             setOpen={setOpen}
             defaultProjectNumber={nextNumber}
@@ -452,10 +434,10 @@ export default function ProjectsPage() {
   const { data: types = [] } = useFetchProjectTypes();
   const updateStatus = useUpdateProjectStatus();
 
+  const isMobile = useIsMobile();
   const [view, setView] = useState<'kanban' | 'table'>('kanban');
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<ProjectFilters>({ statusIds: [], typeIds: [] });
-  const [detailOpen, setDetailOpen] = useState(false);
   const [fullProject, setFullProject] = useState<ProjectWithRelations | null>(null);
   const [fullOpen, setFullOpen] = useState(false);
   const [kanbanAddOpen, setKanbanAddOpen] = useState(false);
@@ -523,12 +505,6 @@ export default function ProjectsPage() {
     setFullOpen(true);
   }
 
-  function handleOpenFull(project: ProjectWithRelations) {
-    setDetailOpen(false);
-    setFullProject(project);
-    setTimeout(() => setFullOpen(true), 220);
-  }
-
   function handleMoveStatus(projectId: string, newStatusId: number) {
     updateStatus.mutate({ id: projectId, statusId: newStatusId });
   }
@@ -569,63 +545,93 @@ export default function ProjectsPage() {
         />
       </div> */}
 
-      {/* Toolbar */}
-      <div className="flex items-center gap-2 flex-wrap">
-        {/* View toggle */}
-        <div className="flex items-center p-0.5 bg-muted rounded-lg border border-border">
-          <button
-            className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-              view === 'kanban'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            )}
-            onClick={() => setView('kanban')}>
-            <KanbanSquareIcon className="h-3.5 w-3.5" />
-            Kanban
-          </button>
-          <button
-            className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-              view === 'table'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            )}
-            onClick={() => setView('table')}>
-            <ListIcon className="h-3.5 w-3.5" />
-            Table
-          </button>
+      {/* Toolbar — two rows on phones (controls, then full-width search), one row from md up */}
+      <div className="flex flex-col gap-2 md:flex-row md:items-center">
+        <div className="flex items-center gap-2">
+          {/* View toggle */}
+          <div className="flex items-center p-0.5 bg-muted rounded-lg border border-border">
+            <button
+              className={cn(
+                'flex items-center gap-1.5 px-3 h-8 rounded-md text-sm font-medium transition-colors',
+                view === 'kanban'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+              title="Kanban view"
+              onClick={() => setView('kanban')}>
+              <KanbanSquareIcon className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Kanban</span>
+            </button>
+            <button
+              className={cn(
+                'flex items-center gap-1.5 px-3 h-8 rounded-md text-sm font-medium transition-colors',
+                view === 'table'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+              title={isMobile ? 'List view' : 'Table view'}
+              onClick={() => setView('table')}>
+              <ListIcon className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Table</span>
+            </button>
+          </div>
+
+          {/* Refresh */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 w-9 p-0"
+            onClick={() => refetch()}
+            title="Refresh">
+            <RefreshCwIcon className="h-3.5 w-3.5" />
+          </Button>
+
+          {/* Filter + settings — right-aligned on phones, after search on md+ */}
+          <div className="ml-auto flex items-center gap-2 md:hidden">
+            <ProjectFilterPopover
+              statuses={statuses}
+              types={types}
+              filters={filters}
+              setFilters={setFilters}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 w-9 p-0"
+              title="Project settings"
+              onClick={() => navigate('/projects/settings')}>
+              <Settings2Icon className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
 
-        {/* Refresh */}
-        <Button variant="outline" size="sm" onClick={() => refetch()} title="Refresh">
-          <RefreshCwIcon className="h-3.5 w-3.5" />
-        </Button>
-
-        {/* Search — pushed right */}
-        <div className="ml-auto flex items-center gap-2">
-          <div className="flex items-center gap-2 border border-border bg-background rounded-lg px-3 h-9 min-w-[240px]">
+        <div className="flex items-center gap-2 md:ml-auto">
+          <div className="flex flex-1 items-center gap-2 border border-border bg-background rounded-lg px-3 h-9 md:flex-none md:w-[280px]">
             <SearchIcon className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
             <Input
-              className="border-0 bg-transparent p-0 h-full text-sm focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground"
+              type="search"
+              className="border-0 bg-transparent p-0 h-full text-base sm:text-sm focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground"
               placeholder="Search projects, customers, address…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <ProjectFilterPopover
-            statuses={statuses}
-            types={types}
-            filters={filters}
-            setFilters={setFilters}
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            title="Project settings"
-            onClick={() => navigate('/projects/settings')}>
-            <Settings2Icon className="h-3.5 w-3.5" />
-          </Button>
+          <div className="hidden md:flex items-center gap-2">
+            <ProjectFilterPopover
+              statuses={statuses}
+              types={types}
+              filters={filters}
+              setFilters={setFilters}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 w-9 p-0"
+              title="Project settings"
+              onClick={() => navigate('/projects/settings')}>
+              <Settings2Icon className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -637,6 +643,13 @@ export default function ProjectsPage() {
           onExpand={handleExpand}
           onAdd={handleKanbanAdd}
           onMoveStatus={handleMoveStatus}
+        />
+      ) : isMobile ? (
+        <ProjectListMobile
+          projects={filteredProjects}
+          isLoading={isLoading}
+          onExpand={handleExpand}
+          emptyAction={<AddProjectDialog />}
         />
       ) : (
         <DataTable
@@ -653,14 +666,6 @@ export default function ProjectsPage() {
           EmptyStateAction={<AddProjectDialog />}
         />
       )}
-
-      {/* Detail slide-over */}
-      <ProjectDetailSheet
-        project={null}
-        open={detailOpen}
-        onClose={() => setDetailOpen(false)}
-        onOpenFull={handleOpenFull}
-      />
 
       {/* Full-screen dialog */}
       <ProjectFullDialog

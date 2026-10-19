@@ -37,7 +37,7 @@ export default function ProjectFilterPopover({ statuses, types, filters, setFilt
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-72 p-4">
+      <PopoverContent align="end" className="w-[calc(100vw-2rem)] max-w-[18rem] sm:w-72 p-4">
         <div className="flex items-center justify-between mb-3">
           <p className="text-sm font-semibold">Filters</p>
           <button
