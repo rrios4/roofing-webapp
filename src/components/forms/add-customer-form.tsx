@@ -63,14 +63,12 @@ export default function AddCustomerForm({ setOpen }: Props) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
           <ScrollArea className="flex-1">
             <div className="flex flex-col gap-4 px-5 py-4">
-
               {/* ── Contact Info ─────────────────────────────── */}
               <SectionCard
                 iconBg="bg-violet-500/10"
                 iconText="text-violet-600"
                 icon={<UsersIcon className="h-3.5 w-3.5" />}
-                label="Contact Info"
-              >
+                label="Contact Info">
                 <FormField
                   control={form.control}
                   name="customer_type"
@@ -80,15 +78,12 @@ export default function AddCustomerForm({ setOpen }: Props) {
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
-                        disabled={customerTypesLoading}
-                      >
+                        disabled={customerTypesLoading}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue
                               placeholder={
-                                customerTypesLoading
-                                  ? 'Loading...'
-                                  : 'Select customer type'
+                                customerTypesLoading ? 'Loading...' : 'Select customer type'
                               }
                             />
                           </SelectTrigger>
@@ -109,7 +104,9 @@ export default function AddCustomerForm({ setOpen }: Props) {
                     name="first_name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>First Name <span className="text-destructive">*</span></FormLabel>
+                        <FormLabel>
+                          First Name <span className="text-destructive">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="First name" />
                         </FormControl>
@@ -122,7 +119,9 @@ export default function AddCustomerForm({ setOpen }: Props) {
                     name="last_name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Last Name <span className="text-destructive">*</span></FormLabel>
+                        <FormLabel>
+                          Last Name <span className="text-destructive">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="Last name" />
                         </FormControl>
@@ -136,7 +135,9 @@ export default function AddCustomerForm({ setOpen }: Props) {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email <span className="text-destructive">*</span></FormLabel>
+                      <FormLabel>
+                        Email <span className="text-destructive">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input {...field} type="email" placeholder="email@example.com" />
                       </FormControl>
@@ -169,8 +170,7 @@ export default function AddCustomerForm({ setOpen }: Props) {
                 iconBg="bg-emerald-500/10"
                 iconText="text-emerald-600"
                 icon={<MapPinIcon className="h-3.5 w-3.5" />}
-                label="Address"
-              >
+                label="Address">
                 <FormField
                   control={form.control}
                   name="street_address"
@@ -238,21 +238,27 @@ export default function AddCustomerForm({ setOpen }: Props) {
                     <FormItem>
                       <FormLabel>Zip Code</FormLabel>
                       <FormControl>
-                        <Input {...field} inputMode="numeric" pattern="[0-9]*" placeholder="Zip code" />
+                        <Input
+                          {...field}
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          placeholder="Zip code"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </SectionCard>
-
             </div>
           </ScrollArea>
 
           {/* ── Sticky footer ────────────────────────────────── */}
           <div className="flex-shrink-0 px-5 py-4 border-t bg-card">
             <Button type="submit" disabled={isAddCustomerMutationLoading} className="w-full">
-              {isAddCustomerMutationLoading && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
+              {isAddCustomerMutationLoading && (
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Save Customer
             </Button>
           </div>

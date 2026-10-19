@@ -173,7 +173,9 @@ export const updateInvoice = async (
 };
 
 // GET invoices linked to a project
-export const fetchInvoicesByProjectId = async (projectId: string): Promise<InvoiceWithRelations[]> => {
+export const fetchInvoicesByProjectId = async (
+  projectId: string
+): Promise<InvoiceWithRelations[]> => {
   const { data, error } = await supabase
     .from(TABLES.INVOICE)
     .select(

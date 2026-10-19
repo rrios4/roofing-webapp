@@ -146,7 +146,18 @@ export const useGoogleService = (): UseGoogleServiceReturn => {
 
   // Drive functions
   const getDriveFiles = useCallback(
-    async (query?: string, maxResults?: number): Promise<Array<{ id: string; name: string; mimeType: string; modifiedTime?: string; webViewLink?: string }>> => {
+    async (
+      query?: string,
+      maxResults?: number
+    ): Promise<
+      Array<{
+        id: string;
+        name: string;
+        mimeType: string;
+        modifiedTime?: string;
+        webViewLink?: string;
+      }>
+    > => {
       if (!isInitialized) throw new Error('Google service not initialized');
       return googleService.getDriveFiles(query, maxResults);
     },

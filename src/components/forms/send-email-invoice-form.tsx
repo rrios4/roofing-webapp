@@ -620,198 +620,202 @@ export const EmailInvoiceDialog: React.FC<EmailInvoiceDialogProps> = ({ invoice,
 
   return (
     <>
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={!isReady || hasError}
-            title={
-              !isReady
-                ? 'Loading Google services...'
-                : hasError
-                  ? 'Google services unavailable'
-                  : 'Email invoice'
-            }>
-            <Mail className="w-4 h-4 mr-2" />
-            Email Invoice
-          </Button>
-        )}
-      </DialogTrigger>
-
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Email Invoice</DialogTitle>
-          <DialogDescription>
-            Send invoice INV-{formatNumber(invoice?.invoice_number || 0)} to your customer via
-            email. The invoice PDF will be automatically attached to the email.
-          </DialogDescription>
-        </DialogHeader>
-
-        {hasError && (
-          <div className="bg-red-50 border border-red-200 rounded-md p-3 mb-4">
-            <p className="text-sm text-red-800 mb-2">
-              <strong>Service Error:</strong> {serviceError}
-            </p>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          {trigger || (
             <Button
-              variant="outline"
               size="sm"
-              className="text-red-700 border-red-300"
-              onClick={() => setReconnectOpen(true)}>
-              <Mail className="w-3 h-3 mr-1.5" />
-              Re-connect with Google
+              variant="outline"
+              disabled={!isReady || hasError}
+              title={
+                !isReady
+                  ? 'Loading Google services...'
+                  : hasError
+                    ? 'Google services unavailable'
+                    : 'Email invoice'
+              }>
+              <Mail className="w-4 h-4 mr-2" />
+              Email Invoice
             </Button>
-          </div>
-        )}
+          )}
+        </DialogTrigger>
 
-        <div className="flex flex-col gap-4 w-full">
-          {/* Email Template Selector */}
-          <div className="flex flex-col gap-1">
-            <Label className="text-left flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Email Template
-            </Label>
-            <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
-              <SelectTrigger className="w-full py-6">
-                <SelectValue placeholder="Select an email template" />
-              </SelectTrigger>
-              <SelectContent>
-                {emailTemplates.map((template) => (
-                  <SelectItem key={template.id} value={template.id}>
-                    <div className="flex flex-col items-start">
-                      <span className="font-medium">{template.name}</span>
-                      <span className="text-xs text-muted-foreground">{template.description}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {/* Template Description */}
-            <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
-              <span className="font-medium">Template: </span>
-              {currentTemplate.description}
-            </div>
-          </div>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Email Invoice</DialogTitle>
+            <DialogDescription>
+              Send invoice INV-{formatNumber(invoice?.invoice_number || 0)} to your customer via
+              email. The invoice PDF will be automatically attached to the email.
+            </DialogDescription>
+          </DialogHeader>
 
-          {/* PDF Display Options */}
-          <div className="flex flex-col gap-2">
-            <Label className="text-sm font-medium">PDF Display Options</Label>
-            <div className="space-y-3 p-4 bg-muted/30 rounded-lg border">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="showPaymentHistory"
-                  checked={displayOptions.showPaymentHistory}
-                  onCheckedChange={() => toggleOption('showPaymentHistory')}
-                />
-                <Label htmlFor="showPaymentHistory" className="text-sm font-normal cursor-pointer">
-                  Show payment history
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="showCustomerNotes"
-                  checked={displayOptions.showCustomerNotes}
-                  onCheckedChange={() => toggleOption('showCustomerNotes')}
-                />
-                <Label htmlFor="showCustomerNotes" className="text-sm font-normal cursor-pointer">
-                  Show customer notes
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="showPaymentInformation"
-                  checked={displayOptions.showPaymentInformation}
-                  onCheckedChange={() => toggleOption('showPaymentInformation')}
-                />
-                <Label
-                  htmlFor="showPaymentInformation"
-                  className="text-sm font-normal cursor-pointer">
-                  Show payment information
-                </Label>
-              </div>
-
-              <p className="text-xs text-muted-foreground mt-2">
-                These options control what information is included in the PDF attachment.
+          {hasError && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3 mb-4">
+              <p className="text-sm text-red-800 mb-2">
+                <strong>Service Error:</strong> {serviceError}
               </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-red-700 border-red-300"
+                onClick={() => setReconnectOpen(true)}>
+                <Mail className="w-3 h-3 mr-1.5" />
+                Re-connect with Google
+              </Button>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-4 w-full">
+            {/* Email Template Selector */}
+            <div className="flex flex-col gap-1">
+              <Label className="text-left flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Email Template
+              </Label>
+              <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
+                <SelectTrigger className="w-full py-6">
+                  <SelectValue placeholder="Select an email template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {emailTemplates.map((template) => (
+                    <SelectItem key={template.id} value={template.id}>
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">{template.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {template.description}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {/* Template Description */}
+              <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
+                <span className="font-medium">Template: </span>
+                {currentTemplate.description}
+              </div>
+            </div>
+
+            {/* PDF Display Options */}
+            <div className="flex flex-col gap-2">
+              <Label className="text-sm font-medium">PDF Display Options</Label>
+              <div className="space-y-3 p-4 bg-muted/30 rounded-lg border">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="showPaymentHistory"
+                    checked={displayOptions.showPaymentHistory}
+                    onCheckedChange={() => toggleOption('showPaymentHistory')}
+                  />
+                  <Label
+                    htmlFor="showPaymentHistory"
+                    className="text-sm font-normal cursor-pointer">
+                    Show payment history
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="showCustomerNotes"
+                    checked={displayOptions.showCustomerNotes}
+                    onCheckedChange={() => toggleOption('showCustomerNotes')}
+                  />
+                  <Label htmlFor="showCustomerNotes" className="text-sm font-normal cursor-pointer">
+                    Show customer notes
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="showPaymentInformation"
+                    checked={displayOptions.showPaymentInformation}
+                    onCheckedChange={() => toggleOption('showPaymentInformation')}
+                  />
+                  <Label
+                    htmlFor="showPaymentInformation"
+                    className="text-sm font-normal cursor-pointer">
+                    Show payment information
+                  </Label>
+                </div>
+
+                <p className="text-xs text-muted-foreground mt-2">
+                  These options control what information is included in the PDF attachment.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="to" className="text-left">
+                To *
+              </Label>
+              <Input
+                id="to"
+                placeholder="customer@example.com"
+                value={emailForm.to}
+                onChange={(e) => handleFormChange('to', e.target.value)}
+                className="w-full"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="cc" className="text-left">
+                CC
+              </Label>
+              <Input
+                id="cc"
+                placeholder="Optional - separate multiple emails with commas"
+                value={emailForm.cc}
+                onChange={(e) => handleFormChange('cc', e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="subject" className="text-left">
+                Subject *
+              </Label>
+              <Input
+                id="subject"
+                value={emailForm.subject}
+                onChange={(e) => handleFormChange('subject', e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="message" className="text-left pt-2">
+                Message *
+              </Label>
+              <Textarea
+                id="message"
+                rows={12}
+                value={emailForm.message}
+                onChange={(e) => handleFormChange('message', e.target.value)}
+                className="col-span-3 resize-none"
+              />
             </div>
           </div>
 
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="to" className="text-left">
-              To *
-            </Label>
-            <Input
-              id="to"
-              placeholder="customer@example.com"
-              value={emailForm.to}
-              onChange={(e) => handleFormChange('to', e.target.value)}
-              className="w-full"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="cc" className="text-left">
-              CC
-            </Label>
-            <Input
-              id="cc"
-              placeholder="Optional - separate multiple emails with commas"
-              value={emailForm.cc}
-              onChange={(e) => handleFormChange('cc', e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="subject" className="text-left">
-              Subject *
-            </Label>
-            <Input
-              id="subject"
-              value={emailForm.subject}
-              onChange={(e) => handleFormChange('subject', e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="message" className="text-left pt-2">
-              Message *
-            </Label>
-            <Textarea
-              id="message"
-              rows={12}
-              value={emailForm.message}
-              onChange={(e) => handleFormChange('message', e.target.value)}
-              className="col-span-3 resize-none"
-            />
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isSending}>
-            Cancel
-          </Button>
-          <Button onClick={handleSendEmail} disabled={isSending || !isReady || hasError}>
-            {isSending ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Sending...
-              </>
-            ) : (
-              <>
-                <Mail className="w-4 h-4 mr-2" />
-                Send Email
-              </>
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-    <GoogleReconnectDialog open={reconnectOpen} onOpenChange={setReconnectOpen} />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isSending}>
+              Cancel
+            </Button>
+            <Button onClick={handleSendEmail} disabled={isSending || !isReady || hasError}>
+              {isSending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Mail className="w-4 h-4 mr-2" />
+                  Send Email
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <GoogleReconnectDialog open={reconnectOpen} onOpenChange={setReconnectOpen} />
     </>
   );
 };

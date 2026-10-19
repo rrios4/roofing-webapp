@@ -110,7 +110,9 @@ function ItemForm({ item, onSubmit, onCancel, isLoading, mode, label }: ItemForm
               <FormControl>
                 <Input placeholder={`e.g., My ${label}…`} {...field} />
               </FormControl>
-              <FormDescription className="text-xs">2–50 characters, must be unique.</FormDescription>
+              <FormDescription className="text-xs">
+                2–50 characters, must be unique.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -171,7 +173,15 @@ interface DeleteDialogProps {
   onCancel: () => void;
 }
 
-function DeleteDialog({ item, usageCount, label, isOpen, isLoading, onConfirm, onCancel }: DeleteDialogProps) {
+function DeleteDialog({
+  item,
+  usageCount,
+  label,
+  isOpen,
+  isLoading,
+  onConfirm,
+  onCancel
+}: DeleteDialogProps) {
   if (!item) return null;
   return (
     <Dialog open={isOpen} onOpenChange={onCancel}>
@@ -190,9 +200,11 @@ function DeleteDialog({ item, usageCount, label, isOpen, isLoading, onConfirm, o
             <div className="flex items-start gap-2">
               <AlertTriangleIcon className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                <strong>{usageCount} project{usageCount !== 1 ? 's' : ''}</strong> currently use this{' '}
-                {label.toLowerCase()}. Deleting it will leave those projects without a{' '}
-                {label.toLowerCase()}.
+                <strong>
+                  {usageCount} project{usageCount !== 1 ? 's' : ''}
+                </strong>{' '}
+                currently use this {label.toLowerCase()}. Deleting it will leave those projects
+                without a {label.toLowerCase()}.
               </p>
             </div>
           </div>
@@ -429,7 +441,7 @@ export default function ProjectSettingsPage() {
   // fires the effect before the optimistic update has propagated, reverting the order.
   useEffect(() => {
     if (statuses) setOrderedStatuses(statuses as LookupItem[]);
-  }, [statuses]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [statuses]);
 
   const createStatus = useCreateProjectStatus(() => setSheetOpen(false));
   const updateStatus = useUpdateProjectStatusItem(() => setSheetOpen(false));

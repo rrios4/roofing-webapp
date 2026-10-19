@@ -48,7 +48,11 @@ type Props = {
   defaultProjectStatusId?: number;
 };
 
-export default function AddProjectForm({ setOpen, defaultProjectNumber, defaultProjectStatusId }: Props) {
+export default function AddProjectForm({
+  setOpen,
+  defaultProjectNumber,
+  defaultProjectStatusId
+}: Props) {
   const { customers } = useFetchCustomers();
   const { data: services } = useFetchAllServices();
   const { data: sources } = useFetchProjectSources();
@@ -296,7 +300,14 @@ export default function AddProjectForm({ setOpen, defaultProjectNumber, defaultP
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium select-none">
                           $
                         </span>
-                        <Input {...field} type="number" min="0" step="0.01" className="pl-7" placeholder="0.00" />
+                        <Input
+                          {...field}
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          className="pl-7"
+                          placeholder="0.00"
+                        />
                       </div>
                     </FormControl>
                   </FormItem>
@@ -313,7 +324,14 @@ export default function AddProjectForm({ setOpen, defaultProjectNumber, defaultP
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium select-none">
                           $
                         </span>
-                        <Input {...field} type="number" min="0" step="0.01" className="pl-7" placeholder="0.00" />
+                        <Input
+                          {...field}
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          className="pl-7"
+                          placeholder="0.00"
+                        />
                       </div>
                     </FormControl>
                   </FormItem>

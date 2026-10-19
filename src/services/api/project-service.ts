@@ -181,11 +181,7 @@ export const deleteProjectSource = async (id: number): Promise<void> => {
 };
 
 export const createProject = async (project: ProjectInsert): Promise<Project> => {
-  const { data, error } = await supabase
-    .from(TABLES.PROJECTS)
-    .insert(project)
-    .select()
-    .single();
+  const { data, error } = await supabase.from(TABLES.PROJECTS).insert(project).select().single();
 
   if (error) throw error;
   return data as Project;

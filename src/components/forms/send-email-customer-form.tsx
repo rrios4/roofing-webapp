@@ -85,87 +85,87 @@ export const SendEmailCustomerDialog: React.FC<SendEmailCustomerDialogProps> = (
 
   return (
     <>
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" size="sm">
-            <Mail className="w-4 h-4 mr-2" />
-            Compose
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[560px]">
-        <DialogHeader>
-          <DialogTitle>New Email to {customerName}</DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-4 py-2">
-          {/* To field — read-only */}
-          <div className="space-y-1">
-            <Label>To</Label>
-            <Input value={customerEmail} readOnly className="bg-muted text-muted-foreground" />
-          </div>
-
-          {/* Subject */}
-          <div className="space-y-1">
-            <Label htmlFor="email-subject">Subject</Label>
-            <Input
-              id="email-subject"
-              placeholder="Email subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              disabled={isSending}
-            />
-          </div>
-
-          {/* Body */}
-          <div className="space-y-1">
-            <Label htmlFor="email-body">Message</Label>
-            <Textarea
-              id="email-body"
-              placeholder="Write your message here..."
-              rows={8}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              disabled={isSending}
-              className="resize-none"
-            />
-          </div>
-
-          {!isServiceReady && (
-            <div className="flex items-center gap-2 p-3 border border-yellow-200 rounded-md bg-yellow-50">
-              <p className="text-sm text-yellow-700 flex-1">
-                Gmail is not connected. Re-connect to send emails.
-              </p>
-              <Button variant="outline" size="sm" onClick={() => setReconnectOpen(true)}>
-                <Mail className="w-3 h-3 mr-1.5" />
-                Connect Google
-              </Button>
-            </div>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          {trigger || (
+            <Button variant="outline" size="sm">
+              <Mail className="w-4 h-4 mr-2" />
+              Compose
+            </Button>
           )}
-        </div>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[560px]">
+          <DialogHeader>
+            <DialogTitle>New Email to {customerName}</DialogTitle>
+          </DialogHeader>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isSending}>
-            Cancel
-          </Button>
-          <Button onClick={handleSend} disabled={isSending || !isServiceReady}>
-            {isSending ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Sending...
-              </>
-            ) : (
-              <>
-                <Mail className="w-4 h-4 mr-2" />
-                Send Email
-              </>
+          <div className="space-y-4 py-2">
+            {/* To field — read-only */}
+            <div className="space-y-1">
+              <Label>To</Label>
+              <Input value={customerEmail} readOnly className="bg-muted text-muted-foreground" />
+            </div>
+
+            {/* Subject */}
+            <div className="space-y-1">
+              <Label htmlFor="email-subject">Subject</Label>
+              <Input
+                id="email-subject"
+                placeholder="Email subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                disabled={isSending}
+              />
+            </div>
+
+            {/* Body */}
+            <div className="space-y-1">
+              <Label htmlFor="email-body">Message</Label>
+              <Textarea
+                id="email-body"
+                placeholder="Write your message here..."
+                rows={8}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                disabled={isSending}
+                className="resize-none"
+              />
+            </div>
+
+            {!isServiceReady && (
+              <div className="flex items-center gap-2 p-3 border border-yellow-200 rounded-md bg-yellow-50">
+                <p className="text-sm text-yellow-700 flex-1">
+                  Gmail is not connected. Re-connect to send emails.
+                </p>
+                <Button variant="outline" size="sm" onClick={() => setReconnectOpen(true)}>
+                  <Mail className="w-3 h-3 mr-1.5" />
+                  Connect Google
+                </Button>
+              </div>
             )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-    <GoogleReconnectDialog open={reconnectOpen} onOpenChange={setReconnectOpen} />
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isSending}>
+              Cancel
+            </Button>
+            <Button onClick={handleSend} disabled={isSending || !isServiceReady}>
+              {isSending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Mail className="w-4 h-4 mr-2" />
+                  Send Email
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <GoogleReconnectDialog open={reconnectOpen} onOpenChange={setReconnectOpen} />
     </>
   );
 };

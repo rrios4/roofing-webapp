@@ -215,7 +215,6 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{trigger || defaultTrigger}</SheetTrigger>
       <SheetContent className="w-full md:w-[600px] sm:max-w-none p-0 flex flex-col">
-
         {/* ── Header ───────────────────────────────────────── */}
         <SheetHeader className="px-6 pt-5 pb-4 border-b bg-card flex-shrink-0">
           <div className="flex items-start gap-3">
@@ -239,8 +238,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                   {project.project_type && (
                     <Badge
                       variant={project.project_type.name === 'Commercial' ? 'secondary' : 'default'}
-                      className="text-[10px] px-1.5 py-0"
-                    >
+                      className="text-[10px] px-1.5 py-0">
                       {project.project_type.name}
                     </Badge>
                   )}
@@ -252,26 +250,23 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
 
         {/* ── Body + Footer ────────────────────────────────── */}
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col flex-1 min-h-0"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
             <ScrollArea className="flex-1">
               <div className="flex flex-col gap-4 px-5 py-4">
-
                 {/* ── Job Site ─────────────────────────────── */}
                 <SectionCard
                   iconBg="bg-emerald-500/10"
                   iconText="text-emerald-600"
                   icon={<MapPinIcon className="h-3.5 w-3.5" />}
-                  label="Job Site"
-                >
+                  label="Job Site">
                   <FormField
                     control={form.control}
                     name="street_address"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Street Address <span className="text-destructive">*</span></FormLabel>
+                        <FormLabel>
+                          Street Address <span className="text-destructive">*</span>
+                        </FormLabel>
                         <FormControl>
                           <AddressAutocomplete
                             value={field.value}
@@ -296,7 +291,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>City</FormLabel>
-                          <FormControl><Input {...field} placeholder="City" /></FormControl>
+                          <FormControl>
+                            <Input {...field} placeholder="City" />
+                          </FormControl>
                         </FormItem>
                       )}
                     />
@@ -306,7 +303,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>State</FormLabel>
-                          <FormControl><Input {...field} placeholder="State" /></FormControl>
+                          <FormControl>
+                            <Input {...field} placeholder="State" />
+                          </FormControl>
                         </FormItem>
                       )}
                     />
@@ -318,7 +317,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Zip Code</FormLabel>
-                          <FormControl><Input {...field} placeholder="Zip code" /></FormControl>
+                          <FormControl>
+                            <Input {...field} placeholder="Zip code" />
+                          </FormControl>
                         </FormItem>
                       )}
                     />
@@ -328,7 +329,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Property Owner</FormLabel>
-                          <FormControl><Input {...field} placeholder="Owner name" /></FormControl>
+                          <FormControl>
+                            <Input {...field} placeholder="Owner name" />
+                          </FormControl>
                         </FormItem>
                       )}
                     />
@@ -340,8 +343,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                   iconBg="bg-violet-500/10"
                   iconText="text-violet-600"
                   icon={<UsersIcon className="h-3.5 w-3.5" />}
-                  label="Assignment"
-                >
+                  label="Assignment">
                   <FormField
                     control={form.control}
                     name="customer"
@@ -362,10 +364,11 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                           <FormLabel>Service Type</FormLabel>
                           <Select
                             value={field.value?.toString() || ''}
-                            onValueChange={(v) => field.onChange(v ? parseInt(v) : null)}
-                          >
+                            onValueChange={(v) => field.onChange(v ? parseInt(v) : null)}>
                             <FormControl>
-                              <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select..." />
+                              </SelectTrigger>
                             </FormControl>
                             <DefaultSelectDataItems data={services} />
                           </Select>
@@ -380,10 +383,11 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                           <FormLabel>Lead Source</FormLabel>
                           <Select
                             value={field.value?.toString() || ''}
-                            onValueChange={(v) => field.onChange(v ? parseInt(v) : null)}
-                          >
+                            onValueChange={(v) => field.onChange(v ? parseInt(v) : null)}>
                             <FormControl>
-                              <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select..." />
+                              </SelectTrigger>
                             </FormControl>
                             <DefaultSelectDataItems data={sources} />
                           </Select>
@@ -398,8 +402,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                   iconBg="bg-sky-500/10"
                   iconText="text-sky-600"
                   icon={<Settings2Icon className="h-3.5 w-3.5" />}
-                  label="Project Details"
-                >
+                  label="Project Details">
                   <div className="grid grid-cols-2 gap-3">
                     <FormField
                       control={form.control}
@@ -409,10 +412,11 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                           <FormLabel>Status</FormLabel>
                           <Select
                             value={field.value?.toString() || ''}
-                            onValueChange={(v) => field.onChange(v ? parseInt(v) : null)}
-                          >
+                            onValueChange={(v) => field.onChange(v ? parseInt(v) : null)}>
                             <FormControl>
-                              <SelectTrigger><SelectValue placeholder="Select status..." /></SelectTrigger>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select status..." />
+                              </SelectTrigger>
                             </FormControl>
                             <DefaultSelectDataItems data={statuses} />
                           </Select>
@@ -427,10 +431,11 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                           <FormLabel>Type</FormLabel>
                           <Select
                             value={field.value?.toString() || ''}
-                            onValueChange={(v) => field.onChange(v ? parseInt(v) : null)}
-                          >
+                            onValueChange={(v) => field.onChange(v ? parseInt(v) : null)}>
                             <FormControl>
-                              <SelectTrigger><SelectValue placeholder="Select type..." /></SelectTrigger>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select type..." />
+                              </SelectTrigger>
                             </FormControl>
                             <DefaultSelectDataItems data={types} />
                           </Select>
@@ -449,7 +454,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                               <CalendarIcon className="h-3 w-3" /> Start Date
                             </span>
                           </FormLabel>
-                          <FormControl><Input type="date" {...field} /></FormControl>
+                          <FormControl>
+                            <Input type="date" {...field} />
+                          </FormControl>
                         </FormItem>
                       )}
                     />
@@ -463,7 +470,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                               <CalendarIcon className="h-3 w-3" /> End Date
                             </span>
                           </FormLabel>
-                          <FormControl><Input type="date" {...field} /></FormControl>
+                          <FormControl>
+                            <Input type="date" {...field} />
+                          </FormControl>
                         </FormItem>
                       )}
                     />
@@ -475,8 +484,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                   iconBg="bg-amber-500/10"
                   iconText="text-amber-600"
                   icon={<DollarSignIcon className="h-3.5 w-3.5" />}
-                  label="Scope & Financials"
-                >
+                  label="Scope & Financials">
                   <FormField
                     control={form.control}
                     name="description"
@@ -484,7 +492,11 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                       <FormItem>
                         <FormLabel>Scope of Work</FormLabel>
                         <FormControl>
-                          <Textarea {...field} placeholder="Describe the scope of work..." rows={3} />
+                          <Textarea
+                            {...field}
+                            placeholder="Describe the scope of work..."
+                            rows={3}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -562,8 +574,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                   iconBg="bg-transparent"
                   iconText=""
                   icon={<GoogleDriveIcon className="h-4 w-4" />}
-                  label="Google Drive"
-                >
+                  label="Google Drive">
                   <FormField
                     control={form.control}
                     name="drive_folder_name"
@@ -626,8 +637,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                         </FormItem>
                       )}
                     />
-                  }
-                >
+                  }>
                   {isInsuranceClaim ? (
                     <>
                       <div className="grid grid-cols-2 gap-3">
@@ -637,7 +647,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Claim Number</FormLabel>
-                              <FormControl><Input {...field} placeholder="Claim #" /></FormControl>
+                              <FormControl>
+                                <Input {...field} placeholder="Claim #" />
+                              </FormControl>
                             </FormItem>
                           )}
                         />
@@ -647,7 +659,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Insurance Company</FormLabel>
-                              <FormControl><Input {...field} placeholder="Company name" /></FormControl>
+                              <FormControl>
+                                <Input {...field} placeholder="Company name" />
+                              </FormControl>
                             </FormItem>
                           )}
                         />
@@ -659,7 +673,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Adjuster Name</FormLabel>
-                              <FormControl><Input {...field} placeholder="Adjuster name" /></FormControl>
+                              <FormControl>
+                                <Input {...field} placeholder="Adjuster name" />
+                              </FormControl>
                             </FormItem>
                           )}
                         />
@@ -669,7 +685,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Adjuster Phone</FormLabel>
-                              <FormControl><Input {...field} placeholder="Phone number" /></FormControl>
+                              <FormControl>
+                                <Input {...field} placeholder="Phone number" />
+                              </FormControl>
                             </FormItem>
                           )}
                         />
@@ -680,7 +698,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Date of Loss</FormLabel>
-                            <FormControl><Input type="date" {...field} /></FormControl>
+                            <FormControl>
+                              <Input type="date" {...field} />
+                            </FormControl>
                           </FormItem>
                         )}
                       />
@@ -711,8 +731,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                         </FormItem>
                       )}
                     />
-                  }
-                >
+                  }>
                   {permitRequired ? (
                     <div className="grid grid-cols-2 gap-3">
                       <FormField
@@ -721,7 +740,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Permit Number</FormLabel>
-                            <FormControl><Input {...field} placeholder="Permit #" /></FormControl>
+                            <FormControl>
+                              <Input {...field} placeholder="Permit #" />
+                            </FormControl>
                           </FormItem>
                         )}
                       />
@@ -731,7 +752,9 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Date Issued</FormLabel>
-                            <FormControl><Input type="date" {...field} /></FormControl>
+                            <FormControl>
+                              <Input type="date" {...field} />
+                            </FormControl>
                           </FormItem>
                         )}
                       />
@@ -748,8 +771,7 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                   iconBg="bg-muted"
                   iconText="text-muted-foreground"
                   icon={<StickyNoteIcon className="h-3.5 w-3.5" />}
-                  label="Notes"
-                >
+                  label="Notes">
                   <FormField
                     control={form.control}
                     name="notes"
@@ -766,7 +788,6 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
                     )}
                   />
                 </SectionCard>
-
               </div>
             </ScrollArea>
 
@@ -779,7 +800,6 @@ export default function UpdateProjectSheet({ project, trigger }: Props) {
             </div>
           </form>
         </Form>
-
       </SheetContent>
     </Sheet>
   );

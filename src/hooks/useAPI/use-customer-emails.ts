@@ -4,9 +4,7 @@ import { googleService, GmailMessageMetadata } from '../../services/google-servi
 export type { GmailMessageMetadata };
 
 export const useCustomerEmails = (customerEmail?: string) => {
-  const query = customerEmail
-    ? `to:${customerEmail} OR from:${customerEmail}`
-    : undefined;
+  const query = customerEmail ? `to:${customerEmail} OR from:${customerEmail}` : undefined;
 
   const {
     data: emails,

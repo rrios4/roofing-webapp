@@ -202,7 +202,9 @@ class GoogleService {
       // Handle rate limiting — wait and retry once with exponential back-off
       if (!response.ok && response.status === 429 && retryCount < 2) {
         const waitMs = retryCount === 0 ? 1000 : 2000;
-        console.warn(`Rate limit hit (429), retrying in ${waitMs}ms (attempt ${retryCount + 1})...`);
+        console.warn(
+          `Rate limit hit (429), retrying in ${waitMs}ms (attempt ${retryCount + 1})...`
+        );
         await new Promise((resolve) => setTimeout(resolve, waitMs));
         return makeRequest(retryCount + 1);
       }
@@ -339,7 +341,15 @@ class GoogleService {
   async getDriveFiles(
     query?: string,
     maxResults: number = 10
-  ): Promise<Array<{ id: string; name: string; mimeType: string; modifiedTime?: string; webViewLink?: string }>> {
+  ): Promise<
+    Array<{
+      id: string;
+      name: string;
+      mimeType: string;
+      modifiedTime?: string;
+      webViewLink?: string;
+    }>
+  > {
     const params = new URLSearchParams({
       pageSize: maxResults.toString(),
       fields: 'files(id,name,mimeType,modifiedTime,webViewLink)',

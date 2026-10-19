@@ -334,9 +334,9 @@ export default function UpdateQuoteForm({ quote, quoteLineItems, onSuccess }: Pr
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0 text-start">
-                        <Calendar 
-                          mode="single" 
-                          selected={field.value} 
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
                           onSelect={field.onChange}
                           disabled={(date) => date < new Date('1900-01-01')}
                         />
@@ -368,9 +368,9 @@ export default function UpdateQuoteForm({ quote, quoteLineItems, onSuccess }: Pr
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0 text-start">
-                        <Calendar 
-                          mode="single" 
-                          selected={field.value} 
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
                           onSelect={field.onChange}
                           disabled={(date) => date < new Date('1900-01-01')}
                         />
@@ -519,8 +519,12 @@ export default function UpdateQuoteForm({ quote, quoteLineItems, onSuccess }: Pr
                               onAddressSelect={(parts) => {
                                 field.onChange(parts.street_address);
                                 form.setValue('custom_city', parts.city, { shouldValidate: true });
-                                form.setValue('custom_state', parts.state, { shouldValidate: true });
-                                form.setValue('custom_zipcode', parts.zipcode, { shouldValidate: true });
+                                form.setValue('custom_state', parts.state, {
+                                  shouldValidate: true
+                                });
+                                form.setValue('custom_zipcode', parts.zipcode, {
+                                  shouldValidate: true
+                                });
                               }}
                               placeholder="Start typing a street address..."
                             />

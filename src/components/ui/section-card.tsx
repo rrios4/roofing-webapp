@@ -8,7 +8,7 @@ export function SectionCard({
   label,
   headerRight,
   headerClassName,
-  children,
+  children
 }: {
   iconBg: string;
   iconText: string;
@@ -24,15 +24,13 @@ export function SectionCard({
         className={cn(
           'px-4 py-3 border-b border-border flex items-center gap-2.5 transition-colors',
           headerClassName ?? 'bg-muted/40'
-        )}
-      >
+        )}>
         <div
           className={cn(
             'h-6 w-6 rounded-md flex items-center justify-center flex-shrink-0',
             iconBg,
             iconText
-          )}
-        >
+          )}>
           {icon}
         </div>
         <span className="text-sm font-semibold flex-1">{label}</span>

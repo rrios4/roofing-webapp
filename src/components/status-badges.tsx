@@ -27,7 +27,8 @@ export default function DefaultStatusBadge({ title, colorScheme, variant }: Prop
         ) : variant === 'gray' ? (
           <div className={`w-1 h-1 p-1 rounded-full my-auto bg-muted-foreground`}></div>
         ) : variant === 'yellow' ? (
-          <div className={`w-1 h-1 p-1 rounded-full my-auto bg-yellow-500 dark:bg-yellow-400`}></div>
+          <div
+            className={`w-1 h-1 p-1 rounded-full my-auto bg-yellow-500 dark:bg-yellow-400`}></div>
         ) : variant === 'red' ? (
           <div className={`w-1 h-1 p-1 rounded-full my-auto bg-red-500 dark:bg-red-400`}></div>
         ) : (

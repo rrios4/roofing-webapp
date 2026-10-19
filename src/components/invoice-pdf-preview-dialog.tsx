@@ -99,18 +99,14 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
         <div className="flex-1 overflow-y-auto px-6 sm:px-0">
           {/* Display Options */}
           <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border">
-            <h3 className="text-sm font-medium mb-3 text-foreground">
-              PDF Display Options
-            </h3>
+            <h3 className="text-sm font-medium mb-3 text-foreground">PDF Display Options</h3>
             <div className="flex flex-wrap gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox
                   checked={displayOptions.showPaymentHistory}
                   onCheckedChange={() => toggleOption('showPaymentHistory')}
                 />
-                <span className="text-sm text-muted-foreground">
-                  Show Payment History
-                </span>
+                <span className="text-sm text-muted-foreground">Show Payment History</span>
                 {displayOptions.showPaymentHistory && (
                   <CheckIcon className="w-4 h-4 text-green-600" />
                 )}
@@ -121,9 +117,7 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
                   checked={displayOptions.showCustomerNotes}
                   onCheckedChange={() => toggleOption('showCustomerNotes')}
                 />
-                <span className="text-sm text-muted-foreground">
-                  Show Customer Notes
-                </span>
+                <span className="text-sm text-muted-foreground">Show Customer Notes</span>
                 {displayOptions.showCustomerNotes && (
                   <CheckIcon className="w-4 h-4 text-green-600" />
                 )}
@@ -134,9 +128,7 @@ export const InvoicePDFPreviewDialog: React.FC<InvoicePDFPreviewDialogProps> = (
                   checked={displayOptions.showPaymentInformation}
                   onCheckedChange={() => toggleOption('showPaymentInformation')}
                 />
-                <span className="text-sm text-muted-foreground">
-                  Show Payment Information
-                </span>
+                <span className="text-sm text-muted-foreground">Show Payment Information</span>
                 {displayOptions.showPaymentInformation && (
                   <CheckIcon className="w-4 h-4 text-green-600" />
                 )}

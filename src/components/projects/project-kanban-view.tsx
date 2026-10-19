@@ -11,7 +11,13 @@ type Props = {
   onMoveStatus: (projectId: string, newStatusId: number) => void;
 };
 
-export default function ProjectKanbanView({ projects, statuses, onExpand, onAdd, onMoveStatus }: Props) {
+export default function ProjectKanbanView({
+  projects,
+  statuses,
+  onExpand,
+  onAdd,
+  onMoveStatus
+}: Props) {
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [hoverStatusId, setHoverStatusId] = useState<number | null>(null);
 
@@ -59,14 +65,15 @@ export default function ProjectKanbanView({ projects, statuses, onExpand, onAdd,
               flex-shrink-0 w-[300px] xl:w-[320px] rounded-xl p-3 flex flex-col gap-2.5
               bg-muted/50 border
               transition-all duration-150
-              ${isDropTarget
-                ? 'border-primary/60 bg-primary/5 ring-2 ring-primary/20 ring-inset'
-                : 'border-border'}
+              ${
+                isDropTarget
+                  ? 'border-primary/60 bg-primary/5 ring-2 ring-primary/20 ring-inset'
+                  : 'border-border'
+              }
             `}
             onDragOver={(e) => handleColumnDragOver(e, status.id)}
             onDragLeave={(e) => handleColumnDragLeave(e, status.id)}
-            onDrop={(e) => handleColumnDrop(e, status.id)}
-          >
+            onDrop={(e) => handleColumnDrop(e, status.id)}>
             {/* Column header */}
             <div className="flex items-center justify-between px-1 pb-1">
               <div className="flex items-center gap-2">
@@ -78,8 +85,7 @@ export default function ProjectKanbanView({ projects, statuses, onExpand, onAdd,
               <button
                 className="h-6 w-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
                 title={`Add to ${status.name}`}
-                onClick={() => onAdd(status.id)}
-              >
+                onClick={() => onAdd(status.id)}>
                 <PlusIcon className="h-3 w-3" />
               </button>
             </div>
@@ -97,7 +103,8 @@ export default function ProjectKanbanView({ projects, statuses, onExpand, onAdd,
                 />
               ))}
               {items.length === 0 && (
-                <div className={`
+                <div
+                  className={`
                   rounded-lg border border-dashed text-center text-xs text-muted-foreground py-6
                   ${isDropTarget ? 'border-primary text-primary' : 'border-border'}
                 `}>

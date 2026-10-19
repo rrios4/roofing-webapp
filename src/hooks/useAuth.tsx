@@ -16,9 +16,9 @@ export type AuthValueTypes = {
 };
 
 // create a context for authentication
-const AuthContext = createContext<AuthValueTypes>({ 
-  session: null, 
-  user: null, 
+const AuthContext = createContext<AuthValueTypes>({
+  session: null,
+  user: null,
   signOut: async () => {},
   googleLogin: async () => ({ error: null })
 });

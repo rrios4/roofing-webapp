@@ -21,7 +21,12 @@ import {
   updateProjectTypeItem
 } from '../../services/api/project-service';
 import { toast } from '../../components/ui/use-toast';
-import { ProjectInsert, ProjectStatus, ProjectUpdate, ProjectWithRelations } from '../../types/db_types';
+import {
+  ProjectInsert,
+  ProjectStatus,
+  ProjectUpdate,
+  ProjectWithRelations
+} from '../../types/db_types';
 
 export const useFetchProjects = () => {
   const { data, isLoading, isError, refetch } = useQuery({
@@ -127,12 +132,18 @@ export const useUpdateProjectStatus = () => {
       onMutate: async ({ id, statusId }) => {
         await queryClient.cancelQueries(['projects']);
         const prev = queryClient.getQueryData<ProjectWithRelations[]>(['projects']);
-        queryClient.setQueryData<ProjectWithRelations[]>(['projects'], (old) =>
-          old?.map((p) =>
-            p.id === id
-              ? { ...p, project_status_id: statusId, project_status: p.project_status ? { ...p.project_status, id: statusId } : null }
-              : p
-          ) ?? []
+        queryClient.setQueryData<ProjectWithRelations[]>(
+          ['projects'],
+          (old) =>
+            old?.map((p) =>
+              p.id === id
+                ? {
+                    ...p,
+                    project_status_id: statusId,
+                    project_status: p.project_status ? { ...p.project_status, id: statusId } : null
+                  }
+                : p
+            ) ?? []
         );
         return { prev };
       },
@@ -170,19 +181,16 @@ export const useDeleteProject = (setOpen?: (open: boolean) => void) => {
 
 export const useCreateProjectStatus = (setOpen?: (open: boolean) => void) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    (data: { name: string; description?: string }) => createProjectStatus(data),
-    {
-      onError: (error: any) => {
-        toast({ title: 'Error creating status', description: error.message, variant: 'destructive' });
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['projectStatuses'] });
-        setOpen?.(false);
-        toast({ variant: 'success', title: 'Status created!' });
-      }
+  return useMutation((data: { name: string; description?: string }) => createProjectStatus(data), {
+    onError: (error: any) => {
+      toast({ title: 'Error creating status', description: error.message, variant: 'destructive' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projectStatuses'] });
+      setOpen?.(false);
+      toast({ variant: 'success', title: 'Status created!' });
     }
-  );
+  });
 };
 
 export const useUpdateProjectStatusItem = (setOpen?: (open: boolean) => void) => {
@@ -192,7 +200,11 @@ export const useUpdateProjectStatusItem = (setOpen?: (open: boolean) => void) =>
       updateProjectStatusItem(id, data),
     {
       onError: (error: any) => {
-        toast({ title: 'Error updating status', description: error.message, variant: 'destructive' });
+        toast({
+          title: 'Error updating status',
+          description: error.message,
+          variant: 'destructive'
+        });
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['projectStatuses'] });
@@ -249,19 +261,16 @@ export const useReorderProjectStatuses = () => {
 
 export const useCreateProjectType = (setOpen?: (open: boolean) => void) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    (data: { name: string; description?: string }) => createProjectType(data),
-    {
-      onError: (error: any) => {
-        toast({ title: 'Error creating type', description: error.message, variant: 'destructive' });
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['projectTypes'] });
-        setOpen?.(false);
-        toast({ variant: 'success', title: 'Type created!' });
-      }
+  return useMutation((data: { name: string; description?: string }) => createProjectType(data), {
+    onError: (error: any) => {
+      toast({ title: 'Error creating type', description: error.message, variant: 'destructive' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projectTypes'] });
+      setOpen?.(false);
+      toast({ variant: 'success', title: 'Type created!' });
     }
-  );
+  });
 };
 
 export const useUpdateProjectTypeItem = (setOpen?: (open: boolean) => void) => {
@@ -302,19 +311,16 @@ export const useDeleteProjectType = (setOpen?: (open: boolean) => void) => {
 
 export const useCreateProjectSource = (setOpen?: (open: boolean) => void) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    (data: { name: string; description?: string }) => createProjectSource(data),
-    {
-      onError: (error: any) => {
-        toast({ title: 'Error creating source', description: error.message, variant: 'destructive' });
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['projectSources'] });
-        setOpen?.(false);
-        toast({ variant: 'success', title: 'Source created!' });
-      }
+  return useMutation((data: { name: string; description?: string }) => createProjectSource(data), {
+    onError: (error: any) => {
+      toast({ title: 'Error creating source', description: error.message, variant: 'destructive' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projectSources'] });
+      setOpen?.(false);
+      toast({ variant: 'success', title: 'Source created!' });
     }
-  );
+  });
 };
 
 export const useUpdateProjectSourceItem = (setOpen?: (open: boolean) => void) => {
@@ -324,7 +330,11 @@ export const useUpdateProjectSourceItem = (setOpen?: (open: boolean) => void) =>
       updateProjectSourceItem(id, data),
     {
       onError: (error: any) => {
-        toast({ title: 'Error updating source', description: error.message, variant: 'destructive' });
+        toast({
+          title: 'Error updating source',
+          description: error.message,
+          variant: 'destructive'
+        });
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['projectSources'] });

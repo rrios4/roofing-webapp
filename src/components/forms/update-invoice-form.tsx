@@ -619,7 +619,9 @@ export default function UpdateInvoiceForm({ invoice, invoiceLineItems, onSuccess
                               field.onChange(parts.street_address);
                               form.setValue('bill_to_city', parts.city, { shouldValidate: true });
                               form.setValue('bill_to_state', parts.state, { shouldValidate: true });
-                              form.setValue('bill_to_zipcode', parts.zipcode, { shouldValidate: true });
+                              form.setValue('bill_to_zipcode', parts.zipcode, {
+                                shouldValidate: true
+                              });
                             }}
                             placeholder="Start typing a street address..."
                           />

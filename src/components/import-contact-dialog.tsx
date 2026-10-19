@@ -108,7 +108,7 @@ export function ImportContactDialog({ open, onOpenChange }: Props) {
       const timer = setTimeout(() => fileInputRef.current?.click(), 150);
       return () => clearTimeout(timer);
     }
-  }, [open]);
+  }, [open, step]);
 
   // Reset state when dialog closes
   useEffect(() => {

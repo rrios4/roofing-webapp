@@ -160,473 +160,483 @@ export default function DashboardPage() {
 
       {/* Desktop Dashboard — hidden on mobile */}
       <div className="hidden lg:block">
-      <DashboardPageHeader />
-      {isLoading ? (
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-muted-foreground">Loading dashboard data...</span>
-        </div>
-      ) : isError || !dashboardMetrics ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <AlertTriangleIcon className="h-8 w-8 text-red-500 mx-auto mb-2" />
-            <p className="text-red-600">Error loading dashboard data</p>
-            <Button variant="outline" className="mt-2" onClick={() => window.location.reload()}>
-              Retry
-            </Button>
+        <DashboardPageHeader />
+        {isLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <span className="ml-2 text-muted-foreground">Loading dashboard data...</span>
           </div>
-        </div>
-      ) : (
-      <div className="flex flex-col w-full gap-4 my-4">
-        {/* Key Metrics Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
-          {/* Total Customers */}
-          <Card>
-            <CardContent className="p-3 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
-                    Total Customers
-                  </p>
-                  <p className="text-md sm:text-2xl font-bold truncate">
-                    {dashboardMetrics.totalCustomers.toLocaleString()}
-                  </p>
-                  <div className="hidden sm:block">
-                    {getTrendIndicator(dashboardMetrics.customerPercentChange)}
-                  </div>
-                  {/* Mobile trend indicator */}
-                  <div className="flex items-center mt-1 sm:hidden">
-                    <span
-                      className={`text-xs ${
-                        dashboardMetrics.customerPercentChange >= 0
-                          ? 'text-green-600'
-                          : 'text-red-600'
-                      }`}>
-                      {dashboardMetrics.customerPercentChange >= 0 ? '+' : ''}
-                      {dashboardMetrics.customerPercentChange}%
-                    </span>
-                  </div>
-                </div>
-                <div className="p-2 sm:p-3 bg-blue-100 rounded-full flex-shrink-0 ml-2">
-                  <UsersIcon className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Active Quotes */}
-          <Card>
-            <CardContent className="p-3 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
-                    Active Quotes
-                  </p>
-                  <p className="text-md sm:text-2xl font-bold truncate">
-                    {dashboardMetrics.activeQuotes.toLocaleString()}
-                  </p>
-                  <div className="hidden sm:block">
-                    {getTrendIndicator(dashboardMetrics.quotePercentChange)}
-                  </div>
-                  {/* Mobile trend indicator */}
-                  <div className="flex items-center mt-1 sm:hidden">
-                    <span
-                      className={`text-xs ${
-                        dashboardMetrics.quotePercentChange >= 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                      {dashboardMetrics.quotePercentChange >= 0 ? '+' : ''}
-                      {dashboardMetrics.quotePercentChange}%
-                    </span>
-                  </div>
-                </div>
-                <div className="p-2 sm:p-3 bg-green-100 rounded-full flex-shrink-0 ml-2">
-                  <FileTextIcon className="h-4 w-4 sm:h-6 sm:w-6 text-green-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Monthly Revenue */}
-          <Card>
-            <CardContent className="p-3 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
-                    Monthly Revenue
-                  </p>
-                  <p className="text-sm sm:text-2xl font-bold truncate">
-                    {formatCurrency(dashboardMetrics.monthlyRevenue)}
-                  </p>
-                  <div className="hidden sm:block">
-                    {getTrendIndicator(dashboardMetrics.revenuePercentChange)}
-                  </div>
-                  {/* Mobile trend indicator */}
-                  <div className="flex items-center mt-1 sm:hidden">
-                    <span
-                      className={`text-xs ${
-                        dashboardMetrics.revenuePercentChange >= 0
-                          ? 'text-green-600'
-                          : 'text-red-600'
-                      }`}>
-                      {dashboardMetrics.revenuePercentChange >= 0 ? '+' : ''}
-                      {dashboardMetrics.revenuePercentChange}%
-                    </span>
-                  </div>
-                </div>
-                <div className="p-2 sm:p-3 bg-purple-100 rounded-full flex-shrink-0 ml-2">
-                  <DollarSignIcon className="h-4 w-4 sm:h-6 sm:w-6 text-purple-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Pending Leads */}
-          <Card>
-            <CardContent className="p-3 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
-                    Pending Leads
-                  </p>
-                  <p className="text-md sm:text-2xl font-bold truncate">
-                    {dashboardMetrics.pendingLeads.toLocaleString()}
-                  </p>
-                  <div className="hidden sm:block">
-                    {getTrendIndicator(dashboardMetrics.leadPercentChange)}
-                  </div>
-                  {/* Mobile trend indicator */}
-                  <div className="flex items-center mt-1 sm:hidden">
-                    <span
-                      className={`text-xs ${
-                        dashboardMetrics.leadPercentChange >= 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                      {dashboardMetrics.leadPercentChange >= 0 ? '+' : ''}
-                      {dashboardMetrics.leadPercentChange}%
-                    </span>
-                  </div>
-                </div>
-                <div className="p-2 sm:p-3 bg-orange-100 rounded-full flex-shrink-0 ml-2">
-                  <PhoneIcon className="h-4 w-4 sm:h-6 sm:w-6 text-orange-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions & Business Overview */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Quick Actions Card */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Quick Actions</CardTitle>
-                <Badge variant="blue">Fast Track</Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  onClick={() => setCustomerSheetOpen(true)}>
-                  <UserPlusIcon className="h-4 w-4 mr-3" />
-                  Add New Customer
-                </Button>
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  onClick={() => setQuoteSheetOpen(true)}>
-                  <FileIcon className="h-4 w-4 mr-3" />
-                  Create Quote
-                </Button>
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  onClick={() => setInvoiceSheetOpen(true)}>
-                  <Receipt className="h-4 w-4 mr-3" />
-                  Generate Invoice
-                </Button>
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  onClick={() => setImportContactOpen(true)}>
-                  <UserPlusIcon className="h-4 w-4 mr-3" />
-                  Import Contact
-                </Button>
-                <Button disabled className="w-full justify-start" variant="outline">
-                  <KanbanSquareIcon className="h-4 w-4 mr-3" />
-                  Update Kanban{' '}
-                  <span className="text-red-400 ml-2 font-extralight">Coming Soon!</span>
-                </Button>
-                <Button disabled className="w-full justify-start" variant="outline">
-                  <CalendarIcon className="h-4 w-4 mr-3" />
-                  Schedule Visit{' '}
-                  <span className="text-red-400 ml-2 font-extralight">Coming Soon!</span>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Business Status Overview */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-lg">Business Status Overview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isBusinessStatusLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                  <span className="ml-2 text-muted-foreground">Loading business status...</span>
-                </div>
-              ) : isBusinessStatusError || !businessStatusData ? (
-                <div className="flex items-center justify-center h-32">
-                  <div className="text-center">
-                    <AlertTriangleIcon className="h-6 w-6 text-red-500 mx-auto mb-2" />
-                    <p className="text-red-600 text-sm">Error loading business status</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-foreground">Quote Status</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Accepted</span>
-                        </div>
-                        <Badge variant="green">{businessStatusData.quoteStatus.accepted}</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <ClockIcon className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm text-muted-foreground">Pending</span>
-                        </div>
-                        <Badge variant="yellow">{businessStatusData.quoteStatus.pending}</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <XCircleIcon className="h-4 w-4 text-red-500" />
-                          <span className="text-sm text-muted-foreground">Rejected</span>
-                        </div>
-                        <Badge variant="red">{businessStatusData.quoteStatus.rejected}</Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-foreground">Invoice Status</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <CheckIcon className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Paid</span>
-                        </div>
-                        <Badge variant="green">{businessStatusData.invoiceStatus.paid}</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Clock4Icon className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm text-muted-foreground">Pending</span>
-                        </div>
-                        <Badge variant="yellow">{businessStatusData.invoiceStatus.pending}</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <AlertTriangleIcon className="h-4 w-4 text-red-500" />
-                          <span className="text-sm text-muted-foreground">Overdue</span>
-                        </div>
-                        <Badge variant="red">{businessStatusData.invoiceStatus.overdue}</Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-medium text-foreground">Project Status</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <PlayIcon className="h-4 w-4 text-blue-500" />
-                          <span className="text-sm text-muted-foreground">Active</span>
-                        </div>
-                        <Badge variant="blue">{businessStatusData.projectStatus.active}</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <PauseIcon className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm text-muted-foreground">On Hold</span>
-                        </div>
-                        <Badge variant="yellow">{businessStatusData.projectStatus.onHold}</Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Completed</span>
-                        </div>
-                        <Badge variant="green">{businessStatusData.projectStatus.completed}</Badge>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Customer Types - Horizontal Layout */}
-              <div className="mt-6 pt-6 border-t border-border">
-                <h4 className="font-medium text-foreground mb-4">Customer Types</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                        <HomeIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Residential</p>
-                        <p className="text-xs text-muted-foreground">Active customers</p>
-                      </div>
-                    </div>
-                    <Badge variant="blue">189</Badge>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
-                        <BuildingIcon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Commercial</p>
-                        <p className="text-xs text-muted-foreground">Business clients</p>
-                      </div>
-                    </div>
-                    <Badge variant="default">58</Badge>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full">
-                        <UsersIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Referrals</p>
-                        <p className="text-xs text-muted-foreground">Word of mouth</p>
-                      </div>
-                    </div>
-                    <Badge variant="green">34</Badge>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full">
-                        <TrendingUpIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">New Leads</p>
-                        <p className="text-xs text-muted-foreground">This month</p>
-                      </div>
-                    </div>
-                    <Badge variant="yellow">42</Badge>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Revenue Trends & Invoice Status */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Monthly Revenue Trend */}
-          <div className="lg:col-span-2">
-            <Card className="p-6">
-              <Title className="text-foreground">{years.length}-Year Revenue Trend</Title>
-              <Subtitle className="text-muted-foreground">
-                Monthly revenue growth from {years[0]} to current ({years[years.length - 1]})
-              </Subtitle>
-              {isRevenueLoading ? (
-                <div className="mt-6 h-96 flex items-center justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                  <span className="ml-2 text-muted-foreground">Loading revenue data...</span>
-                </div>
-              ) : isRevenueError || !multiYearRevenueData ? (
-                <div className="mt-6 h-96 flex items-center justify-center">
-                  <div className="text-center">
-                    <AlertTriangleIcon className="h-8 w-8 text-red-500 mx-auto mb-2" />
-                    <p className="text-red-600">Error loading revenue data</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-foreground">
-                  <AreaChart
-                    data={multiYearRevenueData}
-                    index="month"
-                    categories={years}
-                    colors={['gray', 'red', 'yellow', 'blue', 'green'].slice(0, years.length)}
-                    className="mt-6 h-96"
-                    valueFormatter={(value: number) => `$${(value / 1000).toFixed(0)}K`}
-                    showAnimation={true}
-                    showLegend={true}
-                    showGridLines={true}
-                    connectNulls={false}
-                  />
-                </div>
-              )}
-            </Card>
+        ) : isError || !dashboardMetrics ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <AlertTriangleIcon className="h-8 w-8 text-red-500 mx-auto mb-2" />
+              <p className="text-red-600">Error loading dashboard data</p>
+              <Button variant="outline" className="mt-2" onClick={() => window.location.reload()}>
+                Retry
+              </Button>
+            </div>
           </div>
-
-          {/* Invoice Status */}
-          <Card className="p-6">
-            <Title className="text-foreground">Invoice Status</Title>
-            <Subtitle className="text-muted-foreground">Payment tracking</Subtitle>
-            {isInvoiceStatusLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                <span className="ml-2 text-muted-foreground">Loading invoice data...</span>
-              </div>
-            ) : isInvoiceStatusError || !invoiceStatusData ? (
-              <div className="mt-6 flex items-center justify-center h-32">
-                <div className="text-center">
-                  <AlertTriangleIcon className="h-8 w-8 text-red-500 mx-auto mb-2" />
-                  <p className="text-red-600">Error loading invoice data</p>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-6 space-y-4">
-                {Object.entries(invoiceStatusData).map(([key, item]) => (
-                  <div
-                    key={key}
-                    className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
-                    <div>
-                      <p className="font-medium text-foreground">{item.status}</p>
-                      <p className="text-sm text-muted-foreground">{item.count} invoices</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-foreground">
-                        {item.amount >= 1000
-                          ? `$${(item.amount / 1000).toFixed(0)}K`
-                          : `$${item.amount}`}
+        ) : (
+          <div className="flex flex-col w-full gap-4 my-4">
+            {/* Key Metrics Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+              {/* Total Customers */}
+              <Card>
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                        Total Customers
                       </p>
-                      <Badge
-                        variant={
-                          item.status === 'Paid'
-                            ? 'green'
-                            : item.status === 'Pending'
-                              ? 'yellow'
-                              : item.status === 'Draft'
-                                ? 'gray'
-                                : 'red'
-                        }>
-                        {item.status}
-                      </Badge>
+                      <p className="text-md sm:text-2xl font-bold truncate">
+                        {dashboardMetrics.totalCustomers.toLocaleString()}
+                      </p>
+                      <div className="hidden sm:block">
+                        {getTrendIndicator(dashboardMetrics.customerPercentChange)}
+                      </div>
+                      {/* Mobile trend indicator */}
+                      <div className="flex items-center mt-1 sm:hidden">
+                        <span
+                          className={`text-xs ${
+                            dashboardMetrics.customerPercentChange >= 0
+                              ? 'text-green-600'
+                              : 'text-red-600'
+                          }`}>
+                          {dashboardMetrics.customerPercentChange >= 0 ? '+' : ''}
+                          {dashboardMetrics.customerPercentChange}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-2 sm:p-3 bg-blue-100 rounded-full flex-shrink-0 ml-2">
+                      <UsersIcon className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </Card>
-        </div>
+                </CardContent>
+              </Card>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Quote Status Distribution */}
-          {/* <Card className="p-6">
+              {/* Active Quotes */}
+              <Card>
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                        Active Quotes
+                      </p>
+                      <p className="text-md sm:text-2xl font-bold truncate">
+                        {dashboardMetrics.activeQuotes.toLocaleString()}
+                      </p>
+                      <div className="hidden sm:block">
+                        {getTrendIndicator(dashboardMetrics.quotePercentChange)}
+                      </div>
+                      {/* Mobile trend indicator */}
+                      <div className="flex items-center mt-1 sm:hidden">
+                        <span
+                          className={`text-xs ${
+                            dashboardMetrics.quotePercentChange >= 0
+                              ? 'text-green-600'
+                              : 'text-red-600'
+                          }`}>
+                          {dashboardMetrics.quotePercentChange >= 0 ? '+' : ''}
+                          {dashboardMetrics.quotePercentChange}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-2 sm:p-3 bg-green-100 rounded-full flex-shrink-0 ml-2">
+                      <FileTextIcon className="h-4 w-4 sm:h-6 sm:w-6 text-green-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Monthly Revenue */}
+              <Card>
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                        Monthly Revenue
+                      </p>
+                      <p className="text-sm sm:text-2xl font-bold truncate">
+                        {formatCurrency(dashboardMetrics.monthlyRevenue)}
+                      </p>
+                      <div className="hidden sm:block">
+                        {getTrendIndicator(dashboardMetrics.revenuePercentChange)}
+                      </div>
+                      {/* Mobile trend indicator */}
+                      <div className="flex items-center mt-1 sm:hidden">
+                        <span
+                          className={`text-xs ${
+                            dashboardMetrics.revenuePercentChange >= 0
+                              ? 'text-green-600'
+                              : 'text-red-600'
+                          }`}>
+                          {dashboardMetrics.revenuePercentChange >= 0 ? '+' : ''}
+                          {dashboardMetrics.revenuePercentChange}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-2 sm:p-3 bg-purple-100 rounded-full flex-shrink-0 ml-2">
+                      <DollarSignIcon className="h-4 w-4 sm:h-6 sm:w-6 text-purple-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Pending Leads */}
+              <Card>
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
+                        Pending Leads
+                      </p>
+                      <p className="text-md sm:text-2xl font-bold truncate">
+                        {dashboardMetrics.pendingLeads.toLocaleString()}
+                      </p>
+                      <div className="hidden sm:block">
+                        {getTrendIndicator(dashboardMetrics.leadPercentChange)}
+                      </div>
+                      {/* Mobile trend indicator */}
+                      <div className="flex items-center mt-1 sm:hidden">
+                        <span
+                          className={`text-xs ${
+                            dashboardMetrics.leadPercentChange >= 0
+                              ? 'text-green-600'
+                              : 'text-red-600'
+                          }`}>
+                          {dashboardMetrics.leadPercentChange >= 0 ? '+' : ''}
+                          {dashboardMetrics.leadPercentChange}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-2 sm:p-3 bg-orange-100 rounded-full flex-shrink-0 ml-2">
+                      <PhoneIcon className="h-4 w-4 sm:h-6 sm:w-6 text-orange-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Quick Actions & Business Overview */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Quick Actions Card */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">Quick Actions</CardTitle>
+                    <Badge variant="blue">Fast Track</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <Button
+                      className="w-full justify-start"
+                      variant="outline"
+                      onClick={() => setCustomerSheetOpen(true)}>
+                      <UserPlusIcon className="h-4 w-4 mr-3" />
+                      Add New Customer
+                    </Button>
+                    <Button
+                      className="w-full justify-start"
+                      variant="outline"
+                      onClick={() => setQuoteSheetOpen(true)}>
+                      <FileIcon className="h-4 w-4 mr-3" />
+                      Create Quote
+                    </Button>
+                    <Button
+                      className="w-full justify-start"
+                      variant="outline"
+                      onClick={() => setInvoiceSheetOpen(true)}>
+                      <Receipt className="h-4 w-4 mr-3" />
+                      Generate Invoice
+                    </Button>
+                    <Button
+                      className="w-full justify-start"
+                      variant="outline"
+                      onClick={() => setImportContactOpen(true)}>
+                      <UserPlusIcon className="h-4 w-4 mr-3" />
+                      Import Contact
+                    </Button>
+                    <Button disabled className="w-full justify-start" variant="outline">
+                      <KanbanSquareIcon className="h-4 w-4 mr-3" />
+                      Update Kanban{' '}
+                      <span className="text-red-400 ml-2 font-extralight">Coming Soon!</span>
+                    </Button>
+                    <Button disabled className="w-full justify-start" variant="outline">
+                      <CalendarIcon className="h-4 w-4 mr-3" />
+                      Schedule Visit{' '}
+                      <span className="text-red-400 ml-2 font-extralight">Coming Soon!</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Business Status Overview */}
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="text-lg">Business Status Overview</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {isBusinessStatusLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                      <span className="ml-2 text-muted-foreground">Loading business status...</span>
+                    </div>
+                  ) : isBusinessStatusError || !businessStatusData ? (
+                    <div className="flex items-center justify-center h-32">
+                      <div className="text-center">
+                        <AlertTriangleIcon className="h-6 w-6 text-red-500 mx-auto mb-2" />
+                        <p className="text-red-600 text-sm">Error loading business status</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-foreground">Quote Status</h4>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-muted-foreground">Accepted</span>
+                            </div>
+                            <Badge variant="green">{businessStatusData.quoteStatus.accepted}</Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <ClockIcon className="h-4 w-4 text-yellow-500" />
+                              <span className="text-sm text-muted-foreground">Pending</span>
+                            </div>
+                            <Badge variant="yellow">{businessStatusData.quoteStatus.pending}</Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <XCircleIcon className="h-4 w-4 text-red-500" />
+                              <span className="text-sm text-muted-foreground">Rejected</span>
+                            </div>
+                            <Badge variant="red">{businessStatusData.quoteStatus.rejected}</Badge>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-foreground">Invoice Status</h4>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <CheckIcon className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-muted-foreground">Paid</span>
+                            </div>
+                            <Badge variant="green">{businessStatusData.invoiceStatus.paid}</Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <Clock4Icon className="h-4 w-4 text-yellow-500" />
+                              <span className="text-sm text-muted-foreground">Pending</span>
+                            </div>
+                            <Badge variant="yellow">
+                              {businessStatusData.invoiceStatus.pending}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <AlertTriangleIcon className="h-4 w-4 text-red-500" />
+                              <span className="text-sm text-muted-foreground">Overdue</span>
+                            </div>
+                            <Badge variant="red">{businessStatusData.invoiceStatus.overdue}</Badge>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-foreground">Project Status</h4>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <PlayIcon className="h-4 w-4 text-blue-500" />
+                              <span className="text-sm text-muted-foreground">Active</span>
+                            </div>
+                            <Badge variant="blue">{businessStatusData.projectStatus.active}</Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <PauseIcon className="h-4 w-4 text-yellow-500" />
+                              <span className="text-sm text-muted-foreground">On Hold</span>
+                            </div>
+                            <Badge variant="yellow">
+                              {businessStatusData.projectStatus.onHold}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-muted-foreground">Completed</span>
+                            </div>
+                            <Badge variant="green">
+                              {businessStatusData.projectStatus.completed}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Customer Types - Horizontal Layout */}
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <h4 className="font-medium text-foreground mb-4">Customer Types</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                            <HomeIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">Residential</p>
+                            <p className="text-xs text-muted-foreground">Active customers</p>
+                          </div>
+                        </div>
+                        <Badge variant="blue">189</Badge>
+                      </div>
+
+                      <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                            <BuildingIcon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">Commercial</p>
+                            <p className="text-xs text-muted-foreground">Business clients</p>
+                          </div>
+                        </div>
+                        <Badge variant="default">58</Badge>
+                      </div>
+
+                      <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full">
+                            <UsersIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">Referrals</p>
+                            <p className="text-xs text-muted-foreground">Word of mouth</p>
+                          </div>
+                        </div>
+                        <Badge variant="green">34</Badge>
+                      </div>
+
+                      <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full">
+                            <TrendingUpIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">New Leads</p>
+                            <p className="text-xs text-muted-foreground">This month</p>
+                          </div>
+                        </div>
+                        <Badge variant="yellow">42</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Revenue Trends & Invoice Status */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Monthly Revenue Trend */}
+              <div className="lg:col-span-2">
+                <Card className="p-6">
+                  <Title className="text-foreground">{years.length}-Year Revenue Trend</Title>
+                  <Subtitle className="text-muted-foreground">
+                    Monthly revenue growth from {years[0]} to current ({years[years.length - 1]})
+                  </Subtitle>
+                  {isRevenueLoading ? (
+                    <div className="mt-6 h-96 flex items-center justify-center">
+                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                      <span className="ml-2 text-muted-foreground">Loading revenue data...</span>
+                    </div>
+                  ) : isRevenueError || !multiYearRevenueData ? (
+                    <div className="mt-6 h-96 flex items-center justify-center">
+                      <div className="text-center">
+                        <AlertTriangleIcon className="h-8 w-8 text-red-500 mx-auto mb-2" />
+                        <p className="text-red-600">Error loading revenue data</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-foreground">
+                      <AreaChart
+                        data={multiYearRevenueData}
+                        index="month"
+                        categories={years}
+                        colors={['gray', 'red', 'yellow', 'blue', 'green'].slice(0, years.length)}
+                        className="mt-6 h-96"
+                        valueFormatter={(value: number) => `$${(value / 1000).toFixed(0)}K`}
+                        showAnimation={true}
+                        showLegend={true}
+                        showGridLines={true}
+                        connectNulls={false}
+                      />
+                    </div>
+                  )}
+                </Card>
+              </div>
+
+              {/* Invoice Status */}
+              <Card className="p-6">
+                <Title className="text-foreground">Invoice Status</Title>
+                <Subtitle className="text-muted-foreground">Payment tracking</Subtitle>
+                {isInvoiceStatusLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                    <span className="ml-2 text-muted-foreground">Loading invoice data...</span>
+                  </div>
+                ) : isInvoiceStatusError || !invoiceStatusData ? (
+                  <div className="mt-6 flex items-center justify-center h-32">
+                    <div className="text-center">
+                      <AlertTriangleIcon className="h-8 w-8 text-red-500 mx-auto mb-2" />
+                      <p className="text-red-600">Error loading invoice data</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-6 space-y-4">
+                    {Object.entries(invoiceStatusData).map(([key, item]) => (
+                      <div
+                        key={key}
+                        className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
+                        <div>
+                          <p className="font-medium text-foreground">{item.status}</p>
+                          <p className="text-sm text-muted-foreground">{item.count} invoices</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium text-foreground">
+                            {item.amount >= 1000
+                              ? `$${(item.amount / 1000).toFixed(0)}K`
+                              : `$${item.amount}`}
+                          </p>
+                          <Badge
+                            variant={
+                              item.status === 'Paid'
+                                ? 'green'
+                                : item.status === 'Pending'
+                                  ? 'yellow'
+                                  : item.status === 'Draft'
+                                    ? 'gray'
+                                    : 'red'
+                            }>
+                            {item.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Card>
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Quote Status Distribution */}
+              {/* <Card className="p-6">
             <Title className="text-foreground">Quote Status Distribution</Title>
             <Subtitle className="text-muted-foreground">
               Current month breakdown
@@ -647,8 +657,8 @@ export default function DashboardPage() {
             />
           </Card> */}
 
-          {/* Lead Pipeline */}
-          {/* <Card className="p-6">
+              {/* Lead Pipeline */}
+              {/* <Card className="p-6">
             <Title className="text-foreground">Lead Pipeline</Title>
             <Subtitle className="text-muted-foreground">
               Current lead status breakdown
@@ -663,12 +673,12 @@ export default function DashboardPage() {
               showLegend={false}
             />
           </Card> */}
-        </div>
+            </div>
 
-        {/* Performance Metrics & Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Key Performance Indicators */}
-          {/* <Card className="p-6">
+            {/* Performance Metrics & Recent Activity */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Key Performance Indicators */}
+              {/* <Card className="p-6">
             <Title className="text-foreground">Key Performance Indicators</Title>
             <div className="mt-6 space-y-6">
               <div>
@@ -705,8 +715,8 @@ export default function DashboardPage() {
             </div>
           </Card> */}
 
-          {/* Recent Activity Feed */}
-          {/* <Card>
+              {/* Recent Activity Feed */}
+              {/* <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">
@@ -776,9 +786,9 @@ export default function DashboardPage() {
             </div>
             </CardContent>
           </Card> */}
-        </div>
-      </div>
-      )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Customer Form Sheet */}

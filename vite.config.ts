@@ -56,12 +56,29 @@ export default defineConfig({
           'supabase-vendor': ['@supabase/supabase-js'],
           'react-query': ['@tanstack/react-query'],
           'react-table': ['@tanstack/react-table'],
-          'radix-overlays': ['@radix-ui/react-dialog', '@radix-ui/react-alert-dialog', '@radix-ui/react-popover'],
-          'radix-inputs': ['@radix-ui/react-select', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
-          'radix-base': ['@radix-ui/react-slot', '@radix-ui/react-separator', '@radix-ui/react-switch'],
+          'radix-overlays': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-alert-dialog',
+            '@radix-ui/react-popover'
+          ],
+          'radix-inputs': [
+            '@radix-ui/react-select',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-tabs'
+          ],
+          'radix-base': [
+            '@radix-ui/react-slot',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-switch'
+          ],
           'icons-vendor': ['lucide-react', 'react-icons'],
           'date-utils': ['date-fns', 'luxon', 'react-day-picker'],
-          'style-utils': ['class-variance-authority', 'clsx', 'tailwind-merge', 'tailwindcss-animate'],
+          'style-utils': [
+            'class-variance-authority',
+            'clsx',
+            'tailwind-merge',
+            'tailwindcss-animate'
+          ],
           'app-utils': ['axios', 'uuid', 'cmdk'],
           'app-pdf': ['web-vitals', 'sweetalert']
         }

@@ -556,233 +556,239 @@ export const EmailQuoteDialog: React.FC<EmailQuoteDialogProps> = ({ quote, trigg
 
   return (
     <>
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" size="sm" className="gap-2">
-            <Mail className="h-4 w-4" />
-            Email Quote
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Send className="h-5 w-5" />
-            Send Quote via Email
-          </DialogTitle>
-          <DialogDescription>
-            Send Quote QT-{formatNumber(quote?.quote_number || 0)} to{' '}
-            {quote?.customer?.first_name || 'the customer'} with PDF attachment
-          </DialogDescription>
-        </DialogHeader>
-
-        {hasError && (
-          <div className="p-4 border border-red-200 rounded-lg bg-red-50">
-            <p className="text-sm text-red-600 mb-2">
-              Gmail service error: {serviceError}. Please check your authentication.
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-red-700 border-red-300"
-              onClick={() => setReconnectOpen(true)}>
-              <Mail className="w-3 h-3 mr-1.5" />
-              Re-connect with Google
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          {trigger || (
+            <Button variant="outline" size="sm" className="gap-2">
+              <Mail className="h-4 w-4" />
+              Email Quote
             </Button>
-          </div>
-        )}
+          )}
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Send className="h-5 w-5" />
+              Send Quote via Email
+            </DialogTitle>
+            <DialogDescription>
+              Send Quote QT-{formatNumber(quote?.quote_number || 0)} to{' '}
+              {quote?.customer?.first_name || 'the customer'} with PDF attachment
+            </DialogDescription>
+          </DialogHeader>
 
-        {!isReady && !hasError && (
-          <div className="p-4 border border-yellow-200 rounded-lg bg-yellow-50 flex items-center justify-between gap-3">
-            <p className="text-sm text-yellow-600">Gmail is not connected.</p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-yellow-700 border-yellow-400"
-              onClick={() => setReconnectOpen(true)}>
-              <Mail className="w-3 h-3 mr-1.5" />
-              Connect Google
-            </Button>
-          </div>
-        )}
-
-        <div className="space-y-4">
-          {/* Template Selection */}
-          <div className="space-y-2">
-            <Label htmlFor="template">Email Template</Label>
-            <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select email template" />
-              </SelectTrigger>
-              <SelectContent>
-                {emailTemplates.map((template) => (
-                  <SelectItem key={template.id} value={template.id}>
-                    <div>
-                      <div className="font-medium">{template.name}</div>
-                      <div className="text-sm text-muted-foreground">{template.description}</div>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Custom Message Field for Custom Template */}
-          {selectedTemplate === 'custom' && (
-            <div className="space-y-2">
-              <Label htmlFor="customMessage">Custom Message *</Label>
-              <Textarea
-                id="customMessage"
-                placeholder="Enter your custom message here..."
-                value={customMessage}
-                onChange={(e) => handleCustomMessageChange(e.target.value)}
-                className="min-h-[100px] resize-none"
-              />
-              <p className="text-sm text-muted-foreground">
-                This message will replace the placeholder in the custom template.
+          {hasError && (
+            <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+              <p className="text-sm text-red-600 mb-2">
+                Gmail service error: {serviceError}. Please check your authentication.
               </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-red-700 border-red-300"
+                onClick={() => setReconnectOpen(true)}>
+                <Mail className="w-3 h-3 mr-1.5" />
+                Re-connect with Google
+              </Button>
             </div>
           )}
 
-          <Separator />
-
-          {/* PDF Display Options */}
-          <div className="space-y-3">
-            <Label className="text-sm font-medium">PDF Display Options</Label>
-            <div className="space-y-3 p-4 bg-muted/30 rounded-lg border">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="showServiceDetails"
-                  checked={displayOptions.showServiceDetails}
-                  onCheckedChange={() => toggleOption('showServiceDetails')}
-                />
-                <Label htmlFor="showServiceDetails" className="text-sm font-normal cursor-pointer">
-                  Show service details
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="showMeasurementNote"
-                  checked={displayOptions.showMeasurementNote}
-                  onCheckedChange={() => toggleOption('showMeasurementNote')}
-                />
-                <Label htmlFor="showMeasurementNote" className="text-sm font-normal cursor-pointer">
-                  Show measurement note
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="showCustomerNotes"
-                  checked={displayOptions.showCustomerNotes}
-                  onCheckedChange={() => toggleOption('showCustomerNotes')}
-                />
-                <Label htmlFor="showCustomerNotes" className="text-sm font-normal cursor-pointer">
-                  Show customer notes
-                </Label>
-              </div>
-
-              <p className="text-xs text-muted-foreground mt-2">
-                These options control what information is included in the PDF attachment.
-              </p>
+          {!isReady && !hasError && (
+            <div className="p-4 border border-yellow-200 rounded-lg bg-yellow-50 flex items-center justify-between gap-3">
+              <p className="text-sm text-yellow-600">Gmail is not connected.</p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-yellow-700 border-yellow-400"
+                onClick={() => setReconnectOpen(true)}>
+                <Mail className="w-3 h-3 mr-1.5" />
+                Connect Google
+              </Button>
             </div>
-          </div>
+          )}
 
-          <Separator />
-
-          {/* Email Form */}
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            {/* Template Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="template">Email Template</Label>
+              <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select email template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {emailTemplates.map((template) => (
+                    <SelectItem key={template.id} value={template.id}>
+                      <div>
+                        <div className="font-medium">{template.name}</div>
+                        <div className="text-sm text-muted-foreground">{template.description}</div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Custom Message Field for Custom Template */}
+            {selectedTemplate === 'custom' && (
               <div className="space-y-2">
-                <Label htmlFor="to">To *</Label>
+                <Label htmlFor="customMessage">Custom Message *</Label>
+                <Textarea
+                  id="customMessage"
+                  placeholder="Enter your custom message here..."
+                  value={customMessage}
+                  onChange={(e) => handleCustomMessageChange(e.target.value)}
+                  className="min-h-[100px] resize-none"
+                />
+                <p className="text-sm text-muted-foreground">
+                  This message will replace the placeholder in the custom template.
+                </p>
+              </div>
+            )}
+
+            <Separator />
+
+            {/* PDF Display Options */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">PDF Display Options</Label>
+              <div className="space-y-3 p-4 bg-muted/30 rounded-lg border">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="showServiceDetails"
+                    checked={displayOptions.showServiceDetails}
+                    onCheckedChange={() => toggleOption('showServiceDetails')}
+                  />
+                  <Label
+                    htmlFor="showServiceDetails"
+                    className="text-sm font-normal cursor-pointer">
+                    Show service details
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="showMeasurementNote"
+                    checked={displayOptions.showMeasurementNote}
+                    onCheckedChange={() => toggleOption('showMeasurementNote')}
+                  />
+                  <Label
+                    htmlFor="showMeasurementNote"
+                    className="text-sm font-normal cursor-pointer">
+                    Show measurement note
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="showCustomerNotes"
+                    checked={displayOptions.showCustomerNotes}
+                    onCheckedChange={() => toggleOption('showCustomerNotes')}
+                  />
+                  <Label htmlFor="showCustomerNotes" className="text-sm font-normal cursor-pointer">
+                    Show customer notes
+                  </Label>
+                </div>
+
+                <p className="text-xs text-muted-foreground mt-2">
+                  These options control what information is included in the PDF attachment.
+                </p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Email Form */}
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="to">To *</Label>
+                  <Input
+                    id="to"
+                    type="email"
+                    placeholder="customer@email.com"
+                    value={emailForm.to}
+                    onChange={(e) => handleFormChange('to', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cc">CC</Label>
+                  <Input
+                    id="cc"
+                    type="email"
+                    placeholder="manager@company.com"
+                    value={emailForm.cc}
+                    onChange={(e) => handleFormChange('cc', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="subject">Subject *</Label>
                 <Input
-                  id="to"
-                  type="email"
-                  placeholder="customer@email.com"
-                  value={emailForm.to}
-                  onChange={(e) => handleFormChange('to', e.target.value)}
+                  id="subject"
+                  placeholder="Email subject"
+                  value={emailForm.subject}
+                  onChange={(e) => handleFormChange('subject', e.target.value)}
                 />
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="cc">CC</Label>
-                <Input
-                  id="cc"
-                  type="email"
-                  placeholder="manager@company.com"
-                  value={emailForm.cc}
-                  onChange={(e) => handleFormChange('cc', e.target.value)}
+                <Label htmlFor="message">Message *</Label>
+                <Textarea
+                  id="message"
+                  placeholder="Email message"
+                  value={emailForm.message}
+                  onChange={(e) => handleFormChange('message', e.target.value)}
+                  className="min-h-[200px] resize-none"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="subject">Subject *</Label>
-              <Input
-                id="subject"
-                placeholder="Email subject"
-                value={emailForm.subject}
-                onChange={(e) => handleFormChange('subject', e.target.value)}
-              />
+            {/* Quote Summary Preview */}
+            <div className="p-4 bg-muted rounded-lg">
+              <h4 className="font-medium mb-2">Quote Details (will be included in email):</h4>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>Quote Number: QT-{formatNumber(quote?.quote_number || 0)}</div>
+                <div>Service: {quote?.service?.name || 'N/A'}</div>
+                {quote?.quote_date && (
+                  <div>Quote Date: {new Date(quote.quote_date).toLocaleDateString()}</div>
+                )}
+                {quote?.expiration_date && (
+                  <div>Expires: {new Date(quote.expiration_date).toLocaleDateString()}</div>
+                )}
+                {quote?.total && (
+                  <div className="font-medium col-span-2">
+                    Total: {formatMoneyValue(quote.total)}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="message">Message *</Label>
-              <Textarea
-                id="message"
-                placeholder="Email message"
-                value={emailForm.message}
-                onChange={(e) => handleFormChange('message', e.target.value)}
-                className="min-h-[200px] resize-none"
-              />
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isSending}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSendEmail}
+                disabled={!isReady || isSending || hasError}
+                className="gap-2">
+                {isSending ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    Send Quote
+                  </>
+                )}
+              </Button>
             </div>
           </div>
-
-          {/* Quote Summary Preview */}
-          <div className="p-4 bg-muted rounded-lg">
-            <h4 className="font-medium mb-2">Quote Details (will be included in email):</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>Quote Number: QT-{formatNumber(quote?.quote_number || 0)}</div>
-              <div>Service: {quote?.service?.name || 'N/A'}</div>
-              {quote?.quote_date && (
-                <div>Quote Date: {new Date(quote.quote_date).toLocaleDateString()}</div>
-              )}
-              {quote?.expiration_date && (
-                <div>Expires: {new Date(quote.expiration_date).toLocaleDateString()}</div>
-              )}
-              {quote?.total && (
-                <div className="font-medium col-span-2">Total: {formatMoneyValue(quote.total)}</div>
-              )}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isSending}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSendEmail}
-              disabled={!isReady || isSending || hasError}
-              className="gap-2">
-              {isSending ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4" />
-                  Send Quote
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-    <GoogleReconnectDialog open={reconnectOpen} onOpenChange={setReconnectOpen} />
+        </DialogContent>
+      </Dialog>
+      <GoogleReconnectDialog open={reconnectOpen} onOpenChange={setReconnectOpen} />
     </>
   );
 };

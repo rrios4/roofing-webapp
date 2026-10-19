@@ -42,15 +42,16 @@ export default function ProjectFilterPopover({ statuses, types, filters, setFilt
           <p className="text-sm font-semibold">Filters</p>
           <button
             className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-            onClick={() => setFilters({ statusIds: [], typeIds: [] })}
-          >
+            onClick={() => setFilters({ statusIds: [], typeIds: [] })}>
             Clear all
           </button>
         </div>
 
         {statuses.length > 0 && (
           <div className="mb-4">
-            <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground mb-2">Status</p>
+            <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground mb-2">
+              Status
+            </p>
             <div className="flex flex-wrap gap-1.5">
               {statuses.map((s) => {
                 const active = filters.statusIds.includes(s.id);
@@ -63,8 +64,9 @@ export default function ProjectFilterPopover({ statuses, types, filters, setFilt
                         ? 'bg-primary text-primary-foreground border-primary'
                         : 'bg-background text-muted-foreground border-border hover:bg-muted hover:text-foreground'
                     )}
-                    onClick={() => setFilters({ ...filters, statusIds: toggle(filters.statusIds, s.id) })}
-                  >
+                    onClick={() =>
+                      setFilters({ ...filters, statusIds: toggle(filters.statusIds, s.id) })
+                    }>
                     {s.name}
                   </button>
                 );
@@ -75,7 +77,9 @@ export default function ProjectFilterPopover({ statuses, types, filters, setFilt
 
         {types.length > 0 && (
           <div>
-            <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground mb-2">Type</p>
+            <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground mb-2">
+              Type
+            </p>
             <div className="flex flex-wrap gap-1.5">
               {types.map((t) => {
                 const active = filters.typeIds.includes(t.id);
@@ -88,8 +92,9 @@ export default function ProjectFilterPopover({ statuses, types, filters, setFilt
                         ? 'bg-primary text-primary-foreground border-primary'
                         : 'bg-background text-muted-foreground border-border hover:bg-muted hover:text-foreground'
                     )}
-                    onClick={() => setFilters({ ...filters, typeIds: toggle(filters.typeIds, t.id) })}
-                  >
+                    onClick={() =>
+                      setFilters({ ...filters, typeIds: toggle(filters.typeIds, t.id) })
+                    }>
                     {t.name}
                   </button>
                 );
