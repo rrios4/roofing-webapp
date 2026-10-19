@@ -390,6 +390,7 @@ export const convertQuoteToInvoice = async (
     private_note: quoteData.private_note || '',
     public_note: quoteData.public_note || '',
     converted_from_quote_number: quote_number,
+    project_id: quoteData.project_id ?? null,
     // Bill from (company) address
     bill_from_street_address: '150 Tallant St',
     bill_from_city: 'Houston',

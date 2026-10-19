@@ -34,6 +34,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import AddCustomerForm from './add-customer-form';
 import { SectionCard } from '../ui/section-card';
 import listOfUSStates from '../../data/state_titlecase.json';
+import { findStatusIdByName, QuoteFormValues } from '../../lib/project-prefill';
+
+type Props = {
+  initialValues?: Partial<QuoteFormValues>;
+  setOpen?: (open: boolean) => void;
+  onSuccess?: () => void;
+};
 
 function toDateString(d: Date | undefined): string {
   if (!d) return '';
@@ -44,14 +51,16 @@ function fromDateString(s: string): Date {
   return s ? new Date(s) : new Date();
 }
 
-export default function AddQuoteForm() {
+export default function AddQuoteForm({ initialValues, setOpen, onSuccess }: Props = {}) {
   const queryClient = useQueryClient();
   const { quotes } = useFetchQuotes();
   const { customers } = useFetchCustomers();
   const { data: roofingServices, isLoading: isRoofingServicesLoading } = useFetchAllServices();
   const { quoteStatuses } = useQuoteStatuses();
 
-  const [customAddressOpen, setCustomAddressOpen] = useState(false);
+  const [customAddressOpen, setCustomAddressOpen] = useState(
+    !!initialValues?.custom_street_address
+  );
   const [customerSheetOpen, setCustomerSheetOpen] = useState(false);
 
   const form = useForm<z.infer<typeof addQuoteFormSchema>>({
@@ -70,9 +79,18 @@ export default function AddQuoteForm() {
       custom_zipcode: '',
       private_note: '',
       public_note: '',
-      measurement_note: ''
+      measurement_note: '',
+      project_id: null,
+      ...initialValues
     }
   });
+
+  // When opened with prefilled values, default the status to a draft/pending one if none was given
+  React.useEffect(() => {
+    if (!initialValues || form.getValues('status_id')) return;
+    const defaultStatusId = findStatusIdByName(quoteStatuses, ['Draft', 'Pending']);
+    if (defaultStatusId) form.setValue('status_id', defaultStatusId);
+  }, [initialValues, quoteStatuses, form]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -115,7 +133,7 @@ export default function AddQuoteForm() {
 
   const onSubmit = async (values: z.infer<typeof addQuoteFormSchema>) => {
     const { line_items, ...quote } = values;
-    const updatedQuote = { ...quote, total, subtotal };
+    const updatedQuote = { ...quote, total, subtotal, custom_address: customAddressOpen };
     const updatedLineItems = line_items?.map((item) => ({
       ...item,
       quote_id: values.quote_number,
@@ -127,6 +145,8 @@ export default function AddQuoteForm() {
       await quoteLineItemMutation.mutateAsync(updatedLineItems);
       queryClient.invalidateQueries(['quotes']);
       form.reset();
+      if (setOpen) setOpen(false);
+      if (onSuccess) onSuccess();
     } catch (error) {
       alert('Failed to create quote: ' + error);
     }
@@ -140,14 +160,12 @@ export default function AddQuoteForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
           <ScrollArea className="flex-1">
             <div className="flex flex-col gap-4 px-5 py-4">
-
               {/* ── Customer ─────────────────────────────────── */}
               <SectionCard
                 iconBg="bg-violet-500/10"
                 iconText="text-violet-600"
                 icon={<UsersIcon className="h-3.5 w-3.5" />}
-                label="Customer"
-              >
+                label="Customer">
                 <FormField
                   control={form.control}
                   name="customer_id"
@@ -163,8 +181,7 @@ export default function AddQuoteForm() {
                           variant="outline"
                           size="icon"
                           onClick={() => setCustomerSheetOpen(true)}
-                          className="shrink-0 h-10 w-10"
-                        >
+                          className="shrink-0 h-10 w-10">
                           <PlusIcon className="h-4 w-4" />
                         </Button>
                       </div>
@@ -184,7 +201,9 @@ export default function AddQuoteForm() {
                             {...field}
                             value={field.value || ''}
                             onChange={(e) =>
-                              field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                              field.onChange(
+                                e.target.value ? parseFloat(e.target.value) : undefined
+                              )
                             }
                             placeholder={String(nextQuoteNumber)}
                           />
@@ -201,8 +220,9 @@ export default function AddQuoteForm() {
                         <FormLabel>Status</FormLabel>
                         <Select
                           onValueChange={(v) => field.onChange(Number(v))}
-                          value={field.value && field.value !== 0 ? String(field.value) : undefined}
-                        >
+                          value={
+                            field.value && field.value !== 0 ? String(field.value) : undefined
+                          }>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select status" />
@@ -224,8 +244,7 @@ export default function AddQuoteForm() {
                 iconBg="bg-sky-500/10"
                 iconText="text-sky-600"
                 icon={<FileTextIcon className="h-3.5 w-3.5" />}
-                label="Quote Details"
-              >
+                label="Quote Details">
                 <div className="grid grid-cols-2 gap-3">
                   <FormField
                     control={form.control}
@@ -271,13 +290,14 @@ export default function AddQuoteForm() {
                       <Select
                         onValueChange={(v) => field.onChange(Number(v))}
                         value={field.value && field.value !== 0 ? String(field.value) : undefined}
-                        disabled={isRoofingServicesLoading}
-                      >
+                        disabled={isRoofingServicesLoading}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue
                               placeholder={
-                                isRoofingServicesLoading ? 'Loading...' : 'Select a roofing service...'
+                                isRoofingServicesLoading
+                                  ? 'Loading...'
+                                  : 'Select a roofing service...'
                               }
                             />
                           </SelectTrigger>
@@ -297,13 +317,11 @@ export default function AddQuoteForm() {
                 iconBg="bg-teal-500/10"
                 iconText="text-teal-600"
                 icon={<ListIcon className="h-3.5 w-3.5" />}
-                label="Line Items"
-              >
+                label="Line Items">
                 {fields.map((item, index) => (
                   <div
                     key={item.id}
-                    className="rounded-xl border border-border bg-muted/20 p-3 flex flex-col gap-3"
-                  >
+                    className="rounded-xl border border-border bg-muted/20 p-3 flex flex-col gap-3">
                     <FormField
                       control={form.control}
                       name={`line_items.${index}.description`}
@@ -372,8 +390,7 @@ export default function AddQuoteForm() {
                         variant="ghost"
                         size="sm"
                         onClick={() => remove(index)}
-                        className="self-end text-destructive hover:text-destructive hover:bg-destructive/10 h-8 px-2"
-                      >
+                        className="self-end text-destructive hover:text-destructive hover:bg-destructive/10 h-8 px-2">
                         <TrashIcon className="h-3.5 w-3.5 mr-1" />
                         Remove
                       </Button>
@@ -385,8 +402,7 @@ export default function AddQuoteForm() {
                   variant="outline"
                   size="sm"
                   onClick={() => append({ description: '', qty: 1, amount: 0, subtotal: 0 })}
-                  className="w-full"
-                >
+                  className="w-full">
                   <PlusIcon className="h-3.5 w-3.5 mr-1.5" />
                   Add Line Item
                 </Button>
@@ -412,12 +428,8 @@ export default function AddQuoteForm() {
                 label="Custom Address"
                 headerClassName={customAddressOpen ? 'bg-emerald-500/10' : 'bg-muted/40'}
                 headerRight={
-                  <Switch
-                    checked={customAddressOpen}
-                    onCheckedChange={setCustomAddressOpen}
-                  />
-                }
-              >
+                  <Switch checked={customAddressOpen} onCheckedChange={setCustomAddressOpen} />
+                }>
                 {!customAddressOpen ? (
                   <p className="text-sm text-muted-foreground italic">
                     Enable to add a custom billing address for this quote.
@@ -437,7 +449,9 @@ export default function AddQuoteForm() {
                               onAddressSelect={(parts) => {
                                 field.onChange(parts.street_address);
                                 form.setValue('custom_city', parts.city, { shouldValidate: true });
-                                form.setValue('custom_state', parts.state, { shouldValidate: true });
+                                form.setValue('custom_state', parts.state, {
+                                  shouldValidate: true
+                                });
                                 form.setValue('custom_zipcode', parts.zipcode, {
                                   shouldValidate: true
                                 });
@@ -515,8 +529,7 @@ export default function AddQuoteForm() {
                 iconBg="bg-muted"
                 iconText="text-muted-foreground"
                 icon={<StickyNoteIcon className="h-3.5 w-3.5" />}
-                label="Notes"
-              >
+                label="Notes">
                 <FormField
                   control={form.control}
                   name="private_note"
@@ -569,7 +582,6 @@ export default function AddQuoteForm() {
                   )}
                 />
               </SectionCard>
-
             </div>
           </ScrollArea>
 

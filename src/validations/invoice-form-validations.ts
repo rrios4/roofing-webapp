@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
 export const addInvoiceFormSchema = z.object({
+  project_id: z.string().uuid().nullable().optional(),
   invoice_number: z.number().min(1, 'Invoice number is required'),
   customer_id: z.number(),
   service_type_id: z.number(), // Note: using service_type_id for invoices

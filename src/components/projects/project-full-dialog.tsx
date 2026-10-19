@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -41,6 +35,7 @@ import {
   LinkIcon,
   PlusIcon,
   DownloadIcon,
+  ChevronDownIcon
 } from 'lucide-react';
 import {
   abbreviateName,
@@ -48,7 +43,7 @@ import {
   formatDateWithAbbreviatedMonth,
   formatMoneyValue,
   formatNumber,
-  getAvatarColor,
+  getAvatarColor
 } from '../../lib/utils';
 import { ProjectWithRelations } from '../../types/db_types';
 import UpdateProjectSheet from '../forms/update-project-sheet';
@@ -58,28 +53,43 @@ import {
   useFetchInvoicesByProjectId,
   useFetchAllInvoices,
   useLinkInvoiceToProject,
-  useUnlinkInvoiceFromProject,
+  useUnlinkInvoiceFromProject
 } from '../../hooks/useAPI/use-invoice';
 import {
   useFetchQuotesByProjectId,
   useFetchQuotes,
   useLinkQuoteToProject,
-  useUnlinkQuoteFromProject,
+  useUnlinkQuoteFromProject
 } from '../../hooks/useAPI/use-quotes';
 import { fetchInvoiceById } from '../../services/api/invoice-service';
-import { fetchQuoteById } from '../../services/api/quote-service';
+import { convertQuoteToInvoice, fetchQuoteById } from '../../services/api/quote-service';
+import { useQueryClient } from '@tanstack/react-query';
+import { useToast } from '../ui/use-toast';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '../ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '../ui/dropdown-menu';
+import AddQuoteForm from '../forms/add-quote-form';
+import AddInvoiceForm from '../forms/add-invoice-form';
+import {
+  buildInvoiceDefaultsFromProject,
+  buildQuoteDefaultsFromProject
+} from '../../lib/project-prefill';
 import { pdf } from '@react-pdf/renderer';
 import { ModernInvoiceDocument } from '../pdf-render/modern-invoice-doc';
 import { ModernQuoteDocument } from '../pdf-render/modern-quote-doc-final';
-import { transformInvoiceForPDF, transformQuoteForPDF, getInvoicePDFFilename } from '../../lib/pdf-utils';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '../ui/command';
+  transformInvoiceForPDF,
+  transformQuoteForPDF,
+  getInvoicePDFFilename
+} from '../../lib/pdf-utils';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '../ui/command';
 
 type Props = {
   project: ProjectWithRelations | null;
@@ -101,7 +111,7 @@ function InfoCard({
   title,
   className,
   headerExtra,
-  children,
+  children
 }: {
   iconBg: string;
   iconText: string;
@@ -115,8 +125,7 @@ function InfoCard({
     <div className={cn('rounded-xl border border-border overflow-hidden flex flex-col', className)}>
       <div className="px-4 py-2.5 border-b border-border bg-muted/40 flex items-center gap-2.5 flex-shrink-0">
         <div
-          className={`h-6 w-6 rounded-md flex items-center justify-center flex-shrink-0 ${iconBg} ${iconText}`}
-        >
+          className={`h-6 w-6 rounded-md flex items-center justify-center flex-shrink-0 ${iconBg} ${iconText}`}>
           {icon}
         </div>
         <span className="text-sm font-semibold flex-1">{title}</span>
@@ -130,7 +139,7 @@ function InfoCard({
 function KVRow({
   label,
   icon,
-  value,
+  value
 }: {
   label: string;
   icon?: React.ReactNode;
@@ -201,7 +210,7 @@ function ActivityEntry({ title, timestamp }: { title: string; timestamp?: string
                 day: 'numeric',
                 year: 'numeric',
                 hour: 'numeric',
-                minute: '2-digit',
+                minute: '2-digit'
               })
             : '—'}
         </p>
@@ -247,6 +256,34 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
   const [quotePickerOpen, setQuotePickerOpen] = React.useState(false);
   const [downloadingInvoiceId, setDownloadingInvoiceId] = React.useState<number | null>(null);
   const [downloadingQuoteId, setDownloadingQuoteId] = React.useState<number | null>(null);
+  const [quoteSheetOpen, setQuoteSheetOpen] = React.useState(false);
+  const [invoiceSheetOpen, setInvoiceSheetOpen] = React.useState(false);
+  const [convertingQuoteId, setConvertingQuoteId] = React.useState<number | null>(null);
+
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  async function handleConvertQuote(quoteNumber: number) {
+    setConvertingQuoteId(quoteNumber);
+    try {
+      const result = await convertQuoteToInvoice(quoteNumber);
+      queryClient.invalidateQueries({ queryKey: ['quoteById', quoteNumber] });
+      queryClient.invalidateQueries({ queryKey: ['quotes'] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      toast({
+        title: 'Invoice created',
+        description: `QT-${formatNumber(quoteNumber)} was converted to INV-${formatNumber(result.invoice.invoice_number)}.`
+      });
+    } catch (e) {
+      toast({
+        title: 'Error converting quote',
+        description: e instanceof Error ? e.message : 'Failed to convert quote to invoice.',
+        variant: 'destructive'
+      });
+    } finally {
+      setConvertingQuoteId(null);
+    }
+  }
 
   async function handleDownloadInvoice(invoiceNumber: number) {
     setDownloadingInvoiceId(invoiceNumber);
@@ -333,7 +370,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
     { id: 'photos', label: 'Photos (0)' },
     { id: 'documents', label: docCount > 0 ? `Documents (${docCount})` : 'Documents' },
     { id: 'tasks', label: 'Tasks (0)' },
-    { id: 'activity', label: 'Activity' },
+    { id: 'activity', label: 'Activity' }
   ];
 
   const customer = project.customer_details;
@@ -349,18 +386,31 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
 
   const dash = <em className="not-italic text-muted-foreground">—</em>;
 
-  return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
-      <DialogContent className="w-[92vw] max-w-[92vw] h-[90vh] max-h-[90vh] p-0 flex flex-col gap-0 overflow-hidden [&>button.absolute]:hidden">
+  const nextQuoteNumber =
+    allQuotes && allQuotes.length > 0 ? Math.max(...allQuotes.map((q) => q.quote_number)) + 1 : 1;
+  const nextInvoiceNumber =
+    allInvoices && allInvoices.length > 0
+      ? Math.max(...allInvoices.map((i) => i.invoice_number)) + 1
+      : 1;
+  // Linked quotes that can still become an invoice — accepted ones first
+  const convertibleQuotes = (linkedQuotes ?? [])
+    .filter((q) => !q.converted)
+    .sort((a, b) => Number(b.status?.name === 'Accepted') - Number(a.status?.name === 'Accepted'));
 
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}>
+      <DialogContent className="w-[92vw] max-w-[92vw] h-[90vh] max-h-[90vh] p-0 flex flex-col gap-0 overflow-hidden [&>button.absolute]:hidden">
         {/* ── Header ───────────────────────────────────────── */}
         <DialogHeader className="flex-shrink-0 px-6 py-4 border-b bg-card">
           <div className="flex items-center gap-4 min-w-0">
             {hasCustomer ? (
               <Avatar className="h-11 w-11 flex-shrink-0">
                 <AvatarFallback
-                  className={`text-sm font-semibold ${avatarColors?.bg ?? ''} ${avatarColors?.text ?? ''}`}
-                >
+                  className={`text-sm font-semibold ${avatarColors?.bg ?? ''} ${avatarColors?.text ?? ''}`}>
                   {abbreviateName(displayName!)}
                 </AvatarFallback>
               </Avatar>
@@ -373,8 +423,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   stroke="currentColor"
                   strokeWidth={1.6}
                   strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+                  strokeLinejoin="round">
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
                   <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
@@ -385,15 +434,13 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <DialogTitle
-                  className={`text-lg leading-tight ${!hasCustomer ? 'text-muted-foreground italic font-normal' : ''}`}
-                >
+                  className={`text-lg leading-tight ${!hasCustomer ? 'text-muted-foreground italic font-normal' : ''}`}>
                   {displayName ?? 'No customer assigned'}
                 </DialogTitle>
                 {typeName && (
                   <Badge
                     variant={typeName === 'Commercial' ? 'secondary' : 'default'}
-                    className="text-[10px] px-1.5 py-0"
-                  >
+                    className="text-[10px] px-1.5 py-0">
                     {typeName}
                   </Badge>
                 )}
@@ -445,27 +492,23 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
               <TabsTrigger
                 key={t.id}
                 value={t.id}
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent text-sm py-3 px-3"
-              >
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent text-sm py-3 px-3">
                 {t.label}
               </TabsTrigger>
             ))}
           </TabsList>
 
           <div className="flex-1 overflow-y-auto bg-background">
-
             {/* ── Overview ───────────────────────────────────── */}
             <TabsContent value="overview" className="mt-0 p-6">
               <div className="max-w-5xl mx-auto grid grid-cols-3 gap-4">
-
                 {/* Customer — col-span-2 */}
                 <InfoCard
                   className="col-span-2"
                   iconBg="bg-violet-500/10"
                   iconText="text-violet-600"
                   icon={<UsersIcon className="h-3.5 w-3.5" />}
-                  title="Customer"
-                >
+                  title="Customer">
                   <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                     <KVRow
                       icon={<UserIcon className="h-3 w-3" />}
@@ -490,7 +533,9 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       label="Email"
                       value={
                         customer?.email ? (
-                          <a href={`mailto:${customer.email}`} className="hover:underline truncate block">
+                          <a
+                            href={`mailto:${customer.email}`}
+                            className="hover:underline truncate block">
                             {customer.email}
                           </a>
                         ) : (
@@ -525,8 +570,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg="bg-amber-500/10"
                   iconText="text-amber-600"
                   icon={<DollarSignIcon className="h-3.5 w-3.5" />}
-                  title="Financials"
-                >
+                  title="Financials">
                   <div className="flex flex-col gap-4">
                     <div>
                       <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground mb-1">
@@ -559,8 +603,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg="bg-sky-500/10"
                   iconText="text-sky-600"
                   icon={<Settings2Icon className="h-3.5 w-3.5" />}
-                  title="Project Details"
-                >
+                  title="Project Details">
                   <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                     <KVRow
                       icon={<WrenchIcon className="h-3 w-3" />}
@@ -603,8 +646,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg="bg-transparent"
                   iconText=""
                   icon={<GoogleDriveIcon className="h-4 w-4" />}
-                  title="Google Drive"
-                >
+                  title="Google Drive">
                   {project.drive_folder_url ? (
                     <div className="flex flex-col gap-3">
                       <p className="text-sm font-medium leading-snug">
@@ -615,8 +657,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                         href={project.drive_folder_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline mt-auto"
-                      >
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline mt-auto">
                         Open in Drive <ExternalLinkIcon className="h-3 w-3" />
                       </a>
                     </div>
@@ -633,8 +674,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg="bg-indigo-500/10"
                   iconText="text-indigo-600"
                   icon={<ListChecksIcon className="h-3.5 w-3.5" />}
-                  title="Open Tasks"
-                >
+                  title="Open Tasks">
                   <p className="text-4xl font-bold leading-none">0</p>
                   <p className="text-xs text-muted-foreground mt-1.5">No tasks yet</p>
                 </InfoCard>
@@ -644,8 +684,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg="bg-pink-500/10"
                   iconText="text-pink-600"
                   icon={<ImageIcon className="h-3.5 w-3.5" />}
-                  title="Photos"
-                >
+                  title="Photos">
                   <p className="text-4xl font-bold leading-none">0</p>
                   <p className="text-xs text-muted-foreground mt-1.5">No photos yet</p>
                 </InfoCard>
@@ -655,10 +694,11 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg="bg-teal-500/10"
                   iconText="text-teal-600"
                   icon={<FileTextIcon className="h-3.5 w-3.5" />}
-                  title="Documents"
-                >
-                  <p className="text-4xl font-bold leading-none">0</p>
-                  <p className="text-xs text-muted-foreground mt-1.5">No documents yet</p>
+                  title="Documents">
+                  <p className="text-4xl font-bold leading-none">{docCount}</p>
+                  <p className="text-xs text-muted-foreground mt-1.5">
+                    {docCount > 0 ? 'Linked quotes & invoices' : 'No documents yet'}
+                  </p>
                 </InfoCard>
 
                 {/* Notes — col-span-3 */}
@@ -667,8 +707,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg="bg-muted"
                   iconText="text-muted-foreground"
                   icon={<StickyNoteIcon className="h-3.5 w-3.5" />}
-                  title="Notes"
-                >
+                  title="Notes">
                   {project.notes ? (
                     <p className="text-sm whitespace-pre-wrap leading-relaxed">{project.notes}</p>
                   ) : (
@@ -680,10 +719,11 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                 <InfoCard
                   className={project.permit_required ? 'col-span-2' : 'col-span-3'}
                   iconBg={project.is_insurance_claim ? 'bg-orange-500/10' : 'bg-muted'}
-                  iconText={project.is_insurance_claim ? 'text-orange-600' : 'text-muted-foreground'}
+                  iconText={
+                    project.is_insurance_claim ? 'text-orange-600' : 'text-muted-foreground'
+                  }
                   icon={<ShieldIcon className="h-3.5 w-3.5" />}
-                  title="Insurance Claim"
-                >
+                  title="Insurance Claim">
                   {project.is_insurance_claim ? (
                     <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                       <KVRow
@@ -727,8 +767,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg={project.permit_required ? 'bg-slate-500/10' : 'bg-muted'}
                   iconText={project.permit_required ? 'text-slate-600' : 'text-muted-foreground'}
                   icon={<FileCheckIcon className="h-3.5 w-3.5" />}
-                  title="Permit"
-                >
+                  title="Permit">
                   {project.permit_required ? (
                     <div className="flex flex-col gap-4">
                       <KVRow
@@ -757,11 +796,9 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                   iconBg="bg-primary/10"
                   iconText="text-primary"
                   icon={<ClockIcon className="h-3.5 w-3.5" />}
-                  title="Recent Activity"
-                >
+                  title="Recent Activity">
                   <ActivityEntry title="Project created" timestamp={project.created_at} />
                 </InfoCard>
-
               </div>
             </TabsContent>
 
@@ -775,73 +812,142 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
             {/* ── Documents ──────────────────────────────────── */}
             <TabsContent value="documents" className="mt-0 p-6">
               <div className="max-w-3xl mx-auto flex flex-col gap-6">
-
                 {/* ── Invoices section ─── */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">
-                      Invoices {linkedInvoices && linkedInvoices.length > 0 ? `(${linkedInvoices.length})` : ''}
+                      Invoices{' '}
+                      {linkedInvoices && linkedInvoices.length > 0
+                        ? `(${linkedInvoices.length})`
+                        : ''}
                     </p>
-                    <Popover open={invoicePickerOpen} onOpenChange={setInvoicePickerOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5">
-                          <PlusIcon className="h-3 w-3" />
-                          Link Invoice
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-0 w-72" align="end">
-                        <Command>
-                          <CommandInput placeholder="Search invoices..." className="h-9" />
-                          <CommandList>
-                            <CommandEmpty>No matching invoices found.</CommandEmpty>
-                            {(allInvoices?.filter(
-                              (inv) =>
-                                (project.customer == null || inv.customer_id === project.customer) &&
-                                (inv.project_id == null || inv.project_id === project.id)
-                            ) ?? []).map((inv) => {
-                              const alreadyLinked = inv.project_id === project.id;
-                              const serviceName = inv.service?.name ?? inv.service_type?.name ?? null;
-                              const issueDate = inv.issue_date
-                                ? new Date(inv.issue_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
-                                : null;
-                              return (
-                                <CommandItem
-                                  key={inv.invoice_number}
-                                  value={`${inv.invoice_number} ${serviceName ?? ''}`}
-                                  disabled={alreadyLinked}
-                                  onSelect={() => {
-                                    if (!alreadyLinked) {
-                                      linkInvoice.mutate(inv.invoice_number);
-                                      setInvoicePickerOpen(false);
-                                    }
-                                  }}
-                                >
-                                  <div className="flex items-center justify-between w-full gap-2 py-0.5">
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center gap-1.5">
-                                        <span className="text-sm font-semibold">INV-{formatNumber(inv.invoice_number)}</span>
-                                        {inv.invoice_status?.name && (
-                                          <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                                            {inv.invoice_status.name}
-                                          </span>
-                                        )}
-                                        {alreadyLinked && <LinkIcon className="h-3 w-3 text-primary flex-shrink-0" />}
-                                      </div>
-                                      <p className="text-xs text-muted-foreground truncate mt-0.5">
-                                        {[serviceName, issueDate].filter(Boolean).join(' · ')}
-                                      </p>
-                                    </div>
-                                    <span className="text-xs font-semibold tabular-nums flex-shrink-0">
-                                      ${formatMoneyValue(inv.total)}
+                    <div className="flex items-center gap-2">
+                      {convertibleQuotes.length > 0 ? (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              size="sm"
+                              className="h-7 text-xs gap-1.5"
+                              disabled={convertingQuoteId !== null}>
+                              {convertingQuoteId !== null ? (
+                                <Loader2Icon className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <PlusIcon className="h-3 w-3" />
+                              )}
+                              New Invoice
+                              <ChevronDownIcon className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-60">
+                            <DropdownMenuLabel className="text-xs">
+                              Convert a linked quote
+                            </DropdownMenuLabel>
+                            {convertibleQuotes.map((q) => (
+                              <DropdownMenuItem
+                                key={q.quote_number}
+                                onSelect={() => handleConvertQuote(q.quote_number)}
+                                className="flex items-center justify-between gap-2">
+                                <span className="text-sm">
+                                  From QT-{formatNumber(q.quote_number)}
+                                  {q.status?.name && (
+                                    <span className="ml-1.5 text-[10px] text-muted-foreground">
+                                      {q.status.name}
                                     </span>
-                                  </div>
-                                </CommandItem>
-                              );
-                            })}
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                                  )}
+                                </span>
+                                <span className="text-xs font-semibold tabular-nums">
+                                  ${formatMoneyValue(q.total)}
+                                </span>
+                              </DropdownMenuItem>
+                            ))}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onSelect={() => setInvoiceSheetOpen(true)}>
+                              Blank invoice from project
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      ) : (
+                        <Button
+                          size="sm"
+                          className="h-7 text-xs gap-1.5"
+                          onClick={() => setInvoiceSheetOpen(true)}>
+                          <PlusIcon className="h-3 w-3" />
+                          New Invoice
+                        </Button>
+                      )}
+                      <Popover open={invoicePickerOpen} onOpenChange={setInvoicePickerOpen}>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5">
+                            <LinkIcon className="h-3 w-3" />
+                            Link Invoice
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-0 w-72" align="end">
+                          <Command>
+                            <CommandInput placeholder="Search invoices..." className="h-9" />
+                            <CommandList>
+                              <CommandEmpty>No matching invoices found.</CommandEmpty>
+                              {(
+                                allInvoices?.filter(
+                                  (inv) =>
+                                    (project.customer == null ||
+                                      inv.customer_id === project.customer) &&
+                                    (inv.project_id == null || inv.project_id === project.id)
+                                ) ?? []
+                              ).map((inv) => {
+                                const alreadyLinked = inv.project_id === project.id;
+                                const serviceName =
+                                  inv.service?.name ?? inv.service_type?.name ?? null;
+                                const issueDate = inv.issue_date
+                                  ? new Date(inv.issue_date).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                      timeZone: 'UTC'
+                                    })
+                                  : null;
+                                return (
+                                  <CommandItem
+                                    key={inv.invoice_number}
+                                    value={`${inv.invoice_number} ${serviceName ?? ''}`}
+                                    disabled={alreadyLinked}
+                                    onSelect={() => {
+                                      if (!alreadyLinked) {
+                                        linkInvoice.mutate(inv.invoice_number);
+                                        setInvoicePickerOpen(false);
+                                      }
+                                    }}>
+                                    <div className="flex items-center justify-between w-full gap-2 py-0.5">
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-1.5">
+                                          <span className="text-sm font-semibold">
+                                            INV-{formatNumber(inv.invoice_number)}
+                                          </span>
+                                          {inv.invoice_status?.name && (
+                                            <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                              {inv.invoice_status.name}
+                                            </span>
+                                          )}
+                                          {alreadyLinked && (
+                                            <LinkIcon className="h-3 w-3 text-primary flex-shrink-0" />
+                                          )}
+                                        </div>
+                                        <p className="text-xs text-muted-foreground truncate mt-0.5">
+                                          {[serviceName, issueDate].filter(Boolean).join(' · ')}
+                                        </p>
+                                      </div>
+                                      <span className="text-xs font-semibold tabular-nums flex-shrink-0">
+                                        ${formatMoneyValue(inv.total)}
+                                      </span>
+                                    </div>
+                                  </CommandItem>
+                                );
+                              })}
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                   </div>
                   <div className="flex flex-col gap-2">
                     {invoicesLoading && (
@@ -861,13 +967,12 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                         statusName === 'Paid'
                           ? 'bg-emerald-500/10 text-emerald-700 border-emerald-200'
                           : statusName === 'Overdue'
-                          ? 'bg-destructive/10 text-destructive border-destructive/20'
-                          : 'bg-amber-500/10 text-amber-700 border-amber-200';
+                            ? 'bg-destructive/10 text-destructive border-destructive/20'
+                            : 'bg-amber-500/10 text-amber-700 border-amber-200';
                       return (
                         <div
                           key={inv.invoice_number}
-                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3"
-                        >
+                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
                           <div className="h-9 w-9 rounded-lg bg-teal-500/10 text-teal-600 flex items-center justify-center flex-shrink-0">
                             <ReceiptIcon className="h-4 w-4" />
                           </div>
@@ -877,8 +982,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                 INV-{formatNumber(inv.invoice_number)}
                               </p>
                               <span
-                                className={`inline-flex items-center px-1.5 py-0 text-[10px] font-semibold rounded border ${statusColor}`}
-                              >
+                                className={`inline-flex items-center px-1.5 py-0 text-[10px] font-semibold rounded border ${statusColor}`}>
                                 {statusName}
                               </span>
                             </div>
@@ -889,7 +993,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                   month: 'short',
                                   day: 'numeric',
                                   year: 'numeric',
-                                  timeZone: 'UTC',
+                                  timeZone: 'UTC'
                                 })}`}
                             </p>
                           </div>
@@ -898,25 +1002,24 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                           </span>
                           <a
                             href={`/invoices/${inv.invoice_number}`}
-                            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline flex-shrink-0"
-                          >
+                            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline flex-shrink-0">
                             View <ExternalLinkIcon className="h-3 w-3" />
                           </a>
                           <button
                             title="Download PDF"
                             onClick={() => handleDownloadInvoice(inv.invoice_number)}
                             disabled={downloadingInvoiceId === inv.invoice_number}
-                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40"
-                          >
-                            {downloadingInvoiceId === inv.invoice_number
-                              ? <Loader2Icon className="h-3 w-3 animate-spin" />
-                              : <DownloadIcon className="h-3 w-3" />}
+                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
+                            {downloadingInvoiceId === inv.invoice_number ? (
+                              <Loader2Icon className="h-3 w-3 animate-spin" />
+                            ) : (
+                              <DownloadIcon className="h-3 w-3" />
+                            )}
                           </button>
                           <button
                             title="Unlink invoice"
                             onClick={() => unlinkInvoice.mutate(inv.invoice_number)}
-                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors"
-                          >
+                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors">
                             <XIcon className="h-3 w-3" />
                           </button>
                         </div>
@@ -929,68 +1032,89 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">
-                      Quotes {linkedQuotes && linkedQuotes.length > 0 ? `(${linkedQuotes.length})` : ''}
+                      Quotes{' '}
+                      {linkedQuotes && linkedQuotes.length > 0 ? `(${linkedQuotes.length})` : ''}
                     </p>
-                    <Popover open={quotePickerOpen} onOpenChange={setQuotePickerOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5">
-                          <PlusIcon className="h-3 w-3" />
-                          Link Quote
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-0 w-72" align="end">
-                        <Command>
-                          <CommandInput placeholder="Search quotes..." className="h-9" />
-                          <CommandList>
-                            <CommandEmpty>No matching quotes found.</CommandEmpty>
-                            {(allQuotes?.filter(
-                              (q) =>
-                                (project.customer == null || q.customer_id === project.customer) &&
-                                (q.project_id == null || q.project_id === project.id)
-                            ) ?? []).map((q) => {
-                              const alreadyLinked = q.project_id === project.id;
-                              const serviceName = q.service?.name ?? null;
-                              const issueDate = q.quote_date
-                                ? new Date(q.quote_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
-                                : null;
-                              return (
-                                <CommandItem
-                                  key={q.quote_number}
-                                  value={`${q.quote_number} ${serviceName ?? ''}`}
-                                  disabled={alreadyLinked}
-                                  onSelect={() => {
-                                    if (!alreadyLinked) {
-                                      linkQuote.mutate(q.quote_number);
-                                      setQuotePickerOpen(false);
-                                    }
-                                  }}
-                                >
-                                  <div className="flex items-center justify-between w-full gap-2 py-0.5">
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center gap-1.5">
-                                        <span className="text-sm font-semibold">QT-{formatNumber(q.quote_number)}</span>
-                                        {q.status?.name && (
-                                          <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                                            {q.status.name}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        className="h-7 text-xs gap-1.5"
+                        onClick={() => setQuoteSheetOpen(true)}>
+                        <PlusIcon className="h-3 w-3" />
+                        New Quote
+                      </Button>
+                      <Popover open={quotePickerOpen} onOpenChange={setQuotePickerOpen}>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5">
+                            <LinkIcon className="h-3 w-3" />
+                            Link Quote
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-0 w-72" align="end">
+                          <Command>
+                            <CommandInput placeholder="Search quotes..." className="h-9" />
+                            <CommandList>
+                              <CommandEmpty>No matching quotes found.</CommandEmpty>
+                              {(
+                                allQuotes?.filter(
+                                  (q) =>
+                                    (project.customer == null ||
+                                      q.customer_id === project.customer) &&
+                                    (q.project_id == null || q.project_id === project.id)
+                                ) ?? []
+                              ).map((q) => {
+                                const alreadyLinked = q.project_id === project.id;
+                                const serviceName = q.service?.name ?? null;
+                                const issueDate = q.quote_date
+                                  ? new Date(q.quote_date).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                      timeZone: 'UTC'
+                                    })
+                                  : null;
+                                return (
+                                  <CommandItem
+                                    key={q.quote_number}
+                                    value={`${q.quote_number} ${serviceName ?? ''}`}
+                                    disabled={alreadyLinked}
+                                    onSelect={() => {
+                                      if (!alreadyLinked) {
+                                        linkQuote.mutate(q.quote_number);
+                                        setQuotePickerOpen(false);
+                                      }
+                                    }}>
+                                    <div className="flex items-center justify-between w-full gap-2 py-0.5">
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-1.5">
+                                          <span className="text-sm font-semibold">
+                                            QT-{formatNumber(q.quote_number)}
                                           </span>
-                                        )}
-                                        {alreadyLinked && <LinkIcon className="h-3 w-3 text-primary flex-shrink-0" />}
+                                          {q.status?.name && (
+                                            <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                              {q.status.name}
+                                            </span>
+                                          )}
+                                          {alreadyLinked && (
+                                            <LinkIcon className="h-3 w-3 text-primary flex-shrink-0" />
+                                          )}
+                                        </div>
+                                        <p className="text-xs text-muted-foreground truncate mt-0.5">
+                                          {[serviceName, issueDate].filter(Boolean).join(' · ')}
+                                        </p>
                                       </div>
-                                      <p className="text-xs text-muted-foreground truncate mt-0.5">
-                                        {[serviceName, issueDate].filter(Boolean).join(' · ')}
-                                      </p>
+                                      <span className="text-xs font-semibold tabular-nums flex-shrink-0">
+                                        ${formatMoneyValue(q.total)}
+                                      </span>
                                     </div>
-                                    <span className="text-xs font-semibold tabular-nums flex-shrink-0">
-                                      ${formatMoneyValue(q.total)}
-                                    </span>
-                                  </div>
-                                </CommandItem>
-                              );
-                            })}
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                                  </CommandItem>
+                                );
+                              })}
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                   </div>
                   <div className="flex flex-col gap-2">
                     {quotesLoading && (
@@ -1010,13 +1134,12 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                         statusName === 'Accepted'
                           ? 'bg-emerald-500/10 text-emerald-700 border-emerald-200'
                           : statusName === 'Rejected'
-                          ? 'bg-destructive/10 text-destructive border-destructive/20'
-                          : 'bg-amber-500/10 text-amber-700 border-amber-200';
+                            ? 'bg-destructive/10 text-destructive border-destructive/20'
+                            : 'bg-amber-500/10 text-amber-700 border-amber-200';
                       return (
                         <div
                           key={q.quote_number}
-                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3"
-                        >
+                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
                           <div className="h-9 w-9 rounded-lg bg-sky-500/10 text-sky-600 flex items-center justify-center flex-shrink-0">
                             <FileTextIcon className="h-4 w-4" />
                           </div>
@@ -1026,8 +1149,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                 QT-{formatNumber(q.quote_number)}
                               </p>
                               <span
-                                className={`inline-flex items-center px-1.5 py-0 text-[10px] font-semibold rounded border ${statusColor}`}
-                              >
+                                className={`inline-flex items-center px-1.5 py-0 text-[10px] font-semibold rounded border ${statusColor}`}>
                                 {statusName}
                               </span>
                               {q.converted && (
@@ -1043,7 +1165,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                   month: 'short',
                                   day: 'numeric',
                                   year: 'numeric',
-                                  timeZone: 'UTC',
+                                  timeZone: 'UTC'
                                 })}`}
                             </p>
                           </div>
@@ -1052,25 +1174,24 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                           </span>
                           <a
                             href={`/quotes/${q.quote_number}`}
-                            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline flex-shrink-0"
-                          >
+                            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline flex-shrink-0">
                             View <ExternalLinkIcon className="h-3 w-3" />
                           </a>
                           <button
                             title="Download PDF"
                             onClick={() => handleDownloadQuote(q.quote_number)}
                             disabled={downloadingQuoteId === q.quote_number}
-                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40"
-                          >
-                            {downloadingQuoteId === q.quote_number
-                              ? <Loader2Icon className="h-3 w-3 animate-spin" />
-                              : <DownloadIcon className="h-3 w-3" />}
+                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors disabled:opacity-40">
+                            {downloadingQuoteId === q.quote_number ? (
+                              <Loader2Icon className="h-3 w-3 animate-spin" />
+                            ) : (
+                              <DownloadIcon className="h-3 w-3" />
+                            )}
                           </button>
                           <button
                             title="Unlink quote"
                             onClick={() => unlinkQuote.mutate(q.quote_number)}
-                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors"
-                          >
+                            className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground flex-shrink-0 transition-colors">
                             <XIcon className="h-3 w-3" />
                           </button>
                         </div>
@@ -1088,9 +1209,12 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                     {!project.drive_folder_id && (
                       <EmptyTab label="No Drive folder linked to this project" />
                     )}
-                    {project.drive_folder_id && !driveReady && !docsLoading && !needsDrivePermission && (
-                      <EmptyTab label="Google Drive not connected — sign in with Google to view documents" />
-                    )}
+                    {project.drive_folder_id &&
+                      !driveReady &&
+                      !docsLoading &&
+                      !needsDrivePermission && (
+                        <EmptyTab label="Google Drive not connected — sign in with Google to view documents" />
+                      )}
                     {needsDrivePermission && (
                       <div className="flex flex-col items-center justify-center gap-4 py-16 border border-dashed border-border rounded-xl px-6 text-center">
                         <div className="h-12 w-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
@@ -1116,23 +1240,25 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                       </div>
                     )}
                     {docsError && !docsLoading && <EmptyTab label={docsError} />}
-                    {docsFetched && !docsLoading && !docsError && docs.length === 0 && project.drive_folder_id && (
-                      <EmptyTab label="No PDF or Word documents found in this project's Drive folder" />
-                    )}
+                    {docsFetched &&
+                      !docsLoading &&
+                      !docsError &&
+                      docs.length === 0 &&
+                      project.drive_folder_id && (
+                        <EmptyTab label="No PDF or Word documents found in this project's Drive folder" />
+                      )}
                     {docs.map((file) => {
                       const isPdf = file.mimeType === 'application/pdf';
                       return (
                         <div
                           key={file.id}
-                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3"
-                        >
+                          className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
                           <div
                             className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
                               isPdf
                                 ? 'bg-destructive/10 text-destructive'
                                 : 'bg-primary/10 text-primary'
-                            }`}
-                          >
+                            }`}>
                             <FileTextIcon className="h-4 w-4" />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -1143,7 +1269,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                                 ` · ${new Date(file.modifiedTime).toLocaleDateString('en-US', {
                                   month: 'short',
                                   day: 'numeric',
-                                  year: 'numeric',
+                                  year: 'numeric'
                                 })}`}
                             </p>
                           </div>
@@ -1152,8 +1278,7 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                               href={file.webViewLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline flex-shrink-0"
-                            >
+                              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline flex-shrink-0">
                               Open <ExternalLinkIcon className="h-3 w-3" />
                             </a>
                           )}
@@ -1162,7 +1287,6 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                     })}
                   </div>
                 </div>
-
               </div>
             </TabsContent>
 
@@ -1179,9 +1303,41 @@ export default function ProjectFullDialog({ project, open, onClose }: Props) {
                 <ActivityEntry title="Project created" timestamp={project.created_at} />
               </div>
             </TabsContent>
-
           </div>
         </Tabs>
+
+        {/* ── Create quote / invoice from project ─────────── */}
+        <Sheet open={quoteSheetOpen} onOpenChange={setQuoteSheetOpen}>
+          <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
+            <SheetHeader className="px-5 pt-5 pb-4 border-b">
+              <SheetTitle>New Quote</SheetTitle>
+              <SheetDescription>
+                Prefilled from PRJ-{formatNumber(project.project_number ?? 0)}. Review and adjust
+                before saving.
+              </SheetDescription>
+            </SheetHeader>
+            <AddQuoteForm
+              initialValues={buildQuoteDefaultsFromProject(project, nextQuoteNumber)}
+              setOpen={setQuoteSheetOpen}
+            />
+          </SheetContent>
+        </Sheet>
+
+        <Sheet open={invoiceSheetOpen} onOpenChange={setInvoiceSheetOpen}>
+          <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
+            <SheetHeader className="px-5 pt-5 pb-4 border-b">
+              <SheetTitle>New Invoice</SheetTitle>
+              <SheetDescription>
+                Prefilled from PRJ-{formatNumber(project.project_number ?? 0)}. Review and adjust
+                before saving.
+              </SheetDescription>
+            </SheetHeader>
+            <AddInvoiceForm
+              initialValues={buildInvoiceDefaultsFromProject(project, nextInvoiceNumber)}
+              setOpen={setInvoiceSheetOpen}
+            />
+          </SheetContent>
+        </Sheet>
       </DialogContent>
     </Dialog>
   );

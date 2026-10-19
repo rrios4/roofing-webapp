@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
 export const addQuoteFormSchema = z.object({
+  project_id: z.string().uuid().nullable().optional(),
   quote_number: z.number().min(1, 'Invoice number is required'),
   customer_id: z.number(),
   service_id: z.number(),

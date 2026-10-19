@@ -16,7 +16,7 @@ import {
   StickyNoteIcon,
   TrashIcon,
   UsersIcon,
-  DollarSignIcon,
+  DollarSignIcon
 } from 'lucide-react';
 import { AddressAutocomplete } from '../common/address-autocomplete';
 import { Input } from '../ui/input';
@@ -36,10 +36,12 @@ import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/use-invoice-statu
 import { useFetchAllInvoices } from '../../hooks/useAPI/use-invoice';
 import { ScrollArea } from '../ui/scroll-area';
 import { SectionCard } from '../ui/section-card';
+import { findStatusIdByName, InvoiceFormValues } from '../../lib/project-prefill';
 
 type Props = {
   setOpen?: any;
   onSuccess?: () => void;
+  initialValues?: Partial<InvoiceFormValues>;
 };
 
 function toDateString(d: Date | undefined): string {
@@ -51,14 +53,14 @@ function fromDateString(s: string): Date {
   return s ? new Date(s) : new Date();
 }
 
-export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
+export default function AddInvoiceForm({ setOpen, onSuccess, initialValues }: Props) {
   const queryClient = useQueryClient();
   const { data: invoices } = useFetchAllInvoices();
   const { customers } = useFetchCustomers();
   const { data: roofingServices } = useFetchAllServices();
   const { data: invoiceStatuses } = useFetchAllInvoiceStatuses();
 
-  const [billToOpen, setBillToOpen] = useState(false);
+  const [billToOpen, setBillToOpen] = useState(!!initialValues?.bill_to);
   const [customerSheetOpen, setCustomerSheetOpen] = useState(false);
 
   function calculateNextInvoiceNumber(invoices: { invoice_number: number }[] | undefined): number {
@@ -91,9 +93,18 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
       private_note: '',
       public_note: '',
       cust_note: '',
-      sqft_measurement: ''
+      sqft_measurement: '',
+      project_id: null,
+      ...initialValues
     }
   });
+
+  // When opened with prefilled values, default the status to Draft if none was given
+  useEffect(() => {
+    if (!initialValues || form.getValues('invoice_status_id')) return;
+    const draftStatusId = findStatusIdByName(invoiceStatuses, ['Draft']);
+    if (draftStatusId) form.setValue('invoice_status_id', draftStatusId);
+  }, [initialValues, invoiceStatuses, form]);
 
   const { fields, append, remove } = useFieldArray({ control: form.control, name: 'line_items' });
   const lineItems = form.watch('line_items');
@@ -122,7 +133,9 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
   }
 
   async function createInvoiceLineItems(invoiceLineItems: any) {
-    const { data, error } = await supabase.from(TABLES.INVOICE_LINE_SERVICE).insert(invoiceLineItems);
+    const { data, error } = await supabase
+      .from(TABLES.INVOICE_LINE_SERVICE)
+      .insert(invoiceLineItems);
     if (error) throw error;
     return data;
   }
@@ -152,6 +165,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
       total,
       subtotal,
       amount_due: total,
+      bill_to: billToOpen,
       invoice_date: values.invoice_date.toISOString().split('T')[0],
       issue_date: values.issue_date.toISOString().split('T')[0],
       due_date: values.due_date.toISOString().split('T')[0],
@@ -184,20 +198,20 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
             <ScrollArea className="flex-1">
               <div className="flex flex-col gap-4 px-5 py-4">
-
                 {/* ── Customer ─────────────────────────────────── */}
                 <SectionCard
                   iconBg="bg-violet-500/10"
                   iconText="text-violet-600"
                   icon={<UsersIcon className="h-3.5 w-3.5" />}
-                  label="Customer"
-                >
+                  label="Customer">
                   <FormField
                     control={form.control}
                     name="customer_id"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Customer <span className="text-destructive">*</span></FormLabel>
+                        <FormLabel>
+                          Customer <span className="text-destructive">*</span>
+                        </FormLabel>
                         <div className="flex gap-2">
                           <div className="flex-1">
                             <SearchCustomerCombobox data={customers} form={form} field={field} />
@@ -207,8 +221,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                             variant="outline"
                             size="icon"
                             onClick={() => setCustomerSheetOpen(true)}
-                            className="shrink-0 h-10 w-10"
-                          >
+                            className="shrink-0 h-10 w-10">
                             <PlusIcon className="h-4 w-4" />
                           </Button>
                         </div>
@@ -228,7 +241,9 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                               type="number"
                               value={field.value || ''}
                               onChange={(e) =>
-                                field.onChange(e.target.value === '' ? undefined : Number(e.target.value))
+                                field.onChange(
+                                  e.target.value === '' ? undefined : Number(e.target.value)
+                                )
                               }
                               placeholder={String(nextInvoiceNumber)}
                             />
@@ -245,10 +260,11 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                           <FormLabel>Status</FormLabel>
                           <Select
                             onValueChange={(v) => field.onChange(Number(v))}
-                            value={field.value && field.value > 0 ? String(field.value) : ''}
-                          >
+                            value={field.value && field.value > 0 ? String(field.value) : ''}>
                             <FormControl>
-                              <SelectTrigger><SelectValue placeholder="Select status" /></SelectTrigger>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select status" />
+                              </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               <DefaultSelectDataItems data={invoiceStatuses || []} />
@@ -266,8 +282,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                   iconBg="bg-sky-500/10"
                   iconText="text-sky-600"
                   icon={<ReceiptIcon className="h-3.5 w-3.5" />}
-                  label="Billing"
-                >
+                  label="Billing">
                   <div className="grid grid-cols-2 gap-3">
                     <FormField
                       control={form.control}
@@ -318,10 +333,11 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                         <FormLabel>Service Type</FormLabel>
                         <Select
                           onValueChange={(v) => field.onChange(Number(v))}
-                          value={field.value && field.value > 0 ? String(field.value) : ''}
-                        >
+                          value={field.value && field.value > 0 ? String(field.value) : ''}>
                           <FormControl>
-                            <SelectTrigger><SelectValue placeholder="Select service" /></SelectTrigger>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select service" />
+                            </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             <DefaultSelectDataItems data={roofingServices || []} />
@@ -338,14 +354,12 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                   iconBg="bg-teal-500/10"
                   iconText="text-teal-600"
                   icon={<ListIcon className="h-3.5 w-3.5" />}
-                  label="Line Items"
-                >
+                  label="Line Items">
                   <div className="flex flex-col gap-3">
                     {fields.map((item, index) => (
                       <div
                         key={item.id}
-                        className="rounded-xl border border-border bg-muted/20 p-3 flex flex-col gap-3"
-                      >
+                        className="rounded-xl border border-border bg-muted/20 p-3 flex flex-col gap-3">
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                             Item {index + 1}
@@ -354,8 +368,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                             <button
                               type="button"
                               onClick={() => remove(index)}
-                              className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
-                            >
+                              className="h-6 w-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-destructive transition-colors">
                               <TrashIcon className="h-3 w-3" />
                             </button>
                           )}
@@ -367,7 +380,11 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                             <FormItem>
                               <FormLabel>Description</FormLabel>
                               <FormControl>
-                                <Input placeholder="Item description" {...field} value={field.value || ''} />
+                                <Input
+                                  placeholder="Item description"
+                                  {...field}
+                                  value={field.value || ''}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -427,9 +444,17 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => append({ description: '', qty: 1, rate: 0, amount: 0, sq_ft: 0, fixed_item: true })}
-                    className="w-full mt-1"
-                  >
+                    onClick={() =>
+                      append({
+                        description: '',
+                        qty: 1,
+                        rate: 0,
+                        amount: 0,
+                        sq_ft: 0,
+                        fixed_item: true
+                      })
+                    }
+                    className="w-full mt-1">
                     <PlusIcon className="h-3.5 w-3.5 mr-1.5" />
                     Add Line Item
                   </Button>
@@ -454,10 +479,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                   icon={<MapPinIcon className="h-3.5 w-3.5" />}
                   label="Bill To Address"
                   headerClassName={billToOpen ? 'bg-emerald-500/10' : 'bg-muted/40'}
-                  headerRight={
-                    <Switch checked={billToOpen} onCheckedChange={setBillToOpen} />
-                  }
-                >
+                  headerRight={<Switch checked={billToOpen} onCheckedChange={setBillToOpen} />}>
                   {billToOpen ? (
                     <>
                       <FormField
@@ -472,9 +494,15 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                                 onChange={field.onChange}
                                 onAddressSelect={(parts) => {
                                   field.onChange(parts.street_address);
-                                  form.setValue('bill_to_city', parts.city, { shouldValidate: true });
-                                  form.setValue('bill_to_state', parts.state, { shouldValidate: true });
-                                  form.setValue('bill_to_zipcode', parts.zipcode, { shouldValidate: true });
+                                  form.setValue('bill_to_city', parts.city, {
+                                    shouldValidate: true
+                                  });
+                                  form.setValue('bill_to_state', parts.state, {
+                                    shouldValidate: true
+                                  });
+                                  form.setValue('bill_to_zipcode', parts.zipcode, {
+                                    shouldValidate: true
+                                  });
                                 }}
                                 placeholder="Start typing a street address..."
                               />
@@ -490,7 +518,9 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>City</FormLabel>
-                              <FormControl><Input placeholder="City" {...field} /></FormControl>
+                              <FormControl>
+                                <Input placeholder="City" {...field} />
+                              </FormControl>
                             </FormItem>
                           )}
                         />
@@ -500,7 +530,9 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>State</FormLabel>
-                              <FormControl><Input placeholder="TX" maxLength={2} {...field} /></FormControl>
+                              <FormControl>
+                                <Input placeholder="TX" maxLength={2} {...field} />
+                              </FormControl>
                             </FormItem>
                           )}
                         />
@@ -511,7 +543,9 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Zip Code</FormLabel>
-                            <FormControl><Input placeholder="77076" {...field} /></FormControl>
+                            <FormControl>
+                              <Input placeholder="77076" {...field} />
+                            </FormControl>
                           </FormItem>
                         )}
                       />
@@ -528,8 +562,7 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                   iconBg="bg-muted"
                   iconText="text-muted-foreground"
                   icon={<StickyNoteIcon className="h-3.5 w-3.5" />}
-                  label="Notes"
-                >
+                  label="Notes">
                   <FormField
                     control={form.control}
                     name="private_note"
@@ -537,7 +570,11 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                       <FormItem>
                         <FormLabel>Internal Notes</FormLabel>
                         <FormControl>
-                          <Textarea {...field} placeholder="Private notes (not visible on invoice)..." rows={2} />
+                          <Textarea
+                            {...field}
+                            placeholder="Private notes (not visible on invoice)..."
+                            rows={2}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -549,7 +586,11 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                       <FormItem>
                         <FormLabel>Public Note</FormLabel>
                         <FormControl>
-                          <Textarea {...field} placeholder="Note shown on the invoice..." rows={2} />
+                          <Textarea
+                            {...field}
+                            placeholder="Note shown on the invoice..."
+                            rows={2}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -579,7 +620,6 @@ export default function AddInvoiceForm({ setOpen, onSuccess }: Props) {
                     )}
                   />
                 </SectionCard>
-
               </div>
             </ScrollArea>
 
