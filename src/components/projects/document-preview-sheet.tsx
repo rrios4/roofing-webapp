@@ -1,7 +1,9 @@
 import React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowRightIcon,
+  CheckIcon,
+  ChevronDownIcon,
   CalendarIcon,
   DownloadIcon,
   FileBadgeIcon,
@@ -18,6 +20,19 @@ import { Skeleton } from '../ui/skeleton';
 import { useFetchQuoteById } from '../../hooks/useAPI/use-quotes';
 import { useFetchInvoiceById } from '../../hooks/useAPI/use-invoice';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useQuoteStatuses } from '../../hooks/useAPI/use-quote-status';
+import { useFetchAllInvoiceStatuses } from '../../hooks/useAPI/use-invoice-status';
+import { updateQuoteStatusById } from '../../services/api/quote-service';
+import { updateInvoiceStatusById } from '../../services/api/invoice-service';
+import { useToast } from '../ui/use-toast';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '../ui/dropdown-menu';
 import {
   cn,
   formatDateWithAbbreviatedMonth,
@@ -117,6 +132,43 @@ export default function DocumentPreviewSheet({
   const isLoading = isQuote ? quoteQuery.isLoading : invoiceQuery.isLoading;
   const isError = isQuote ? quoteQuery.isError : invoiceQuery.isError;
 
+  const { toast } = useToast();
+  const { quoteStatuses } = useQuoteStatuses();
+  const { data: invoiceStatuses } = useFetchAllInvoiceStatuses();
+  const statusOptions: { id: number; name: string }[] =
+    (isQuote ? quoteStatuses : invoiceStatuses) ?? [];
+
+  const statusMutation = useMutation({
+    mutationFn: async ({ ref, statusId }: { ref: DocumentRef; statusId: number }) => {
+      if (ref.kind === 'quote') await updateQuoteStatusById(statusId, ref.number);
+      else await updateInvoiceStatusById({ status_id: statusId, invoice_number: ref.number });
+      return ref;
+    },
+    onSuccess: (ref, { statusId }) => {
+      // Refresh the preview and every list it appears in (the ['quotes'] / ['invoices'] prefixes
+      // cover the project's Documents lists)
+      if (ref.kind === 'quote') {
+        queryClient.invalidateQueries({ queryKey: ['quoteById', ref.number] });
+        queryClient.invalidateQueries({ queryKey: ['quotes'] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['invoiceById', ref.number] });
+        queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      }
+      const name = statusOptions.find((s) => s.id === statusId)?.name;
+      toast({
+        title: 'Status updated',
+        description: `${ref.kind === 'quote' ? 'QT' : 'INV'}-${formatNumber(ref.number)} is now ${name ?? 'updated'}.`
+      });
+    },
+    onError: (error: unknown) => {
+      toast({
+        title: 'Error updating status',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive'
+      });
+    }
+  });
+
   function retry() {
     if (!doc) return;
     queryClient.invalidateQueries({
@@ -128,6 +180,11 @@ export default function DocumentPreviewSheet({
   const statusName: string = data
     ? ((isQuote ? data.quote_status?.name : data.invoice_status?.name) ?? '')
     : '';
+  const currentStatusId: number | undefined = data
+    ? isQuote
+      ? (data.status_id ?? data.quote_status?.id)
+      : (data.invoice_status_id ?? data.invoice_status?.id)
+    : undefined;
 
   const lineItems: LineItem[] = !data
     ? []
@@ -214,14 +271,43 @@ export default function DocumentPreviewSheet({
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <SheetTitle className="text-lg leading-tight">{label}</SheetTitle>
-                {statusName && (
-                  <span
-                    className={cn(
-                      'inline-flex items-center px-1.5 py-0 text-[10px] font-semibold rounded border',
-                      statusClasses(doc?.kind ?? 'quote', statusName)
-                    )}>
-                    {statusName}
-                  </span>
+                {data && doc && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        title="Change status"
+                        disabled={statusMutation.isLoading || statusOptions.length === 0}
+                        className={cn(
+                          'inline-flex items-center gap-1 h-7 sm:h-6 px-2 text-[11px] font-semibold rounded-md border transition-opacity hover:opacity-80 disabled:opacity-60',
+                          statusClasses(doc.kind, statusName)
+                        )}>
+                        {statusName || 'Set status'}
+                        {statusMutation.isLoading ? (
+                          <Loader2Icon className="h-3 w-3 animate-spin" />
+                        ) : (
+                          <ChevronDownIcon className="h-3 w-3" />
+                        )}
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-52">
+                      <DropdownMenuLabel className="text-xs">Change status</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {statusOptions.map((s) => {
+                        const current = s.id === currentStatusId;
+                        return (
+                          <DropdownMenuItem
+                            key={s.id}
+                            disabled={current}
+                            className="flex items-center justify-between min-h-10 sm:min-h-0"
+                            onSelect={() => statusMutation.mutate({ ref: doc, statusId: s.id })}>
+                            {s.name}
+                            {current && <CheckIcon className="h-3.5 w-3.5 text-primary" />}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
               </div>
               <SheetDescription className="text-xs mt-0.5 flex items-center gap-1.5 flex-wrap">
